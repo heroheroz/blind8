@@ -228,6 +228,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <ul id="caseList" class="clist"></ul>
 <details class="tagmgr"><summary>管理標籤</summary>
   <div id="tagMgrList" class="tagbar"></div>
+  <p class="hint" id="tagMgrLogin" hidden>登入先可以加標籤。</p>
   <form id="tagMgrAdd" class="row" style="margin-top:6px"><input type="text" id="tagMgrIn" maxlength="100" placeholder="新標籤，例如夏仲奇老師" aria-label="新標籤" style="flex:1"><button type="submit" class="lnk">加</button></form>
   <p class="hint" style="margin-top:4px">加咗嘅標籤會喺上面變成可以撳嘅建議。刪除有命例用緊嘅標籤會由所有命例移除。共享模式下，登入就可以加標籤，刪除只限管理員。</p>
 </details>
@@ -900,7 +901,7 @@ function renderSug(){
 }
 function renderAuth(){
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
-  $('caseAdd').hidden=!can.add();$('caseIO').hidden=!can.io();
+  $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();
   const box=$('caseAuth');if(!CLOUD){box.hidden=true;return;}box.hidden=false;
   box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||'')}${ADMIN?' · <b class="adm">管理員</b>':''}</span> <button type="button" class="lnk" data-logout>登出</button>`
     :`<form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
@@ -914,7 +915,7 @@ function renderCases(){
   $('tagBar').innerHTML=tl.map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}" aria-pressed="${TAGF.has(t)}">#${esc(t)} <small>${cnt[t]}</small></button>`).join('')+(TAGF.size?'<button type="button" class="lnk" data-tagclear>清除篩選</button>':'');
   $('caseCount').textContent=CASES.length;
   $('caseList').innerHTML=list.length?list.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
-    :`<li class="hint">${CASES.length?'搵唔到。':'未有命例。排好盤之後，喺上面填備註再撳「加入目前命盤」。'}</li>`;
+    :`<li class="hint">${CASES.length?'搵唔到。':'未有命例。'+(can.add()?'排好盤之後，喺上面打名再撳「儲存」。':'')}</li>`;
   showCase(CASES.find(c=>c.id===CUR));
   renderSug();renderAuth();
 }
