@@ -751,7 +751,12 @@ function render(){
 
   // 五行 tally of 8 chars
   const cnt=[0,0,0,0,0];P.forEach(p=>{cnt[gw(gi(p[0]))]++;cnt[ZWX[zi(p[1])]]++;});
-  const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span></div>`;
+  // 人元司令：按出生時離上一個「節」幾多日，決定月支藏干邊個當令（月令分日用事）
+  const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
+  const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
+  let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
+  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`;
+  const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
   const startSol=yun.getStartSolar();
