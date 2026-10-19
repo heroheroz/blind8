@@ -240,7 +240,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <form id="f" autocomplete="off">
   <fieldset>
     <label class="cap" for="name">姓名</label>
-    <input type="text" id="name" placeholder="例：陳大文">
+    <input type="text" id="name" placeholder="例：香港回歸">
     <div class="row" style="margin-top:6px">
       <div class="seg" role="radiogroup" aria-label="性別">
         <label><input type="radio" name="sex" id="sexM" value="1" checked>男（乾造）</label>
@@ -803,7 +803,7 @@ if(typeof Solar==='undefined'){$('err').textContent='曆法程式庫載入失敗
 let init={name:'Owner',sex:1,lunar:false,leap:false,y:1982,m:5,d:6,h:9,mi:25,zi:1,city:0,lon:114.17,tz:8,dst:false,tst:true};
 try{const s=localStorage.getItem('bazi-last');if(s)init=Object.assign(init,JSON.parse(s));}catch(e){}
 // 打開網站時日期時間預設為香港回歸（1997-07-01 00:00），其他欄沿用上次
-Object.assign(init,{lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0});
+Object.assign(init,{name:'香港回歸',lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0});
 /* ---------- 命例 ---------- */
 // 有填 B8_CLOUD（Supabase）就同所有人共享，要登入先可以新增；冇就只存喺呢個瀏覽器
 const CLOUD=(window.B8_CLOUD&&window.B8_CLOUD.url&&window.B8_CLOUD.key)?{url:window.B8_CLOUD.url.replace(/\/$/,''),key:window.B8_CLOUD.key}:null;
@@ -878,16 +878,19 @@ const TagStore={
     await api('tags?name=eq.'+encodeURIComponent(name),{method:'DELETE'});}
 };
 const parseTags=t=>[...new Set(String(t||'').split(/[,，、\s]+/).map(x=>x.trim().replace(/^#/,'')).filter(Boolean).map(x=>x.slice(0,30)))];
-const tagChips=(tags,id)=>(tags||[]).length?`<span class="tags">${tags.map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}">#${esc(t)}</button>${id?`<button type="button" class="tagx" data-untag="${esc(t)}" data-id="${id}" aria-label="移除標籤 ${esc(t)}">×</button>`:''}`).join('')}</span>`:'';
+const tagUse=()=>{const n={};CASES.forEach(c=>(c.tags||[]).forEach(t=>n[t]=(n[t]||0)+1));return n;};
+const byUse=(a,n=tagUse())=>[...a].sort((x,y)=>(n[y]||0)-(n[x]||0)||x.localeCompare(y));
+const caseScore=c=>(c.likes||0)+(c.unlikes||0)+(c.comments||[]).length+(c.tags||[]).length;
+const tagChips=(tags,id)=>(tags||[]).length?`<span class="tags">${byUse(tags).map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}">#${esc(t)}</button>${id?`<button type="button" class="tagx" data-untag="${esc(t)}" data-id="${id}" aria-label="移除標籤 ${esc(t)}">×</button>`:''}`).join('')}</span>`:'';
 const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${v.y}-${pad(v.m)}-${pad(v.d)} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;
 const voteBtns=c=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
   return `<span class="votes"><button type="button" class="vb${c.myVote===1?' on':''}" data-vote="1" data-id="${c.id}" aria-pressed="${c.myVote===1}"${dis}>準 ${c.likes}</button><button type="button" class="vb no${c.myVote===-1?' on':''}" data-vote="-1" data-id="${c.id}" aria-pressed="${c.myVote===-1}"${dis}>唔準 ${c.unlikes}</button></span>`;};
 const cvoteBtns=(c,m)=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
   return `<span class="votes"><button type="button" class="vb${m.myVote===1?' on':''}" data-cvote="1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===1}"${dis}>準 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-cvote="-1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===-1}"${dis}>唔準 ${m.unlikes||0}</button></span>`;};
 function renderSug(){
-  document.querySelector('.tagsug').innerHTML=TAG_SUG.map(t=>`<button type="button" class="tag sug" data-sug="${esc(t)}">+${esc(t)}</button>`).join('');
+  document.querySelector('.tagsug').innerHTML=byUse(TAG_SUG).map(t=>`<button type="button" class="tag sug" data-sug="${esc(t)}">+${esc(t)}</button>`).join('');
   const used={};CASES.forEach(c=>(c.tags||[]).forEach(t=>used[t]=(used[t]||0)+1));
-  const all=[...new Set([...TAG_SUG,...Object.keys(used)])];
+  const all=byUse([...new Set([...TAG_SUG,...Object.keys(used)])],used);
   $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${(CLOUD?can.tagdel():!used[t]||can.tagdel())?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
 }
 function renderAuth(){
@@ -899,7 +902,7 @@ function renderAuth(){
   
 }
 function renderCases(){
-  const list=CASES.filter(c=>(!Q||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
+  const list=CASES.map((c,i)=>[c,i]).sort((a,b)=>caseScore(b[0])-caseScore(a[0])||a[1]-b[1]).map(x=>x[0]).filter(c=>(!Q||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
   const cnt={};CASES.forEach(c=>(c.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
   $('tagBar').innerHTML=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b)).map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}" aria-pressed="${TAGF.has(t)}">#${esc(t)} <small>${cnt[t]}</small></button>`).join('')+(TAGF.size?'<button type="button" class="lnk" data-tagclear>清除篩選</button>':'');
   $('caseCount').textContent=CASES.length;
@@ -914,7 +917,7 @@ function showCase(c){
   const head=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">命例：${esc(c.name)}</h2><span class="row">${voteBtns(c)}${ed&&!EDIT?'<button type="button" class="lnk" data-edit>修改</button>':''}<button type="button" class="lnk" data-close>收埋</button>${can.del()?`<button type="button" class="lnk del" data-del="${c.id}">刪除</button>`:''}</span></div>
     <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}${c.by?` · 由 ${esc(c.by)} 新增`:''}</p>`;
   if(EDIT&&ed){box.innerHTML=head+`<form class="cadd" data-editf="${c.id}"><input type="text" name="name" maxlength="60" value="${esc(c.name)}" aria-label="命例名稱"><textarea name="notes" rows="4" maxlength="2000" aria-label="備註">${esc(c.notes||'')}</textarea><input type="text" name="tags" maxlength="200" value="${esc((c.tags||[]).join(' '))}" aria-label="標籤"><label class="chk"><input type="checkbox" name="birth"> 出生資料改做而家表格上面嘅資料</label><span class="row"><button type="submit" class="go sm">儲存</button><button type="button" class="lnk" data-editcancel>取消</button></span></form>`;return;}
-  const have=c.tags||[],sug=TAG_SUG.filter(t=>!have.includes(t));
+  const have=c.tags||[],sug=byUse(TAG_SUG.filter(t=>!have.includes(t)));
   box.innerHTML=head+`<div class="ctags"><span class="cap">標籤</span>${have.length?tagChips(have,ed?c.id:''):'<span class="hint">未有標籤</span>'}</div>
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk">加</button></form></div>`:''}
     ${c.notes?`<div class="cbody">${esc(c.notes)}</div>`:''}
