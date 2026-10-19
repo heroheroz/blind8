@@ -112,6 +112,8 @@ table.chart{border-collapse:collapse;width:100%;min-width:720px;font-variant-num
 .cx.kg{background:var(--accent);color:var(--paper)}
 .yr{display:inline-block;margin-top:3px;margin-left:2px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--bad);color:var(--bad);line-height:1.5}
 .yr.own{background:var(--bad);color:var(--paper)}
+.yr.hit{box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--bad)}
+.yrh{display:inline-block;margin-top:3px;margin-left:2px;font-size:10px;padding:0 5px;border-radius:8px;border:1px dashed var(--muted);color:var(--muted);line-height:1.5}
 .ss{font-size:13px;font-weight:700}
 .ss.dm{color:var(--accent)}
 .hid{display:flex;flex-direction:column;gap:1px;font-size:13px;line-height:1.35}
@@ -351,7 +353,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="npane" id="np-calc">
   <p><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
-  <p>地支格標「坐辰戌」：該柱天干坐喺辰或戌上面，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。地支標「X刃」：盤上有陽干 X，呢個地支係佢嘅陽刃（甲卯、丙午、戊午、庚酉、壬子，陰干冇陽刃）；標「日主陽刃」就係日主嘅陽刃。</p>
+  <p>地支格標「坐辰戌」：該柱天干坐喺辰或戌上面，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。地支標「X刃」：盤上有陽干 X，呢個地支係佢嘅陽刃（甲卯、丙午、戊午、庚酉、壬子，陰干冇陽刃）；標「日主陽刃」就係日主嘅陽刃。盤上另一柱有沖陽刃嘅字（卯酉、子午）就標「X刃逢沖」並加外框；如果同時有字同陽刃六合或半合（例如卯見戌、亥、未），旁邊標「X合護」，即係要等個合被解開、再有天干引動先應事。</p>
   <p>元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、命宮、身宮用傳統算法。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
   <div class="rules">
   <p><b>本派規則列表</b>　排盤嘅招感、粘連、啟動全部跟以下規則計。要加或者改規則，講返編號就得。</p>
@@ -771,9 +773,14 @@ function nlList(k,ci,cols){
 // 啟動：佢嘅天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動
 // 陽刃：陽干最旺嘅地支（甲卯、丙午、戊午、庚酉、壬子）；陰干冇陽刃。盤上有邊個陽干，佢嘅陽刃地支就標出嚟，日主嘅陽刃特別突出
 const YANGREN={甲:'卯',丙:'午',戊:'午',庚:'酉',壬:'子'};
-function yangren(z,cols,dmG){const gs=[...new Set(cols.filter(c=>c.gz).map(c=>c.gz[0]).filter(g=>YANGREN[g]===z))];if(!gs.length)return '';
-  const own=YANGREN[dmG]===z;
-  return `<span class="yr${own?' own':''}" title="${gs.join('、')}嘅陽刃${own?'（日主陽刃）':''}。陽刃易招凶災；甲庚卯酉、壬丙子午四字會齊就會應事。">${own?'日主陽刃':gs.join('')+'刃'}</span>`;}
+// 陽刃逢沖：盤上另一柱有沖陽刃嘅地支；有六合或半合嘅字就係「有合護」，要等合被解開先應
+const RENCHONG={卯:'酉',午:'子',酉:'卯',子:'午'},RENHE={卯:'戌亥未',午:'未寅戌',酉:'辰巳丑',子:'丑申辰'};
+function yangren(z,cols,dmG,ci){const gs=[...new Set(cols.filter(c=>c.gz).map(c=>c.gz[0]).filter(g=>YANGREN[g]===z))];if(!gs.length)return '';
+  const own=YANGREN[dmG]===z,others=cols.filter((c,i)=>c.gz&&i!==ci).map(c=>c.gz[1]);
+  const hit=others.includes(RENCHONG[z]),guard=hit?[...new Set(others.filter(x=>RENHE[z].includes(x)))]:[];
+  const lab=(own?'日主':gs.join(''))+(hit?'刃逢沖':own?'陽刃':'刃');
+  const tip=`${gs.join('、')}嘅陽刃${own?'（日主陽刃）':''}。`+(hit?`盤上有${RENCHONG[z]}沖${z}，陽刃逢沖。`+(guard.length?`但有${guard.join('、')}合住${z}，要等合被解開，再有天干引動先應事。`:'冇合保護，天干引動就易有血光之災。'):'陽刃易招凶災；甲庚卯酉、壬丙子午四字會齊就會應事。');
+  return `<span class="yr${own?' own':''}${hit?' hit':''}" title="${tip}">${lab}</span>${guard.length?`<span class="yrh" title="${tip}">${guard.join('')}合護</span>`:''}`;}
 // 坐辰戌：天干坐喺辰或戌上面，做功特別有力；魁罡（庚辰、庚戌、壬辰、戊戌）係其中四柱
 const KUIGANG=['庚辰','庚戌','壬辰','戊戌'];
 function chenxu(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';const kg=KUIGANG.includes(gz);
@@ -919,7 +926,7 @@ function render(){
     <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${nlList(0,ci,cols)}`)}</tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="0" data-m="p" data-up="1"></td></tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="1" data-m="p" data-up="0"></td></tr>
-    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${yangren(col.gz[1],cols,P[2][0])}${nlList(1,ci,cols)}`)}</tr>
+    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${yangren(col.gz[1],cols,P[2][0],ci)}${nlList(1,ci,cols)}`)}</tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="1" data-m="v" data-up="1"></td></tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[1],false,N)}</td></tr>
     <tr><th class="rl">藏干</th>${td((col,g,z)=>`<div class="hid">${[...HIDE[col.gz[1]]].map(h=>{const hg=gi(h);return `<span><b class="w${gw(hg)}">${h}</b>${shishen(dm,hg)}</span>`;}).join('')}</div>`)}</tr>
