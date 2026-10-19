@@ -179,6 +179,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .ccom{border-top:1px solid var(--soft);padding-top:6px;margin-top:6px}.ccom .hint{font-size:11px}.ccom .by{color:var(--ink)}.ccom .votes{margin:0}
 .cases input[type=text]#lgName{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .tags,.tagbar,.tagsug{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.pngbtn{font-size:13px;margin-left:10px;vertical-align:middle}#pngMsg{font-size:12px;margin-left:6px;font-weight:400}.pngcap{font-size:14px;margin:-4px 0 10px}
 .tags{margin-top:4px}.tagbar{margin:8px 0 0}
 .cfind{margin-top:10px;padding:8px;border:1px solid var(--soft);border-radius:8px}.cfind input[type=search]{width:100%;box-sizing:border-box}.cfind .row{margin-top:6px;gap:6px;flex-wrap:nowrap}.cfind .row input{flex:1;min-width:0}.cfind .cap{white-space:nowrap;font-size:12px}#findInfo:empty{display:none}
 .tag{font-size:12px;border:1px solid var(--line);background:var(--paper);color:var(--accent);border-radius:10px;padding:0 8px;cursor:pointer;line-height:1.6}
@@ -755,7 +756,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${startSol.getYear()}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel"><h2>命盤</h2><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日</label><span class="hint">（招感字：只係隱藏條線，粘連力照計；大運流年流月流日：閂咗就唔計招感粘連）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label></div>${table}${CHAIN_LEGEND}${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><span class="hint" id="pngMsg"></span></h2><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日</label><span class="hint">（招感字：只係隱藏條線，粘連力照計；大運流年流月流日：閂咗就唔計招感粘連）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label></div>${table}${CHAIN_LEGEND}${wx}</section>
   <section class="panel">
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
@@ -1005,6 +1006,26 @@ document.addEventListener('submit',e=>{
   else if(f.dataset.comment){e.preventDefault();const body=f.querySelector('textarea').value.trim();if(body)busy(()=>Store.comment(f.dataset.comment,body));}
   else if(f.id==='f'){CUR=null;EDIT=false;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));setTimeout(renderAuth);}
 });
+async function chartFontCSS(node){
+  const txt=[...new Set(node.innerText.replace(/\s/g,''))].join('');
+  let css=await (await fetch('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&text='+encodeURIComponent(txt))).text();
+  for(const u of [...new Set([...css.matchAll(/url\((https:[^)]+)\)/g)].map(m=>m[1]))]){
+    const b=await (await fetch(u)).blob();
+    css=css.split(u).join(await new Promise(ok=>{const f=new FileReader();f.onload=()=>ok(f.result);f.readAsDataURL(b);}));}
+  return css;}
+const loadH2I=()=>window.htmlToImage?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js';sc.onload=ok;sc.onerror=()=>no(new Error('載入唔到截圖工具'));document.head.appendChild(sc);});
+async function savePng(btn){
+  const box=$('chartBox'),msg=$('pngMsg');if(!box||btn.disabled)return;btn.disabled=true;msg.textContent='整緊圖…';
+  const cap=document.createElement('div');cap.className='pngcap';cap.textContent=S&&S.inp?`${S.inp.name||''}　${birthTxt(S.inp)}`.trim():'';
+  box.querySelector('h2').after(cap);
+  try{await loadH2I();let fontEmbedCSS;try{fontEmbedCSS=await chartFontCSS(box);}catch(e){}
+    const blob=await htmlToImage.toBlob(box,{pixelRatio:2,backgroundColor:getComputedStyle(box).backgroundColor,fontEmbedCSS,skipFonts:!fontEmbedCSS,
+      filter:n=>!(n.classList&&(n.classList.contains('viewopt')||n.classList.contains('pngbtn')||n.id==='pngMsg'))});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${(S&&S.inp&&S.inp.name)||'命盤'}.png`.replace(/[\\/:*?"<>|]/g,'_');document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+    msg.textContent='已存。';}
+  catch(e){msg.textContent='存唔到：'+(e.message||e);}
+  finally{cap.remove();btn.disabled=false;setTimeout(()=>{if(msg.textContent==='已存。')msg.textContent='';},3000);}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-png]');if(b)savePng(b);});
 $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('input',e=>{TQ=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const b=[...document.querySelectorAll('#tagBar [data-tagf]')].find(x=>!TAGF.has(x.dataset.tagf));if(b){TAGF.add(b.dataset.tagf);TQ='';e.target.value='';renderCases();}});
