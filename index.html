@@ -180,6 +180,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .ccom{border-top:1px solid var(--soft);padding-top:6px;margin-top:6px}.ccom .hint{font-size:11px}.ccom .by{color:var(--ink)}.ccom .votes{margin:0}
 .cases input[type=text]#lgName{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .tags,.tagbar,.tagsug{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.pngmode{max-width:none!important;overflow:visible!important}.pngmode .tscroll{overflow:visible!important}
 .pngbtn{font-size:13px;margin-left:10px;vertical-align:middle}#pngMsg{font-size:12px;margin-left:6px;font-weight:400}.pngcap{font-size:14px;margin:-4px 0 10px}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border:1px solid var(--soft);border-radius:8px;background:#fff;color:#333;text-decoration:none;font-weight:500}.gbtn+.gbtn{margin-top:6px}.gbtn b{font-family:Arial,sans-serif;font-size:16px}.gbtn:hover{background:#f6f6f6}
 .tags{margin-top:4px}.tagbar{margin:8px 0 0}
@@ -1053,13 +1054,18 @@ async function savePng(btn){
   const box=$('chartBox'),msg=$('pngMsg');if(!box||btn.disabled)return;btn.disabled=true;msg.textContent='整緊圖…';
   const cap=document.createElement('div');cap.className='pngcap';cap.textContent=S&&S.inp?`${S.inp.name||''}　${birthTxt(S.inp)}`.trim():'';
   box.querySelector('h2').after(cap);
+  // 影圖時唔要捲軸：個框闊到成個表放得落，等條線重新畫好先影
+  const tbl=box.querySelector('table.chart'),cs=getComputedStyle(box);
+  const need=tbl?tbl.scrollWidth+parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+16:0;
+  box.classList.add('pngmode');box.style.width=Math.max(need,box.offsetWidth,1500)+'px';
+  drawChains();await new Promise(ok=>requestAnimationFrame(()=>requestAnimationFrame(ok)));
   try{await loadH2I();let fontEmbedCSS;try{fontEmbedCSS=await chartFontCSS(box);}catch(e){}
     const blob=await htmlToImage.toBlob(box,{pixelRatio:2,backgroundColor:getComputedStyle(box).backgroundColor,fontEmbedCSS,skipFonts:!fontEmbedCSS,
       filter:n=>!(n.classList&&(n.classList.contains('viewopt')||n.classList.contains('pngbtn')||n.id==='pngMsg'))});
     const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${(S&&S.inp&&S.inp.name)||'命盤'}.png`.replace(/[\\/:*?"<>|]/g,'_');document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
     msg.textContent='已存。';}
   catch(e){msg.textContent='存唔到：'+(e.message||e);}
-  finally{cap.remove();btn.disabled=false;setTimeout(()=>{if(msg.textContent==='已存。')msg.textContent='';},3000);}}
+  finally{cap.remove();box.classList.remove('pngmode');box.style.width='';drawChains();btn.disabled=false;setTimeout(()=>{if(msg.textContent==='已存。')msg.textContent='';},3000);}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-png]');if(b)savePng(b);});
 $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('input',e=>{TQ=e.target.value.trim();renderCases();});
