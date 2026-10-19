@@ -11,7 +11,7 @@ The left sidebar keeps 命例 (name, birth data, notes, tags, 準/唔準 votes).
 To share 命例 with every visitor, with sign-in:
 
 1. Create a free project at https://supabase.com.
-2. In its SQL Editor, run `supabase/schema.sql`, then `supabase/002_update.sql` and `supabase/003_guestbook.sql` (留言版).
+2. In its SQL Editor, run `supabase/schema.sql`, then `supabase/002_update.sql`, `supabase/003_guestbook.sql` (留言版) and `supabase/004_event_votes.sql` (事件投票).
 3. Under Authentication → URL Configuration, set Site URL to `https://heroheroz.github.io/blind8/`.
 4. Copy the Project URL and the anon public key (Project Settings → API) into `config.js`.
 5. Sign up on the website, confirm the email, then run the last line of `schema.sql` with your email to make yourself admin.
