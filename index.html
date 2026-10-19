@@ -181,6 +181,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cases input[type=text]#lgName{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .tags,.tagbar,.tagsug{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .pngmode{max-width:none!important;overflow:visible!important}.pngmode .tscroll{overflow:visible!important}
+.tag.ev{border-color:var(--accent);color:var(--accent)}.evadd{gap:6px;margin-bottom:8px}.evadd select,.evadd input{font-size:13px;padding:3px 6px}
 .pngbtn{font-size:13px;margin-left:10px;vertical-align:middle}#pngMsg{font-size:12px;margin-left:6px;font-weight:400}.pngcap{font-size:14px;margin:-4px 0 10px}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border:1px solid var(--soft);border-radius:8px;background:#fff;color:#333;text-decoration:none;font-weight:500}.gbtn+.gbtn{margin-top:6px}.gbtn b{font-family:Arial,sans-serif;font-size:16px}.gbtn:hover{background:#f6f6f6}
 .tags{margin-top:4px}.tagbar{margin:8px 0 0}
@@ -963,10 +964,18 @@ function showCase(c){
   const have=c.tags||[],sug=byUse(TAG_SUG.filter(t=>!have.includes(t)));
   box.innerHTML=head+`<div class="ctags"><span class="cap">標籤</span>${have.length?tagChips(have,ed?c.id:''):'<span class="hint">未有標籤</span>'}</div>
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk">加</button></form></div>`:''}
+    ${evBlock(c,ed)}
     ${c.notes?`<div class="cbody">${esc(c.notes)}</div>`:''}
     ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span>${cvoteBtns(c,m)}</div><div>${esc(m.body)}</div></div>`).join('')}
     ${can.vote()?`<form class="cadd" data-comment="${c.id}"><textarea rows="2" maxlength="2000" placeholder="加解釋或者補充備註" required></textarea><button type="submit" class="go sm">加備註</button></form>`:'<p class="hint">登入先可以加備註。</p>'}`;
 }
+// 命例事件日期（例如結婚、生仔、過身），撳一下就用嗰日做睇運日期；存喺 input.events
+const EV_SUG=['結婚','離婚','生仔','生女','過身','父親過身','母親過身','升職','轉工','破財','發財','手術','意外','搬屋','移民','畢業'];
+const evTxt=v=>`${yearTxt(v.y)}-${pad(v.m)}-${pad(v.d)}`;
+function evBlock(c,ed){const evs=c.input.events||[];
+  return `<div class="ctags"><span class="cap">事件</span>${evs.length?`<span class="tags">${evs.map((v,i)=>`<button type="button" class="tag ev" data-evgo="${i}" data-id="${c.id}" title="用呢日睇運">${esc(v.t)} ${evTxt(v)}</button>${ed?`<button type="button" class="tagx" data-evdel="${i}" data-id="${c.id}" aria-label="刪除事件 ${esc(v.t)}">×</button>`:''}`).join('')}</span>`:'<span class="hint">未有事件日期</span>'}</div>
+  ${ed?`<form class="row evadd" data-addev="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em">加事件</span><input name="t" list="evList" maxlength="30" required placeholder="例如結婚" aria-label="事件" style="width:7.5em"><select name="era" aria-label="公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" name="y" min="1" max="9999" required placeholder="年" aria-label="年" style="width:5em"><select name="m" aria-label="月">${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1} 月</option>`).join('')}</select><select name="d" aria-label="日">${Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1} 日</option>`).join('')}</select><button type="submit" class="lnk">加</button><datalist id="evList">${[...new Set([...EV_SUG,...TAG_SUG])].map(x=>`<option value="${x}">`).join('')}</datalist></form>`:''}`;}
+const sortEv=a=>a.slice().sort((p,q)=>p.y-q.y||p.m-q.m||p.d-q.d);
 async function reloadCases(){
   try{if(CLOUD)TAG_SUG=await TagStore.list().catch(()=>TAG_SUG);CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
   catch(e){$('caseMsg').textContent='讀唔到命例：'+e.message;}
@@ -977,7 +986,7 @@ const CSV_COLS=[['名稱',c=>c.name],['性別',c=>c.input.sex===1?'男':'女'],[
   ['年',c=>c.input.y],['月',c=>c.input.m],['日',c=>c.input.d],['時',c=>c.input.h],['分',c=>c.input.mi],['子時換日',c=>c.input.zi],
   ['城市',c=>c.input.city],['經度',c=>c.input.lon],['時區',c=>c.input.tz],['夏令時間',c=>c.input.dst?'是':''],['真太陽時',c=>c.input.tst===false?'否':'是'],
   ['姓名',c=>c.input.name||''],['備註',c=>c.notes||''],['標籤',c=>(c.tags||[]).join(' ')],['新增者',c=>c.by||''],['準',c=>c.likes||0],['唔準',c=>c.unlikes||0],
-  ['補充備註',c=>(c.comments||[]).map(m=>`${m.by?m.by+'：':''}${m.body}`).join('\n---\n')]];
+  ['事件',c=>(c.input.events||[]).map(v=>`${v.t}:${v.y}-${v.m}-${v.d}`).join('; ')],['補充備註',c=>(c.comments||[]).map(m=>`${m.by?m.by+'：':''}${m.body}`).join('\n---\n')]];
 const csvCell=v=>{v=String(v??'');return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
 const toCSV=list=>'\ufeff'+[CSV_COLS.map(x=>x[0]).join(','),...list.map(c=>CSV_COLS.map(x=>csvCell(x[1](c))).join(','))].join('\r\n');
 function parseCSV(t){t=t.replace(/^\ufeff/,'');const rows=[];let row=[],f='',q=false;
@@ -992,6 +1001,7 @@ function caseFromRow(o){
   const input={name:o['姓名']||o['名稱']||'',sex:/女|坤|0/.test(o['性別']||'')?0:1,lunar:/農/.test(o['曆法']||''),leap:/是|1|true/i.test(o['閏月']||''),
     y:num('年',NaN),m:num('月',1),d:num('日',1),h:num('時',0),mi:num('分',0),zi:num('子時換日',1),city:num('城市',0),lon:num('經度',114.17),tz:num('時區',8),
     dst:/是|1|true/i.test(o['夏令時間']||''),tst:!/否|0|false/i.test(o['真太陽時']||'是')};
+  const ev=[...(o['事件']||'').matchAll(/([^:;]+):(-?\d+)-(\d+)-(\d+)/g)].map(x=>({t:x[1].trim().slice(0,30),y:+x[2],m:+x[3],d:+x[4]}));if(ev.length)input.events=sortEv(ev);
   if(!o['名稱']||isNaN(input.y))return null;
   return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤'])};}
 // 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變「確定？」，三秒內再撳先執行
@@ -999,7 +1009,7 @@ function twice(btn,label){if(btn.dataset.armed)return true;btn.dataset.armed='1'
   setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},3000);return false;}
 const busy=async(fn)=>{try{await fn();}catch(e){$('caseMsg').textContent='出錯：'+e.message;await reloadCases();$('caseMsg').textContent='出錯：'+e.message;return;}await reloadCases();};
 document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-resend],[data-open],[data-vote],[data-cvote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
+  const t=e.target.closest('[data-evgo],[data-evdel],[data-resend],[data-open],[data-vote],[data-cvote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
   if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
   if(t.hasAttribute('data-tagclear')){TAGF.clear();renderCases();return;}
   if(t.hasAttribute('data-edit')){EDIT=true;renderCases();return;}
@@ -1017,6 +1027,10 @@ document.addEventListener('click',e=>{
   if(t.dataset.addsug){const c=CASES.find(x=>x.id===t.dataset.id);if(c)busy(()=>Store.update(c.id,{tags:[...new Set([...(c.tags||[]),t.dataset.addsug])]}));return;}
   if(t.dataset.untag){const c=CASES.find(x=>x.id===t.dataset.id);busy(()=>Store.update(c.id,{tags:(c.tags||[]).filter(g=>g!==t.dataset.untag)}));return;}
   if(t.dataset.sug){const el=$('caseTags'),cur=parseTags(el.value);if(!cur.includes(t.dataset.sug))el.value=[...cur,t.dataset.sug].join(' ');return;}
+  if(t.dataset.evgo!==undefined){const c=CASES.find(x=>x.id===t.dataset.id),v=c&&(c.input.events||[])[+t.dataset.evgo];if(!v)return;
+    writeForm({...c.input,at:{y:v.y,m:v.m,d:v.d}});run(readForm());$('out').scrollIntoView({behavior:'smooth'});return;}
+  if(t.dataset.evdel!==undefined){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!twice(t,'確定？'))return;
+    const evs=(c.input.events||[]).filter((_,i)=>i!==+t.dataset.evdel);busy(()=>Store.update(c.id,{input:{...c.input,events:evs}}));return;}
   if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);run(c.input);renderCases();
     if(matchMedia('(max-width:1099px)').matches)$('caseNote').scrollIntoView({behavior:'smooth'});}
   else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
@@ -1038,6 +1052,12 @@ document.addEventListener('submit',e=>{
     if(fd.get('birth'))patch.input=S&&S.inp?{...S.inp}:readForm();
     busy(async()=>{await Store.update(c.id,patch);EDIT=false;if(patch.input){writeForm(patch.input);run(patch.input);}});}
   else if(f.id==='tagMgrAdd'){e.preventDefault();const add=parseTags($('tagMgrIn').value).filter(x=>!TAG_SUG.includes(x));$('tagMgrIn').value='';if(add.length){if(CLOUD&&!can.add()){$('caseMsg').textContent='登入先可以加標籤。';return;}busy(()=>TagStore.add(add));}}
+  else if(f.dataset.addev){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addev);if(!c)return;const fd=new FormData(f);
+    const t=String(fd.get('t')).trim(),n=+fd.get('y'),y=fd.get('era')==='-1'?1-n:n,m=+fd.get('m'),d=+fd.get('d');
+    if(!t||!n){return;}if(!validDate(y,m,d)){$('caseMsg').textContent='事件日期冇呢一日，請再揀過。';return;}
+    // 事件名順手加做命例標籤（例如結婚），新標籤亦加入標籤表
+    const tg=t.slice(0,30);busy(async()=>{await Store.update(c.id,{input:{...c.input,events:sortEv([...(c.input.events||[]),{t:tg,y,m,d}])},tags:[...new Set([...(c.tags||[]),tg])]});
+      if(!TAG_SUG.includes(tg))await TagStore.add([tg]).catch(()=>{});});}
   else if(f.dataset.addtag){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addtag),add=parseTags(f.querySelector('input').value);if(c&&add.length)busy(()=>Store.update(c.id,{tags:[...new Set([...(c.tags||[]),...add])]}));}
   else if(f.dataset.comment){e.preventDefault();const body=f.querySelector('textarea').value.trim();if(body)busy(()=>Store.comment(f.dataset.comment,body));}
   else if(f.id==='f'){CUR=null;EDIT=false;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));setTimeout(renderAuth);}
