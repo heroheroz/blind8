@@ -685,8 +685,8 @@ $('f').addEventListener('submit',e=>{e.preventDefault();run(readForm());});
 if(typeof Solar==='undefined'){$('err').textContent='曆法程式庫載入失敗，請重新整理頁面。';return;}
 let init={name:'Owner',sex:1,lunar:false,leap:false,y:1982,m:5,d:6,h:9,mi:25,zi:1,city:0,lon:114.17,tz:8,dst:false,tst:true};
 try{const s=localStorage.getItem('bazi-last');if(s)init=Object.assign(init,JSON.parse(s));}catch(e){}
-// 打開網站時日期預設為今年農曆新年（正月初一，以公曆填），時間用當下，其他欄沿用上次
-{const n=new Date(),ny=Lunar.fromYmd(n.getFullYear(),1,1).getSolar();Object.assign(init,{lunar:false,leap:false,y:ny.getYear(),m:ny.getMonth(),d:ny.getDay(),h:n.getHours(),mi:n.getMinutes()});}
+// 打開網站時日期時間預設為香港回歸（1997-07-01 00:00），其他欄沿用上次
+Object.assign(init,{lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0});
 writeForm(init);run(init);
 })();
 </script>
