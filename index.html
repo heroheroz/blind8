@@ -383,7 +383,7 @@ const $=id=>document.getElementById(id);
 
 /* ---------- form setup ---------- */
 function fillSel(el,arr){el.innerHTML=arr.map(([v,t])=>`<option value="${v}">${t}</option>`).join('');}
-fillSel($('h'),Array.from({length:24},(_,i)=>[i,pad(i)+' 時']));
+fillSel($('h'),Array.from({length:24},(_,i)=>[i,pad(i)+' 時 · '+'子丑寅卯辰巳午未申酉戌亥'[Math.floor((i+1)/2)%12]]));
 fillSel($('mi'),Array.from({length:60},(_,i)=>[i,pad(i)+' 分']));
 fillSel($('city'),CITIES.map((c,i)=>[i,c[0]]));
 const TZS=[];for(let i=-12;i<=14;i++)TZS.push(i);[-9.5,-3.5,3.5,4.5,5.5,5.75,6.5,9.5,10.5,12.75].forEach(v=>TZS.push(v));TZS.sort((a,b)=>a-b);
