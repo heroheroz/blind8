@@ -147,6 +147,10 @@ td.chain{position:relative;overflow:visible}
 .zg i{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .zg .zgn{position:absolute;right:-6px;top:-7px;font-family:var(--f-body);font-size:11px;font-weight:700;line-height:1.3;padding:0 3px;border-radius:7px;background:var(--ink);color:var(--paper)}
 .notes{font-size:12px;color:var(--muted);line-height:1.6}
+.rules{margin-top:10px;padding-top:10px;border-top:1px solid var(--soft)}
+.rules h4{margin:12px 0 4px;font-size:13px;color:var(--ink)}
+.rules ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.rules li b{color:var(--ink);margin-right:4px}
 .notes p{margin:0 0 4px}
 @media (max-width:520px){.big{font-size:32px}.cards{grid-template-columns:1fr 1fr 1fr}h1{font-size:24px}}
 @media (prefers-reduced-motion:no-preference){.cell{transition:background .15s,border-color .15s}}
@@ -226,7 +230,44 @@ td.chain{position:relative;overflow:visible}
 <section class="panel notes">
   <p><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
-  <p>元運用三元九運（每運廿年，2024–2043 為下元九運）。胎元、命宮、身宮用傳統算法。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
+  <p>元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、命宮、身宮用傳統算法。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
+  <div class="rules">
+  <p><b>本派規則列表</b>　排盤嘅招感、粘連、啟動全部跟以下規則計。要加或者改規則，講返編號就得。</p>
+  <h4>甲・計算範圍</h4>
+  <ol>
+    <li id="r-a1"><b>A1</b> 只計有顯示嘅柱。用「只顯示…」選項收埋嘅柱，同閂咗「三桓命宮柱」時嘅四條柱，完全唔計。</li>
+    <li id="r-a2"><b>A2</b> 元運柱要剔「元運參與招感粘連」先計；三桓命宮柱要剔「三桓命宮參與招感粘連」先計。兩個預設都唔計，柱照顯示。</li>
+    <li id="r-a3"><b>A3</b> 「顯示粘連線」嗰行嘅「大運流年流月流日」閂咗，呢四柱就唔計招感粘連；「招感字」嗰格只係收埋條線，照計。</li>
+    <li id="r-a4"><b>A4</b> 天干同天干計，地支同地支計，唔會跨行。柱同柱之間唔使相鄰。</li>
+  </ol>
+  <h4>乙・招感</h4>
+  <ol>
+    <li id="r-z1"><b>Z1 重字招合</b>　同一行有兩個或以上同一個字，招出佢嘅合字：天干五合（甲己、乙庚、丙辛、丁壬、戊癸），地支六合（子丑、寅亥、卯戌、辰酉、巳申、午未）。</li>
+    <li id="r-z2"><b>Z2 重字只招一個</b>　幾多個重字都只招一個字，擺喺最近嗰兩個重字中間。三個重字加一個 ↑，之後每多一個重字多一個 ↑，冇上限。</li>
+    <li id="r-z3"><b>Z3 夾拱</b>　兩個字喺天干或地支次序相差兩位，招出中間嗰個字，例如丙戊夾丁、子寅夾丑。次序循環計，所以壬甲夾癸、亥丑夾子。</li>
+    <li id="r-z4"><b>Z4 夾拱一對一</b>　每個字喺同一種夾只可以用一次，兩邊字一對一配，最近嘅先配，所以兩丙兩戊只夾兩個丁。</li>
+    <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字本身唔會再招感，亦唔會啟動其他字。</li>
+    <li id="r-z6"><b>Z6 合併顯示（選項）</b>　剔咗「同一招感字合併顯示」，同一行同一個招感字只顯示一個，寫 ×次數；只改顯示，唔改計算。</li>
+  </ol>
+  <h4>丙・粘連</h4>
+  <ol>
+    <li id="r-n1"><b>N1 伏吟</b>　同一個字。多過兩個時，按柱嘅次序逐個相連（例如三個己有兩條）。</li>
+    <li id="r-n2"><b>N2 連續</b>　次序相差一位嘅兩個字，例如甲乙、乙丙、子丑；循環計，所以癸甲、亥子都算。兩個字已經成立。</li>
+    <li id="r-n3"><b>N3 合</b>　天干五合、地支六合（同 Z1 嘅合字表）。</li>
+    <li id="r-n4"><b>N4 地支半合</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）其中兩個字，而且要包括中神（子、卯、午、酉），例如申子、子辰、午戌。只計地支。</li>
+    <li id="r-n5"><b>N5 招感字粘連</b>　招感字只同招佢出嚟嗰幾個來源字粘連：夾出嚟嘅算連續，招合出嚟嘅算合，唔同其他字粘連。</li>
+    <li id="r-n6"><b>N6 粘連力</b>　每條粘連喺字旁邊加一個 ↓，用加法，唔係乘數。</li>
+    <li id="r-n7"><b>N7 線</b>　柱與柱之間嘅粘連線畫喺天干同地支中間；招感字嘅線畫喺外面。線色跟兩端字嘅五行，兩端唔同五行就兩色交替。</li>
+  </ol>
+  <h4>丁・啟動</h4>
+  <ol>
+    <li id="r-q1"><b>Q1 天干</b>　盤上有呢個字嘅七殺（同陰陽、剋我，例如庚之於甲），而嗰個七殺冇粘連，或者七殺本身已經啟動，呢個字就啟動。</li>
+    <li id="r-q2"><b>Q2 地支</b>　盤上有同呢個字相沖、相害或相刑嘅字（刑計寅巳、巳申、申寅、丑戌、戌未、未丑、子卯；自刑唔計），條件同 Q1。</li>
+    <li id="r-q3"><b>Q3 遞迴</b>　啟動可以一層層傳落去：甲靠庚，庚有粘連但壬啟動咗庚，咁甲都啟動。每多一層多一個 ↑。</li>
+    <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
+    <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，↓ 照顯示但劃走，粘連標籤亦劃走。</li>
+  </ol>
+  </div>
 </section>
 </div>
 
