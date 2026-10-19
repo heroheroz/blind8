@@ -17,3 +17,15 @@ To share 命例 with every visitor, with sign-in:
 5. Sign up on the website, confirm the email, then run the last line of `schema.sql` with your email to make yourself admin.
 
 Everyone can read 命例. Signed-in users can add 命例, vote and add notes, and edit the 命例 they added. Only admins can delete 命例, delete tags in use, or edit other people's 命例.
+
+### Google, Facebook and Discord sign-in
+
+Each provider needs an app on its own site; paste its ID and secret into Supabase → Authentication → Sign In / Providers, and turn the provider on. Use this callback (redirect) URL in every provider app:
+
+`https://tuphvsxtqwasotnviwlb.supabase.co/auth/v1/callback`
+
+- Google: https://console.cloud.google.com → APIs & Services → Credentials → Create OAuth client ID (Web application). Fill in the OAuth consent screen first.
+- Facebook: https://developers.facebook.com → My Apps → Create app → add Facebook Login → Settings → Valid OAuth Redirect URIs.
+- Discord: https://discord.com/developers/applications → New Application → OAuth2 → Redirects.
+
+Also add `https://heroheroz.github.io/blind8/` under Supabase → Authentication → URL Configuration → Redirect URLs. A provider that is not turned on shows an error after its button is clicked.

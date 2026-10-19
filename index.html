@@ -180,6 +180,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cases input[type=text]#lgName{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .tags,.tagbar,.tagsug{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .pngbtn{font-size:13px;margin-left:10px;vertical-align:middle}#pngMsg{font-size:12px;margin-left:6px;font-weight:400}.pngcap{font-size:14px;margin:-4px 0 10px}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border:1px solid var(--soft);border-radius:8px;background:#fff;color:#333;text-decoration:none;font-weight:500}.gbtn+.gbtn{margin-top:6px}.gbtn b{font-family:Arial,sans-serif;font-size:16px}.gbtn:hover{background:#f6f6f6}
 .tags{margin-top:4px}.tagbar{margin:8px 0 0}
 .cfind{margin-top:10px;padding:8px;border:1px solid var(--soft);border-radius:8px}.cfind input[type=search]{width:100%;box-sizing:border-box}.cfind .row{margin-top:6px;gap:6px;flex-wrap:nowrap}.cfind .row input{flex:1;min-width:0}.cfind .cap{white-space:nowrap;font-size:12px}#findInfo:empty{display:none}
 .tag{font-size:12px;border:1px solid var(--line);background:var(--paper);color:var(--accent);border-radius:10px;padding:0 8px;cursor:pointer;line-height:1.6}
@@ -826,7 +827,7 @@ const saveSess=s=>{SESSION=s;try{s?localStorage.setItem('b8-session',JSON.string
 async function auth(path,body){
   const r=await fetch(CLOUD.url+'/auth/v1/'+path,{method:'POST',headers:{apikey:CLOUD.key,'Content-Type':'application/json'},body:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.msg||j.error_description||j.message||r.status);return j;}
-const sessFrom=j=>({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),user:{id:j.user.id,email:j.user.email,name:((j.user.user_metadata||{}).name||j.user.email.split('@')[0]).slice(0,40)}});
+const sessFrom=j=>({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),user:{id:j.user.id,email:j.user.email,name:((j.user.user_metadata||{}).name||(j.user.user_metadata||{}).full_name||(j.user.email||'用戶').split('@')[0]).slice(0,40)}});
 async function token(){
   if(!SESSION)return null;
   if(SESSION.expires_at-60<Date.now()/1000){try{saveSess(sessFrom(await auth('token?grant_type=refresh_token',{refresh_token:SESSION.refresh_token})));}catch(e){saveSess(null);ADMIN=false;return null;}}
@@ -904,8 +905,8 @@ function renderAuth(){
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
   $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();
   const box=$('caseAuth');if(!CLOUD){box.hidden=true;return;}box.hidden=false;
-  box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||'')}${ADMIN?' · <b class="adm">管理員</b>':''}</span> <button type="button" class="lnk" data-logout>登出</button>`
-    :`<form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
+  box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||SESSION.user.name||'')}${ADMIN?' · <b class="adm">管理員</b>':''}</span> <button type="button" class="lnk" data-logout>登出</button>`
+    :`${[['google','G','#4285f4','Google'],['facebook','f','#1877f2','Facebook'],['discord','D','#5865f2','Discord']].map(([pv,ic,col,nm])=>`<a class="gbtn" href="${CLOUD.url}/auth/v1/authorize?provider=${pv}&redirect_to=${encodeURIComponent(location.origin+location.pathname)}"><b style="color:${col}">${ic}</b> 用 ${nm} 登入</a>`).join('')}<p class="hint" style="text-align:center;margin:6px 0">或者用電郵</p><form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
   
 }
 function renderCases(){
@@ -1046,8 +1047,9 @@ $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$
     // 撳完確認電郵條 link 返嚟，網址會帶住登入資料
     const h=new URLSearchParams(location.hash.slice(1));
     if(h.get('access_token')){try{const r=await fetch(CLOUD.url+'/auth/v1/user',{headers:{apikey:CLOUD.key,Authorization:'Bearer '+h.get('access_token')}});const u=await r.json();
-      if(r.ok)saveSess({access_token:h.get('access_token'),refresh_token:h.get('refresh_token'),expires_at:+h.get('expires_at')||Math.floor(Date.now()/1000)+3600,user:{id:u.id,email:u.email,name:((u.user_metadata||{}).name||u.email.split('@')[0]).slice(0,40)}});}catch(e){}
+      if(r.ok)saveSess({access_token:h.get('access_token'),refresh_token:h.get('refresh_token'),expires_at:+h.get('expires_at')||Math.floor(Date.now()/1000)+3600,user:{id:u.id,email:u.email,name:((u.user_metadata||{}).name||(u.user_metadata||{}).full_name||(u.email||'用戶').split('@')[0]).slice(0,40)}});}catch(e){}
       history.replaceState(null,'',location.pathname+location.search);}
+    else if(h.get('error_description')){setTimeout(()=>{$('caseMsg').textContent='登入失敗：'+h.get('error_description');},500);history.replaceState(null,'',location.pathname+location.search);SESSION=loadSess();}
     else SESSION=loadSess();
     await checkAdmin();
   }
