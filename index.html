@@ -266,7 +266,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
       <label><input type="radio" name="cal" id="calL" value="lunar">農曆</label>
     </div>
     <div class="row">
-      <input type="number" id="y" min="1900" max="2100" aria-label="年"> 年
+      <select id="era" aria-label="公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" id="y" min="1" max="9999" aria-label="年"> 年
       <select id="m" aria-label="月"></select>
       <select id="d" aria-label="日"></select>
     </div>
@@ -403,17 +403,21 @@ $('city').addEventListener('change',()=>{const c=CITIES[$('city').value];if(c[1]
 $('lon').addEventListener('input',()=>{$('city').value=CITIES.length-1;});
 
 /* ---------- time correction ---------- */
-function eot(y,m,d){const N=Math.round((Date.UTC(y,m-1,d)-Date.UTC(y,0,0))/864e5);const B=2*Math.PI*(N-81)/364;return 9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B);}
+// 用儒略日計，1582 年 10 月之前自動用儒略曆（同 lunar-javascript 一致），公元前都計得
+const jd=(y,m,d,h=0,mi=0)=>Solar.fromYmdHms(y,m,d,h,mi,0).getJulianDay();
+const yearTxt=y=>y<=0?'公元前'+(1-y):''+y;
+function validDate(y,m,d){if(y===1582&&m===10&&d>4&&d<15)return false;
+  const jul=y<1582||(y===1582&&m<10),leap=jul?((y%4)+4)%4===0:(y%4===0&&y%100!==0)||y%400===0;
+  return d<=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31][m-1];}
+function eot(y,m,d){const N=Math.round(jd(y,m,d)-jd(y,1,1))+1;const B=2*Math.PI*(N-81)/364;return 9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B);}
 function correct(y,m,d,h,mi,tz,dst,lon,tst){
-  const utc=Date.UTC(y,m-1,d,h,mi)-(tz+(dst?1:0))*3600e3;
-  let ms,info;
-  if(tst){const lonMin=lon*4, e=eot(y,m,d);ms=utc+(lonMin+e)*60e3;
-    const diff=Math.round((ms-Date.UTC(y,m-1,d,h,mi))/60e3);
+  const off=(tz+(dst?1:0))*60;let diff,info;
+  if(tst){const lonMin=lon*4, e=eot(y,m,d);diff=Math.round(lonMin+e-off);
     info={label:'真太陽時',detail:`經度時差 ${fmtMin(lonMin-tz*60)}，均時差 ${fmtMin(e)}${dst?'，扣夏令 1 小時':''}，合共 ${fmtMin(diff)}`};}
-  else{ms=utc+8*3600e3;const diff=Math.round((ms-Date.UTC(y,m-1,d,h,mi))/60e3);
+  else{diff=Math.round(480-off);
     info={label:'北京時間',detail:diff?`換算 ${fmtMin(diff)}`:'無需換算'};}
-  const t=new Date(ms);
-  return {y:t.getUTCFullYear(),m:t.getUTCMonth()+1,d:t.getUTCDate(),h:t.getUTCHours(),mi:t.getUTCMinutes(),info};
+  const t=Solar.fromJulianDay(jd(y,m,d,h,mi)+(diff+0.5/60)/1440);
+  return {y:t.getYear(),m:t.getMonth(),d:t.getDay(),h:t.getHour(),mi:t.getMinute(),info};
 }
 function fmtMin(x){const s=x<0?'−':'+';x=Math.abs(Math.round(x));return s+(x>=60?Math.floor(x/60)+' 小時 ':'')+(x%60)+' 分';}
 
@@ -623,12 +627,12 @@ let S=null;
 function compute(inp){
   let y=inp.y,m=inp.m,d=inp.d;
   if(inp.lunar){const ls=Lunar.fromYmdHms(inp.y,inp.leap?-inp.m:inp.m,inp.d,inp.h,inp.mi,0).getSolar();y=ls.getYear();m=ls.getMonth();d=ls.getDay();}
-  else{const t=new Date(Date.UTC(y,m-1,d));if(t.getUTCMonth()!==m-1)throw new Error(`${y} 年 ${m} 月冇 ${d} 號，請再揀過日子。`);}
+  else if(!validDate(y,m,d))throw new Error(y===1582&&m===10?'1582 年 10 月 5 至 14 號因為改曆冇呢啲日子，請再揀過。':`${yearTxt(y)} 年 ${m} 月冇 ${d} 號，請再揀過日子。`);
   const c=correct(y,m,d,inp.h,inp.mi,inp.tz,inp.dst,inp.lon,inp.tst);
   const sol=Solar.fromYmdHms(c.y,c.m,c.d,c.h,c.mi,0);
   const lun=sol.getLunar();const ec=lun.getEightChar();ec.setSect(inp.zi);
   const yun=ec.getYun(inp.sex,1);
-  const dys=yun.getDaYun(10);
+  const dys=yun.getDaYun(13);
   const P=[ec.getYear(),ec.getMonth(),ec.getDay(),ec.getTime()];
   return {inp,birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,dm:gi(P[2][0])};
 }
@@ -758,16 +762,16 @@ function render(){
   const dStrip=S.ds.map((x,i)=>{const lu=x.sol.getLunar();return gzCell(x.gz,`${x.sol.getMonth()}/${x.sol.getDay()}`,`${lunarDay(lu.getDay())} ${shishen(dm,gi(x.gz[0]))}`,i===S.dd,x.sol.toYmd()===today?'today':'',`data-dd="${i}"`);}).join('');
 
   const bs=S.birthSolar;
-  const inLabel=inp.lunar?`農曆 ${inp.y}年${inp.leap?'閏':''}${LMON[inp.m-1]}月${lunarDay(inp.d)}（公曆 ${bs.getYear()}-${pad(bs.getMonth())}-${pad(bs.getDay())}）`:`公曆 ${bs.getYear()}-${pad(bs.getMonth())}-${pad(bs.getDay())}`;
+  const inLabel=inp.lunar?`農曆 ${yearTxt(inp.y)}年${inp.leap?'閏':''}${LMON[inp.m-1]}月${lunarDay(inp.d)}（公曆 ${yearTxt(bs.getYear())}-${pad(bs.getMonth())}-${pad(bs.getDay())}）`:`公曆 ${yearTxt(bs.getYear())}-${pad(bs.getMonth())}-${pad(bs.getDay())}`;
 
   $('out').innerHTML=`
   <section class="panel">
     <div class="summary">
       <div class="name">${esc(inp.name||'未命名')}　<span style="font-size:15px;color:var(--muted)">${sex}</span></div>
       <div><span class="k">出生</span>${inLabel} ${pad(inp.h)}:${pad(inp.mi)}</div>
-      <div><span class="k">${c.info.label}</span><b>${sol.getYear()}-${pad(sol.getMonth())}-${pad(sol.getDay())} ${pad(sol.getHour())}:${pad(sol.getMinute())}</b>（${c.info.detail}）</div>
+      <div><span class="k">${c.info.label}</span><b>${yearTxt(sol.getYear())}-${pad(sol.getMonth())}-${pad(sol.getDay())} ${pad(sol.getHour())}:${pad(sol.getMinute())}</b>（${c.info.detail}）</div>
       <div><span class="k">農曆</span>${lun.getYearInGanZhi()}年 ${lun.getMonth()<0?'閏':''}${LMON[Math.abs(lun.getMonth())-1]}月${lunarDay(lun.getDay())} ${lun.getTimeZhi()}時</div>
-      <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${startSol.getYear()}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
+      <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
   <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><span class="hint" id="pngMsg"></span></h2><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日</label><span class="hint">（招感字：只係隱藏條線，粘連力照計；大運流年流月流日：閂咗只收埋條線，照計）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div>${table}${CHAIN_LEGEND}${wx}</section>
@@ -803,17 +807,17 @@ $('out').addEventListener('click',e=>{
 
 function readForm(){
   return {name:$('name').value.trim(),sex:$('sexM').checked?1:0,lunar:isLunar(),leap:$('leap').checked,
-    y:+$('y').value,m:+$('m').value,d:+$('d').value,h:+$('h').value,mi:+$('mi').value,zi:+$('zi').value,
+    y:$('era').value==='-1'?1-(+$('y').value):+$('y').value,m:+$('m').value,d:+$('d').value,h:+$('h').value,mi:+$('mi').value,zi:+$('zi').value,
     city:+$('city').value,lon:parseFloat($('lon').value),tz:parseFloat($('tz').value),dst:$('dst').checked,tst:$('tst').checked};
 }
 function writeForm(v){
   $('name').value=v.name||'';(v.sex===0?$('sexF'):$('sexM')).checked=true;(v.lunar?$('calL'):$('calS')).checked=true;refreshMD();
-  $('leap').checked=!!v.leap;$('y').value=v.y;$('m').value=v.m;$('d').value=v.d;$('h').value=v.h;$('mi').value=v.mi;$('zi').value=v.zi||1;
+  $('leap').checked=!!v.leap;$('era').value=v.y<=0?'-1':'1';$('y').value=v.y<=0?1-v.y:v.y;$('m').value=v.m;$('d').value=v.d;$('h').value=v.h;$('mi').value=v.mi;$('zi').value=v.zi||1;
   $('city').value=v.city??0;$('lon').value=v.lon;$('tz').value=v.tz;$('dst').checked=!!v.dst;$('tst').checked=v.tst!==false;
 }
 function run(v){
   $('err').textContent='';
-  if(!(v.y>=1900&&v.y<=2100)){$('err').textContent='年份請填 1900 至 2100。';return;}
+  if(!(v.y>=-2999&&v.y<=9999)){$('err').textContent='年份請填公元前 3000 年至公元 9999 年。';return;}
   if(isNaN(v.lon)){$('err').textContent='請填出生地經度，或者揀城市。';return;}
   try{S=compute(v);pickToday();render();try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}}
   catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
@@ -903,7 +907,7 @@ const tagUse=()=>{const n={};CASES.forEach(c=>(c.tags||[]).forEach(t=>n[t]=(n[t]
 const byUse=(a,n=tagUse())=>[...a].sort((x,y)=>(n[y]||0)-(n[x]||0)||x.localeCompare(y));
 const caseScore=c=>(c.likes||0)+(c.unlikes||0)+(c.comments||[]).length+(c.tags||[]).length;
 const tagChips=(tags,id)=>(tags||[]).length?`<span class="tags">${byUse(tags).map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}">#${esc(t)}</button>${id?`<button type="button" class="tagx" data-untag="${esc(t)}" data-id="${id}" aria-label="移除標籤 ${esc(t)}">×</button>`:''}`).join('')}</span>`:'';
-const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${v.y}-${pad(v.m)}-${pad(v.d)} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;
+const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${yearTxt(v.y)}-${pad(v.m)}-${pad(v.d)} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;
 const voteBtns=c=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
   return `<span class="votes"><button type="button" class="vb${c.myVote===1?' on':''}" data-vote="1" data-id="${c.id}" aria-pressed="${c.myVote===1}"${dis}>準 ${c.likes}</button><button type="button" class="vb no${c.myVote===-1?' on':''}" data-vote="-1" data-id="${c.id}" aria-pressed="${c.myVote===-1}"${dis}>唔準 ${c.unlikes}</button></span>`;};
 const cvoteBtns=(c,m)=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
