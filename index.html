@@ -153,10 +153,71 @@ td.chain{position:relative;overflow:visible}
 .rules li b{color:var(--ink);margin-right:4px}
 .notes p{margin:0 0 4px}
 @media (max-width:520px){.big{font-size:32px}.cards{grid-template-columns:1fr 1fr 1fr}h1{font-size:24px}}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px;max-width:1900px;margin:0 auto;align-items:start}
+.layout>.wrap{max-width:none;margin:0;min-width:0}
+.cases{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding:12px 14px}
+.cases summary{cursor:pointer;list-style:none}.cases summary::-webkit-details-marker{display:none}
+.cases summary h2{display:inline;margin:0}.cases summary::after{content:'▾';color:var(--muted);margin-left:6px}
+.cases details:not([open]) summary::after{content:'▸'}
+.cadd{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.cadd textarea,.cases input[type=search]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;resize:vertical}
+button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
+.clist{list-style:none;margin:10px 0 6px;padding:0;display:flex;flex-direction:column;gap:6px}
+.case{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--bg)}
+.case.on{border-color:var(--accent);background:var(--accent-soft)}
+.cname{all:unset;cursor:pointer;display:flex;flex-direction:column;width:100%;font-size:12px;color:var(--muted)}
+.cname b{font-size:15px;color:var(--ink)}.cname:focus-visible{outline:2px solid var(--accent)}
+.cnote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.votes{display:inline-flex;gap:4px;margin-top:4px}
+.vb{font-size:12px;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:1px 9px;cursor:pointer}
+.vb.on{background:var(--good);border-color:var(--good);color:var(--paper)}
+.vb.no.on{background:var(--bad);border-color:var(--bad)}
+.lnk{all:unset;cursor:pointer;color:var(--accent);font-size:13px;padding:2px 4px}.lnk.del{color:var(--bad)}
+.casenote{border-color:var(--accent)}
+.cbody,.ccom{white-space:pre-wrap;overflow-wrap:anywhere}
+.ccom{border-top:1px solid var(--soft);padding-top:6px;margin-top:6px}.ccom .hint{display:block;font-size:11px}
+.tags,.tagbar,.tagsug{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.tags{margin-top:4px}.tagbar{margin:8px 0 0}
+.tag{font-size:12px;border:1px solid var(--line);background:var(--paper);color:var(--accent);border-radius:10px;padding:0 8px;cursor:pointer;line-height:1.6}
+.tag.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}.tag small{color:inherit;opacity:.7}
+.tag.sug{color:var(--muted);border-style:dashed}
+.tagmgr{margin:10px 0 6px;font-size:13px}.tagmgr summary{cursor:pointer;color:var(--accent)}
+.tagmgr input{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.tagm{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:0 2px 0 8px;font-size:12px;background:var(--paper)}.tagm small{color:var(--muted)}.tagm .tagx{margin:0 4px}
+.tagx{all:unset;cursor:pointer;color:var(--muted);font-size:12px;margin:0 4px 0 -2px}
+.layout:has(#caseBox:not([open])){grid-template-columns:42px minmax(0,1fr)}
+@media (min-width:1100px){.cases:has(#caseBox:not([open])){padding:10px 6px}
+  .cases details:not([open]) summary{writing-mode:vertical-rl;letter-spacing:.2em}
+  .cases details:not([open]) summary h2{font-size:15px}}
+.cases summary{display:flex;align-items:center;gap:6px}.cases summary::after{margin-left:auto}
+@media (max-width:1099px){.layout{grid-template-columns:minmax(0,1fr)}.cases{position:static;max-height:none}}
 @media (prefers-reduced-motion:no-preference){.cell{transition:background .15s,border-color .15s}}
 </style>
 </head><body>
 
+<div class="layout">
+<aside class="panel cases" aria-label="命例">
+<details id="caseBox" open>
+<summary title="打開／收埋命例"><h2>命例 <span class="hint" id="caseCount">0</span></h2></summary>
+<form id="caseAdd" class="cadd">
+  <input type="text" id="caseName" maxlength="60" placeholder="命例名稱（留空就用姓名）">
+  <textarea id="caseNotes" rows="3" maxlength="2000" placeholder="備註（可留空）"></textarea>
+  <input type="text" id="caseTags" maxlength="200" placeholder="標籤，用逗號或空格分隔">
+  <div class="tagsug" aria-label="常用標籤"></div>
+  <button type="submit" class="go sm">加入目前命盤</button>
+</form>
+<input type="search" id="caseQ" placeholder="搵命例（名、備註、標籤）" aria-label="搵命例">
+<div id="tagBar" class="tagbar"></div>
+<ul id="caseList" class="clist"></ul>
+<details class="tagmgr"><summary>管理標籤</summary>
+  <div id="tagMgrList" class="tagbar"></div>
+  <form id="tagMgrAdd" class="row" style="margin-top:6px"><input type="text" id="tagMgrIn" maxlength="100" placeholder="新標籤，例如夏仲奇老師" aria-label="新標籤" style="flex:1"><button type="submit" class="lnk">加</button></form>
+  <p class="hint" style="margin-top:4px">加咗嘅標籤會喺上面變成可以撳嘅建議。刪除標籤會由所有命例移除。</p>
+</details>
+<p class="hint" id="caseMsg"></p>
+<div class="row"><button type="button" class="lnk" id="caseExport">匯出</button><label class="lnk">匯入<input type="file" id="caseImport" accept="application/json,.json" hidden></label></div>
+</details>
+</aside>
 <div class="wrap">
 <header>
   <h1>盲派八字排盤</h1>
@@ -225,6 +286,7 @@ td.chain{position:relative;overflow:visible}
 </form>
 </section>
 
+<section id="caseNote" class="panel casenote" hidden></section>
 <div id="out" class="wrap" style="gap:18px"></div>
 
 <section class="panel notes">
@@ -270,7 +332,9 @@ td.chain{position:relative;overflow:visible}
   </div>
 </section>
 </div>
+</div>
 
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
 <script>
 (function(){
@@ -728,6 +792,117 @@ let init={name:'Owner',sex:1,lunar:false,leap:false,y:1982,m:5,d:6,h:9,mi:25,zi:
 try{const s=localStorage.getItem('bazi-last');if(s)init=Object.assign(init,JSON.parse(s));}catch(e){}
 // 打開網站時日期時間預設為香港回歸（1997-07-01 00:00），其他欄沿用上次
 Object.assign(init,{lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0});
+/* ---------- 命例 ---------- */
+// 有填 B8_CLOUD（Supabase）就同所有人共享；冇就只存喺呢個瀏覽器
+const CLOUD=(window.B8_CLOUD&&window.B8_CLOUD.url&&window.B8_CLOUD.key)?window.B8_CLOUD:null;
+const LS_CASES='b8-cases';
+const voter=(()=>{try{let v=localStorage.getItem('b8-voter');if(!v){v=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now();localStorage.setItem('b8-voter',v);}return v;}catch(e){return 'anon';}})();
+const lsGet=()=>{try{return JSON.parse(localStorage.getItem(LS_CASES)||'[]');}catch(e){return [];}};
+const lsSet=a=>{try{localStorage.setItem(LS_CASES,JSON.stringify(a));return true;}catch(e){return false;}};
+async function api(path,opt={}){
+  const r=await fetch(CLOUD.url.replace(/\/$/,'')+'/rest/v1/'+path,{...opt,headers:{apikey:CLOUD.key,Authorization:'Bearer '+CLOUD.key,'Content-Type':'application/json',...(opt.headers||{})}});
+  if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,120));
+  const t=await r.text();return t?JSON.parse(t):null;}
+const Store={
+  async list(){
+    if(!CLOUD)return lsGet();
+    const rows=await api('cases?select=id,created_at,name,input,notes,tags,votes(voter,vote),comments(id,created_at,body)&order=created_at.desc');
+    return rows.map(r=>({id:r.id,created:r.created_at,name:r.name,input:r.input,notes:r.notes||'',tags:r.tags||[],
+      likes:r.votes.filter(v=>v.vote===1).length,unlikes:r.votes.filter(v=>v.vote===-1).length,myVote:(r.votes.find(v=>v.voter===voter)||{}).vote||0,
+      comments:(r.comments||[]).sort((a,b)=>a.created_at<b.created_at?-1:1).map(c=>({t:c.created_at,body:c.body}))}));},
+  async add(c){
+    if(!CLOUD){const a=lsGet(),x={id:'L'+Date.now(),created:new Date().toISOString(),likes:0,unlikes:0,myVote:0,comments:[],tags:[],...c};a.unshift(x);if(!lsSet(a))throw new Error('瀏覽器唔畀儲存');return x.id;}
+    const r=await api('cases',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({name:c.name,input:c.input,notes:c.notes,tags:c.tags||[]})});return r[0].id;},
+  async vote(id,v){
+    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;if(x.myVote===1)x.likes--;if(x.myVote===-1)x.unlikes--;x.myVote=v;if(v===1)x.likes++;if(v===-1)x.unlikes++;lsSet(a);return;}
+    await api('votes?on_conflict=case_id,voter',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({case_id:id,voter,vote:v})});},
+  async comment(id,body){
+    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({t:new Date().toISOString(),body});lsSet(a);return;}
+    await api('comments',{method:'POST',body:JSON.stringify({case_id:id,body})});},
+  async setTags(id,tags){
+    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.tags=tags;lsSet(a);return;}
+    await api('cases?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify({tags})});},
+  async remove(id){if(!CLOUD)lsSet(lsGet().filter(c=>c.id!==id));}
+};
+let CASES=[],CUR=null,Q='';const TAGF=new Set();
+// 常用標籤：可以自己加減，記喺呢個瀏覽器
+let TAG_SUG=(()=>{try{const v=JSON.parse(localStorage.getItem('b8-tagsug'));if(Array.isArray(v))return v;}catch(e){}return ['雙胞胎','結婚','離婚','生死','生仔','兄弟數目','父母','事業','財運','疾病'];})();
+const saveSug=()=>{try{localStorage.setItem('b8-tagsug',JSON.stringify(TAG_SUG));}catch(e){}};
+function renderSug(){
+  document.querySelector('.tagsug').innerHTML=TAG_SUG.map(t=>`<button type="button" class="tag sug" data-sug="${esc(t)}">+${esc(t)}</button>`).join('');
+  const used={};CASES.forEach(c=>(c.tags||[]).forEach(t=>used[t]=(used[t]||0)+1));
+  const all=[...new Set([...TAG_SUG,...Object.keys(used)])];
+  $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span><button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button></span>`).join(''):'<span class="hint">未有標籤。</span>';
+}
+const parseTags=t=>[...new Set(String(t||'').split(/[,，、\s]+/).map(x=>x.trim().replace(/^#/,'')).filter(Boolean).map(x=>x.slice(0,30)))];
+const tagChips=(tags,id)=>(tags||[]).length?`<span class="tags">${tags.map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}">#${esc(t)}</button>${id?`<button type="button" class="tagx" data-untag="${esc(t)}" data-id="${id}" aria-label="移除標籤 ${esc(t)}">×</button>`:''}`).join('')}</span>`:'';
+const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${v.y}-${pad(v.m)}-${pad(v.d)} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;
+const voteBtns=c=>`<span class="votes"><button type="button" class="vb${c.myVote===1?' on':''}" data-vote="1" data-id="${c.id}" aria-pressed="${c.myVote===1}" title="覺得準">準 ${c.likes}</button><button type="button" class="vb no${c.myVote===-1?' on':''}" data-vote="-1" data-id="${c.id}" aria-pressed="${c.myVote===-1}" title="覺得唔準">唔準 ${c.unlikes}</button></span>`;
+function renderCases(){
+  const list=CASES.filter(c=>(!Q||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
+  const cnt={};CASES.forEach(c=>(c.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
+  $('tagBar').innerHTML=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b)).map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}" aria-pressed="${TAGF.has(t)}">#${esc(t)} <small>${cnt[t]}</small></button>`).join('')+(TAGF.size?'<button type="button" class="lnk" data-tagclear>清除篩選</button>':'');
+  $('caseCount').textContent=CASES.length;
+  $('caseList').innerHTML=list.length?list.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
+    :`<li class="hint">${CASES.length?'搵唔到。':'未有命例。排好盤之後，喺上面填備註再撳「加入目前命盤」。'}</li>`;
+  showCase(CASES.find(c=>c.id===CUR));
+  renderSug();
+}
+function showCase(c){
+  const box=$('caseNote');if(!c){box.hidden=true;box.innerHTML='';return;}
+  box.hidden=false;
+  box.innerHTML=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">命例：${esc(c.name)}</h2><span class="row">${voteBtns(c)}<button type="button" class="lnk" data-close>收埋</button>${CLOUD?'':`<button type="button" class="lnk del" data-del="${c.id}">刪除</button>`}</span></div>
+    <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}</p>
+    <div class="row" style="margin-bottom:8px">${tagChips(c.tags,c.id)}<form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="加標籤" aria-label="加標籤" style="width:9em"><button type="submit" class="lnk">加</button></form></div>
+    ${c.notes?`<div class="cbody">${esc(c.notes)}</div>`:''}
+    ${c.comments.map(m=>`<div class="ccom"><span class="hint">${esc(String(m.t).slice(0,10))}</span>${esc(m.body)}</div>`).join('')}
+    <form class="cadd" data-comment="${c.id}"><textarea rows="2" maxlength="2000" placeholder="加解釋或者補充備註" required></textarea><button type="submit" class="go sm">加備註</button></form>`;
+}
+async function reloadCases(){
+  try{CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
+  catch(e){$('caseMsg').textContent='讀唔到命例：'+e.message;}
+  renderCases();
+}
+const busy=async(fn)=>{try{await fn();}catch(e){$('caseMsg').textContent='出錯：'+e.message;}await reloadCases();};
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-open],[data-vote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-tagdel]');if(!t)return;
+  if(t.dataset.tagdel){const g=t.dataset.tagdel,hit=CASES.filter(c=>(c.tags||[]).includes(g));
+    if(hit.length&&!confirm(`刪除標籤「${g}」？有 ${hit.length} 個命例用緊，會一齊移除。`))return;
+    TAG_SUG=TAG_SUG.filter(x=>x!==g);saveSug();TAGF.delete(g);
+    busy(async()=>{for(const c of hit)await Store.setTags(c.id,c.tags.filter(x=>x!==g));});return;}
+  if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
+  if(t.hasAttribute('data-tagclear')){TAGF.clear();renderCases();return;}
+  if(t.dataset.untag){const c=CASES.find(x=>x.id===t.dataset.id);busy(()=>Store.setTags(c.id,(c.tags||[]).filter(g=>g!==t.dataset.untag)));return;}
+  if(t.dataset.sug){const el=$('caseTags'),cur=parseTags(el.value);if(!cur.includes(t.dataset.sug))el.value=[...cur,t.dataset.sug].join(' ');return;}
+  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;writeForm(c.input);run(c.input);renderCases();
+    if(matchMedia('(max-width:1099px)').matches)$('caseNote').scrollIntoView({behavior:'smooth'});}
+  else if(t.dataset.vote){const c=CASES.find(x=>x.id===t.dataset.id),v=+t.dataset.vote;busy(()=>Store.vote(c.id,c.myVote===v?0:v));}
+  else if(t.hasAttribute('data-close')){CUR=null;renderCases();}
+  else if(t.dataset.del){if(confirm('刪除呢個命例？'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
+  else if(t.id==='caseExport'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(CLOUD?CASES:lsGet(),null,1)],{type:'application/json'}));a.download='命例.json';a.click();}
+});
+document.addEventListener('submit',e=>{
+  const f=e.target;
+  if(f.id==='caseAdd'){e.preventDefault();const input=S&&S.inp?{...S.inp}:readForm();
+    const name=$('caseName').value.trim()||input.name||'未命名',notes=$('caseNotes').value.trim();
+    const tags=parseTags($('caseTags').value);
+    busy(async()=>{CUR=await Store.add({name,input,notes,tags});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';});}
+  else if(f.id==='tagMgrAdd'){e.preventDefault();const add=parseTags($('tagMgrIn').value).filter(x=>!TAG_SUG.includes(x));if(add.length){TAG_SUG=[...TAG_SUG,...add];saveSug();}$('tagMgrIn').value='';renderSug();}
+  else if(f.dataset.addtag){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addtag),add=parseTags(f.querySelector('input').value);if(c&&add.length)busy(()=>Store.setTags(c.id,[...new Set([...(c.tags||[]),...add])]));}
+  else if(f.dataset.comment){e.preventDefault();const body=f.querySelector('textarea').value.trim();if(body)busy(()=>Store.comment(f.dataset.comment,body));}
+  else if(f.id==='f'){CUR=null;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));}
+});
+$('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
+$('caseImport').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;
+  try{const inc=JSON.parse(await file.text());if(!Array.isArray(inc))throw new Error('格式唔啱');
+    if(CLOUD){for(const c of inc)if(c&&c.name&&c.input)await Store.add({name:c.name,input:c.input,notes:c.notes||''});}
+    else{const a=lsGet(),ids=new Set(a.map(c=>c.id));inc.forEach(c=>{if(c&&c.name&&c.input&&!ids.has(c.id))a.push({likes:0,unlikes:0,myVote:0,comments:[],...c});});lsSet(a);}
+  }catch(err){$('caseMsg').textContent='匯入失敗：'+err.message;}e.target.value='';reloadCases();});
+renderSug();
+// 側欄收埋／打開：記住上次；細畫面預設收埋
+{let o=null;try{o=localStorage.getItem('b8-side');}catch(e){}$('caseBox').open=o?o==='1':!matchMedia('(max-width:1099px)').matches;}
+$('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$('caseBox').open?'1':'0');}catch(e){}});
+reloadCases();
 writeForm(init);run(init);
 })();
 </script>
