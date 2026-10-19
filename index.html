@@ -895,7 +895,7 @@ const Store={
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;if(x.myVote===1)x.likes--;if(x.myVote===-1)x.unlikes--;x.myVote=v;if(v===1)x.likes++;if(v===-1)x.unlikes++;lsSet(a);return;}
     await api('votes?on_conflict=case_id,voter',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({case_id:id,voter:SESSION.user.id,vote:v})});},
   async comment(id,body){
-    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({id:'C'+Date.now(),t:new Date().toISOString(),body,by:'我',likes:0,unlikes:0,myVote:0});lsSet(a);return;}
+    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({id:'C'+Date.now()+'_'+x.comments.length,t:new Date().toISOString(),body,by:'我',likes:0,unlikes:0,myVote:0});lsSet(a);return;}
     await api('comments',{method:'POST',body:JSON.stringify({case_id:id,body,author_name:myName()})});},
   // 每條備註都可以投準／唔準
   async cvote(caseId,cid,v){
@@ -1091,14 +1091,20 @@ $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();})
 $('tagQ').addEventListener('input',e=>{TQ=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const b=[...document.querySelectorAll('#tagBar [data-tagf]')].find(x=>!TAGF.has(x.dataset.tagf));if(b){TAGF.add(b.dataset.tagf);TQ='';e.target.value='';renderCases();}});
 $('caseImport').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;
-  // 匯入只會新增命例（名稱、出生資料、備註、標籤）；準唔準同補充備註唔會匯入
-  let n=0,bad=0;
+  // 匯入只會新增命例（名稱、出生資料、備註、標籤、補充備註）；準唔準唔會匯入
+  // 同名又同出生時間嘅命例當係重複，唔會再加
+  let n=0,bad=0,dup=0;
   try{if(!can.io())throw new Error('只有管理員可以匯入');
     const rows=parseCSV(await file.text());if(!rows.length)throw new Error('檔案冇資料');
-    for(const o of rows){const c=caseFromRow(o);if(!c){bad++;continue;}await Store.add(c);n++;}
+    const ck=c=>[c.name.trim(),c.input.lunar,c.input.y,c.input.m,c.input.d,c.input.h,c.input.mi].join('|');
+    const seen=new Set(CASES.map(ck));
+    for(const o of rows){const c=caseFromRow(o);if(!c){bad++;continue;}if(seen.has(ck(c))){dup++;continue;}seen.add(ck(c));
+      const id=await Store.add(c);n++;
+      // 匯出時每條補充備註係「作者：內容」，用 --- 分隔；作者係電郵就剷走，因為匯入後作者會變成匯入嗰個人
+      for(const b of (o['補充備註']||'').split(/\n-{3,}\n/).map(x=>x.replace(/^[^\s：]+@[^\s：]+：/,'').trim()).filter(Boolean))await Store.comment(id,b.slice(0,2000));}
     const nt=[...new Set(rows.flatMap(o=>parseTags(o['標籤'])))].filter(x=>!TAG_SUG.includes(x));if(nt.length)await TagStore.add(nt).catch(()=>{});
   }catch(err){$('caseMsg').textContent='匯入失敗：'+err.message;e.target.value='';return;}
-  e.target.value='';await reloadCases();$('caseMsg').textContent=`匯入咗 ${n} 個命例${bad?`，${bad} 行缺名稱或年份冇匯入`:''}。`;});
+  e.target.value='';await reloadCases();$('caseMsg').textContent=`匯入咗 ${n} 個命例${dup?`，${dup} 個已經有咗冇再加`:''}${bad?`，${bad} 行缺名稱或年份冇匯入`:''}。`;});
 // 側欄收埋／打開：記住上次；細畫面預設收埋
 {let o=null;try{o=localStorage.getItem('b8-side');}catch(e){}$('caseBox').open=o?o==='1':!matchMedia('(max-width:1099px)').matches;}
 $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$('caseBox').open?'1':'0');}catch(e){}});
