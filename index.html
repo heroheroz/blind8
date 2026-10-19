@@ -157,9 +157,9 @@ td.chain{position:relative;overflow:visible}
 .layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px;max-width:1900px;margin:0 auto;align-items:start}
 .layout>.wrap{max-width:none;margin:0;min-width:0}
 .cases{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding:12px 14px}
-.cases summary{cursor:pointer;list-style:none}.cases summary::-webkit-details-marker{display:none}
-.cases summary h2{display:inline;margin:0}.cases summary::after{content:'▾';color:var(--muted);margin-left:6px}
-.cases details:not([open]) summary::after{content:'▸'}
+#caseBox>summary{cursor:pointer;list-style:none}#caseBox>summary::-webkit-details-marker{display:none}
+#caseBox>summary h2{display:inline;margin:0}#caseBox>summary::after{content:'▾';color:var(--muted);margin-left:6px}
+#caseBox:not([open])>summary::after{content:'▸'}
 .cadd{display:flex;flex-direction:column;gap:6px;margin:10px 0}
 .cadd textarea,.cases input[type=search]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;resize:vertical}
 button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
@@ -185,15 +185,17 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cauth{margin:8px 0;font-size:13px}.cauth .adm{color:var(--good)}
 .cases input[type=email],.cases input[type=password],.casenote input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .vb:disabled{opacity:.6;cursor:default}
+.qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
+.more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
 .tagmgr{margin:10px 0 6px;font-size:13px}.tagmgr summary{cursor:pointer;color:var(--accent)}
 .tagmgr input{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
 .tagm{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:0 2px 0 8px;font-size:12px;background:var(--paper)}.tagm small{color:var(--muted)}.tagm .tagx{margin:0 4px}
 .tagx{all:unset;cursor:pointer;color:var(--muted);font-size:12px;margin:0 4px 0 -2px}
 .layout:has(#caseBox:not([open])){grid-template-columns:42px minmax(0,1fr)}
 @media (min-width:1100px){.cases:has(#caseBox:not([open])){padding:10px 6px}
-  .cases details:not([open]) summary{writing-mode:vertical-rl;letter-spacing:.2em}
-  .cases details:not([open]) summary h2{font-size:15px}}
-.cases summary{display:flex;align-items:center;gap:6px}.cases summary::after{margin-left:auto}
+  #caseBox:not([open])>summary{writing-mode:vertical-rl;letter-spacing:.2em}
+  #caseBox:not([open])>summary h2{font-size:15px}}
+#caseBox>summary{display:flex;align-items:center;gap:6px}#caseBox>summary::after{margin-left:auto}
 @media (max-width:1099px){.layout{grid-template-columns:minmax(0,1fr)}.cases{position:static;max-height:none}}
 @media (prefers-reduced-motion:no-preference){.cell{transition:background .15s,border-color .15s}}
 </style>
@@ -205,11 +207,12 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <summary title="打開／收埋命例"><h2>命例 <span class="hint" id="caseCount">0</span></h2></summary>
 <div id="caseAuth" class="cauth" hidden></div>
 <form id="caseAdd" class="cadd">
-  <input type="text" id="caseName" maxlength="60" placeholder="命例名稱（留空就用姓名）">
-  <textarea id="caseNotes" rows="3" maxlength="2000" placeholder="備註（可留空）"></textarea>
-  <input type="text" id="caseTags" maxlength="200" placeholder="標籤，用逗號或空格分隔">
-  <div class="tagsug" aria-label="常用標籤"></div>
-  <button type="submit" class="go sm">加入目前命盤</button>
+  <div class="qsave"><input type="text" id="caseName" maxlength="60" placeholder="命例名稱" aria-label="命例名稱"><button type="submit" class="go sm">儲存</button></div>
+  <details class="more"><summary>加備註／標籤（可選）</summary>
+    <textarea id="caseNotes" rows="3" maxlength="2000" placeholder="備註"></textarea>
+    <input type="text" id="caseTags" maxlength="200" placeholder="標籤，用逗號或空格分隔">
+    <div class="tagsug" aria-label="常用標籤"></div>
+  </details>
 </form>
 <input type="search" id="caseQ" placeholder="搵命例（名、備註、標籤）" aria-label="搵命例">
 <div id="tagBar" class="tagbar"></div>
@@ -868,10 +871,12 @@ function renderSug(){
   $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${!used[t]||can.tagdel()?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
 }
 function renderAuth(){
+  const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
+  $('caseAdd').hidden=!can.add();
   const box=$('caseAuth');if(!CLOUD){box.hidden=true;return;}box.hidden=false;
   box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||'')}${ADMIN?' · <b class="adm">管理員</b>':''}</span> <button type="button" class="lnk" data-logout>登出</button>`
     :`<form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
-  $('caseAdd').hidden=!can.add();
+  
 }
 function renderCases(){
   const list=CASES.filter(c=>(!Q||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
@@ -928,7 +933,7 @@ document.addEventListener('submit',e=>{
   if(f.id==='caseAdd'){e.preventDefault();const input=S&&S.inp?{...S.inp}:readForm();
     const name=$('caseName').value.trim()||input.name||'未命名',notes=$('caseNotes').value.trim();
     const tags=parseTags($('caseTags').value);
-    busy(async()=>{CUR=await Store.add({name,input,notes,tags});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';});}
+    busy(async()=>{CUR=await Store.add({name,input,notes,tags});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;});}
   else if(f.id==='loginF'){e.preventDefault();
     auth('token?grant_type=password',{email:$('lgEmail').value.trim(),password:$('lgPass').value}).then(async j=>{saveSess(sessFrom(j));await checkAdmin();reloadCases();}).catch(err=>$('caseMsg').textContent='登入失敗：'+err.message);}
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
@@ -938,7 +943,7 @@ document.addEventListener('submit',e=>{
   else if(f.id==='tagMgrAdd'){e.preventDefault();const add=parseTags($('tagMgrIn').value).filter(x=>!TAG_SUG.includes(x));if(add.length){TAG_SUG=[...TAG_SUG,...add];saveSug();}$('tagMgrIn').value='';renderSug();}
   else if(f.dataset.addtag){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addtag),add=parseTags(f.querySelector('input').value);if(c&&add.length)busy(()=>Store.update(c.id,{tags:[...new Set([...(c.tags||[]),...add])]}));}
   else if(f.dataset.comment){e.preventDefault();const body=f.querySelector('textarea').value.trim();if(body)busy(()=>Store.comment(f.dataset.comment,body));}
-  else if(f.id==='f'){CUR=null;EDIT=false;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));}
+  else if(f.id==='f'){CUR=null;EDIT=false;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));setTimeout(renderAuth);}
 });
 $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
 $('caseImport').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;
