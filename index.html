@@ -966,11 +966,13 @@ function twice(btn,label){if(btn.dataset.armed)return true;btn.dataset.armed='1'
   setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},3000);return false;}
 const busy=async(fn)=>{try{await fn();}catch(e){$('caseMsg').textContent='出錯：'+e.message;await reloadCases();$('caseMsg').textContent='出錯：'+e.message;return;}await reloadCases();};
 document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-open],[data-vote],[data-cvote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
+  const t=e.target.closest('[data-resend],[data-open],[data-vote],[data-cvote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
   if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
   if(t.hasAttribute('data-tagclear')){TAGF.clear();renderCases();return;}
   if(t.hasAttribute('data-edit')){EDIT=true;renderCases();return;}
   if(t.hasAttribute('data-editcancel')){EDIT=false;renderCases();return;}
+  if(t.hasAttribute('data-resend')){const em=$('lgEmail')&&$('lgEmail').value.trim();if(!em)return;t.disabled=true;
+    auth('resend?redirect_to='+encodeURIComponent(location.origin+location.pathname),{type:'signup',email:em}).then(()=>{$('caseMsg').textContent=`已重寄確認電郵去 ${em}，請睇埋垃圾郵件匣。`;}).catch(err=>{$('caseMsg').textContent='重寄失敗：'+err.message+'（Supabase 每個鐘只可以寄幾封，遲啲再試）';});return;}
   if(t.hasAttribute('data-logout')){saveSess(null);ADMIN=false;reloadCases();return;}
   if(t.hasAttribute('data-signup')){const em=$('lgEmail').value.trim(),pw=$('lgPass').value;if(!em||pw.length<6){$('caseMsg').textContent='請填電郵同最少 6 個字嘅密碼。';return;}
     auth('signup?redirect_to='+encodeURIComponent(location.href.split('#')[0]),{email:em,password:pw,data:{name:$('lgName').value.trim()||em.split('@')[0]}}).then(async j=>{if(j.access_token){saveSess(sessFrom(j));await checkAdmin();reloadCases();}else $('caseMsg').textContent='已寄確認電郵畀你，撳咗電郵入面條 link 之後再登入。';}).catch(err=>$('caseMsg').textContent='註冊失敗：'+err.message);return;}
@@ -997,7 +999,7 @@ document.addEventListener('submit',e=>{
     const tags=parseTags($('caseTags').value);
     busy(async()=>{CUR=await Store.add({name,input,notes,tags});const nw=tags.filter(x=>!TAG_SUG.includes(x));if(nw.length)await TagStore.add(nw).catch(()=>{});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;});}
   else if(f.id==='loginF'){e.preventDefault();
-    auth('token?grant_type=password',{email:$('lgEmail').value.trim(),password:$('lgPass').value}).then(async j=>{saveSess(sessFrom(j));await checkAdmin();reloadCases();}).catch(err=>$('caseMsg').textContent='登入失敗：'+err.message);}
+    auth('token?grant_type=password',{email:$('lgEmail').value.trim(),password:$('lgPass').value}).then(async j=>{saveSess(sessFrom(j));await checkAdmin();reloadCases();}).catch(err=>{const m=$('caseMsg');if(/not confirmed/i.test(err.message))m.innerHTML='電郵未確認。請去收件匣（包括垃圾郵件）撳確認連結。<button type="button" class="lnk" data-resend>重寄確認電郵</button>';else m.textContent='登入失敗：'+err.message;});}
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
     const patch={name:String(fd.get('name')).trim()||c.name,notes:String(fd.get('notes')).trim(),tags:parseTags(fd.get('tags'))};
     if(fd.get('birth'))patch.input=S&&S.inp?{...S.inp}:readForm();
