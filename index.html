@@ -565,13 +565,17 @@ function nlList(k,ci,cols){
   if(!order.length)return '';
   // 連續全部併做一行：戊丁連、戊己連 → 丁戊己連；招感字同真字重疊都併埋，只係招感字先有嘅一邊標「招」
   const cs=k?ZHI:GAN,N=cs.length,mi=cs.indexOf(me);
+  // 同一關係，真字同招感字都有（例如戊癸合同戊癸合招），併做一行；全部都係招感字先標「招」
+  if(!VIEW.lianSplit)order.slice().forEach(o=>{const x=seen[o];if(!x||x.t==='lian')return;
+    order.filter(o2=>o2!==o&&seen[o2]&&seen[o2].t===x.t&&seen[o2].txt===x.txt&&!!seen[o2].broken===!!x.broken).forEach(o2=>{
+      x.virt=x.virt&&seen[o2].virt;x.n+=seen[o2].n;delete seen[o2];order.splice(order.indexOf(o2),1);});});
   if(!VIEW.lianSplit)[false,true].forEach(br=>{
     const ks=order.filter(o=>seen[o].t==='lian'&&!!seen[o].broken===br);if(ks.length<2)return;
     const L=ks.map(o=>seen[o]),side=d=>L.filter(x=>(d<0?(mi-cs.indexOf(x.other)+N):(cs.indexOf(x.other)-mi+N))%N===1);
     const P=side(-1),Q=side(1),allV=L.every(x=>x.virt),mark=a=>a.length&&!allV&&a.every(x=>x.virt)?'<sup>招</sup>':'';
     const x=L[0];x.txt=(P.length?P[0].other+mark(P):'')+me+(Q.length?Q[0].other+mark(Q):'')+'連';x.virt=allV;
     ks.slice(1).forEach(o=>{delete seen[o];order.splice(order.indexOf(o),1);});});
-  return `<div class="nl">${order.map(k2=>{const x=seen[k2];return `<span class="nl-${x.t}${x.broken?' nlx':''}" title="${x.virt?'同招感字':''}${x.broken?'（已被七殺解開）':''}">${x.txt}${x.virt?'<sup>招</sup>':''}${x.n>1&&!(x.t==='lian'&&!VIEW.lianSplit)?'×'+x.n:''}</span>`;}).join('')}</div>`;
+  return `<div class="nl">${order.map(k2=>{const x=seen[k2];return `<span class="nl-${x.t}${x.broken?' nlx':''}" title="${x.virt?'同招感字':''}${x.broken?'（已被七殺解開）':''}">${x.txt}${x.virt?'<sup>招</sup>':''}${x.n>1&&VIEW.lianSplit?'×'+x.n:''}</span>`;}).join('')}</div>`;
 }
 // 啟動：佢嘅天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動
 function status(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];
@@ -765,7 +769,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${startSol.getYear()}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><span class="hint" id="pngMsg"></span></h2><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日</label><span class="hint">（招感字：只係隱藏條線，粘連力照計；大運流年流月流日：閂咗就唔計招感粘連）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>連續分開兩行（丁戊連、戊己連）</label></div>${table}${CHAIN_LEGEND}${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><span class="hint" id="pngMsg"></span></h2><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日</label><span class="hint">（招感字：只係隱藏條線，粘連力照計；大運流年流月流日：閂咗就唔計招感粘連）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div>${table}${CHAIN_LEGEND}${wx}</section>
   <section class="panel">
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
