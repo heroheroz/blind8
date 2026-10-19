@@ -108,6 +108,8 @@ table.chart{border-collapse:collapse;width:100%;min-width:720px;font-variant-num
 .lk{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 6px;border-radius:8px;border:1px solid var(--muted);color:var(--ink);font-variant-numeric:tabular-nums}
 .lk.off{border-color:var(--bad);color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent)}
 .tiny{font-size:11px;color:var(--muted);display:block}
+.cx{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--accent);color:var(--accent);line-height:1.5}
+.cx.kg{background:var(--accent);color:var(--paper)}
 .ss{font-size:13px;font-weight:700}
 .ss.dm{color:var(--accent)}
 .hid{display:flex;flex-direction:column;gap:1px;font-size:13px;line-height:1.35}
@@ -338,6 +340,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <section class="panel notes">
   <p><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
+  <p>地支格標「坐辰戌」：該柱天干坐喺辰或戌上面，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。</p>
   <p>元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、命宮、身宮用傳統算法。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
   <div class="rules">
   <p><b>本派規則列表</b>　排盤嘅招感、粘連、啟動全部跟以下規則計。要加或者改規則，講返編號就得。</p>
@@ -621,6 +624,10 @@ function nlList(k,ci,cols){
   return `<div class="nl">${order.map(k2=>{const x=seen[k2];return `<span class="nl-${x.t}${x.broken?' nlx':''}" title="${x.virt?'同招感字':''}${x.broken?'（已被七殺解開）':''}">${x.txt}${x.virt?'<sup>招</sup>':''}${x.n>1&&VIEW.lianSplit?'×'+x.n:''}</span>`;}).join('')}</div>`;
 }
 // 啟動：佢嘅天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動
+// 坐辰戌：天干坐喺辰或戌上面，做功特別有力；魁罡（庚辰、庚戌、壬辰、戊戌）係其中四柱
+const KUIGANG=['庚辰','庚戌','壬辰','戊戌'];
+function chenxu(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';const kg=KUIGANG.includes(gz);
+  return `<span class="cx${kg?' kg':''}" title="${kg?'魁罡：庚辰、庚戌、壬辰、戊戌。':''}天干坐辰戌，做功特別有力；用得唔好係天羅地網。">${kg?'魁罡':'坐辰戌'}</span>`;}
 function status(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];
   if(!up)return '<span class="st st-off">&nbsp;</span>';
   return `<span class="st" title="被${S.act[k][ci][1]}啟動">啟動</span>`;}
@@ -762,7 +769,7 @@ function render(){
     <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${nlList(0,ci,cols)}`)}</tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="0" data-m="p" data-up="1"></td></tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="1" data-m="p" data-up="0"></td></tr>
-    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${nlList(1,ci,cols)}`)}</tr>
+    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${nlList(1,ci,cols)}`)}</tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="1" data-m="v" data-up="1"></td></tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[1],false,N)}</td></tr>
     <tr><th class="rl">藏干</th>${td((col,g,z)=>`<div class="hid">${[...HIDE[col.gz[1]]].map(h=>{const hg=gi(h);return `<span><b class="w${gw(hg)}">${h}</b>${shishen(dm,hg)}</span>`;}).join('')}</div>`)}</tr>
