@@ -271,6 +271,13 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
       <select id="d" aria-label="日"></select>
     </div>
     <label class="chk" id="leapWrap" hidden><input type="checkbox" id="leap">閏月</label>
+    <label class="cap" for="aty" style="margin-top:6px">睇運日期（公曆，留空就用今日）</label>
+    <div class="row">
+      <select id="atEra" aria-label="睇運日期公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" id="aty" min="1" max="9999" placeholder="今日" aria-label="睇運日期年" style="width:5.2em"> 年
+      <select id="atm" aria-label="睇運日期月"></select>
+      <select id="atd" aria-label="睇運日期日"></select>
+      <button type="button" class="lnk" id="atClr">用今日</button>
+    </div>
   </fieldset>
 
   <fieldset>
@@ -390,6 +397,11 @@ fillSel($('city'),CITIES.map((c,i)=>[i,c[0]]));
 const TZS=[];for(let i=-12;i<=14;i++)TZS.push(i);[-9.5,-3.5,3.5,4.5,5.5,5.75,6.5,9.5,10.5,12.75].forEach(v=>TZS.push(v));TZS.sort((a,b)=>a-b);
 fillSel($('tz'),TZS.map(v=>{const s=v<0?'−':'+',a=Math.abs(v);return [v,`UTC${s}${Math.floor(a)}:${pad(Math.round((a%1)*60))}`];}));
 function isLunar(){return $('calL').checked;}
+fillSel($('atm'),Array.from({length:12},(_,i)=>[i+1,(i+1)+' 月']));fillSel($('atd'),Array.from({length:31},(_,i)=>[i+1,(i+1)+' 日']));
+{const t=new Date();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();}
+$('atClr').addEventListener('click',()=>{$('aty').value='';$('atEra').value='1';const t=new Date();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();if(S)run(readForm());});
+// 睇運日期：有填就用嗰日揀大運流年流月流日，冇填就用今日
+const refDay=()=>(S&&S.ref)||Solar.fromDate(new Date());
 function refreshMD(){
   const lunar=isLunar(), mv=$('m').value, dv=$('d').value;
   fillSel($('m'),Array.from({length:12},(_,i)=>[i+1,lunar?LMON[i]+'月':(i+1)+' 月']));
@@ -405,7 +417,7 @@ $('lon').addEventListener('input',()=>{$('city').value=CITIES.length-1;});
 /* ---------- time correction ---------- */
 // 用儒略日計，1582 年 10 月之前自動用儒略曆（同 lunar-javascript 一致），公元前都計得
 const jd=(y,m,d,h=0,mi=0)=>Solar.fromYmdHms(y,m,d,h,mi,0).getJulianDay();
-const yearTxt=y=>y<=0?'公元前'+(1-y):''+y;
+const yearTxt=y=>y<=0?'公元前'+(1-y):''+y,yearS=y=>y<=0?'前'+(1-y):''+y;
 function validDate(y,m,d){if(y===1582&&m===10&&d>4&&d<15)return false;
   const jul=y<1582||(y===1582&&m<10),leap=jul?((y%4)+4)%4===0:(y%4===0&&y%100!==0)||y%400===0;
   return d<=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31][m-1];}
@@ -637,7 +649,7 @@ function compute(inp){
   return {inp,birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,dm:gi(P[2][0])};
 }
 function pickToday(){
-  const today=Solar.fromDate(new Date());const Y=gzYear(today);
+  const today=refDay();const Y=gzYear(today);
   let di=S.dys.findIndex(dy=>dy.getLiuNian().some(l=>l.getYear()===Y));
   if(di<0)di=Y<S.dys[0].getStartYear()?0:S.dys.length-1;
   S.di=di;selectYear(Y,today);
@@ -646,12 +658,12 @@ function selectYear(Y,today){
   const lns=S.dys[S.di].getLiuNian();
   let li=lns.findIndex(l=>l.getYear()===Y);if(li<0)li=0;S.li=li;
   S.mos=months(lns[li].getYear());
-  today=today||Solar.fromDate(new Date());const t=today.toYmd();
+  today=today||refDay();const t=today.toYmd();
   let mi=S.mos.findIndex(mo=>mo.start.toYmd()<=t&&t<mo.end.toYmd());if(mi<0)mi=0;S.mi=mi;
   selectMonth(t);
 }
 function selectMonth(t){
-  S.ds=days(S.mos[S.mi]);t=t||Solar.fromDate(new Date()).toYmd();
+  S.ds=days(S.mos[S.mi]);t=t||refDay().toYmd();
   let k=S.ds.findIndex(x=>x.sol.toYmd()===t);S.dd=k<0?0:k;
 }
 
@@ -664,7 +676,7 @@ function ssShort(dm,g){return shishen(dm,g);}
 
 function render(){
   const {inp,c,sol,lun,ec,yun,dys,P,dm}=S;
-  const today=Solar.fromDate(new Date()).toYmd();
+  const today=refDay().toYmd();
   const dy=dys[S.di], ln=dy.getLiuNian()[S.li], mo=S.mos[S.mi], dd=S.ds[S.dd];
   const cols=[
     {h:'時柱',sub:'子女 · 晚年',gz:P[3],bz:'主'},
@@ -689,10 +701,10 @@ function render(){
     if(VIEW.yuan&&!VIEW.core)for(let n=Math.min(pb,pl),i=1;n<=Math.max(pb,pl);n++,i++){const idx=((56+n)%60+60)%60,ys=1924+n*60;
       cols.push({h:pb===pl?'元運':'元運'+i,sub:`${ys}–${ys+59}`,gz:GAN[idx%10]+ZHI[idx%12],dyn:true,yuan:true});}
     cols.push(
-    {h:'大運',sub:dy.getGanZhi()?`${dy.getStartYear()}–${dy.getEndYear()}`:'未起運',gz:dy.getGanZhi(),dyn:true},
-    {h:'流年',sub:`${ln.getYear()} · ${ln.getAge()}歲`,gz:ln.getGanZhi(),dyn:true},
+    {h:'大運',sub:dy.getGanZhi()?`${yearS(dy.getStartYear())}–${yearS(dy.getEndYear())}`:'未起運',gz:dy.getGanZhi(),dyn:true},
+    {h:'流年',sub:`${yearS(ln.getYear())} · ${ln.getAge()}歲`,gz:ln.getGanZhi(),dyn:true},
     {h:'流月',sub:`${mo.name}起 ${mo.start.getMonth()}/${mo.start.getDay()}`,gz:mo.gz,dyn:true},
-    {h:'流日',sub:`${dd.sol.getYear()}/${dd.sol.getMonth()}/${dd.sol.getDay()}`,gz:dd.gz,dyn:true},
+    {h:'流日',sub:`${yearS(dd.sol.getYear())}/${dd.sol.getMonth()}/${dd.sol.getDay()}`,gz:dd.gz,dyn:true},
     );
     cols[n4].first=true;
   }
@@ -738,7 +750,7 @@ function render(){
   const cnt=[0,0,0,0,0];P.forEach(p=>{cnt[gw(gi(p[0]))]++;cnt[ZWX[zi(p[1])]]++;});
   const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span></div>`;
 
-  const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(Solar.fromDate(new Date())));
+  const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
   const startSol=yun.getStartSolar();
   const card=(t,gz,n)=>{const g=gi(gz[0]),z=zi(gz[1]);return `<div class="card"><div class="t">${t}</div><div class="gz"><span class="w${gw(g)}">${gz[0]}</span><span class="w${ZWX[z]}">${gz[1]}</span></div><div class="n">${nayin(g,z)}</div></div>`;};
 
@@ -756,8 +768,8 @@ function render(){
   const relHtml=zgHtml+nlHtml+(rels.length?rels.sort((a,b)=>(a.dyn-b.dyn)).map(r=>`<div class="rel"><span class="pill p-${r.k}">${pillName[r.k]}</span><b>${r.t}</b><span>${r.w}</span>${r.dyn?'<span class="dyn">行運引動</span>':''}</div>`).join(''):'<p class="hint">原局同行運之間未見刑沖合穿。</p>');
 
   // strips
-  const dyStrip=dys.map((x,i)=>gzCell(x.getGanZhi(),`${x.getStartAge()}歲`,x.getGanZhi()?`${x.getStartYear()}<br>${shishen(dm,gi(x.getGanZhi()[0]))}`:`${x.getStartYear()}<br>童限`,i===S.di,'',`data-dy="${i}"`)).join('');
-  const lnStrip=dy.getLiuNian().map((x,i)=>gzCell(x.getGanZhi(),`${x.getYear()}`,`${x.getAge()}歲 ${shishen(dm,gi(x.getGanZhi()[0]))}`,i===S.li,'',`data-ln="${i}"`)).join('');
+  const dyStrip=dys.map((x,i)=>gzCell(x.getGanZhi(),`${x.getStartAge()}歲`,x.getGanZhi()?`${yearS(x.getStartYear())}<br>${shishen(dm,gi(x.getGanZhi()[0]))}`:`${yearS(x.getStartYear())}<br>童限`,i===S.di,'',`data-dy="${i}"`)).join('');
+  const lnStrip=dy.getLiuNian().map((x,i)=>gzCell(x.getGanZhi(),yearS(x.getYear()),`${x.getAge()}歲 ${shishen(dm,gi(x.getGanZhi()[0]))}`,i===S.li,'',`data-ln="${i}"`)).join('');
   const moStrip=S.mos.map((x,i)=>gzCell(x.gz,x.name,`${x.start.getMonth()}/${x.start.getDay()} ${shishen(dm,gi(x.gz[0]))}`,i===S.mi,(x.start.toYmd()<=today&&today<x.end.toYmd())?'today':'',`data-mo="${i}"`)).join('');
   const dStrip=S.ds.map((x,i)=>{const lu=x.sol.getLunar();return gzCell(x.gz,`${x.sol.getMonth()}/${x.sol.getDay()}`,`${lunarDay(lu.getDay())} ${shishen(dm,gi(x.gz[0]))}`,i===S.dd,x.sol.toYmd()===today?'today':'',`data-dd="${i}"`);}).join('');
 
@@ -798,7 +810,7 @@ function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;
 
 $('out').addEventListener('click',e=>{
   const b=e.target.closest('button.cell');if(!b)return;
-  if(b.dataset.dy!==undefined){S.di=+b.dataset.dy;const lns=S.dys[S.di].getLiuNian();const Y=gzYear(Solar.fromDate(new Date()));selectYear(lns.some(l=>l.getYear()===Y)?Y:lns[0].getYear());}
+  if(b.dataset.dy!==undefined){S.di=+b.dataset.dy;const lns=S.dys[S.di].getLiuNian();const Y=gzYear(refDay());selectYear(lns.some(l=>l.getYear()===Y)?Y:lns[0].getYear());}
   else if(b.dataset.ln!==undefined){selectYear(S.dys[S.di].getLiuNian()[+b.dataset.ln].getYear());}
   else if(b.dataset.mo!==undefined){S.mi=+b.dataset.mo;selectMonth();}
   else if(b.dataset.dd!==undefined){S.dd=+b.dataset.dd;}
@@ -808,18 +820,20 @@ $('out').addEventListener('click',e=>{
 function readForm(){
   return {name:$('name').value.trim(),sex:$('sexM').checked?1:0,lunar:isLunar(),leap:$('leap').checked,
     y:$('era').value==='-1'?1-(+$('y').value):+$('y').value,m:+$('m').value,d:+$('d').value,h:+$('h').value,mi:+$('mi').value,zi:+$('zi').value,
-    city:+$('city').value,lon:parseFloat($('lon').value),tz:parseFloat($('tz').value),dst:$('dst').checked,tst:$('tst').checked};
+    at:$('aty').value?{y:$('atEra').value==='-1'?1-(+$('aty').value):+$('aty').value,m:+$('atm').value,d:+$('atd').value}:null,city:+$('city').value,lon:parseFloat($('lon').value),tz:parseFloat($('tz').value),dst:$('dst').checked,tst:$('tst').checked};
 }
 function writeForm(v){
   $('name').value=v.name||'';(v.sex===0?$('sexF'):$('sexM')).checked=true;(v.lunar?$('calL'):$('calS')).checked=true;refreshMD();
   $('leap').checked=!!v.leap;$('era').value=v.y<=0?'-1':'1';$('y').value=v.y<=0?1-v.y:v.y;$('m').value=v.m;$('d').value=v.d;$('h').value=v.h;$('mi').value=v.mi;$('zi').value=v.zi||1;
+  if(v.at){$('atEra').value=v.at.y<=0?'-1':'1';$('aty').value=v.at.y<=0?1-v.at.y:v.at.y;$('atm').value=v.at.m;$('atd').value=v.at.d;}else{$('aty').value='';$('atEra').value='1';const t=new Date();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();}
   $('city').value=v.city??0;$('lon').value=v.lon;$('tz').value=v.tz;$('dst').checked=!!v.dst;$('tst').checked=v.tst!==false;
 }
 function run(v){
   $('err').textContent='';
   if(!(v.y>=-2999&&v.y<=9999)){$('err').textContent='年份請填公元前 3000 年至公元 9999 年。';return;}
   if(isNaN(v.lon)){$('err').textContent='請填出生地經度，或者揀城市。';return;}
-  try{S=compute(v);pickToday();render();try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}}
+  if(v.at&&!validDate(v.at.y,v.at.m,v.at.d)){$('err').textContent='睇運日期冇呢一日，請再揀過。';return;}
+  try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}}
   catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
 }
 $('f').addEventListener('submit',e=>{e.preventDefault();run(readForm());});
