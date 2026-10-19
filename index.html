@@ -326,8 +326,8 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <ol>
     <li id="r-z1"><b>Z1 重字招合</b>　同一行有兩個或以上同一個字，招出佢嘅合字：天干五合（甲己、乙庚、丙辛、丁壬、戊癸），地支六合（子丑、寅亥、卯戌、辰酉、巳申、午未）。</li>
     <li id="r-z2"><b>Z2 重字只招一個</b>　幾多個重字都只招一個字，擺喺最近嗰兩個重字中間。三個重字加一個 ↑，之後每多一個重字多一個 ↑，冇上限。</li>
-    <li id="r-z3"><b>Z3 夾拱</b>　兩個字喺天干或地支次序相差兩位，招出中間嗰個字，例如丙戊夾丁、子寅夾丑。次序循環計，所以壬甲夾癸、亥丑夾子。</li>
-    <li id="r-z4"><b>Z4 夾拱一對一</b>　每個字喺同一種夾只可以用一次，兩邊字一對一配，最近嘅先配，所以兩丙兩戊只夾兩個丁。</li>
+    <li id="r-z3"><b>Z3 夾拱</b>　兩個字喺天干或地支次序相差兩位，招出中間嗰個字，例如丙戊夾拱丁、子寅夾拱丑。次序循環計，所以壬甲夾拱癸、亥丑夾拱子。</li>
+    <li id="r-z4"><b>Z4 夾拱一對一</b>　每個字喺同一種夾拱只可以用一次，兩邊字一對一配，最近嘅先配，所以兩丙兩戊只夾拱兩個丁。</li>
     <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字本身唔會再招感，亦唔會啟動其他字。</li>
     <li id="r-z6"><b>Z6 合併顯示（選項）</b>　剔咗「同一招感字合併顯示」，同一行同一個招感字只顯示一個，寫 ×次數；只改顯示，唔改計算。</li>
   </ol>
@@ -337,7 +337,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-n2"><b>N2 連續</b>　次序相差一位嘅兩個字，例如甲乙、乙丙、子丑；循環計，所以癸甲、亥子都算。兩個字已經成立。</li>
     <li id="r-n3"><b>N3 合</b>　天干五合、地支六合（同 Z1 嘅合字表）。</li>
     <li id="r-n4"><b>N4 地支半合</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）其中兩個字，而且要包括中神（子、卯、午、酉），例如申子、子辰、午戌。只計地支。</li>
-    <li id="r-n5"><b>N5 招感字粘連</b>　招感字只同招佢出嚟嗰幾個來源字粘連：夾出嚟嘅算連續，招合出嚟嘅算合，唔同其他字粘連。</li>
+    <li id="r-n5"><b>N5 招感字粘連</b>　招感字只同招佢出嚟嗰幾個來源字粘連：夾拱出嚟嘅算連續，招合出嚟嘅算合，唔同其他字粘連。</li>
     <li id="r-n6"><b>N6 粘連力</b>　每條粘連喺字旁邊加一個 ↓，用加法，唔係乘數。</li>
     <li id="r-n7"><b>N7 線</b>　柱與柱之間嘅粘連線畫喺天干同地支中間；招感字嘅線畫喺外面。線色跟兩端字嘅五行，兩端唔同五行就兩色交替。</li>
   </ol>
@@ -490,7 +490,7 @@ function zhaogan(cols){
       pr.sort((p,q)=>(p[1].i-p[0].i)-(q[1].i-q[0].i));const used=new Set();
       pr.forEach(([A,B])=>{if(used.has(A.i)||used.has(B.i))return;used.add(A.i);used.add(B.i);
         const a=chars.indexOf(A.gz[k]),b=chars.indexOf(B.gz[k]);
-        out.push({c:chars[m],pos:(A.i+B.i)/2+0.5,tag:chars[a]+chars[b]+'夾',kind:'jia',src:[A.i,B.i],dyn:A.dyn||B.dyn,from:`${A.lbl}${lbl}${chars[a]} · ${B.lbl}${lbl}${chars[b]}`});});
+        out.push({c:chars[m],pos:(A.i+B.i)/2+0.5,tag:chars[a]+chars[b]+'夾拱',kind:'jia',src:[A.i,B.i],dyn:A.dyn||B.dyn,from:`${A.lbl}${lbl}${chars[a]} · ${B.lbl}${lbl}${chars[b]}`});});
     }};
   side(cs,0,10,GAN,'干',ch=>GAN[(gi(ch)+5)%10],st);
   side(cs,1,12,ZHI,'支',ch=>HE6[ch],br);
