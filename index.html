@@ -180,6 +180,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cases input[type=text]#lgName{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .tags,.tagbar,.tagsug{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .tags{margin-top:4px}.tagbar{margin:8px 0 0}
+.cfind{margin-top:10px;padding:8px;border:1px solid var(--soft);border-radius:8px}.cfind input[type=search]{width:100%;box-sizing:border-box}.cfind .row{margin-top:6px;gap:6px;flex-wrap:nowrap}.cfind .row input{flex:1;min-width:0}.cfind .cap{white-space:nowrap;font-size:12px}#findInfo:empty{display:none}
 .tag{font-size:12px;border:1px solid var(--line);background:var(--paper);color:var(--accent);border-radius:10px;padding:0 8px;cursor:pointer;line-height:1.6}
 .tag.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}.tag small{color:inherit;opacity:.7}
 .tag.sug{color:var(--muted);border-style:dashed}
@@ -218,8 +219,12 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <div class="tagsug" aria-label="常用標籤"></div>
   </details>
 </form>
-<input type="search" id="caseQ" placeholder="搵命例（名、備註、標籤）" aria-label="搵命例">
+<div class="cfind">
+<input type="search" id="caseQ" placeholder="🔍 搵命例（名、備註、標籤）" aria-label="搵命例">
+<div class="row"><span class="cap">標籤篩選</span><input type="search" id="tagQ" placeholder="搵標籤" aria-label="搵標籤"></div>
 <div id="tagBar" class="tagbar"></div>
+<p class="hint" id="findInfo"></p>
+</div>
 <ul id="caseList" class="clist"></ul>
 <details class="tagmgr"><summary>管理標籤</summary>
   <div id="tagMgrList" class="tagbar"></div>
@@ -865,7 +870,7 @@ const Store={
     await api('cases?id=eq.'+encodeURIComponent(id),{method:'DELETE'});}
 };
 
-let CASES=[],CUR=null,EDIT=false,Q='';const TAGF=new Set();
+let CASES=[],CUR=null,EDIT=false,Q='',TQ='';const TAGF=new Set();
 // 常用標籤：可以自己加減，記喺呢個瀏覽器
 let TAG_SUG=(()=>{try{const v=JSON.parse(localStorage.getItem('b8-tagsug'));if(Array.isArray(v))return v;}catch(e){}return ['雙胞胎','結婚','離婚','生死','生仔','兄弟數目','父母','事業','財運','疾病'];})();
 const saveSug=()=>{try{localStorage.setItem('b8-tagsug',JSON.stringify(TAG_SUG));}catch(e){}};
@@ -904,7 +909,9 @@ function renderAuth(){
 function renderCases(){
   const list=CASES.map((c,i)=>[c,i]).sort((a,b)=>caseScore(b[0])-caseScore(a[0])||a[1]-b[1]).map(x=>x[0]).filter(c=>(!Q||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
   const cnt={};CASES.forEach(c=>(c.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
-  $('tagBar').innerHTML=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b)).map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}" aria-pressed="${TAGF.has(t)}">#${esc(t)} <small>${cnt[t]}</small></button>`).join('')+(TAGF.size?'<button type="button" class="lnk" data-tagclear>清除篩選</button>':'');
+  const tq=TQ.toLowerCase(),tl=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b)).filter(t=>TAGF.has(t)||!tq||t.toLowerCase().includes(tq));
+  $('findInfo').textContent=(Q||TAGF.size)?`搵到 ${list.length} 個命例`+(TAGF.size?`（標籤：${[...TAGF].join('、')}）`:''):(TQ&&!tl.length?'冇呢個標籤':'');
+  $('tagBar').innerHTML=tl.map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}" aria-pressed="${TAGF.has(t)}">#${esc(t)} <small>${cnt[t]}</small></button>`).join('')+(TAGF.size?'<button type="button" class="lnk" data-tagclear>清除篩選</button>':'');
   $('caseCount').textContent=CASES.length;
   $('caseList').innerHTML=list.length?list.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
     :`<li class="hint">${CASES.length?'搵唔到。':'未有命例。排好盤之後，喺上面填備註再撳「加入目前命盤」。'}</li>`;
@@ -998,6 +1005,8 @@ document.addEventListener('submit',e=>{
   else if(f.id==='f'){CUR=null;EDIT=false;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));setTimeout(renderAuth);}
 });
 $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
+$('tagQ').addEventListener('input',e=>{TQ=e.target.value.trim();renderCases();});
+$('tagQ').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const b=[...document.querySelectorAll('#tagBar [data-tagf]')].find(x=>!TAGF.has(x.dataset.tagf));if(b){TAGF.add(b.dataset.tagf);TQ='';e.target.value='';renderCases();}});
 $('caseImport').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;
   // 匯入只會新增命例（名稱、出生資料、備註、標籤）；準唔準同補充備註唔會匯入
   let n=0,bad=0;
