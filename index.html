@@ -670,10 +670,10 @@ function render(){
   // 三桓（胎元、胎息、身宮）同命宮，放喺時柱左邊
   if(!VIEW.only4&&!VIEW.core&&VIEW.aux){
     cols.unshift(
-      {h:'命宮',sub:'命主所居',gz:ec.getMingGong(),aux:true},
       {h:'身宮',sub:'三桓',gz:ec.getShenGong(),aux:true},
       {h:'胎息',sub:'三桓',gz:ec.getTaiXi(),aux:true},
-      {h:'胎元',sub:'三桓',gz:ec.getTaiYuan(),aux:true});
+      {h:'胎元',sub:'三桓',gz:ec.getTaiYuan(),aux:true},
+      {h:'命宮',sub:'命主所居',gz:ec.getMingGong(),aux:true});
     cols[4].first=true;
   }
   const n4=cols.findIndex(c=>c.h==='年柱')+1;
