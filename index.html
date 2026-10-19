@@ -271,9 +271,9 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
       <select id="d" aria-label="日"></select>
     </div>
     <label class="chk" id="leapWrap" hidden><input type="checkbox" id="leap">閏月</label>
-    <label class="cap" for="aty" style="margin-top:6px">睇運日期（公曆，留空就用今日）</label>
+    <label class="cap" for="aty" style="margin-top:6px">睇運日期（公曆，預設今日）</label>
     <div class="row">
-      <select id="atEra" aria-label="睇運日期公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" id="aty" min="1" max="9999" placeholder="今日" aria-label="睇運日期年" style="width:5.2em"> 年
+      <select id="atEra" aria-label="睇運日期公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" id="aty" min="1" max="9999" aria-label="睇運日期年" style="width:5.2em"> 年
       <select id="atm" aria-label="睇運日期月"></select>
       <select id="atd" aria-label="睇運日期日"></select>
       <button type="button" class="lnk" id="atClr">用今日</button>
@@ -398,9 +398,10 @@ const TZS=[];for(let i=-12;i<=14;i++)TZS.push(i);[-9.5,-3.5,3.5,4.5,5.5,5.75,6.5
 fillSel($('tz'),TZS.map(v=>{const s=v<0?'−':'+',a=Math.abs(v);return [v,`UTC${s}${Math.floor(a)}:${pad(Math.round((a%1)*60))}`];}));
 function isLunar(){return $('calL').checked;}
 fillSel($('atm'),Array.from({length:12},(_,i)=>[i+1,(i+1)+' 月']));fillSel($('atd'),Array.from({length:31},(_,i)=>[i+1,(i+1)+' 日']));
-{const t=new Date();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();}
-$('atClr').addEventListener('click',()=>{$('aty').value='';$('atEra').value='1';const t=new Date();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();if(S)run(readForm());});
+const atToday=()=>{const t=new Date();$('atEra').value='1';$('aty').value=t.getFullYear();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();};atToday();
+$('atClr').addEventListener('click',()=>{atToday();if(S)run(readForm());});
 // 睇運日期：有填就用嗰日揀大運流年流月流日，冇填就用今日
+const isTodayAt=()=>{const t=new Date();return $('atEra').value==='1'&&+$('aty').value===t.getFullYear()&&+$('atm').value===t.getMonth()+1&&+$('atd').value===t.getDate();};
 const refDay=()=>(S&&S.ref)||Solar.fromDate(new Date());
 function refreshMD(){
   const lunar=isLunar(), mv=$('m').value, dv=$('d').value;
@@ -820,12 +821,12 @@ $('out').addEventListener('click',e=>{
 function readForm(){
   return {name:$('name').value.trim(),sex:$('sexM').checked?1:0,lunar:isLunar(),leap:$('leap').checked,
     y:$('era').value==='-1'?1-(+$('y').value):+$('y').value,m:+$('m').value,d:+$('d').value,h:+$('h').value,mi:+$('mi').value,zi:+$('zi').value,
-    at:$('aty').value?{y:$('atEra').value==='-1'?1-(+$('aty').value):+$('aty').value,m:+$('atm').value,d:+$('atd').value}:null,city:+$('city').value,lon:parseFloat($('lon').value),tz:parseFloat($('tz').value),dst:$('dst').checked,tst:$('tst').checked};
+    at:$('aty').value&&!isTodayAt()?{y:$('atEra').value==='-1'?1-(+$('aty').value):+$('aty').value,m:+$('atm').value,d:+$('atd').value}:null,city:+$('city').value,lon:parseFloat($('lon').value),tz:parseFloat($('tz').value),dst:$('dst').checked,tst:$('tst').checked};
 }
 function writeForm(v){
   $('name').value=v.name||'';(v.sex===0?$('sexF'):$('sexM')).checked=true;(v.lunar?$('calL'):$('calS')).checked=true;refreshMD();
   $('leap').checked=!!v.leap;$('era').value=v.y<=0?'-1':'1';$('y').value=v.y<=0?1-v.y:v.y;$('m').value=v.m;$('d').value=v.d;$('h').value=v.h;$('mi').value=v.mi;$('zi').value=v.zi||1;
-  if(v.at){$('atEra').value=v.at.y<=0?'-1':'1';$('aty').value=v.at.y<=0?1-v.at.y:v.at.y;$('atm').value=v.at.m;$('atd').value=v.at.d;}else{$('aty').value='';$('atEra').value='1';const t=new Date();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();}
+  if(v.at){$('atEra').value=v.at.y<=0?'-1':'1';$('aty').value=v.at.y<=0?1-v.at.y:v.at.y;$('atm').value=v.at.m;$('atd').value=v.at.d;}else atToday();
   $('city').value=v.city??0;$('lon').value=v.lon;$('tz').value=v.tz;$('dst').checked=!!v.dst;$('tst').checked=v.tst!==false;
 }
 function run(v){
