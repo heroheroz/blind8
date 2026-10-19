@@ -188,6 +188,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .vb:disabled{opacity:.6;cursor:default}
 .qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
 .more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
+.armed{color:var(--paper)!important;background:var(--bad);border-radius:6px;padding:2px 6px}
 .tagmgr{margin:10px 0 6px;font-size:13px}.tagmgr summary{cursor:pointer;color:var(--accent)}
 .tagmgr input{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
 .tagm{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:0 2px 0 8px;font-size:12px;background:var(--paper)}.tagm small{color:var(--muted)}.tagm .tagx{margin:0 4px}
@@ -943,6 +944,9 @@ function caseFromRow(o){
     dst:/是|1|true/i.test(o['夏令時間']||''),tst:!/否|0|false/i.test(o['真太陽時']||'是')};
   if(!o['名稱']||isNaN(input.y))return null;
   return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤'])};}
+// 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變「確定？」，三秒內再撳先執行
+function twice(btn,label){if(btn.dataset.armed)return true;btn.dataset.armed='1';const old=btn.innerHTML;btn.innerHTML=label;btn.classList.add('armed');
+  setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},3000);return false;}
 const busy=async(fn)=>{try{await fn();}catch(e){$('caseMsg').textContent='出錯：'+e.message;await reloadCases();$('caseMsg').textContent='出錯：'+e.message;return;}await reloadCases();};
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-open],[data-vote],[data-cvote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
@@ -955,7 +959,7 @@ document.addEventListener('click',e=>{
     auth('signup?redirect_to='+encodeURIComponent(location.href.split('#')[0]),{email:em,password:pw,data:{name:$('lgName').value.trim()||em.split('@')[0]}}).then(async j=>{if(j.access_token){saveSess(sessFrom(j));await checkAdmin();reloadCases();}else $('caseMsg').textContent='已寄確認電郵畀你，撳咗電郵入面條 link 之後再登入。';}).catch(err=>$('caseMsg').textContent='註冊失敗：'+err.message);return;}
   if(t.dataset.tagdel){const g=t.dataset.tagdel,hit=CASES.filter(c=>(c.tags||[]).includes(g));
     if((CLOUD||hit.length)&&!can.tagdel())return;
-    if(hit.length&&!confirm(`刪除標籤「${g}」？有 ${hit.length} 個命例用緊，會一齊移除。`))return;
+    if(!twice(t,hit.length?`確定刪除？（${hit.length} 個命例用緊）`:'確定刪除？'))return;
     TAGF.delete(g);
     busy(async()=>{await TagStore.remove(g);for(const c of hit)await Store.update(c.id,{tags:c.tags.filter(x=>x!==g)});});return;}
   if(t.dataset.untag){const c=CASES.find(x=>x.id===t.dataset.id);busy(()=>Store.update(c.id,{tags:(c.tags||[]).filter(g=>g!==t.dataset.untag)}));return;}
@@ -965,7 +969,7 @@ document.addEventListener('click',e=>{
   else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
   else if(t.dataset.vote){const c=CASES.find(x=>x.id===t.dataset.id),v=+t.dataset.vote;busy(()=>Store.vote(c.id,c.myVote===v?0:v));}
   else if(t.hasAttribute('data-close')){CUR=null;EDIT=false;renderCases();}
-  else if(t.dataset.del){if(confirm('刪除呢個命例？'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
+  else if(t.dataset.del){if(twice(t,'確定刪除？'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
   else if(t.id==='caseExport'){if(!can.io())return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([toCSV(CASES)],{type:'text/csv;charset=utf-8'}));a.download='命例.csv';a.click();}
 });
 document.addEventListener('submit',e=>{
