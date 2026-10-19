@@ -561,8 +561,17 @@ function nlList(k,ci,cols){
     const virt=l.vx!=null,other=virt?l.vc:cols[l.a===ci?l.b:l.a].gz[k];
     const txt=l.t==='fu'?me+other+'伏吟粘連':l.t==='he'?me+other+'合':l.t==='banhe'?me+other+'半合':me+other+'連';
     const key=l.t+txt+(virt?'v':'')+(l.broken?'x':'');
-    if(!seen[key]){seen[key]={t:l.t,txt,virt,broken:l.broken,n:0};order.push(key);}seen[key].n++;});
+    if(!seen[key]){seen[key]={t:l.t,txt,virt,broken:l.broken,n:0,other};order.push(key);}seen[key].n++;});
   if(!order.length)return '';
+  // 兩邊都有連續，例如戊丁連、戊己連，併做一行「丁戊己連」
+  const cs=k?ZHI:GAN,N=cs.length,mi=cs.indexOf(me);
+  order.slice().forEach(k2=>{const x=seen[k2];if(!x||x.t!=='lian'||x.merged)return;
+    const pre=(mi-cs.indexOf(x.other)+N)%N===1;if(!pre)return;
+    const k3=order.find(o=>{const y=seen[o];return y&&y!==x&&y.t==='lian'&&!y.merged&&y.virt===x.virt&&y.broken===x.broken&&(cs.indexOf(y.other)-mi+N)%N===1;});
+    if(!k3)return;const y=seen[k3];
+    x.txt=x.other+me+y.other+'連';
+    if(x.n!==y.n){const nt=[x.n>1?x.other+'×'+x.n:'',y.n>1?y.other+'×'+y.n:''].filter(Boolean).join('、');x.txt+=`（${nt}）`;x.n=1;}
+    x.merged=true;delete seen[k3];order.splice(order.indexOf(k3),1);});
   return `<div class="nl">${order.map(k2=>{const x=seen[k2];return `<span class="nl-${x.t}${x.broken?' nlx':''}" title="${x.virt?'同招感字':''}${x.broken?'（已被七殺解開）':''}">${x.txt}${x.virt?'<sup>招</sup>':''}${x.n>1?'×'+x.n:''}</span>`;}).join('')}</div>`;
 }
 // 啟動：佢嘅天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動
