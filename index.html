@@ -176,7 +176,8 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .lnk{all:unset;cursor:pointer;color:var(--accent);font-size:13px;padding:2px 4px}.lnk.del{color:var(--bad)}
 .casenote{border-color:var(--accent)}
 .cbody,.ccom{white-space:pre-wrap;overflow-wrap:anywhere}
-.ccom{border-top:1px solid var(--soft);padding-top:6px;margin-top:6px}.ccom .hint{display:block;font-size:11px}
+.ccom{border-top:1px solid var(--soft);padding-top:6px;margin-top:6px}.ccom .hint{font-size:11px}.ccom .by{color:var(--ink)}.ccom .votes{margin:0}
+.cases input[type=text]#lgName{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .tags,.tagbar,.tagsug{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .tags{margin-top:4px}.tagbar{margin:8px 0 0}
 .tag{font-size:12px;border:1px solid var(--line);background:var(--paper);color:var(--accent);border-radius:10px;padding:0 8px;cursor:pointer;line-height:1.6}
@@ -220,10 +221,10 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <details class="tagmgr"><summary>管理標籤</summary>
   <div id="tagMgrList" class="tagbar"></div>
   <form id="tagMgrAdd" class="row" style="margin-top:6px"><input type="text" id="tagMgrIn" maxlength="100" placeholder="新標籤，例如夏仲奇老師" aria-label="新標籤" style="flex:1"><button type="submit" class="lnk">加</button></form>
-  <p class="hint" style="margin-top:4px">加咗嘅標籤會喺上面變成可以撳嘅建議。刪除有命例用緊嘅標籤會由所有命例移除；共享模式下只有管理員做得到。</p>
+  <p class="hint" style="margin-top:4px">加咗嘅標籤會喺上面變成可以撳嘅建議。刪除有命例用緊嘅標籤會由所有命例移除。共享模式下，登入就可以加標籤，刪除只限管理員。</p>
 </details>
 <p class="hint" id="caseMsg"></p>
-<div class="row"><button type="button" class="lnk" id="caseExport">匯出</button><label class="lnk">匯入<input type="file" id="caseImport" accept="application/json,.json" hidden></label></div>
+<div class="row" id="caseIO" hidden><span class="hint">管理員：</span><button type="button" class="lnk" id="caseExport">匯出 CSV</button><label class="lnk">匯入 CSV<input type="file" id="caseImport" accept=".csv,text/csv" hidden></label></div>
 </details>
 </aside>
 <div class="wrap">
@@ -815,7 +816,7 @@ const saveSess=s=>{SESSION=s;try{s?localStorage.setItem('b8-session',JSON.string
 async function auth(path,body){
   const r=await fetch(CLOUD.url+'/auth/v1/'+path,{method:'POST',headers:{apikey:CLOUD.key,'Content-Type':'application/json'},body:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.msg||j.error_description||j.message||r.status);return j;}
-const sessFrom=j=>({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),user:{id:j.user.id,email:j.user.email}});
+const sessFrom=j=>({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),user:{id:j.user.id,email:j.user.email,name:((j.user.user_metadata||{}).name||j.user.email.split('@')[0]).slice(0,40)}});
 async function token(){
   if(!SESSION)return null;
   if(SESSION.expires_at-60<Date.now()/1000){try{saveSess(sessFrom(await auth('token?grant_type=refresh_token',{refresh_token:SESSION.refresh_token})));}catch(e){saveSess(null);ADMIN=false;return null;}}
@@ -827,20 +828,21 @@ async function api(path,opt={}){
   const t=await r.text();return t?JSON.parse(t):null;}
 async function checkAdmin(){ADMIN=false;if(CLOUD&&SESSION){try{ADMIN=(await api('admins?select=user_id')).length>0;}catch(e){}}}
 const me=()=>CLOUD?(SESSION&&SESSION.user.id):localVoter;
+const myName=()=>CLOUD?(SESSION&&(SESSION.user.name||SESSION.user.email))||'':'我';
 // 權限：本機模式乜都做得；雲端模式要登入先加得，自己加嘅自己改，刪除只限管理員
-const can={add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:()=>!CLOUD||ADMIN,vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN};
+const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:()=>!CLOUD||ADMIN,vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN};
 
 const Store={
   async list(){
-    if(!CLOUD)return lsGet();
-    const rows=await api('cases?select=id,created_at,owner,name,input,notes,tags,votes(voter,vote),comments(id,created_at,body)&order=created_at.desc');
+    if(!CLOUD)return lsGet().map(c=>({...c,comments:(c.comments||[]).map((m,i)=>({likes:0,unlikes:0,myVote:0,by:'我',...m,id:m.id||'i'+i}))}));
+    const rows=await api('cases?select=id,created_at,owner,owner_name,name,input,notes,tags,votes(voter,vote),comments(id,created_at,body,author_name,comment_votes(voter,vote))&order=created_at.desc');
     const uid=me();
-    return rows.map(r=>({id:r.id,created:r.created_at,owner:r.owner,name:r.name,input:r.input,notes:r.notes||'',tags:r.tags||[],
+    return rows.map(r=>({id:r.id,created:r.created_at,owner:r.owner,by:r.owner_name||'',name:r.name,input:r.input,notes:r.notes||'',tags:r.tags||[],
       likes:r.votes.filter(v=>v.vote===1).length,unlikes:r.votes.filter(v=>v.vote===-1).length,myVote:(r.votes.find(v=>v.voter===uid)||{}).vote||0,
-      comments:(r.comments||[]).sort((a,b)=>a.created_at<b.created_at?-1:1).map(c=>({t:c.created_at,body:c.body}))}));},
+      comments:(r.comments||[]).sort((a,b)=>a.created_at<b.created_at?-1:1).map(c=>{const cv=c.comment_votes||[];return {id:c.id,t:c.created_at,body:c.body,by:c.author_name||'',likes:cv.filter(v=>v.vote===1).length,unlikes:cv.filter(v=>v.vote===-1).length,myVote:(cv.find(v=>v.voter===uid)||{}).vote||0};})}));},
   async add(c){
-    if(!CLOUD){const a=lsGet(),x={id:'L'+Date.now(),created:new Date().toISOString(),likes:0,unlikes:0,myVote:0,comments:[],tags:[],...c};a.unshift(x);if(!lsSet(a))throw new Error('瀏覽器唔畀儲存');return x.id;}
-    const r=await api('cases',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({name:c.name,input:c.input,notes:c.notes,tags:c.tags||[]})});return r[0].id;},
+    if(!CLOUD){const a=lsGet(),x={id:'L'+Date.now(),created:new Date().toISOString(),by:'我',likes:0,unlikes:0,myVote:0,comments:[],tags:[],...c};a.unshift(x);if(!lsSet(a))throw new Error('瀏覽器唔畀儲存');return x.id;}
+    const r=await api('cases',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({name:c.name,input:c.input,notes:c.notes,tags:c.tags||[],owner_name:myName()})});return r[0].id;},
   async update(id,patch){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;Object.assign(x,patch);lsSet(a);return;}
     await api('cases?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify(patch)});},
@@ -848,8 +850,13 @@ const Store={
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;if(x.myVote===1)x.likes--;if(x.myVote===-1)x.unlikes--;x.myVote=v;if(v===1)x.likes++;if(v===-1)x.unlikes++;lsSet(a);return;}
     await api('votes?on_conflict=case_id,voter',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({case_id:id,voter:SESSION.user.id,vote:v})});},
   async comment(id,body){
-    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({t:new Date().toISOString(),body});lsSet(a);return;}
-    await api('comments',{method:'POST',body:JSON.stringify({case_id:id,body})});},
+    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({id:'C'+Date.now(),t:new Date().toISOString(),body,by:'我',likes:0,unlikes:0,myVote:0});lsSet(a);return;}
+    await api('comments',{method:'POST',body:JSON.stringify({case_id:id,body,author_name:myName()})});},
+  // 每條備註都可以投準／唔準
+  async cvote(caseId,cid,v){
+    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===caseId);if(!x)return;const m=x.comments.find((m,i)=>(m.id||'i'+i)===cid);if(!m)return;
+      m.likes=m.likes||0;m.unlikes=m.unlikes||0;if(m.myVote===1)m.likes--;if(m.myVote===-1)m.unlikes--;m.myVote=v;if(v===1)m.likes++;if(v===-1)m.unlikes++;lsSet(a);return;}
+    await api('comment_votes?on_conflict=comment_id,voter',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({comment_id:cid,voter:SESSION.user.id,vote:v})});},
   async remove(id){
     if(!CLOUD){lsSet(lsGet().filter(c=>c.id!==id));return;}
     await api('cases?id=eq.'+encodeURIComponent(id),{method:'DELETE'});}
@@ -859,23 +866,33 @@ let CASES=[],CUR=null,EDIT=false,Q='';const TAGF=new Set();
 // 常用標籤：可以自己加減，記喺呢個瀏覽器
 let TAG_SUG=(()=>{try{const v=JSON.parse(localStorage.getItem('b8-tagsug'));if(Array.isArray(v))return v;}catch(e){}return ['雙胞胎','結婚','離婚','生死','生仔','兄弟數目','父母','事業','財運','疾病'];})();
 const saveSug=()=>{try{localStorage.setItem('b8-tagsug',JSON.stringify(TAG_SUG));}catch(e){}};
+// 雲端模式：常用標籤存喺 Supabase 嘅 tags 表，登入就加得，刪除只限管理員
+const TagStore={
+  async list(){if(!CLOUD)return TAG_SUG;return (await api('tags?select=name&order=created_at')).map(x=>x.name);},
+  async add(names){if(!CLOUD){TAG_SUG=[...TAG_SUG,...names.filter(x=>!TAG_SUG.includes(x))];saveSug();return;}
+    await api('tags?on_conflict=name',{method:'POST',headers:{Prefer:'resolution=ignore-duplicates'},body:JSON.stringify(names.map(name=>({name})))});},
+  async remove(name){if(!CLOUD){TAG_SUG=TAG_SUG.filter(x=>x!==name);saveSug();return;}
+    await api('tags?name=eq.'+encodeURIComponent(name),{method:'DELETE'});}
+};
 const parseTags=t=>[...new Set(String(t||'').split(/[,，、\s]+/).map(x=>x.trim().replace(/^#/,'')).filter(Boolean).map(x=>x.slice(0,30)))];
 const tagChips=(tags,id)=>(tags||[]).length?`<span class="tags">${tags.map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}">#${esc(t)}</button>${id?`<button type="button" class="tagx" data-untag="${esc(t)}" data-id="${id}" aria-label="移除標籤 ${esc(t)}">×</button>`:''}`).join('')}</span>`:'';
 const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${v.y}-${pad(v.m)}-${pad(v.d)} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;
 const voteBtns=c=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
   return `<span class="votes"><button type="button" class="vb${c.myVote===1?' on':''}" data-vote="1" data-id="${c.id}" aria-pressed="${c.myVote===1}"${dis}>準 ${c.likes}</button><button type="button" class="vb no${c.myVote===-1?' on':''}" data-vote="-1" data-id="${c.id}" aria-pressed="${c.myVote===-1}"${dis}>唔準 ${c.unlikes}</button></span>`;};
+const cvoteBtns=(c,m)=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
+  return `<span class="votes"><button type="button" class="vb${m.myVote===1?' on':''}" data-cvote="1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===1}"${dis}>準 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-cvote="-1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===-1}"${dis}>唔準 ${m.unlikes||0}</button></span>`;};
 function renderSug(){
   document.querySelector('.tagsug').innerHTML=TAG_SUG.map(t=>`<button type="button" class="tag sug" data-sug="${esc(t)}">+${esc(t)}</button>`).join('');
   const used={};CASES.forEach(c=>(c.tags||[]).forEach(t=>used[t]=(used[t]||0)+1));
   const all=[...new Set([...TAG_SUG,...Object.keys(used)])];
-  $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${!used[t]||can.tagdel()?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
+  $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${(CLOUD?can.tagdel():!used[t]||can.tagdel())?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
 }
 function renderAuth(){
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
-  $('caseAdd').hidden=!can.add();
+  $('caseAdd').hidden=!can.add();$('caseIO').hidden=!can.io();
   const box=$('caseAuth');if(!CLOUD){box.hidden=true;return;}box.hidden=false;
   box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||'')}${ADMIN?' · <b class="adm">管理員</b>':''}</span> <button type="button" class="lnk" data-logout>登出</button>`
-    :`<form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
+    :`<form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
   
 }
 function renderCases(){
@@ -892,65 +909,92 @@ function showCase(c){
   const box=$('caseNote');if(!c){box.hidden=true;box.innerHTML='';return;}
   box.hidden=false;const ed=can.edit(c);
   const head=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">命例：${esc(c.name)}</h2><span class="row">${voteBtns(c)}${ed&&!EDIT?'<button type="button" class="lnk" data-edit>修改</button>':''}<button type="button" class="lnk" data-close>收埋</button>${can.del()?`<button type="button" class="lnk del" data-del="${c.id}">刪除</button>`:''}</span></div>
-    <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}</p>`;
+    <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}${c.by?` · 由 ${esc(c.by)} 新增`:''}</p>`;
   if(EDIT&&ed){box.innerHTML=head+`<form class="cadd" data-editf="${c.id}"><input type="text" name="name" maxlength="60" value="${esc(c.name)}" aria-label="命例名稱"><textarea name="notes" rows="4" maxlength="2000" aria-label="備註">${esc(c.notes||'')}</textarea><input type="text" name="tags" maxlength="200" value="${esc((c.tags||[]).join(' '))}" aria-label="標籤"><label class="chk"><input type="checkbox" name="birth"> 出生資料改做而家表格上面嘅資料</label><span class="row"><button type="submit" class="go sm">儲存</button><button type="button" class="lnk" data-editcancel>取消</button></span></form>`;return;}
   box.innerHTML=head+`<div class="row" style="margin-bottom:8px">${tagChips(c.tags,ed?c.id:'')}${ed?`<form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="加標籤" aria-label="加標籤" style="width:9em"><button type="submit" class="lnk">加</button></form>`:''}</div>
     ${c.notes?`<div class="cbody">${esc(c.notes)}</div>`:''}
-    ${c.comments.map(m=>`<div class="ccom"><span class="hint">${esc(String(m.t).slice(0,10))}</span>${esc(m.body)}</div>`).join('')}
+    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span>${cvoteBtns(c,m)}</div><div>${esc(m.body)}</div></div>`).join('')}
     ${can.vote()?`<form class="cadd" data-comment="${c.id}"><textarea rows="2" maxlength="2000" placeholder="加解釋或者補充備註" required></textarea><button type="submit" class="go sm">加備註</button></form>`:'<p class="hint">登入先可以加備註。</p>'}`;
 }
 async function reloadCases(){
-  try{CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
+  try{if(CLOUD)TAG_SUG=await TagStore.list().catch(()=>TAG_SUG);CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
   catch(e){$('caseMsg').textContent='讀唔到命例：'+e.message;}
   renderCases();
 }
+// CSV：第一行係欄名；Excel 開得到（加 BOM）
+const CSV_COLS=[['名稱',c=>c.name],['性別',c=>c.input.sex===1?'男':'女'],['曆法',c=>c.input.lunar?'農曆':'公曆'],['閏月',c=>c.input.leap?'是':''],
+  ['年',c=>c.input.y],['月',c=>c.input.m],['日',c=>c.input.d],['時',c=>c.input.h],['分',c=>c.input.mi],['子時換日',c=>c.input.zi],
+  ['城市',c=>c.input.city],['經度',c=>c.input.lon],['時區',c=>c.input.tz],['夏令時間',c=>c.input.dst?'是':''],['真太陽時',c=>c.input.tst===false?'否':'是'],
+  ['姓名',c=>c.input.name||''],['備註',c=>c.notes||''],['標籤',c=>(c.tags||[]).join(' ')],['新增者',c=>c.by||''],['準',c=>c.likes||0],['唔準',c=>c.unlikes||0],
+  ['補充備註',c=>(c.comments||[]).map(m=>`${m.by?m.by+'：':''}${m.body}`).join('\n---\n')]];
+const csvCell=v=>{v=String(v??'');return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+const toCSV=list=>'\ufeff'+[CSV_COLS.map(x=>x[0]).join(','),...list.map(c=>CSV_COLS.map(x=>csvCell(x[1](c))).join(','))].join('\r\n');
+function parseCSV(t){t=t.replace(/^\ufeff/,'');const rows=[];let row=[],f='',q=false;
+  for(let i=0;i<t.length;i++){const ch=t[i];
+    if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
+    else if(ch==='"')q=true;else if(ch===','){row.push(f);f='';}
+    else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f='';}else f+=ch;}
+  if(f!==''||row.length){row.push(f);rows.push(row);}
+  const head=rows.shift()||[];return rows.filter(r=>r.some(x=>x.trim())).map(r=>Object.fromEntries(head.map((h,i)=>[h.trim(),(r[i]||'').trim()])));}
+function caseFromRow(o){
+  const num=(k,d)=>{const v=parseFloat(o[k]);return isNaN(v)?d:v;};
+  const input={name:o['姓名']||o['名稱']||'',sex:/女|坤|0/.test(o['性別']||'')?0:1,lunar:/農/.test(o['曆法']||''),leap:/是|1|true/i.test(o['閏月']||''),
+    y:num('年',NaN),m:num('月',1),d:num('日',1),h:num('時',0),mi:num('分',0),zi:num('子時換日',1),city:num('城市',0),lon:num('經度',114.17),tz:num('時區',8),
+    dst:/是|1|true/i.test(o['夏令時間']||''),tst:!/否|0|false/i.test(o['真太陽時']||'是')};
+  if(!o['名稱']||isNaN(input.y))return null;
+  return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤'])};}
 const busy=async(fn)=>{try{await fn();}catch(e){$('caseMsg').textContent='出錯：'+e.message;await reloadCases();$('caseMsg').textContent='出錯：'+e.message;return;}await reloadCases();};
 document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-open],[data-vote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
+  const t=e.target.closest('[data-open],[data-vote],[data-cvote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
   if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
   if(t.hasAttribute('data-tagclear')){TAGF.clear();renderCases();return;}
   if(t.hasAttribute('data-edit')){EDIT=true;renderCases();return;}
   if(t.hasAttribute('data-editcancel')){EDIT=false;renderCases();return;}
   if(t.hasAttribute('data-logout')){saveSess(null);ADMIN=false;reloadCases();return;}
   if(t.hasAttribute('data-signup')){const em=$('lgEmail').value.trim(),pw=$('lgPass').value;if(!em||pw.length<6){$('caseMsg').textContent='請填電郵同最少 6 個字嘅密碼。';return;}
-    auth('signup',{email:em,password:pw,options:{emailRedirectTo:location.href.split('#')[0]}}).then(async j=>{if(j.access_token){saveSess(sessFrom(j));await checkAdmin();reloadCases();}else $('caseMsg').textContent='已寄確認電郵畀你，撳咗電郵入面條 link 之後再登入。';}).catch(err=>$('caseMsg').textContent='註冊失敗：'+err.message);return;}
+    auth('signup?redirect_to='+encodeURIComponent(location.href.split('#')[0]),{email:em,password:pw,data:{name:$('lgName').value.trim()||em.split('@')[0]}}).then(async j=>{if(j.access_token){saveSess(sessFrom(j));await checkAdmin();reloadCases();}else $('caseMsg').textContent='已寄確認電郵畀你，撳咗電郵入面條 link 之後再登入。';}).catch(err=>$('caseMsg').textContent='註冊失敗：'+err.message);return;}
   if(t.dataset.tagdel){const g=t.dataset.tagdel,hit=CASES.filter(c=>(c.tags||[]).includes(g));
-    if(hit.length&&!can.tagdel())return;
+    if((CLOUD||hit.length)&&!can.tagdel())return;
     if(hit.length&&!confirm(`刪除標籤「${g}」？有 ${hit.length} 個命例用緊，會一齊移除。`))return;
-    TAG_SUG=TAG_SUG.filter(x=>x!==g);saveSug();TAGF.delete(g);
-    busy(async()=>{for(const c of hit)await Store.update(c.id,{tags:c.tags.filter(x=>x!==g)});});return;}
+    TAGF.delete(g);
+    busy(async()=>{await TagStore.remove(g);for(const c of hit)await Store.update(c.id,{tags:c.tags.filter(x=>x!==g)});});return;}
   if(t.dataset.untag){const c=CASES.find(x=>x.id===t.dataset.id);busy(()=>Store.update(c.id,{tags:(c.tags||[]).filter(g=>g!==t.dataset.untag)}));return;}
   if(t.dataset.sug){const el=$('caseTags'),cur=parseTags(el.value);if(!cur.includes(t.dataset.sug))el.value=[...cur,t.dataset.sug].join(' ');return;}
   if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);run(c.input);renderCases();
     if(matchMedia('(max-width:1099px)').matches)$('caseNote').scrollIntoView({behavior:'smooth'});}
+  else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
   else if(t.dataset.vote){const c=CASES.find(x=>x.id===t.dataset.id),v=+t.dataset.vote;busy(()=>Store.vote(c.id,c.myVote===v?0:v));}
   else if(t.hasAttribute('data-close')){CUR=null;EDIT=false;renderCases();}
   else if(t.dataset.del){if(confirm('刪除呢個命例？'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
-  else if(t.id==='caseExport'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(CLOUD?CASES:lsGet(),null,1)],{type:'application/json'}));a.download='命例.json';a.click();}
+  else if(t.id==='caseExport'){if(!can.io())return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([toCSV(CASES)],{type:'text/csv;charset=utf-8'}));a.download='命例.csv';a.click();}
 });
 document.addEventListener('submit',e=>{
   const f=e.target;
   if(f.id==='caseAdd'){e.preventDefault();const input=S&&S.inp?{...S.inp}:readForm();
     const name=$('caseName').value.trim()||input.name||'未命名',notes=$('caseNotes').value.trim();
     const tags=parseTags($('caseTags').value);
-    busy(async()=>{CUR=await Store.add({name,input,notes,tags});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;});}
+    busy(async()=>{CUR=await Store.add({name,input,notes,tags});const nw=tags.filter(x=>!TAG_SUG.includes(x));if(nw.length)await TagStore.add(nw).catch(()=>{});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;});}
   else if(f.id==='loginF'){e.preventDefault();
     auth('token?grant_type=password',{email:$('lgEmail').value.trim(),password:$('lgPass').value}).then(async j=>{saveSess(sessFrom(j));await checkAdmin();reloadCases();}).catch(err=>$('caseMsg').textContent='登入失敗：'+err.message);}
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
     const patch={name:String(fd.get('name')).trim()||c.name,notes:String(fd.get('notes')).trim(),tags:parseTags(fd.get('tags'))};
     if(fd.get('birth'))patch.input=S&&S.inp?{...S.inp}:readForm();
     busy(async()=>{await Store.update(c.id,patch);EDIT=false;if(patch.input){writeForm(patch.input);run(patch.input);}});}
-  else if(f.id==='tagMgrAdd'){e.preventDefault();const add=parseTags($('tagMgrIn').value).filter(x=>!TAG_SUG.includes(x));if(add.length){TAG_SUG=[...TAG_SUG,...add];saveSug();}$('tagMgrIn').value='';renderSug();}
+  else if(f.id==='tagMgrAdd'){e.preventDefault();const add=parseTags($('tagMgrIn').value).filter(x=>!TAG_SUG.includes(x));$('tagMgrIn').value='';if(add.length){if(CLOUD&&!can.add()){$('caseMsg').textContent='登入先可以加標籤。';return;}busy(()=>TagStore.add(add));}}
   else if(f.dataset.addtag){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addtag),add=parseTags(f.querySelector('input').value);if(c&&add.length)busy(()=>Store.update(c.id,{tags:[...new Set([...(c.tags||[]),...add])]}));}
   else if(f.dataset.comment){e.preventDefault();const body=f.querySelector('textarea').value.trim();if(body)busy(()=>Store.comment(f.dataset.comment,body));}
   else if(f.id==='f'){CUR=null;EDIT=false;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));setTimeout(renderAuth);}
 });
 $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
 $('caseImport').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;
-  try{const inc=JSON.parse(await file.text());if(!Array.isArray(inc))throw new Error('格式唔啱');
-    if(CLOUD){if(!can.add())throw new Error('要登入先可以匯入');for(const c of inc)if(c&&c.name&&c.input)await Store.add({name:c.name,input:c.input,notes:c.notes||'',tags:c.tags||[]});}
-    else{const a=lsGet(),ids=new Set(a.map(c=>c.id));inc.forEach(c=>{if(c&&c.name&&c.input&&!ids.has(c.id))a.push({likes:0,unlikes:0,myVote:0,comments:[],tags:[],...c});});lsSet(a);}
-  }catch(err){$('caseMsg').textContent='匯入失敗：'+err.message;}e.target.value='';reloadCases();});
+  // 匯入只會新增命例（名稱、出生資料、備註、標籤）；準唔準同補充備註唔會匯入
+  let n=0,bad=0;
+  try{if(!can.io())throw new Error('只有管理員可以匯入');
+    const rows=parseCSV(await file.text());if(!rows.length)throw new Error('檔案冇資料');
+    for(const o of rows){const c=caseFromRow(o);if(!c){bad++;continue;}await Store.add(c);n++;}
+    const nt=[...new Set(rows.flatMap(o=>parseTags(o['標籤'])))].filter(x=>!TAG_SUG.includes(x));if(nt.length)await TagStore.add(nt).catch(()=>{});
+  }catch(err){$('caseMsg').textContent='匯入失敗：'+err.message;e.target.value='';return;}
+  e.target.value='';await reloadCases();$('caseMsg').textContent=`匯入咗 ${n} 個命例${bad?`，${bad} 行缺名稱或年份冇匯入`:''}。`;});
 // 側欄收埋／打開：記住上次；細畫面預設收埋
 {let o=null;try{o=localStorage.getItem('b8-side');}catch(e){}$('caseBox').open=o?o==='1':!matchMedia('(max-width:1099px)').matches;}
 $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$('caseBox').open?'1':'0');}catch(e){}});
@@ -959,7 +1003,7 @@ $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$
     // 撳完確認電郵條 link 返嚟，網址會帶住登入資料
     const h=new URLSearchParams(location.hash.slice(1));
     if(h.get('access_token')){try{const r=await fetch(CLOUD.url+'/auth/v1/user',{headers:{apikey:CLOUD.key,Authorization:'Bearer '+h.get('access_token')}});const u=await r.json();
-      if(r.ok)saveSess({access_token:h.get('access_token'),refresh_token:h.get('refresh_token'),expires_at:+h.get('expires_at')||Math.floor(Date.now()/1000)+3600,user:{id:u.id,email:u.email}});}catch(e){}
+      if(r.ok)saveSess({access_token:h.get('access_token'),refresh_token:h.get('refresh_token'),expires_at:+h.get('expires_at')||Math.floor(Date.now()/1000)+3600,user:{id:u.id,email:u.email,name:((u.user_metadata||{}).name||u.email.split('@')[0]).slice(0,40)}});}catch(e){}
       history.replaceState(null,'',location.pathname+location.search);}
     else SESSION=loadSess();
     await checkAdmin();
