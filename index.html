@@ -504,7 +504,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q3"><b>Q3 遞迴</b>　啟動可以一層層傳落去：甲靠庚，庚有粘連但壬啟動咗庚，咁甲都啟動。每多一層多一個 ↑：如果啟動呢個字嘅字本身又被啟動，↑ 就再加一。同一個字喺同一條鏈入面只計一次，唔會繞住七殺圈（甲←庚←丙←壬←戊←甲）兜圈加 ↑，最多計 6 層。如果有字兜返轉頭（本身又已經啟動），命盤上面會顯示「⚠ 全盤連鎖」。招感字都一樣計，例如乙啟動招感字己，而乙本身被辛啟動，己就有兩個 ↑。</li>
     <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，↓ 照顯示但劃走，粘連標籤亦劃走。</li>
-    <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：原局地支有粘連，而原局冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示。</li>
+    <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：原局地支有粘連，而原局冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示；呢個選項只開畀進階用戶、高級用戶同管理員。</li>
     <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣加一個橙色 ↑：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到佢嘅陽刃地支（甲卯、丙午、戊午、庚酉、壬子），每見一個加一；③ 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一。三樣可以疊加，例如戊坐戌，盤上另外有兩個午、一個未：坐戌 1＋陽刃午 2＋土地支戌未 2＝↑5（坐住嘅戌都算同五行）。橙色 ↑ 只係表示力度，唔代表啟動，亦唔影響招感、粘連同啟動嘅計算。</li>
   </ol>
   </div>
@@ -760,8 +760,12 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>出生資料</th><th></th></tr></thead><tbody id="usList"></tbody></table></div>
   <div class="gbpager" id="usPager"></div>
+  <h2>用戶等級 <span class="hint">（只有管理員睇到；招感殺星只開畀進階用戶、高級用戶同管理員）</span></h2>
+  <div class="auf"><input id="tuQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
+  <p class="hint" id="tuMsg"></p>
+  <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
-  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload>重新載入</button></div>
+  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload>重新載入</button></div>
   <p class="hint" id="auMsg"></p>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
@@ -1194,6 +1198,7 @@ function render(){
     if(cols[n4])cols[n4].first=true;
   }
   // 招感殺星（Q6）：擺喺最右邊（流日右邊），本身唔參與招感粘連，只負責啟動招佢嘅字
+  S.shaOk=can.sha();if(VIEW.sha&&!S.shaOk)VIEW.sha=false;
   if(VIEW.sha)cols.push({h:'招殺星',sub:'原局冇七殺',gz:null,sha:true});
   const N=cols.length;
   // 元運柱同三桓命宮柱預設唔參與招感同粘連，只係顯示
@@ -1320,7 +1325,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label><label class="chk" title="原局有粘連但原局冇七殺嘅天干（地支冇沖害刑），自動由最右邊招殺星（規則 Q6）"><input type="checkbox" id="vSha" ${VIEW.sha?'checked':''}>招感殺星</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${loopNote()}${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label>${can.sha()?`<label class="chk" title="原局有粘連但原局冇七殺嘅天干（地支冇沖害刑），自動由最右邊招殺星（規則 Q6）"><input type="checkbox" id="vSha" ${VIEW.sha?'checked':''}>招感殺星</label>`:''}<label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${loopNote()}${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
   <section class="panel">
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
@@ -1422,7 +1427,7 @@ const lsSet=a=>{try{localStorage.setItem(LS_CASES,JSON.stringify(a));return true
 const localVoter=(()=>{try{let v=localStorage.getItem('b8-voter');if(!v){v=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now();localStorage.setItem('b8-voter',v);}return v;}catch(e){return 'anon';}})();
 
 /* 登入（Supabase Auth） */
-let SESSION=null,ADMIN=false;
+let SESSION=null,ADMIN=false,TIER='';
 const loadSess=()=>{try{return JSON.parse(localStorage.getItem('b8-session'));}catch(e){return null;}};
 const saveSess=s=>{SESSION=s;try{s?localStorage.setItem('b8-session',JSON.stringify(s)):localStorage.removeItem('b8-session');}catch(e){}};
 async function auth(path,body){
@@ -1431,7 +1436,7 @@ async function auth(path,body){
 const sessFrom=j=>({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),user:{id:j.user.id,email:j.user.email,name:((j.user.user_metadata||{}).name||(j.user.user_metadata||{}).full_name||(j.user.email||'用戶').split('@')[0]).slice(0,40)}});
 async function token(){
   if(!SESSION)return null;
-  if(SESSION.expires_at-60<Date.now()/1000){try{saveSess(sessFrom(await auth('token?grant_type=refresh_token',{refresh_token:SESSION.refresh_token})));}catch(e){saveSess(null);ADMIN=false;return null;}}
+  if(SESSION.expires_at-60<Date.now()/1000){try{saveSess(sessFrom(await auth('token?grant_type=refresh_token',{refresh_token:SESSION.refresh_token})));}catch(e){saveSess(null);ADMIN=false;TIER='';return null;}}
   return SESSION.access_token;}
 async function api(path,opt={}){
   const tk=await token();
@@ -1442,11 +1447,17 @@ async function api(path,opt={}){
 const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('b8-anon',a);}return a;}catch(e){return Math.random().toString(36).slice(2,12)+'x';}})();
 function track(kind,input){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
   api('usage',{method:'POST',body:JSON.stringify({kind,anon:ANON,mobile,...(input?{input}:{})})}).catch(()=>{});}
-async function checkAdmin(){ADMIN=false;if(CLOUD&&SESSION){try{ADMIN=(await api('admins?select=user_id')).length>0;}catch(e){}}}
+async function checkAdmin(){ADMIN=false;TIER='';if(CLOUD&&SESSION){try{ADMIN=(await api('admins?select=user_id')).length>0;}catch(e){}
+  // 用戶等級（supabase/007_tiers.sql）：進階用戶 advance、高級用戶 premium；未設定就係普通用戶
+  try{const r=await api('user_tiers?select=tier&user_id=eq.'+SESSION.user.id);TIER=(r[0]&&r[0].tier)||'';}catch(e){}}}
+const TIER_N={advance:'進階用戶',premium:'高級用戶'};
+const tierTag=()=>ADMIN?'<b class="adm">管理員</b>':TIER_N[TIER]?`<b class="adm tier">${TIER_N[TIER]}</b>`:'';
 const me=()=>CLOUD?(SESSION&&SESSION.user.id):localVoter;
 const myName=()=>CLOUD?(SESSION&&(SESSION.user.name||SESSION.user.email))||'':'我';
 // 權限：本機模式乜都做得；雲端模式要登入先加得，自己加嘅自己改同刪，管理員改同刪任何命例
-const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN};
+const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN,
+  // 招感殺星：只限進階用戶、高級用戶同管理員（本機模式照開）
+  sha:()=>!CLOUD||ADMIN||TIER==='advance'||TIER==='premium'};
 
 const Store={
   async list(){
@@ -1521,7 +1532,7 @@ function renderSug(){
 // 每頁幾多條：預設 20，記喺呢個瀏覽器；「全部」= 0（伺服器一次最多俾 1000 條，超過就照樣分頁）
 const AU={p:0,n:(()=>{try{const v=localStorage.getItem('b8-aun');return v!=null&&['0','20','50','100','200'].includes(v)?+v:20;}catch(e){return 20;}})(),loaded:false};
 $('auN').value=String(AU.n);
-const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員',users:'用戶註冊',logins:'用戶登入'};
+const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員',user_tiers:'用戶等級',users:'用戶註冊',logins:'用戶登入'};
 const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'準','-1':'唔準','0':'撤回'};
 const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者'};
 const auS=v=>v==null?'':typeof v==='string'?v:JSON.stringify(v);
@@ -1552,6 +1563,22 @@ async function loadAudit(){
   }catch(e){$('auList').innerHTML='';$('auPager').innerHTML='';$('auMsg').textContent=/audit_log|42P01|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/005_audit.sql。':'載入唔到：'+e.message;}
 }
 const US={p:0,n:50,rows:[]};
+// 用戶等級（管理員）：列出全部用戶，揀普通／進階／高級；管理員本身唔使揀
+const TU={loaded:false,rows:[]};
+async function loadTiers(){
+  if(!(CLOUD&&ADMIN))return;
+  try{TU.rows=await api('rpc/admin_users',{method:'POST',body:'{}'});$('tuMsg').textContent='';}
+  catch(e){TU.rows=[];$('tuList').innerHTML='';$('tuMsg').textContent=/admin_users|42883|PGRST20|42P01/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/007_tiers.sql。':'載入唔到：'+e.message;return;}
+  drawTiers();}
+function drawTiers(){const q=($('tuQ').value||'').trim().toLowerCase(),d=t=>t?new Date(t).toLocaleString('zh-HK',{hour12:false}):'—';
+  const rows=TU.rows.filter(u=>!q||(u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q));
+  $('tuList').innerHTML=rows.map(u=>`<tr><td>${esc(u.name||'')}<br><span class="hint">${esc(u.email||'')}</span></td><td>${d(u.created_at)}</td><td>${d(u.last_sign_in_at)}</td><td>${u.admin?'<b class="adm">管理員</b>':`<select data-tier="${u.id}" aria-label="等級"><option value="">普通用戶</option><option value="advance"${u.tier==='advance'?' selected':''}>進階用戶</option><option value="premium"${u.tier==='premium'?' selected':''}>高級用戶</option></select>`}</td></tr>`).join('')||'<tr><td colspan="4" class="hint">冇用戶</td></tr>';}
+async function setTier(id,tier){const msg=$('tuMsg');
+  try{if(tier)await api('user_tiers?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({user_id:id,tier,updated_at:new Date().toISOString()})});
+    else await api('user_tiers?user_id=eq.'+id,{method:'DELETE'});
+    const u=TU.rows.find(x=>x.id===id);if(u)u.tier=tier||null;msg.textContent='已更新：'+((u&&(u.name||u.email))||'')+' → '+(TIER_N[tier]||'普通用戶');
+    if(SESSION&&id===SESSION.user.id){TIER=tier;renderAuth();}}
+  catch(e){msg.textContent='改唔到：'+e.message;drawTiers();}}
 async function loadUsage(){
   if(!(CLOUD&&ADMIN))return;
   const cols=[['visitors','人數（部機）'],['users','登入用戶'],['visits','開網'],['charts','排盤'],['cases','開命例']];
@@ -1569,20 +1596,23 @@ async function loadUsage(){
     $('usPager').innerHTML=US.p||more?`<button type="button" class="lnk" data-uspage="-1" ${US.p?'':'disabled'}>‹ 新啲</button><span class="hint">第 ${US.p+1} 頁</span><button type="button" class="lnk" data-uspage="1" ${more?'':'disabled'}>舊啲 ›</button>`:'';
   }catch(e){$('usList').innerHTML='';$('usPager').innerHTML='';$('usMsg').textContent='載入唔到：'+e.message;}
 }
-$('audit').addEventListener('change',e=>{if(e.target.id==='usKind'||e.target.id==='usQ'){US.p=0;loadUsage();}});
+$('audit').addEventListener('change',e=>{if(e.target.dataset.tier!==undefined){setTier(e.target.dataset.tier,e.target.value);return;}if(e.target.id==='usKind'||e.target.id==='usQ'){US.p=0;loadUsage();}});
+$('tuQ').addEventListener('input',drawTiers);
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],[data-usopen]');if(!b)return;
   if(b.dataset.uspage){US.p=Math.max(0,US.p+ +b.dataset.uspage);loadUsage();return;}
   const v=US.rows[+b.dataset.usopen].input;writeForm(v);run(v);mTab('chart');$('out').scrollIntoView({block:'start'});});
 $('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun',e.target.value);}catch(x){}}if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,AU.p+ +b.dataset.aupage);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
 function renderAuth(){
+  const shaOk=can.sha();if(!shaOk)VIEW.sha=false;if(S&&S.dys&&S.shaOk!==shaOk)render();
+  if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
   $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();}else if(!ADMIN)AU.loaded=false;
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
   $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();
   const box=$('caseAuth'),ma=$('mAuth');if(!CLOUD){box.hidden=true;ma.innerHTML='';return;}box.hidden=false;
   // 手機版頂部左邊嘅登入狀態；未登入撳「登入」去命例頁嘅登入選項
-  ma.innerHTML=SESSION?`<span class="who">👤 ${esc(SESSION.user.name||SESSION.user.email||'')}</span>${ADMIN?'<b class="adm">管理員</b>':''}<button type="button" data-logout>登出</button>`:`<button type="button" data-mlogin>登入</button><span class="hint">登入先可以加命例同投票</span>`;
-  box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||SESSION.user.name||'')}${ADMIN?' · <b class="adm">管理員</b>':''}</span> <button type="button" class="lnk" data-logout>登出</button>`
+  ma.innerHTML=SESSION?`<span class="who">👤 ${esc(SESSION.user.name||SESSION.user.email||'')}</span>${tierTag()}<button type="button" data-logout>登出</button>`:`<button type="button" data-mlogin>登入</button><span class="hint">登入先可以加命例同投票</span>`;
+  box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||SESSION.user.name||'')}${tierTag()?' · '+tierTag():''}</span> <button type="button" class="lnk" data-logout>登出</button>`
     :`${[['google','G','#4285f4','Google'],['discord','D','#5865f2','Discord']].map(([pv,ic,col,nm])=>`<a class="gbtn" href="${CLOUD.url}/auth/v1/authorize?provider=${pv}&redirect_to=${encodeURIComponent(location.origin+location.pathname)}"><b style="color:${col}">${ic}</b> 用 ${nm} 登入</a>`).join('')}<p class="hint" style="text-align:center;margin:6px 0">或者用電郵</p><form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
   
 }
@@ -1713,7 +1743,7 @@ document.addEventListener('click',e=>{
   if(t.hasAttribute('data-editcancel')){EDIT=false;renderCases();return;}
   if(t.hasAttribute('data-resend')){const em=$('lgEmail')&&$('lgEmail').value.trim();if(!em)return;t.disabled=true;
     auth('resend?redirect_to='+encodeURIComponent(location.origin+location.pathname),{type:'signup',email:em}).then(()=>{$('caseMsg').textContent=`已重寄確認電郵去 ${em}，請睇埋垃圾郵件匣。`;}).catch(err=>{$('caseMsg').textContent='重寄失敗：'+err.message+'（Supabase 每個鐘只可以寄幾封，遲啲再試）';});return;}
-  if(t.hasAttribute('data-logout')){saveSess(null);ADMIN=false;reloadCases();return;}
+  if(t.hasAttribute('data-logout')){saveSess(null);ADMIN=false;TIER='';reloadCases();return;}
   if(t.hasAttribute('data-signup')){const em=$('lgEmail').value.trim(),pw=$('lgPass').value;if(!em||pw.length<6){$('caseMsg').textContent='請填電郵同最少 6 個字嘅密碼。';return;}
     auth('signup?redirect_to='+encodeURIComponent(location.href.split('#')[0]),{email:em,password:pw,data:{name:$('lgName').value.trim()||em.split('@')[0]}}).then(async j=>{if(j.access_token){saveSess(sessFrom(j));await checkAdmin();reloadCases();}else $('caseMsg').textContent='已寄確認電郵畀你，撳咗電郵入面條 link 之後再登入。';}).catch(err=>$('caseMsg').textContent='註冊失敗：'+err.message);return;}
   if(t.dataset.tagdel){const g=t.dataset.tagdel,hit=CASES.filter(c=>(c.tags||[]).includes(g));
