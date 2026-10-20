@@ -48,6 +48,10 @@ header p{margin:0;color:var(--muted);font-size:13px}
 .gbreply{margin:6px 0 0 18px}
 .gbreply textarea{width:100%;box-sizing:border-box}
 .gblist .who{font-weight:700}
+.gbpager{display:flex;flex-wrap:wrap;gap:4px;align-items:center;justify-content:center;margin-top:12px}
+.gbpager .pg{font:inherit;font-size:13px;min-width:30px;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);cursor:pointer}
+.gbpager .pg.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.gbpager .lnk:disabled{opacity:.4;cursor:default}
 .gblist .when{color:var(--muted);font-size:12px;margin-left:8px}
 .gblist .body{margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}
 #gbAdd,.gbreply{display:block}
@@ -634,6 +638,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div id="gbForm"></div>
   <p class="hint" id="gbMsg"></p>
   <ul class="gblist" id="gbList"></ul>
+  <div class="gbpager" id="gbPager"></div>
 </section>
 <footer class="madeby">Created by 隱姓師父天字第一號小粉絲 - 叉油雞飯多汁</footer>
 </div>
@@ -1337,20 +1342,24 @@ const GB={
     await api('guestbook',{method:'POST',body:JSON.stringify({body,author_name:myName(),...(parent?{parent}:{})})});},
   async remove(id){if(!CLOUD){localStorage.setItem(LS_GB,JSON.stringify(gbLs().filter(m=>m.id!==id&&m.parent!==id)));return;}
     await api('guestbook?id=eq.'+encodeURIComponent(id),{method:'DELETE'});}};
-let GBS=[],GBR=null;
+// 留言版分頁：每頁 10 條主留言，回覆跟住佢嘅主留言
+let GBS=[],GBR=null,GBP=1;const GB_N=10;
 const gbWhen=t=>{const d=new Date(t);return isNaN(d)?'':`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;};
 function renderGB(){
   $('gbForm').innerHTML=can.vote()?`<form id="gbAdd"><textarea id="gbBody" rows="3" maxlength="1000" placeholder="留低你想講嘅嘢，例如意見、問題或者命例討論" required></textarea><div class="row" style="justify-content:space-between;margin-top:6px"><span class="hint">以「${esc(myName())}」名義留言</span><button type="submit" class="go sm">留言</button></div></form>`:'<p class="hint">登入先可以留言。所有人都睇到留言。</p>';
   const canDel=m=>!CLOUD||ADMIN||(SESSION&&m.author===SESSION.user.id);
   const one=m=>`<span class="who">${esc(m.by||'無名')}</span><span class="when">${gbWhen(m.t)}</span>${canDel(m)?` <button type="button" class="lnk del" data-gbdel="${esc(m.id)}">刪除</button>`:''}<div class="body">${esc(m.body)}</div>`;
-  const top=GBS.filter(m=>!m.parent);
+  const all=GBS.filter(m=>!m.parent),np=Math.max(1,Math.ceil(all.length/GB_N));GBP=Math.min(Math.max(1,GBP),np);
+  const top=all.slice((GBP-1)*GB_N,GBP*GB_N);
+  $('gbPager').innerHTML=np>1?`<button type="button" class="lnk" data-gbpage="${GBP-1}" ${GBP===1?'disabled':''}>‹ 上一頁</button>${Array.from({length:np},(_,i)=>`<button type="button" class="pg${i+1===GBP?' on':''}" data-gbpage="${i+1}" aria-current="${i+1===GBP}">${i+1}</button>`).join('')}<button type="button" class="lnk" data-gbpage="${GBP+1}" ${GBP===np?'disabled':''}>下一頁 ›</button>`:'';
   $('gbList').innerHTML=top.length?top.map(m=>{const rs=GBS.filter(r=>r.parent===m.id).reverse();
     return `<li>${one(m)}${rs.length?`<ul class="gbreplies">${rs.map(r=>`<li>${one(r)}</li>`).join('')}</ul>`:''}${can.vote()?(GBR===m.id?`<form class="gbreply" data-gbparent="${esc(m.id)}"><textarea rows="2" maxlength="1000" placeholder="回覆 ${esc(m.by||'')}" required></textarea><div class="row" style="gap:8px;margin-top:4px"><button type="submit" class="go sm">回覆</button><button type="button" class="lnk" data-gbcancel>取消</button></div></form>`:`<button type="button" class="lnk" data-gbreply="${esc(m.id)}">回覆</button>`):''}</li>`;}).join(''):'<li class="hint" style="border:0">未有留言。</li>';}
 async function reloadGB(){try{GBS=await GB.list();$('gbMsg').textContent='';}catch(e){GBS=[];$('gbMsg').textContent=/404|guestbook|PGRST/.test(e.message)?'留言版未開通：管理員要喺 Supabase 執行 supabase/003_guestbook.sql。':'讀唔到留言：'+e.message;}renderGB();}
 document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='gbAdd'&&!f.dataset.gbparent)return;e.preventDefault();const b=f.querySelector('textarea').value.trim();if(!b)return;
   const btn=f.querySelector('button[type=submit]');btn.disabled=true;
-  GB.add(b.slice(0,1000),f.dataset.gbparent).then(()=>{GBR=null;return reloadGB();}).catch(err=>{$('gbMsg').textContent='留言失敗：'+err.message;btn.disabled=false;});});
-document.addEventListener('click',e=>{const t=e.target.closest('[data-gbdel],[data-gbreply],[data-gbcancel]');if(!t)return;
+  GB.add(b.slice(0,1000),f.dataset.gbparent).then(()=>{GBR=null;if(!f.dataset.gbparent)GBP=1;return reloadGB();}).catch(err=>{$('gbMsg').textContent='留言失敗：'+err.message;btn.disabled=false;});});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-gbdel],[data-gbreply],[data-gbcancel],[data-gbpage]');if(!t)return;
+  if(t.dataset.gbpage){if(t.disabled)return;GBP=+t.dataset.gbpage;GBR=null;renderGB();$('gb').scrollIntoView({block:'start'});return;}
   if(t.dataset.gbreply){GBR=t.dataset.gbreply;renderGB();const ta=document.querySelector('.gbreply textarea');if(ta)ta.focus();return;}
   if(t.hasAttribute('data-gbcancel')){GBR=null;renderGB();return;}if(!twice(t,'確定刪除？'))return;
   GB.remove(t.dataset.gbdel).then(reloadGB).catch(err=>{$('gbMsg').textContent='刪除失敗：'+err.message;});});
