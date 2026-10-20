@@ -262,7 +262,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .mfold>summary{display:none}
 /* 手機版：底部分頁（排盤／命盤／命例／更多），每次只顯示一頁；桌面版唔顯示呢啲 */
 .mtop,.mguide,.mbar,.mcasehint{display:none}
-@media (max-width:700px){
+@media (max-width:700px),(pointer:coarse) and (max-width:1000px){
   body{padding-block:0 32px;font-size:16px}
   .mtop{display:block;position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 4px;margin:0 -16px 12px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
   .mauth{display:flex;align-items:center;gap:8px;font-size:14px;min-height:28px}.mauth .who{font-weight:600;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -968,7 +968,7 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];if(!up&&!dn)r
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
 function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.act[k][ci][0]>0;
   return act?`<span class="lk off" title="${n} 條粘連，粘連力 ×${f}；已被七殺解開，七殺力度 ×${f}">解 ×${f}</span>`:`<span class="lk" title="${n} 條粘連，粘連力 ×${f}">粘 ×${f}</span>`;}
-const isMob=()=>matchMedia('(max-width:700px)').matches;
+const isMob=()=>matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
 const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false};
