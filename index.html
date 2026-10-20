@@ -483,7 +483,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-z2"><b>Z2 重字只招一個</b>　幾多個重字都只招一個字，擺喺最近嗰兩個重字中間。三個重字加一個 ↑，之後每多一個重字多一個 ↑，冇上限。</li>
     <li id="r-z3"><b>Z3 夾拱</b>　兩個字喺天干或地支次序相差兩位，招出中間嗰個字，例如丙戊夾拱丁、子寅夾拱丑。次序循環計，所以壬甲夾拱癸、亥丑夾拱子。</li>
     <li id="r-z4"><b>Z4 夾拱一對一</b>　每個字喺同一種夾拱只可以用一次，兩邊字一對一配，最近嘅先配，所以兩丙兩戊只夾拱兩個丁。</li>
-    <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字本身唔會再招感，亦唔會啟動其他字。</li>
+    <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字本身唔會再招感，亦唔會啟動其他字，直至招感字本身被啟動（天干被七殺剋，地支被沖、害、刑，條件同 Q1、Q2）。未啟動嘅招感字旁邊顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，佢同來源字嘅粘連解開，之後就可以同其他字招感、亦可以去啟動其他字。新招出嚟嘅字同樣要等自己被啟動先有作用。</li>
     <li id="r-z6"><b>Z6 合併顯示（選項）</b>　剔咗「同一招感字合併顯示」，同一行同一個招感字只顯示一個，寫 ×次數；只改顯示，唔改計算。</li>
   </ol>
   <h4>丙・粘連</h4>
@@ -500,7 +500,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <ol>
     <li id="r-q1"><b>Q1 天干</b>　盤上有呢個字嘅七殺（同陰陽、剋我，例如庚之於甲），而嗰個七殺冇粘連，或者七殺本身已經啟動，呢個字就啟動。</li>
     <li id="r-q2"><b>Q2 地支</b>　盤上有同呢個字相沖、相害或相刑嘅字（刑計寅巳、巳申、申寅、丑戌、戌未、未丑、子卯；自刑唔計），條件同 Q1。</li>
-    <li id="r-q3"><b>Q3 遞迴</b>　啟動可以一層層傳落去：甲靠庚，庚有粘連但壬啟動咗庚，咁甲都啟動。每多一層多一個 ↑。</li>
+    <li id="r-q3"><b>Q3 遞迴</b>　啟動可以一層層傳落去：甲靠庚，庚有粘連但壬啟動咗庚，咁甲都啟動。每多一層多一個 ↑：如果啟動呢個字嘅字本身又被啟動，↑ 就再加一。招感字都一樣計，例如乙啟動招感字己，而乙本身被辛啟動，己就有兩個 ↑。</li>
     <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，↓ 照顯示但劃走，粘連標籤亦劃走。</li>
   </ol>
@@ -902,7 +902,7 @@ function zhaogan(cols){
   const st=[],br=[],HE6={子:'丑',丑:'子',寅:'亥',亥:'寅',卯:'戌',戌:'卯',辰:'酉',酉:'辰',巳:'申',申:'巳',午:'未',未:'午'};
   const cs=cols.map((c,i)=>({...c,i})).filter(c=>c.gz);
   const side=(arr,k,n,chars,lbl,partner,out)=>{
-    const seen={};arr.forEach(c=>{const v=chars.indexOf(c.gz[k]);(seen[v]=seen[v]||[]).push(c);});
+    const seen={};arr.forEach(c=>{const v=chars.indexOf(c.gz[k]);if(v>=0)(seen[v]=seen[v]||[]).push(c);});
     for(const v in seen){const g=seen[v];if(g.length<2)continue;const ch=chars[v];
       // 幾多個重字都只招一個字，擺喺最近嗰兩個中間；多過兩個就加箭咀表示能量
       let j0=1;for(let j=2;j<g.length;j++)if(g[j].i-g[j-1].i<g[j0].i-g[j0-1].i)j0=j;
@@ -919,12 +919,18 @@ function zhaogan(cols){
   side(cs,1,12,ZHI,'支',ch=>HE6[ch],br);
   return {st,br};
 }
+// 同 zhaogan 一樣，但柱已經有自己嘅位置 i（假柱用小數位）
+function zhaogan2(ext){const r=zhaogan(ext.map(c=>({gz:c.gz,dyn:c.dyn,lbl:c.lbl})));const fix=z=>{const src=z.src.map(j=>ext[j].i);const a=ext[z.pa].i,b=ext[z.pb].i;return {...z,src,pa:a,pb:b,pos:(a+b)/2+0.5};};return {st:r.st.map(fix),br:r.br.map(fix)};}
+// 招感字：未啟動顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，每多一層啟動多一個 ↑（Z5、Q3）
+function zgArrows(k,vi){const a=S.vact&&S.vact[k]&&S.vact[k][vi],dn=(S.vdown&&S.vdown[k]&&S.vdown[k][vi])||0;
+  if(a&&a[0]>0)return `<span class="act zgon" title="被${a[1]}啟動">${'<b>↑</b>'.repeat(a[0])}</span>`;
+  return dn?`<span class="act" title="${dn} 條粘連（未被啟動，唔會招感或者啟動其他字）">${'<b class="dn">↓</b>'.repeat(dn)}</span>`:'';}
 function zgStrip(list,isGan,ncol){
   if(!list.length)return '<span class="tiny" style="padding:4px 0">—</span>';
   const rows=[];
   const items=list.map((x,oi)=>({oi,...x})).sort((a,b)=>a.pos-b.pos).map(x=>{let r=0;while(rows[r]&&rows[r].some(p=>Math.abs(p-x.pos)<0.75))r++;(rows[r]=rows[r]||[]).push(x.pos);return {...x,row:r};});
   return `<div class="zgstrip" style="height:${rows.length*52}px">${items.map(x=>{const w=isGan?gw(gi(x.c)):ZWX[zi(x.c)];
-    return `<span class="zg w${w}${x.dyn?' zgd':''}" data-zg="${isGan?0:1}-${x.oi}" style="left:${x.pos/ncol*100}%;top:${x.row*52}px" title="${x.from}">${x.c}${x.n>1?`<b class="zgn">×${x.n}</b>`:''}<i>${x.tag}</i>${x.boost>0?`<span class="act" title="${x.boost+2} 個重字招合">${'↑'.repeat(x.boost)}</span>`:''}</span>`;}).join('')}</div>`;
+    return `<span class="zg w${w}${x.dyn?' zgd':''}" data-zg="${isGan?0:1}-${x.oi}" style="left:${x.pos/ncol*100}%;top:${x.row*52}px" title="${x.from}">${x.c}${x.n>1?`<b class="zgn">×${x.n}</b>`:''}<i>${x.tag}</i>${x.boost>0?`<span class="act" title="${x.boost+2} 個重字招合">${'↑'.repeat(x.boost)}</span>`:''}${zgArrows(isGan?0:1,x.oi)}</span>`;}).join('')}</div>`;
 }
 
 /* ---------- 粘連：伏吟、連續、五合六合 ---------- */
@@ -952,7 +958,7 @@ function chains(cols,k,virt){
   for(let x=0;x<cs.length;x++)for(let y=x+1;y<cs.length;y++){const A=cs[x],B=cs[y];
     if((B.v-A.v+n)%n===1||(A.v-B.v+n)%n===1)out.push({a:A.i,b:B.i,t:'lian',tip:'連續 '+chars[A.v]+chars[B.v]});}
   // 招感出嚟嘅字只同招佢出嚟嗰兩個字粘連：夾 → 連續，招合 → 合
-  (virt||[]).forEach((z,vi)=>z.src.forEach(ci=>{const t=z.kind==='jia'?'lian':'he';
+  (virt||[]).forEach((z,vi)=>z.src.filter(ci=>Number.isInteger(ci)&&cols[ci]).forEach(ci=>{const t=z.kind==='jia'?'lian':'he';
     out.push({a:ci,vx:z.pos,vi,vc:z.c,vname:`招感${z.c}（${z.tag}）`,t,tip:`${t==='he'?'合':'連續'} 招感${z.c}（${z.tag}）· ${cols[ci].h}${k?'支':'干'}${cols[ci].gz[k]}`});}));
   return out;
 }
@@ -961,21 +967,24 @@ function chains(cols,k,virt){
 const BR_ACT={};[[CHONG,'沖'],[CHUAN,'害'],[['寅巳','巳申','申寅','丑戌','戌未','未丑','子卯'],'刑']].forEach(([l,n])=>l.forEach(p=>{(BR_ACT[p[0]]=BR_ACT[p[0]]||{})[p[1]]=n;(BR_ACT[p[1]]=BR_ACT[p[1]]||{})[p[0]]=n;}));
 function killers(k,v){if(!k)return [(v+6)%10];return Object.keys(BR_ACT[ZHI[v]]||{}).map(c=>zi(c));}
 const actName=(k,v,w)=>k?BR_ACT[ZHI[v]][ZHI[w]]:'七殺';
-function activation(cols,k,links){
-  const chars=k?ZHI:GAN,lbl=c=>c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0];
-  const vals=cols.map(c=>c.gz?chars.indexOf(c.gz[k]):-1);
-  const chained=new Set();links.forEach(l=>{chained.add(l.a);if(l.b!=null)chained.add(l.b);});
+// 招感字（virt）都計：佢有粘連（同來源字），所以未被啟動之前唔會啟動其他字；被啟動之後就可以（Z5）
+function activation(cols,k,links,virt=[]){
+  const chars=k?ZHI:GAN,N=cols.length,lbl0=c=>c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0];
+  const vals=[...cols.map(c=>c.gz?chars.indexOf(c.gz[k]):-1),...virt.map(z=>chars.indexOf(z.c))];
+  const lbl=j=>j<N?lbl0(cols[j]):'招感';
+  const chained=new Set();links.forEach(l=>{chained.add(l.a);if(l.b!=null)chained.add(l.b);if(l.vi!=null)chained.add(N+l.vi);});
+  virt.forEach((_,vi)=>chained.add(N+vi));
   const lvl=(i,seen)=>{let best=[0,''];
     // 七殺冇粘連，或者七殺本身已經啟動，先啟動得到呢個字
     for(let j=0;j<vals.length;j++){if(j===i||vals[j]<0||seen.has(j)||!killers(k,vals[i]).includes(vals[j]))continue;
-      const [n,why]=lvl(j,new Set([...seen,i]));if(chained.has(j)&&n===0)continue;if(n+1>best[0])best=[n+1,`${actName(k,vals[i],vals[j])}${lbl(cols[j])}${k?'支':'干'}${chars[vals[j]]}${why?'（'+why+'）':''}`];}
+      const [n,why]=lvl(j,new Set([...seen,i]));if(chained.has(j)&&n===0)continue;if(n+1>best[0])best=[n+1,`${actName(k,vals[i],vals[j])}${lbl(j)}${k?'支':'干'}${chars[vals[j]]}${why?'（'+why+'）':''}`];}
     return best;};
-  const act=vals.map((v,i)=>v<0?[0,'']:lvl(i,new Set()));
+  const all=vals.map((v,i)=>v<0?[0,'']:lvl(i,new Set())),act=all.slice(0,N),vact=all.slice(N);
     // 七殺嘅向上箭咀數 ≥ 粘連（向下箭咀）數，先解得開佢身上嘅粘連
   const down=vals.map((_,i)=>links.filter(l=>l.a===i||l.b===i).length);
   const brk=i=>act[i][0]>0;
-  links.forEach(l=>{l.broken=brk(l.a)||(l.b!=null&&brk(l.b));});
-  return act;
+  links.forEach(l=>{l.broken=brk(l.a)||(l.b!=null&&brk(l.b))||(l.vi!=null&&vact[l.vi][0]>0);});
+  act.vact=vact;return act;
 }
 // 每個字下面列出佢嘅粘連點樣嚟，例如「己己粘連」
 function nlList(k,ci,cols){
@@ -1151,10 +1160,37 @@ function render(){
   // 元運柱同三桓命宮柱預設唔參與招感同粘連，只係顯示
   // 收埋咗嘅柱本身唔喺 cols 入面，所以唔計；大運流年流月流日條線閂咗照計，只係收埋條線
   const cc=cols.map(c=>(c.yuan&&!VIEW.yuanCalc)||(c.aux&&!VIEW.auxCalc)?{...c,gz:null}:c);
-  const ZG=zhaogan(cc.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0]})));
+  const zcols=cc.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0]}));
+  const ZG=zhaogan(zcols);
   S.cols=cols;
-  S.links=[0,1].map(k=>chains(cc,k,k?ZG.br:ZG.st));
-  S.act=[0,1].map(k=>activation(cc,k,S.links[k]));
+  // Z5：招感字被啟動之後，可以同其他字再招感、再啟動；新招出嚟嘅字同樣要等被啟動先有作用。一路計到冇新嘢為止
+  for(let round=0;round<4;round++){
+    S.links=[0,1].map(k=>chains(cc,k,k?ZG.br:ZG.st));
+    const prev=S.act&&round?S.act:null;
+    S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st));
+    // 之前一輪已經啟動咗嘅字保持啟動（新招出嚟嘅字加咗粘連，唔會反過嚟令佢哋失效）
+    if(prev)[0,1].forEach(k=>{const A=S.act[k],P=prev[k];A.forEach((x,i)=>{if(P[i]&&P[i][0]>x[0])A[i]=P[i];});A.vact.forEach((x,i)=>{if(P.vact[i]&&P.vact[i][0]>x[0])A.vact[i]=P.vact[i];});
+      S.links[k].forEach(l=>{l.broken=A[l.a][0]>0||(l.b!=null&&A[l.b][0]>0)||(l.vi!=null&&A.vact[l.vi][0]>0);});});
+    const used=ZG.used||(ZG.used=new Set());
+    const pseudo=[0,1].flatMap(k=>(k?ZG.br:ZG.st).map((z,vi)=>({z,vi,k})).filter(({vi,k})=>S.act[k].vact[vi][0]>0&&!used.has(k+'-'+vi)));
+    if(!pseudo.length)break;
+    pseudo.forEach(({vi,k})=>used.add(k+'-'+vi));
+    // 已啟動嘅招感字當做一條假柱（只有嗰一行有字），擺喺佢自己位置，再計一次招感，只要有佢參與嘅新結果
+    const act=[0,1].flatMap(k=>(k?ZG.br:ZG.st).map((z,vi)=>({z,vi,k})).filter(({vi,k})=>used.has(k+'-'+vi)));
+    const pc=act.map(({z,k},j)=>({i:z.pos-0.5+0.001*(j+1),gz:k?'　'+z.c:z.c+'　',dyn:z.dyn,lbl:'招感',pseudo:true}));
+    const ext=zcols.map((c,i)=>({...c,i})).concat(pc).sort((a,b)=>a.i-b.i);
+    const Z2=zhaogan2(ext);
+    let added=0;
+    [['st',0],['br',1]].forEach(([key,k])=>{const cur=ZG[key];
+      Z2[key].filter(z=>z.src.some(i=>!Number.isInteger(i))).forEach(z=>{
+        const real=z.src.filter(i=>Number.isInteger(i));
+        if(z.kind==='he'){const ex=cur.find(o=>o.kind==='he'&&o.c===z.c&&o.src.every(i=>z.src.includes(i)));if(ex){ex.boost=Math.max(ex.boost||0,z.boost);return;}}
+        else if(cur.some(o=>o.kind==='jia'&&o.c===z.c&&o.src.some(i=>real.includes(i))))return;
+        if(cur.some(o=>o.c===z.c&&o.src.length===z.src.length&&o.src.every(i=>z.src.includes(i))))return;
+        cur.push({...z,pa:null,pb:null,second:true});added++;});});
+    if(!added)break;
+  }
+  S.vact=S.act.map(a=>a.vact);S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
   // 粘連力：每條粘連乘二
   S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).length));
   // 同一個招感字出現多次：選項開咗就只顯示一個，後面寫 ×次數（只影響顯示，粘連照計）
