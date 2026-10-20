@@ -713,7 +713,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>出生資料</th><th></th></tr></thead><tbody id="usList"></tbody></table></div>
   <div class="gbpager" id="usPager"></div>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
-  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><button type="button" class="lnk" data-aureload>重新載入</button></div>
+  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload>重新載入</button></div>
   <p class="hint" id="auMsg"></p>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
@@ -1384,7 +1384,9 @@ function renderSug(){
   $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${(CLOUD?can.tagdel():!used[t]||can.tagdel())?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
 }
 // 審計紀錄：管理員睇邊個用戶新增、修改、刪除咗乜（資料由 supabase/005_audit.sql 嘅 trigger 寫入）
-const AU={p:0,n:50,loaded:false};
+// 每頁幾多條：預設 20，記喺呢個瀏覽器；「全部」= 0（伺服器一次最多俾 1000 條，超過就照樣分頁）
+const AU={p:0,n:(()=>{try{const v=localStorage.getItem('b8-aun');return v!=null&&['0','20','50','100','200'].includes(v)?+v:20;}catch(e){return 20;}})(),loaded:false};
+$('auN').value=String(AU.n);
 const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員',users:'用戶註冊',logins:'用戶登入'};
 const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'準','-1':'唔準','0':'撤回'};
 const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者'};
@@ -1407,8 +1409,9 @@ async function loadAudit(){
   const f=[],t=$('auTbl').value,op=$('auOp').value,q=$('auQ').value.trim().replace(/[,()*%]/g,'');
   if(t)f.push('tbl=eq.'+t);if(op)f.push('op=eq.'+op);if(q)f.push('or='+encodeURIComponent(`(actor_name.ilike.*${q}*,actor_email.ilike.*${q}*)`));
   $('auMsg').textContent='載入緊…';
-  try{const rows=await api(`audit_log?select=*&order=at.desc&limit=${AU.n+1}&offset=${AU.p*AU.n}${f.length?'&'+f.join('&'):''}`);
-    const more=rows.length>AU.n;rows.length=Math.min(rows.length,AU.n);
+  const n=AU.n||1000;
+  try{const rows=await api(`audit_log?select=*&order=at.desc&limit=${n+1}&offset=${AU.p*n}${f.length?'&'+f.join('&'):''}`);
+    const more=rows.length>n;rows.length=Math.min(rows.length,n);
     $('auMsg').textContent=rows.length?'':'冇紀錄。';
     $('auList').innerHTML=rows.map(r=>`<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.actor?`${esc(r.actor_name||'')}<small>${esc(r.actor_email||'')}</small>`:'<small>系統／SQL</small>'}</td><td class="op-${r.op}">${r.tbl==='users'&&r.op==='INSERT'?'註冊':AU_OP[r.op]||esc(r.op)}</td><td>${esc(AU_T[r.tbl]||r.tbl)}</td><td>${esc(auWhat(r))}${auDiff(r).map(x=>`<span class="chg">${esc(x)}</span>`).join('')}<details><summary class="hint">詳細</summary><pre>${esc(JSON.stringify(r.op==='UPDATE'?{改之前:r.row_old,改之後:r.row_new}:(r.row_new||r.row_old),null,1))}</pre></details></td></tr>`).join('');
     $('auPager').innerHTML=AU.p||more?`<button type="button" class="lnk" data-aupage="-1" ${AU.p?'':'disabled'}>‹ 新啲</button><span class="hint">第 ${AU.p+1} 頁</span><button type="button" class="lnk" data-aupage="1" ${more?'':'disabled'}>舊啲 ›</button>`:'';
@@ -1436,7 +1439,7 @@ $('audit').addEventListener('change',e=>{if(e.target.id==='usKind'||e.target.id=
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],[data-usopen]');if(!b)return;
   if(b.dataset.uspage){US.p=Math.max(0,US.p+ +b.dataset.uspage);loadUsage();return;}
   const v=US.rows[+b.dataset.usopen].input;writeForm(v);run(v);mTab('chart');$('out').scrollIntoView({block:'start'});});
-$('audit').addEventListener('change',e=>{if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'){AU.p=0;loadAudit();}});
+$('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun',e.target.value);}catch(x){}}if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,AU.p+ +b.dataset.aupage);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
 function renderAuth(){
   $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();}else if(!ADMIN)AU.loaded=false;
