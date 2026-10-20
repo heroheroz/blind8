@@ -29,3 +29,7 @@ Each provider needs an app on its own site; paste its ID and secret into Supabas
 - Discord: https://discord.com/developers/applications → New Application → OAuth2 → Redirects.
 
 Also add `https://heroheroz.github.io/blind8/` under Supabase → Authentication → URL Configuration → Redirect URLs. A provider that is not turned on shows an error after its button is clicked.
+
+## Backup
+
+`.github/workflows/backup.yml` runs every Monday (and on demand from the Actions tab). It reads the shared 命例 and 留言版 with the public key and commits them to `backup/`: `cases.csv` uses the website's export format, so it can be brought back with 匯入; `cases.json` and `guestbook.json` keep everything.

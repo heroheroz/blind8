@@ -1,5 +1,15 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="盲派八字排盤：四柱、大運流年流月流日、元運、三桓，自動計招感、粘連、啟動，仲有師兄師姐共享命例。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="盲派八字排盤">
+<meta property="og:title" content="盲派八字排盤">
+<meta property="og:description" content="輸入出生資料，即刻睇命盤、招感、粘連同大運流年；師兄師姐共享命例。">
+<meta property="og:image" content="https://heroheroz.github.io/blind8/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://heroheroz.github.io/blind8/">
+<meta name="twitter:card" content="summary_large_image">
 <title>盲派八字排盤</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
@@ -233,7 +243,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .tagmgr input{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
 .tagm{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:0 2px 0 8px;font-size:12px;background:var(--paper)}.tagm small{color:var(--muted)}.tagm .tagx{margin:0 4px}
 .tagx{all:unset;cursor:pointer;color:var(--muted);font-size:12px;margin:0 4px 0 -2px}
-.layout:has(#caseBox:not([open])){grid-template-columns:42px minmax(0,1fr)}
+@media (min-width:1100px){.layout:has(#caseBox:not([open])){grid-template-columns:42px minmax(0,1fr)}}
 @media (min-width:1100px){.cases:has(#caseBox:not([open])){padding:10px 6px}
   #caseBox:not([open])>summary{writing-mode:vertical-rl;letter-spacing:.2em}
   #caseBox:not([open])>summary h2{font-size:15px}}
@@ -257,7 +267,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   </details>
 </form>
 <div class="cfind">
-<input type="search" id="caseQ" placeholder="🔍 搵命例（名、備註、標籤）" aria-label="搵命例">
+<input type="search" id="caseQ" placeholder="🔍 搵命例（名、備註、標籤、干支）" title="可以搵干支，例如：庚辰、日柱庚辰、時癸巳、魁罡、坐辰戌、陽刃、陽刃逢沖；幾個詞用空格分開" aria-label="搵命例">
 <div class="row"><span class="cap">標籤篩選</span><input type="search" id="tagQ" placeholder="搵標籤" aria-label="搵標籤"></div>
 <div id="tagBar" class="tagbar"></div>
 <p class="hint" id="findInfo"></p>
@@ -800,7 +810,7 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];if(!up&&!dn)r
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
 function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.act[k][ci][0]>0;
   return act?`<span class="lk off" title="${n} 條粘連，粘連力 ×${f}；已被七殺解開，七殺力度 ×${f}">解 ×${f}</span>`:`<span class="lk" title="${n} 條粘連，粘連力 ×${f}">粘 ×${f}</span>`;}
-const VIEW={virt:true,dyn:true,only4:false,yuan:true,aux:true,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false};
+const VIEW={virt:true,dyn:true,only4:false,yuan:true,aux:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false};
 function drawChains(){
   document.querySelectorAll('td.chain').forEach(td=>{
     const k=+td.dataset.k,up=td.dataset.up==='1',mv=td.dataset.m==='v',links=((S.links||[])[k]||[]).filter(l=>(mv?l.vx!=null&&VIEW.virt:l.vx==null)&&(VIEW.dyn||(!S.cols[l.a].dyn&&(l.b==null||!S.cols[l.b].dyn))));
@@ -986,7 +996,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><span class="hint" id="pngMsg"></span></h2><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日</label><span class="hint">（招感字：只係隱藏條線，粘連力照計；大運流年流月流日：閂咗只收埋條線，照計）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div>${table}${CHAIN_LEGEND}${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日</label><span class="hint">（招感字：只係隱藏條線，粘連力照計；大運流年流月流日：閂咗只收埋條線，照計）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div>${table}${CHAIN_LEGEND}${wx}</section>
   <section class="panel">
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
@@ -1028,12 +1038,25 @@ function writeForm(v){
   if(v.at){$('atEra').value=v.at.y<=0?'-1':'1';$('aty').value=v.at.y<=0?1-v.at.y:v.at.y;$('atm').value=v.at.m;$('atd').value=v.at.d;}else atToday();
   $('city').value=v.city??0;$('lon').value=v.lon;$('tz').value=v.tz;$('dst').checked=!!v.dst;$('tst').checked=v.tst!==false;
 }
+// 分享連結：出生資料放喺網址（?y=1997&m=7&d=1&h=0…），貼出去人哋一撳就見到同一個盤
+const SHARE_BASE=/github\.io$/.test(location.hostname)?location.origin+location.pathname:'https://heroheroz.github.io/blind8/';
+let LAST_V=null,PENDING_CASE=new URLSearchParams(location.search).get('case');
+function toQuery(v){const q=new URLSearchParams();if(v.name)q.set('name',v.name);
+  for(const k of ['y','m','d','h','mi'])q.set(k,v[k]);q.set('sex',v.sex?'m':'f');if(v.lunar)q.set('lunar',1);if(v.leap)q.set('leap',1);if(v.zi!==1)q.set('zi',v.zi);
+  if(v.city)q.set('city',v.city);q.set('lon',v.lon);q.set('tz',v.tz);if(v.dst)q.set('dst',1);if(v.tst===false)q.set('tst',0);if(v.at)q.set('at',`${v.at.y}-${v.at.m}-${v.at.d}`);
+  const c=typeof CUR!=='undefined'&&CUR&&CASES.find(x=>x.id===CUR);if(c&&['y','m','d','h','mi'].every(k=>c.input[k]===v[k]))q.set('case',c.id);
+  return q.toString();}
+function fromQuery(){const q=new URLSearchParams(location.search);if(!q.has('y')||isNaN(+q.get('y')))return null;const n=(k,d)=>q.has(k)&&!isNaN(parseFloat(q.get(k)))?parseFloat(q.get(k)):d;
+  const v={name:(q.get('name')||'').slice(0,60),y:n('y'),m:n('m',1),d:n('d',1),h:n('h',0),mi:n('mi',0),sex:q.get('sex')==='f'?0:1,lunar:q.get('lunar')==='1',leap:q.get('leap')==='1',
+    zi:n('zi',1),city:n('city',0),lon:n('lon',114.17),tz:n('tz',8),dst:q.get('dst')==='1',tst:q.get('tst')!=='0',at:null};
+  const a=(q.get('at')||'').match(/^(-?\d+)-(\d+)-(\d+)$/);if(a)v.at={y:+a[1],m:+a[2],d:+a[3]};return v;}
 function run(v){
   $('err').textContent='';
   if(!(v.y>=-2999&&v.y<=9999)){$('err').textContent='年份請填公元前 3000 年至公元 9999 年。';return;}
   if(isNaN(v.lon)){$('err').textContent='請填出生地經度，或者揀城市。';return;}
   if(v.at&&!validDate(v.at.y,v.at.m,v.at.d)){$('err').textContent='睇運日期冇呢一日，請再揀過。';return;}
-  try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}}
+  try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
+    LAST_V=v;try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
   catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
 }
 $('f').addEventListener('submit',e=>{e.preventDefault();run(readForm());});
@@ -1043,6 +1066,8 @@ let init={name:'Owner',sex:1,lunar:false,leap:false,y:1982,m:5,d:6,h:9,mi:25,zi:
 try{const s=localStorage.getItem('bazi-last');if(s)init=Object.assign(init,JSON.parse(s));}catch(e){}
 // 打開網站時日期時間預設為香港回歸（1997-07-01 00:00），其他欄沿用上次
 Object.assign(init,{name:'香港回歸',lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0});
+// 網址有出生資料（分享連結）就用網址嗰個盤
+{const qv=fromQuery();if(qv)init=Object.assign(init,qv);}
 /* ---------- 命例 ---------- */
 // 有填 B8_CLOUD（Supabase）就同所有人共享，要登入先可以新增；冇就只存喺呢個瀏覽器
 const CLOUD=(window.B8_CLOUD&&window.B8_CLOUD.url&&window.B8_CLOUD.key)?{url:window.B8_CLOUD.url.replace(/\/$/,''),key:window.B8_CLOUD.key}:null;
@@ -1148,8 +1173,16 @@ function renderAuth(){
     :`${[['google','G','#4285f4','Google'],['facebook','f','#1877f2','Facebook'],['discord','D','#5865f2','Discord']].map(([pv,ic,col,nm])=>`<a class="gbtn" href="${CLOUD.url}/auth/v1/authorize?provider=${pv}&redirect_to=${encodeURIComponent(location.origin+location.pathname)}"><b style="color:${col}">${ic}</b> 用 ${nm} 登入</a>`).join('')}<p class="hint" style="text-align:center;margin:6px 0">或者用電郵</p><form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
   
 }
+// 用干支搵命例：「庚辰」「日柱庚辰」「日庚辰」，或者「魁罡」「坐辰戌」「陽刃」「陽刃逢沖」；幾個詞用空格分開要全部中
+const GZ_CACHE=new Map();
+function caseTokens(c){const k=c.id+JSON.stringify(c.input);if(GZ_CACHE.has(k))return GZ_CACHE.get(k);const t=new Set();
+  try{const P=compute(c.input).P,pos='年月日時';P.forEach((gz,i)=>{t.add(gz);t.add(pos[i]+gz);t.add(pos[i]+'柱'+gz);t.add(gz[0]);t.add(gz[1]);t.add(pos[i]+gz[0]);t.add(pos[i]+gz[1]);
+      if(gz[1]==='辰'||gz[1]==='戌')t.add('坐辰戌');if(KUIGANG.includes(gz))t.add('魁罡');});
+    const zs=P.map(g=>g[1]);P.forEach(g=>{const r=YANGREN[g[0]];if(r&&zs.includes(r)){t.add('陽刃');t.add(g[0]+'刃');if(zs.includes(RENCHONG[r])){t.add('陽刃逢沖');t.add('刃逢沖');}}});}catch(e){}
+  GZ_CACHE.set(k,t);return t;}
+const gzMatch=(c,q)=>{const ws=q.split(/\s+/).filter(Boolean);return ws.length&&ws.every(w=>caseTokens(c).has(w.replace(/^日主/,'日')));};
 function renderCases(){
-  const list=CASES.map((c,i)=>[c,i]).sort((a,b)=>caseScore(b[0])-caseScore(a[0])||a[1]-b[1]).map(x=>x[0]).filter(c=>(!Q||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
+  const list=CASES.map((c,i)=>[c,i]).sort((a,b)=>caseScore(b[0])-caseScore(a[0])||a[1]-b[1]).map(x=>x[0]).filter(c=>(!Q||gzMatch(c,Q)||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
   const cnt={};CASES.forEach(c=>(c.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
   const tq=TQ.toLowerCase(),tl=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b)).filter(t=>TAGF.has(t)||!tq||t.toLowerCase().includes(tq));
   $('findInfo').textContent=(Q||TAGF.size)?`搵到 ${list.length} 個命例`+(TAGF.size?`（標籤：${[...TAGF].join('、')}）`:''):(TQ&&!tl.length?'冇呢個標籤':'');
@@ -1214,6 +1247,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-gbdel],[da
 async function reloadCases(){
   try{if(CLOUD)TAG_SUG=await TagStore.list().catch(()=>TAG_SUG);CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
   catch(e){$('caseMsg').textContent='讀唔到命例：'+e.message;}
+  if(PENDING_CASE){const c=CASES.find(x=>x.id===PENDING_CASE);if(c)CUR=c.id;PENDING_CASE=null;}
   renderCases();reloadGB();
 }
 // CSV：第一行係欄名；Excel 開得到（加 BOM）
@@ -1323,6 +1357,9 @@ async function savePng(btn){
   catch(e){msg.textContent='存唔到：'+(e.message||e);}
   finally{cap.remove();box.classList.remove('pngmode');box.style.width='';drawChains();btn.disabled=false;setTimeout(()=>{if(msg.textContent==='已存。')msg.textContent='';},3000);}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-png]');if(b)savePng(b);});
+document.addEventListener('click',e=>{if(!e.target.closest('[data-share]')||!LAST_V)return;const url=SHARE_BASE+'?'+toQuery(LAST_V),msg=$('pngMsg');
+  const done=()=>{msg.textContent='已複製連結，可以貼去 Telegram';setTimeout(()=>{if(msg.textContent.startsWith('已複製連結'))msg.textContent='';},4000);};
+  (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(done).catch(()=>{prompt('複製呢條連結：',url);});});
 $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('input',e=>{TQ=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const b=[...document.querySelectorAll('#tagBar [data-tagf]')].find(x=>!TAGF.has(x.dataset.tagf));if(b){TAGF.add(b.dataset.tagf);TQ='';e.target.value='';renderCases();}});
