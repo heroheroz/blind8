@@ -126,7 +126,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .nl sup{font-size:8px;margin-left:1px}
 .act.even,.actl.even{color:var(--muted);font-size:12px}
 .ch>.act{display:flex;flex-wrap:wrap;width:52px;letter-spacing:0;line-height:1;gap:0 1px}
-.ch>.act b{font-weight:900;width:8.5px;text-align:center}
+.ch>.act b{font-weight:900;width:8.5px;text-align:center}.act b.pw{color:#d97706}
 .lk{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 6px;border-radius:8px;border:1px solid var(--muted);color:var(--ink);font-variant-numeric:tabular-nums}
 .lk.off{border-color:var(--bad);color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent)}
 .tiny{font-size:11px;color:var(--muted);display:block}
@@ -505,6 +505,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，↓ 照顯示但劃走，粘連標籤亦劃走。</li>
     <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：原局地支有粘連，而原局冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示。</li>
+    <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣加一個橙色 ↑：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到佢嘅陽刃地支（甲卯、丙午、戊午、庚酉、壬子），每見一個加一；③ 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一。三樣可以疊加，例如戊坐戌，盤上另外有兩個午、一個未：坐戌 1＋陽刃午 2＋土地支戌未 2＝↑5（坐住嘅戌都算同五行）。橙色 ↑ 只係表示力度，唔代表啟動，亦唔影響招感、粘連同啟動嘅計算。</li>
   </ol>
   </div>
   </div>
@@ -1057,12 +1058,13 @@ function status(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];
 // 全盤連鎖：啟動鏈繞住七殺（地支沖害刑）圈兜返去鏈入面已經有嘅字；同一個字只計一次，所以 ↑ 唔會再加
 function loopNote(){const t=[0,1].map(k=>S.act&&S.act[k]&&S.act[k].loop&&S.act[k].loop.length?`${k?'地支':'天干'}${S.act[k].loop.join('、')}`:'').filter(Boolean);
   return t.length?`<div class="hint loopnote" title="啟動鏈兜圈，同一個字喺同一條鏈只計一次（規則 Q3）">⚠ 全盤連鎖：${t.join('；')} 嘅啟動鏈兜返轉頭，同一個字只計一次</div>`:'';}
-function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];if(!up&&!dn)return '';
+function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,why:[]};if(!up&&!dn&&!pw.n)return '';
+  const pwB='<b class="pw">↑</b>'.repeat(pw.n),pwT=pw.n?`　力度 ↑${pw.n}（${pw.why.join('，')}）`:'';
   // 招感殺星（Q6）去到招佢嘅字：↓ 變 ↑（同招感字被啟動一樣）
-  if(up&&((S.sha||[])[k]||[]).some(sh=>sh.callers.some(cl=>cl.i===ci&&!cl.st)))return `<span class="act" title="↑${up}（被${S.act[k][ci][1]}啟動，${dn} 條粘連已解開）">${'<b>↑</b>'.repeat(up)}</span>`;
+  if(up&&((S.sha||[])[k]||[]).some(sh=>sh.callers.some(cl=>cl.i===ci&&!cl.st)))return `<span class="act" title="↑${up}（被${S.act[k][ci][1]}啟動，${dn} 條粘連已解開）${pwT}">${'<b>↑</b>'.repeat(up)}${pwB}</span>`;
   // 啟動咗嘅字：向下箭咀照顯示，但劃走
-  const tip=`↑${up}${up?`（被${S.act[k][ci][1]}啟動）`:''}　↓${dn}（${dn} 條粘連${up&&dn?'，已解開':''}）`;
-  return `<span class="act" title="${tip}">${'<b>↑</b>'.repeat(up)}${`<b class="${up?'dnx':'dn'}">↓</b>`.repeat(dn)}</span>`;}
+  const tip=`↑${up}${up?`（被${S.act[k][ci][1]}啟動）`:''}　↓${dn}（${dn} 條粘連${up&&dn?'，已解開':''}）${pwT}`;
+  return `<span class="act" title="${tip}">${'<b>↑</b>'.repeat(up)}${pwB}${`<b class="${up?'dnx':'dn'}">↓</b>`.repeat(dn)}</span>`;}
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
 function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.act[k][ci][0]>0;
   return act?`<span class="lk off" title="${n} 條粘連，粘連力 ×${f}；已被七殺解開，七殺力度 ×${f}">解 ×${f}</span>`:`<span class="lk" title="${n} 條粘連，粘連力 ×${f}">粘 ×${f}</span>`;}
@@ -1228,6 +1230,13 @@ function render(){
   S.vact=S.act.map(a=>a.vact);S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
   // 粘連力：每條粘連乘二
   S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).length));
+  // 天干力度（Q7）：坐辰戌 +1；盤上每見一個佢嘅陽刃地支 +1；盤上每見一個同五行嘅地支 +1。只係顯示多啲 ↑，唔影響啟動計算
+  const bz=cc.filter(c=>c.gz).map(c=>c.gz[1]);
+  S.pw=cc.map(c=>{if(!c.gz)return null;const g=c.gz[0],gx=gi(g),why=[];
+    if(c.gz[1]==='辰'||c.gz[1]==='戌')why.push(`坐${c.gz[1]}`);
+    const yr=bz.filter(z=>z===YANGREN[g]).length;if(yr)why.push(`見陽刃${YANGREN[g]}×${yr}`);
+    const se=bz.filter(z=>ZWX[zi(z)]===gw(gx));if(se.length)why.push(`見同五行地支${se.join('')}×${se.length}`);
+    return {n:(why[0]&&why[0][0]==='坐'?1:0)+yr+se.length,why};});
   // 同一個招感字出現多次：選項開咗就只顯示一個，後面寫 ×次數（只影響顯示，粘連照計）
   S.zgAlias=[{},{}];
   // 顯示次序：DO[顯示位置]=計算用嘅柱號；只有「命宮放三桓左邊」會調位
