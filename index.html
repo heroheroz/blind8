@@ -52,6 +52,7 @@ header p{margin:0;color:var(--muted);font-size:13px}
 .gbpager .pg{font:inherit;font-size:13px;min-width:30px;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);cursor:pointer}
 .gbpager .pg.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .gbpager .lnk:disabled{opacity:.4;cursor:default}
+#casePager .cpn{flex-basis:100%;text-align:center;margin-bottom:4px}#casePager select{font:inherit;font-size:13px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
 .auf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}.auf select,.auf input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
 .auwrap{overflow-x:auto}table.audit{width:100%;border-collapse:collapse;font-size:13px}table.audit th,table.audit td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}table.audit th{color:var(--muted);font-weight:600;white-space:nowrap}
 table.audit td.t{white-space:nowrap;color:var(--muted)}table.audit small{color:var(--muted);display:block}table.audit .op-INSERT{color:var(--good,#2e7d32)}table.audit .op-DELETE{color:var(--bad)}table.audit .op-UPDATE{color:var(--accent)}
@@ -269,7 +270,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
   .mauth .adm{font-size:12px}
   .mnav{display:flex}
-  #casePager .cpn{flex-basis:100%;text-align:center;margin-bottom:4px}#casePager select{font:inherit;font-size:15px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}.mnav button[hidden]{display:none}
+  #casePager select{font-size:15px}.mnav button[hidden]{display:none}
   table.audit thead{display:none}table.audit,table.audit tbody{display:block}table.audit tr{display:block;border-top:1px solid var(--line);padding:8px 0}
   table.audit td{display:inline;border:0;padding:0 8px 0 0;font-size:14px}table.audit td small{display:inline;margin-left:4px}table.audit td:last-child{display:block;margin-top:4px}
   .mnav button{flex:1;font:inherit;font-size:13px;line-height:1.25;background:none;border:0;border-radius:10px;color:var(--muted);padding:6px 0;margin:0 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
@@ -1247,11 +1248,11 @@ function mTab(k){document.body.dataset.mtab=k;document.querySelectorAll('.mnav [
   if(k==='case')$('caseBox').open=true;if(isMob())scrollTo(0,0);}
 mTab('in');
 try{if(!localStorage.getItem('b8-guide-off'))$('mGuide').hidden=false;}catch(e){$('mGuide').hidden=false;}
-document.addEventListener('change',e=>{if(e.target.id!=='cpN')return;CP_N=+e.target.value;CP=1;try{localStorage.setItem('b8-cpn',String(CP_N));}catch(x){}renderCases();});
+document.addEventListener('change',e=>{if(e.target.id!=='cpN')return;CP=1;try{localStorage.setItem(cpKey(),e.target.value);}catch(x){}renderCases();});
 document.addEventListener('click',e=>{
   if(e.target.closest('[data-mguide-close]')){$('mGuide').hidden=true;try{localStorage.setItem('b8-guide-off','1');}catch(x){}return;}
   const g=e.target.closest('[data-mtab-go]');if(g){mTab(g.dataset.mtabGo);return;}
-  const cpb=e.target.closest('[data-cpage]');if(cpb){if(cpb.disabled)return;CP=+cpb.dataset.cpage;renderCases();$('caseList').scrollIntoView({block:'start'});scrollBy(0,-130);return;}
+  const cpb=e.target.closest('[data-cpage]');if(cpb){if(cpb.disabled)return;CP=+cpb.dataset.cpage;renderCases();$('caseList').scrollIntoView({block:'start'});if(isMob())scrollBy(0,-130);return;}
   if(e.target.closest('[data-mlogin]')){mTab('case');$('caseAuth').scrollIntoView({block:'center'});return;}
   if(e.target.closest('[data-msave]')){mTab('case');const n=$('caseName');if(n&&!$('caseAdd').hidden)n.focus();}
 });
@@ -1337,7 +1338,10 @@ const Store={
     await api('cases?id=eq.'+encodeURIComponent(id),{method:'DELETE'});}
 };
 
-let CASES=[],CUR=null,EDIT=false,Q='',TQ='',CP=1,CP_KEY='',CP_N=10;try{const v=+localStorage.getItem('b8-cpn');if([10,20,30,50,0].includes(v)&&localStorage.getItem('b8-cpn')!==null)CP_N=v;}catch(e){}const TAGF=new Set();
+let CASES=[],CUR=null,EDIT=false,Q='',TQ='',CP=1,CP_KEY='';
+// 命例每頁幾多個：手機預設 10、電腦預設 20，0 即全部；兩邊分開記低
+const cpKey=()=>isMob()?'b8-cpn-m':'b8-cpn-d';
+const cpN=()=>{try{const s=localStorage.getItem(cpKey());if(s!==null&&[10,20,30,50,0].includes(+s))return +s;}catch(e){}return isMob()?10:20;};const TAGF=new Set();
 // 常用標籤：可以自己加減，記喺呢個瀏覽器
 let TAG_SUG=(()=>{try{const v=JSON.parse(localStorage.getItem('b8-tagsug'));if(Array.isArray(v))return v;}catch(e){}return ['雙胞胎','結婚','離婚','生死','生仔','兄弟數目','父母','事業','財運','疾病'];})();
 const saveSug=()=>{try{localStorage.setItem('b8-tagsug',JSON.stringify(TAG_SUG));}catch(e){}};
@@ -1421,11 +1425,11 @@ function renderCases(){
   $('findInfo').textContent=(Q||TAGF.size)?`搵到 ${list.length} 個命例`+(TAGF.size?`（標籤：${[...TAGF].join('、')}）`:''):(TQ&&!tl.length?'冇呢個標籤':'');
   $('tagBar').innerHTML=tl.map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}" aria-pressed="${TAGF.has(t)}">#${esc(t)} <small>${cnt[t]}</small></button>`).join('')+(TAGF.size?'<button type="button" class="lnk" data-tagclear>清除篩選</button>':'');
   $('caseCount').textContent=CASES.length;
-  // 手機版：命例每 10 個一頁；搜尋或者標籤篩選改咗就返第一頁。桌面版照舊全部列出
+  // 命例分頁；搜尋或者標籤篩選改咗就返第一頁
   const fk=Q+'|'+[...TAGF].join(',');if(fk!==CP_KEY){CP_KEY=fk;CP=1;}
-  const np=isMob()&&CP_N?Math.max(1,Math.ceil(list.length/CP_N)):1;CP=Math.min(CP,np);
+  const CP_N=cpN(),np=CP_N?Math.max(1,Math.ceil(list.length/CP_N)):1;CP=Math.min(CP,np);
   const shown=np>1?list.slice((CP-1)*CP_N,CP*CP_N):list;
-  const per=isMob()&&list.length>10?`<label class="hint cpn">每頁 <select id="cpN" aria-label="每頁顯示幾多個命例">${[[10,'10 個'],[20,'20 個'],[30,'30 個'],[50,'50 個'],[0,'全部']].map(([v,t])=>`<option value="${v}"${v===CP_N?' selected':''}>${t}</option>`).join('')}</select></label>`:'';
+  const per=list.length>10?`<label class="hint cpn">每頁 <select id="cpN" aria-label="每頁顯示幾多個命例">${[[10,'10 個'],[20,'20 個'],[30,'30 個'],[50,'50 個'],[0,'全部']].map(([v,t])=>`<option value="${v}"${v===CP_N?' selected':''}>${t}</option>`).join('')}</select></label>`:'';
   $('casePager').innerHTML=per+(np>1?`<button type="button" class="lnk" data-cpage="${CP-1}" ${CP===1?'disabled':''}>‹ 上一頁</button>${Array.from({length:np},(_,i)=>i+1).filter(i=>i===1||i===np||Math.abs(i-CP)<=2).map((i,k,a)=>(k&&i-a[k-1]>1?'<span class="hint">…</span>':'')+`<button type="button" class="pg${i===CP?' on':''}" data-cpage="${i}" aria-current="${i===CP}">${i}</button>`).join('')}<button type="button" class="lnk" data-cpage="${CP+1}" ${CP===np?'disabled':''}>下一頁 ›</button>`:'');
   $('caseList').innerHTML=list.length?shown.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
     :`<li class="hint">${CASES.length?'搵唔到。':'未有命例。'+(can.add()?'排好盤之後，喺上面打名再撳「儲存」。':'')}</li>`;
