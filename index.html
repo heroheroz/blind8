@@ -1358,7 +1358,7 @@ async function savePng(btn){
   finally{cap.remove();box.classList.remove('pngmode');box.style.width='';drawChains();btn.disabled=false;setTimeout(()=>{if(msg.textContent==='已存。')msg.textContent='';},3000);}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-png]');if(b)savePng(b);});
 document.addEventListener('click',e=>{if(!e.target.closest('[data-share]')||!LAST_V)return;const url=SHARE_BASE+'?'+toQuery(LAST_V),msg=$('pngMsg');
-  const done=()=>{msg.textContent='已複製連結，可以貼去 Telegram';setTimeout(()=>{if(msg.textContent.startsWith('已複製連結'))msg.textContent='';},4000);};
+  const done=()=>{msg.textContent='已複製連結';setTimeout(()=>{if(msg.textContent.startsWith('已複製連結'))msg.textContent='';},4000);};
   (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(done).catch(()=>{prompt('複製呢條連結：',url);});});
 $('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('input',e=>{TQ=e.target.value.trim();renderCases();});
