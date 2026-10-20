@@ -274,8 +274,9 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   .mnav button[aria-current=page]{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent);font-weight:700}
   body[data-mtab]:not([data-mtab=case]) .cases{display:none}
   body[data-mtab]:not([data-mtab=in]) header,body[data-mtab]:not([data-mtab=in]) #inPanel,body[data-mtab]:not([data-mtab=in]) .mguide{display:none!important}
-  body[data-mtab]:not([data-mtab=chart]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
-  body[data-mtab]:not([data-mtab=more]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
+  body[data-mtab]:not([data-mtab=chart]):not([data-mtab=rel]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
+  body[data-mtab=chart] #relBox,body[data-mtab=rel] #out>:not(#relBox){display:none!important}
+  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
   .layout{display:block}
   .mguide:not([hidden]){display:block;position:relative;font-size:15px;line-height:1.65;background:var(--paper);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;margin:0 0 12px}
   .mguide h2{font-size:18px;margin:0 0 6px}.mguide ol{margin:0;padding-left:22px}.mguide li{margin:4px 0}
@@ -325,6 +326,8 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <nav class="mnav" aria-label="分頁">
   <button type="button" data-mtab-go="in"><b>✎</b>排盤</button>
   <button type="button" data-mtab-go="chart"><b>☯</b>命盤</button>
+  <button type="button" data-mtab-go="rel"><b>⇄</b>招感</button>
+  <button type="button" data-mtab-go="calc"><b>§</b>計法</button>
   <button type="button" data-mtab-go="case"><b>☰</b>命例</button>
   <button type="button" data-mtab-go="more"><b>…</b>更多</button>
 </nav></div>
@@ -373,6 +376,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li>喺下面填<b>出生日期、時間、出生地</b>，撳<b>「排盤」</b>。</li>
     <li>排完會自動去<b>「命盤」</b>頁；撳大運、流年、流月、流日格仔就睇嗰段時間。</li>
     <li>想儲低，喺命盤頁撳<b>「★ 儲做命例」</b>（要先登入）。</li>
+    <li><b>「招感」</b>頁列出招感、粘連、刑沖合穿；<b>「計法」</b>頁有計法說明同口訣。</li>
     <li>去<b>「命例」</b>頁可以搵同打開大家儲嘅命例。</li>
   </ol>
 </div>
@@ -1184,7 +1188,7 @@ function render(){
       <p>而家行<b>${yn.yuan}${yn.name.slice(0,1)}運</b>（${yn.name}，${yn.start}–${yn.end}）</p></div></div>
     </section>
   </div>
-  <section class="panel"><h2>招感 · 粘連 · 刑沖合穿</h2><p class="hint" style="margin-bottom:8px">招感計原局四柱同大運、流年、流月、流日，任何兩柱都計；刑沖合穿計原局四柱，加上而家揀選嘅大運同流年。</p><div class="rels">${relHtml}</div></section>`;
+  <section class="panel" id="relBox"><h2>招感 · 粘連 · 刑沖合穿</h2><p class="hint" style="margin-bottom:8px">招感計原局四柱同大運、流年、流月、流日，任何兩柱都計；刑沖合穿計原局四柱，加上而家揀選嘅大運同流年。</p><div class="rels">${relHtml}</div></section>`;
   drawChains();
 }
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
