@@ -45,6 +45,9 @@ header p{margin:0;color:var(--muted);font-size:13px}
 .madeby{text-align:center;color:var(--muted);font-size:14px;padding:6px 0 18px}
 header .credit a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 header .credit a:hover{color:var(--accent)}
+.zhbtn{align-self:center;display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;padding:0;background:var(--paper);cursor:pointer;font:inherit}
+.zhbtn span{padding:3px 10px;font-size:14px;color:var(--muted)}
+.zhbtn span.on{background:var(--accent);color:var(--paper)}
 header .credit{margin-left:auto;font-size:17px;font-weight:700;color:var(--ink);letter-spacing:.02em}
 h2{font-family:var(--f-display);font-size:18px;margin:0 0 10px;font-weight:700;letter-spacing:.04em}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
@@ -275,6 +278,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <h1>盲派八字排盤</h1>
   <p>測試中，希望師兄師姐多多支持</p>
   <p class="credit">Inspired by <a href="https://www.youtube.com/@%E9%9A%B1%E5%A7%93%E5%9F%8B%E5%90%8D%E8%AB%87%E8%A1%93%E6%95%B8" target="_blank" rel="noopener">隱姓師父</a> &amp; <a href="https://www.youtube.com/@toneming" target="_blank" rel="noopener">通明師兄</a></p>
+  <button type="button" id="zhBtn" class="zhbtn" data-nozh aria-label="繁簡轉換" title="繁簡轉換"><span class="t on">繁</span><span class="s">简</span></button>
 </header>
 
 <section class="panel" aria-label="輸入資料">
@@ -1355,6 +1359,32 @@ $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$
 })();
 writeForm(init);run(init);
 })();
+// 繁簡轉換：右上角個掣將成頁文字轉做簡體（用 OpenCC，第一次撳先載入），再撳就還原繁體原文。
+// 輸入框入面打緊嘅字唔會改；選擇記喺呢個瀏覽器
+const ZH={on:false,cv:null,orig:new Map(),obs:null};
+const ZH_ATTR=['title','placeholder','aria-label'];
+function zhLoad(){return ZH.cv?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/t2cn.js';
+  sc.onload=()=>{try{ZH.cv=OpenCC.Converter({from:'hk',to:'cn'});ok();}catch(e){no(e);}};sc.onerror=()=>no(new Error('簡體轉換程式載入失敗'));document.head.appendChild(sc);});}
+const zhSkip=n=>{const el=n.nodeType===1?n:n.parentElement;return !el||!!el.closest('script,style,textarea,[data-nozh]');};
+function zhNode(n){
+  if(n.nodeType===3){if(zhSkip(n)||!/[㐀-鿿]/.test(n.nodeValue))return;const t=n.nodeValue,c=ZH.cv(t);if(c!==t){if(!ZH.orig.has(n))ZH.orig.set(n,t);n.nodeValue=c;}return;}
+  if(n.nodeType!==1||zhSkip(n))return;
+  for(const a of ZH_ATTR){const v=n.getAttribute(a);if(!v||!/[㐀-鿿]/.test(v))continue;const c=ZH.cv(v);if(c!==v){const o=ZH.orig.get(n)||{};if(!(a in o))o[a]=v;ZH.orig.set(n,o);n.setAttribute(a,c);}}}
+function zhWalk(root){zhNode(root);const w=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))zhNode(n);}
+function zhApply(on){
+  ZH.on=on;try{localStorage.setItem('b8-zh',on?'cn':'hk');}catch(e){}
+  const b=document.getElementById('zhBtn');b.querySelector('.t').classList.toggle('on',!on);b.querySelector('.s').classList.toggle('on',on);b.setAttribute('aria-pressed',on);
+  document.documentElement.lang=on?'zh-Hans':'zh-Hant';
+  if(on){zhWalk(document.body);document.title=ZH.cv(document.title);
+    ZH.obs=ZH.obs||new MutationObserver(ms=>{if(!ZH.on)return;for(const m of ms){if(m.type==='childList')m.addedNodes.forEach(zhWalk);else zhNode(m.target);}
+      if(ZH.orig.size>20000)for(const n of [...ZH.orig.keys()])if(!n.isConnected)ZH.orig.delete(n);});
+    ZH.obs.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:ZH_ATTR});}
+  else{if(ZH.obs)ZH.obs.disconnect();
+    for(const [n,o] of ZH.orig){if(!n.isConnected)continue;if(typeof o==='string')n.nodeValue=o;else for(const a in o)n.setAttribute(a,o[a]);}
+    ZH.orig.clear();document.title='盲派八字排盤';}}
+document.getElementById('zhBtn').addEventListener('click',()=>{if(ZH.on)zhApply(false);else zhLoad().then(()=>zhApply(true)).catch(e=>alert(e.message));});
+try{if(localStorage.getItem('b8-zh')==='cn')zhLoad().then(()=>zhApply(true)).catch(()=>{});}catch(e){}
+
 </script>
 
 </body></html>
