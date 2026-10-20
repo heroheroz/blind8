@@ -1078,7 +1078,7 @@ function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.
 const isMob=()=>matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
-const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:false};
+const VIEW={virt:true,dyn:false,dynZg:true,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:false};
 function drawChains(){
   document.querySelectorAll('td.chain').forEach(td=>{
     const k=+td.dataset.k,up=td.dataset.up==='1',mv=td.dataset.m==='v',links=((S.links||[])[k]||[]).filter(l=>(mv?l.vx!=null&&VIEW.virt:l.vx==null)&&((mv?VIEW.dynZg:VIEW.dyn)||(!S.cols[l.a].dyn&&(l.b==null||!S.cols[l.b].dyn))));
