@@ -184,6 +184,7 @@ td.chain{position:relative;overflow:visible}
 .viewopt .cap{font-size:12px;color:var(--muted)}
 .chainleg span{font-weight:500;color:var(--muted);display:inline-flex;align-items:center;gap:6px;padding:0}
 .zgstrip{position:relative}
+.shabox{display:flex;flex-direction:column;align-items:center;margin-bottom:6px}.shabox .shx{color:var(--muted);text-decoration:line-through}.shabox .sho{color:var(--bad);font-weight:600}td.sha{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.06) 6px 12px)}
 .zg{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;width:64px;height:48px;justify-content:center;
   font-family:var(--f-display);font-weight:900;font-size:22px;line-height:1.05;border:1.5px dashed currentColor;border-radius:8px;background:var(--paper)}
 .zg{width:56px;z-index:3}
@@ -503,6 +504,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q3"><b>Q3 遞迴</b>　啟動可以一層層傳落去：甲靠庚，庚有粘連但壬啟動咗庚，咁甲都啟動。每多一層多一個 ↑：如果啟動呢個字嘅字本身又被啟動，↑ 就再加一。招感字都一樣計，例如乙啟動招感字己，而乙本身被辛啟動，己就有兩個 ↑。</li>
     <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，↓ 照顯示但劃走，粘連標籤亦劃走。</li>
+    <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。顯示選項「招感殺星」預設閂住，開咗先計同顯示。暫時只計天干。</li>
   </ol>
   </div>
   </div>
@@ -967,19 +969,39 @@ function chains(cols,k,virt){
 const BR_ACT={};[[CHONG,'沖'],[CHUAN,'害'],[['寅巳','巳申','申寅','丑戌','戌未','未丑','子卯'],'刑']].forEach(([l,n])=>l.forEach(p=>{(BR_ACT[p[0]]=BR_ACT[p[0]]||{})[p[1]]=n;(BR_ACT[p[1]]=BR_ACT[p[1]]||{})[p[0]]=n;}));
 function killers(k,v){if(!k)return [(v+6)%10];return Object.keys(BR_ACT[ZHI[v]]||{}).map(c=>zi(c));}
 const actName=(k,v,w)=>k?BR_ACT[ZHI[v]][ZHI[w]]:'七殺';
+// 招感殺星（Q6）：原局（時日月年）天干有粘連，而原局冇佢嘅七殺，就自動招一個七殺。
+// 殺星由最右邊（流日右邊）向左行去招佢嗰個字，途中有字合佢（五合）就「合住」，有字剋佢（佢嘅七殺）就「擋走」，兩樣都啟動唔到；
+// 不過途中嗰個字如果本身已經被啟動，就合唔住、擋唔走，殺星可以行過去。path 由右至左列出途中所有可能阻住佢嘅字，喺 activation 入面逐個睇
+function shaCalc(cols,links){
+  const NAT=['時柱','日柱','月柱','年柱'],natal=cols.map((c,i)=>i).filter(i=>NAT.includes(cols[i].h)&&cols[i].gz),ns=natal.map(i=>gi(cols[i].gz[0]));
+  const chained=i=>links.some(l=>l.a===i||l.b===i),out={};
+  natal.forEach(i=>{const k=(gi(cols[i].gz[0])+6)%10;if(ns.includes(k)||!chained(i))return;
+    const path=[];for(let j=cols.length-1;j>i;j--){const c=cols[j];if(!c.gz)continue;const w=gi(c.gz[0]);
+      if(w===(k+5)%10)path.push({t:'合住',j});else if(w===(k+6)%10)path.push({t:'擋走',j});}
+    (out[k]=out[k]||{c:GAN[k],callers:[]}).callers.push({i,path,st:null,pass:[]});});
+  return Object.values(out);}
 // 招感字（virt）都計：佢有粘連（同來源字），所以未被啟動之前唔會啟動其他字；被啟動之後就可以（Z5）
-function activation(cols,k,links,virt=[]){
+function activation(cols,k,links,virt=[],sha=[]){
   const chars=k?ZHI:GAN,N=cols.length,lbl0=c=>c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0];
   const vals=[...cols.map(c=>c.gz?chars.indexOf(c.gz[k]):-1),...virt.map(z=>chars.indexOf(z.c))];
   const lbl=j=>j<N?lbl0(cols[j]):'招感';
   const chained=new Set();links.forEach(l=>{chained.add(l.a);if(l.b!=null)chained.add(l.b);if(l.vi!=null)chained.add(N+l.vi);});
   virt.forEach((_,vi)=>chained.add(N+vi));
-  const lvl=(i,seen)=>{let best=[0,''];
+  // 招感殺星：途中阻擋字全部已啟動（或者冇阻擋），就啟動招佢嗰個字（殺星本身冇粘連，算一層）；反覆計到穩定
+  let seed={},memo=new Map();
+  // 同一輪入面記住計過嘅結果；最多追 6 層（再深嘅連鎖實際上唔會出現，避免字多嗰陣計到卡死）
+  const lvl=(i,seen)=>{const key=i+'|'+[...seen].sort((a,b)=>a-b).join(',');if(memo.has(key))return memo.get(key);let best=seed[i]||[0,''];if(seen.size>=6)return best;
     // 七殺冇粘連，或者七殺本身已經啟動，先啟動得到呢個字
     for(let j=0;j<vals.length;j++){if(j===i||vals[j]<0||seen.has(j)||!killers(k,vals[i]).includes(vals[j]))continue;
       const [n,why]=lvl(j,new Set([...seen,i]));if(chained.has(j)&&n===0)continue;if(n+1>best[0])best=[n+1,`${actName(k,vals[i],vals[j])}${lbl(j)}${k?'支':'干'}${chars[vals[j]]}${why?'（'+why+'）':''}`];}
-    return best;};
-  const all=vals.map((v,i)=>v<0?[0,'']:lvl(i,new Set())),act=all.slice(0,N),vact=all.slice(N);
+    memo.set(key,best);return best;};
+  let all;
+  for(let r=0;r<6;r++){memo=new Map();all=vals.map((v,i)=>v<0?[0,'']:lvl(i,new Set()));
+    const ns={};sha.forEach(sh=>sh.callers.forEach(cl=>{if(cl.path.every(b=>b.j!==cl.i&&all[b.j][0]>0))ns[cl.i]=[1,`招感殺星${sh.c}`];}));
+    if(JSON.stringify(ns)===JSON.stringify(seed))break;seed=ns;}
+  const act=all.slice(0,N),vact=all.slice(N);
+  // 殺星顯示用：第一個（由右數）未被啟動嘅阻擋字就係佢被合住／擋走嘅原因；已啟動嘅阻擋字記做「行過」
+  sha.forEach(sh=>sh.callers.forEach(cl=>{cl.st=null;cl.pass=[];for(const b of cl.path){if(act[b.j][0]>0)cl.pass.push(b);else{cl.st=b;break;}}}));
     // 七殺嘅向上箭咀數 ≥ 粘連（向下箭咀）數，先解得開佢身上嘅粘連
   const down=vals.map((_,i)=>links.filter(l=>l.a===i||l.b===i).length);
   const brk=i=>act[i][0]>0;
@@ -1028,6 +1050,8 @@ function status(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];
   if(!up)return '<span class="st st-off">&nbsp;</span>';
   return `<span class="st" title="被${S.act[k][ci][1]}啟動">啟動</span>`;}
 function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];if(!up&&!dn)return '';
+  // 招感殺星（Q6）去到招佢嘅字：↓ 變 ↑（同招感字被啟動一樣）
+  if(up&&!k&&(S.sha||[]).some(sh=>sh.callers.some(cl=>cl.i===ci&&!cl.st)))return `<span class="act" title="↑${up}（被${S.act[k][ci][1]}啟動，${dn} 條粘連已解開）">${'<b>↑</b>'.repeat(up)}</span>`;
   // 啟動咗嘅字：向下箭咀照顯示，但劃走
   const tip=`↑${up}${up?`（被${S.act[k][ci][1]}啟動）`:''}　↓${dn}（${dn} 條粘連${up&&dn?'，已解開':''}）`;
   return `<span class="act" title="${tip}">${'<b>↑</b>'.repeat(up)}${`<b class="${up?'dnx':'dn'}">↓</b>`.repeat(dn)}</span>`;}
@@ -1037,7 +1061,7 @@ function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.
 const isMob=()=>matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
-const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false};
+const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:false};
 function drawChains(){
   document.querySelectorAll('td.chain').forEach(td=>{
     const k=+td.dataset.k,up=td.dataset.up==='1',mv=td.dataset.m==='v',links=((S.links||[])[k]||[]).filter(l=>(mv?l.vx!=null&&VIEW.virt:l.vx==null)&&((mv?VIEW.dynZg:VIEW.dyn)||(!S.cols[l.a].dyn&&(l.b==null||!S.cols[l.b].dyn))));
@@ -1064,7 +1088,7 @@ function drawChains(){
   });
 }
 window.addEventListener('resize',()=>{if(S)drawChains();});
-document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vPrevMo'){VIEW.prevMo=e.target.checked;render();}else if(e.target.name==='mgq'){VIEW.mgQi=e.target.value==='qi';render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
+document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vPrevMo'){VIEW.prevMo=e.target.checked;render();}else if(e.target.id==='vSha'){VIEW.sha=e.target.checked;render();}else if(e.target.name==='mgq'){VIEW.mgQi=e.target.value==='qi';render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
 
 /* ---------- state & render ---------- */
 let S=null;
@@ -1156,6 +1180,8 @@ function render(){
     );
     if(cols[n4])cols[n4].first=true;
   }
+  // 招感殺星（Q6）：擺喺最右邊（流日右邊），本身唔參與招感粘連，只負責啟動招佢嘅字
+  if(VIEW.sha)cols.push({h:'招殺星',sub:'原局冇七殺',gz:null,sha:true});
   const N=cols.length;
   // 元運柱同三桓命宮柱預設唔參與招感同粘連，只係顯示
   // 收埋咗嘅柱本身唔喺 cols 入面，所以唔計；大運流年流月流日條線閂咗照計，只係收埋條線
@@ -1167,7 +1193,8 @@ function render(){
   for(let round=0;round<4;round++){
     S.links=[0,1].map(k=>chains(cc,k,k?ZG.br:ZG.st));
     const prev=S.act&&round?S.act:null;
-    S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st));
+    S.sha=VIEW.sha?shaCalc(cc,S.links[0]):[];
+    S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st,k?[]:S.sha));
     // 之前一輪已經啟動咗嘅字保持啟動（新招出嚟嘅字加咗粘連，唔會反過嚟令佢哋失效）
     if(prev)[0,1].forEach(k=>{const A=S.act[k],P=prev[k];A.forEach((x,i)=>{if(P[i]&&P[i][0]>x[0])A[i]=P[i];});A.vact.forEach((x,i)=>{if(P.vact[i]&&P.vact[i][0]>x[0])A.vact[i]=P.vact[i];});
       S.links[k].forEach(l=>{l.broken=A[l.a][0]>0||(l.b!=null&&A[l.b][0]>0)||(l.vi!=null&&A.vact[l.vi][0]>0);});});
@@ -1202,8 +1229,10 @@ function render(){
     list.forEach((x,i)=>{if(g[x.c]==null){g[x.c]=out.length;out.push({...x,oi:i,n:0,ps:[],tags:[],froms:[],boost:0});}
       const m=out[g[x.c]];m.n++;m.ps.push(x.pos);if(!m.tags.includes(x.tag))m.tags.push(x.tag);m.froms.push(x.from);m.boost+=x.boost||0;m.dyn=m.dyn&&x.dyn;S.zgAlias[k][i]=m.oi;});
     return out.map(m=>({...m,pos:m.ps.reduce((a,b)=>a+b,0)/m.ps.length,tag:m.tags.join('、'),from:m.froms.join(' ／ ')}));});
-  const cls=col=>(col.first?'sep ':'')+(col.dyn?'dyn':'')+(col.aux?'aux':'');
-  const td=(fn)=>DO.map(ci=>[cols[ci],ci]).map(([col,ci])=>`<td class="${cls(col)}">${col.gz?fn(col,gi(col.gz[0]),zi(col.gz[1]),ci):'<span class="tiny">—</span>'}</td>`).join('');
+  const cls=col=>(col.first||col.sha?'sep ':'')+(col.dyn?'dyn':'')+(col.aux?'aux':'')+(col.sha?' sha':'');
+  const td=(fn,shaCell)=>DO.map(ci=>[cols[ci],ci]).map(([col,ci])=>`<td class="${cls(col)}">${col.gz?fn(col,gi(col.gz[0]),zi(col.gz[1]),ci):col.sha?(shaCell||''):'<span class="tiny">—</span>'}</td>`).join('');
+  const shLbl=i=>cols[i].h.replace('柱','')+'干'+cols[i].gz[0];
+  const shaCell=(S.sha||[]).length?S.sha.map(sh=>`<div class="shabox"><span class="big w${gw(gi(sh.c))}"><span class="ch">${sh.c}</span></span>${sh.callers.map(cl=>`<span class="tiny ${cl.st?'shx':'sho'}" title="${cl.st?`被${cols[cl.st.j].h}${cols[cl.st.j].gz[0]}${cl.st.t}，啟動唔到${shLbl(cl.i)}`:`啟動${shLbl(cl.i)}`}">${cl.st?`${cl.st.t}（${cols[cl.st.j].h.replace('柱','')}${cols[cl.st.j].gz[0]}）→${shLbl(cl.i)}`:`啟動→${shLbl(cl.i)}`}${cl.pass.length?`<br><small>（行過已啟動嘅${cl.pass.map(b=>cols[b.j].h.replace('柱','')+cols[b.j].gz[0]).join('、')}）</small>`:''}</span>`).join('')}</div>`).join(''):'<span class="tiny">冇</span>';
   const sex=inp.sex===1?'乾造':'坤造';
   const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"><b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
   const table=`<div class="tscroll"><table class="chart" style="--n:${N};--mw:${60+N*54}px">
@@ -1211,7 +1240,7 @@ function render(){
     <tr><th class="rl">十神</th>${td((col,g)=>col.dm?`<span class="ss dm">日主</span><span class="tiny">${inp.sex===1?'元男':'元女'}</span>`:`<span class="ss">${shishen(dm,g)}</span>`)}</tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[0],true,N)}</td></tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="0" data-m="v" data-up="0"></td></tr>
-    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${nlList(0,ci,cols)}`)}</tr>
+    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${nlList(0,ci,cols)}`,shaCell)}</tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="0" data-m="p" data-up="1"></td></tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="1" data-m="p" data-up="0"></td></tr>
     <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${yangren(col.gz[1],cols,P[2][0],ci)}${nlList(1,ci,cols)}`)}</tr>
@@ -1270,7 +1299,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label><label class="chk" title="原局有粘連但原局冇七殺嘅天干，自動由最右邊招七殺（規則 Q6）"><input type="checkbox" id="vSha" ${VIEW.sha?'checked':''}>招感殺星</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
   <section class="panel">
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
