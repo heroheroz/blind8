@@ -260,8 +260,32 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 
 .intoggle{display:none}
 .mfold>summary{display:none}
+/* 手機版：底部分頁（排盤／命盤／命例／更多），每次只顯示一頁；桌面版唔顯示呢啲 */
+.mnav,.mguide,.mbar,.mcasehint{display:none}
 @media (max-width:700px){
-  body{padding-block:10px 32px}
+  body{padding-block:10px 84px;font-size:16px}
+  .mnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--paper);border-top:1px solid var(--line);padding:4px 2px calc(4px + env(safe-area-inset-bottom));box-shadow:0 -2px 10px rgba(0,0,0,.08)}
+  .mnav button{flex:1;font:inherit;font-size:13px;line-height:1.25;background:none;border:0;border-radius:10px;color:var(--muted);padding:6px 0;margin:0 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .mnav button b{font-size:20px;font-weight:400;line-height:1}
+  .mnav button[aria-current=page]{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent);font-weight:700}
+  body[data-mtab]:not([data-mtab=case]) .cases{display:none}
+  body[data-mtab]:not([data-mtab=in]) header,body[data-mtab]:not([data-mtab=in]) #inPanel,body[data-mtab]:not([data-mtab=in]) .mguide{display:none!important}
+  body[data-mtab]:not([data-mtab=chart]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
+  body[data-mtab]:not([data-mtab=more]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
+  .layout{display:block}
+  .mguide:not([hidden]){display:block;position:relative;font-size:15px;line-height:1.65;background:var(--paper);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;margin:0 0 12px}
+  .mguide h2{font-size:18px;margin:0 0 6px}.mguide ol{margin:0;padding-left:22px}.mguide li{margin:4px 0}
+  .mguide .mgx{position:absolute;top:8px;right:10px;font:inherit;font-size:15px;color:var(--accent);background:none;border:0;padding:4px;cursor:pointer}
+  .mbar{display:flex;flex-direction:column;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+  .mbar .who{font-size:16px;font-weight:700;line-height:1.4}
+  .mbar .acts{display:flex;gap:8px}
+  .mbtn{flex:1;font:inherit;font-size:15px;font-weight:600;padding:10px 8px;border-radius:10px;border:1px solid var(--accent);background:var(--paper);color:var(--accent);cursor:pointer;text-align:center}
+  .mbtn.pri{background:var(--accent);color:var(--paper)}
+  .mcasehint{display:block;font-size:14px;line-height:1.6;color:var(--muted);margin:0 0 10px}
+  #caseBox>summary{pointer-events:none}#caseBox>summary::after{display:none}
+  .intoggle{display:none!important}.inpanel.incol #f{display:block!important}
+  #f .go{font-size:18px;padding:12px 20px;width:100%}
+  .cases input,.cases textarea,.cases select,#f input,#f select{font-size:16px}
   header{gap:4px 10px}header h1{font-size:22px}header p:not(.credit){display:none}header .credit{margin-left:0;font-size:13px}
   .panel{padding:12px}
   .intoggle{all:unset;box-sizing:border-box;display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;cursor:pointer;font-size:14px}
@@ -274,17 +298,18 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   .tscroll{padding-right:8px}
   .chart{--cw:calc((100cqw - 40px)/var(--n,10))}
   table.chart{min-width:calc(30px + var(--n)*44px)}
-  .chart td{font-size:13px}
+  .chart td{font-size:14px}
   .chart .big{font-size:clamp(20px,calc(var(--cw)*.42),40px)}
-  .chart th.rl{width:30px;padding-right:2px;font-size:11px}
-  .chart thead th{font-size:11px;padding:4px 1px}.chart thead th b{font-size:14px}
+  .chart th.rl{width:30px;padding-right:2px;font-size:12px}
+  .chart thead th{font-size:12px;padding:4px 1px}.chart thead th b{font-size:15px}
   .chart .hsub{display:none}
   .chart th,.chart td{padding:4px 1px}
-  .nl{font-size:10px}.tiny{font-size:10px}
-  .ss{font-size:12px}.hid{font-size:11px}.hid span b{font-size:13px}
-  .lk,.cx,.yr,.yrh{font-size:10px;padding:0 4px}
-  .chainleg{font-size:12px}
-  .cell{min-width:56px;padding:5px 4px}.cell .gz{font-size:19px}.cell .s{font-size:10px;white-space:nowrap}
+  .nl{font-size:11px}.tiny{font-size:11px}
+  .ss{font-size:13px}.hid{font-size:12px}.hid span b{font-size:14px}
+  .lk,.cx,.yr,.yrh{font-size:11px;padding:0 4px}
+  .chainleg{font-size:13px}
+  .cell{min-width:62px;padding:6px 4px}.cell .gz{font-size:22px}.cell .top{font-size:12px}.cell .s{font-size:12px;white-space:nowrap}
+  .lvl h3{font-size:15px}.rel{font-size:14px}.hint{font-size:13px}
   .days{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
 }
 @media (prefers-reduced-motion:no-preference){.cell{transition:background .15s,border-color .15s}}
@@ -295,6 +320,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <aside class="panel cases" aria-label="命例">
 <details id="caseBox" open>
 <summary title="打開／收埋命例"><h2>命例 <span class="hint" id="caseCount">0</span></h2></summary>
+<p class="mcasehint">撳命例個名就會打開嗰個命盤。登入之後，喺下面「命例名稱」填個名再撳「儲存」，就會將而家個命盤加入命例。</p>
 <div id="caseAuth" class="cauth" hidden></div>
 <form id="caseAdd" class="cadd">
   <div class="qsave"><input type="text" id="caseName" maxlength="60" placeholder="命例名稱" aria-label="命例名稱"><button type="submit" class="go sm">儲存</button></div>
@@ -329,6 +355,16 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <button type="button" id="zhBtn" class="zhbtn" data-nozh aria-label="繁簡轉換" title="繁簡轉換"><span class="t on">繁</span><span class="s">简</span></button>
 </header>
 
+<div class="mguide" id="mGuide" hidden>
+  <button type="button" class="mgx" data-mguide-close aria-label="收埋說明">✕</button>
+  <h2>點用？</h2>
+  <ol>
+    <li>喺下面填<b>出生日期、時間、出生地</b>，撳<b>「排盤」</b>。</li>
+    <li>排完會自動去<b>「命盤」</b>頁；撳大運、流年、流月、流日格仔就睇嗰段時間。</li>
+    <li>想儲低，喺命盤頁撳<b>「★ 儲做命例」</b>（要先登入）。</li>
+    <li>去<b>「命例」</b>頁可以搵同打開大家儲嘅命例。</li>
+  </ol>
+</div>
 <section class="panel inpanel" id="inPanel" aria-label="輸入資料">
 <button type="button" class="intoggle" id="inToggle" aria-expanded="true"><span id="inSum">出生資料</span><b>修改 ▾</b></button>
 <form id="f" autocomplete="off">
@@ -399,6 +435,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 </form>
 </section>
 
+<div class="mbar" id="mBar"><div class="who" id="mWho"></div><div class="acts"><button type="button" class="mbtn" data-mtab-go="in">✎ 改出生資料</button><button type="button" class="mbtn pri" data-msave>★ 儲做命例</button></div></div>
 <section id="caseNote" class="panel casenote" hidden></section>
 <div id="out" class="wrap" style="gap:18px"></div>
 
@@ -651,6 +688,12 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
 </section>
+<nav class="mnav" aria-label="分頁">
+  <button type="button" data-mtab-go="in"><b>✎</b>排盤</button>
+  <button type="button" data-mtab-go="chart"><b>☯</b>命盤</button>
+  <button type="button" data-mtab-go="case"><b>☰</b>命例</button>
+  <button type="button" data-mtab-go="more"><b>…</b>更多</button>
+</nav>
 <footer class="madeby">Created by 隱姓師父天字第一號小粉絲 - 叉油雞飯多汁</footer>
 </div>
 </div>
@@ -1178,13 +1221,23 @@ function run(v){
   if(!(v.y>=-2999&&v.y<=9999)){$('err').textContent='年份請填公元前 3000 年至公元 9999 年。';return;}
   if(isNaN(v.lon)){$('err').textContent='請填出生地經度，或者揀城市。';return;}
   if(v.at&&!validDate(v.at.y,v.at.m,v.at.d)){$('err').textContent='睇運日期冇呢一日，請再揀過。';return;}
-  try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();setInSum(v);if(isMob()&&(RUN_N++||fromQuery()))foldIn(true);try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
+  try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();setInSum(v);if(RUN_N++||fromQuery())mTab('chart');try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
     LAST_V=v;try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
   catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
 }
-$('f').addEventListener('submit',e=>{e.preventDefault();run(readForm());if(isMob()&&$('chartBox'))$('chartBox').scrollIntoView({block:'start'});});
+$('f').addEventListener('submit',e=>{e.preventDefault();run(readForm());});
+// 手機版分頁：排盤 in、命盤 chart、命例 case、更多 more（桌面版 CSS 唔理呢個設定）
+function mTab(k){document.body.dataset.mtab=k;document.querySelectorAll('.mnav [data-mtab-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.mtabGo===k?'page':'false'));
+  if(k==='case')$('caseBox').open=true;if(isMob())scrollTo(0,0);}
+mTab('in');
+try{if(!localStorage.getItem('b8-guide-off'))$('mGuide').hidden=false;}catch(e){$('mGuide').hidden=false;}
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-mguide-close]')){$('mGuide').hidden=true;try{localStorage.setItem('b8-guide-off','1');}catch(x){}return;}
+  const g=e.target.closest('[data-mtab-go]');if(g){mTab(g.dataset.mtabGo);return;}
+  if(e.target.closest('[data-msave]')){mTab('case');const n=$('caseName');if(n&&!$('caseAdd').hidden)n.focus();}
+});
 // 手機版：排完盤就收埋輸入表，頂部只顯示一行出生資料，撳「修改」再打開
-function setInSum(v){$('inSum').textContent=`${v.name||'未命名'} · ${v.lunar?'農曆':'公曆'} ${yearS(v.y)}-${v.m}-${v.d} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;}
+function setInSum(v){$('inSum').textContent=$('mWho').textContent=`${v.name||'未命名'} · ${v.lunar?'農曆':'公曆'} ${yearS(v.y)}-${v.m}-${v.d} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;}
 let RUN_N=0;
 function foldIn(c){$('inPanel').classList.toggle('incol',c);$('inToggle').setAttribute('aria-expanded',String(!c));}
 $('inToggle').addEventListener('click',()=>foldIn(!$('inPanel').classList.contains('incol')));
