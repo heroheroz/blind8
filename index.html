@@ -810,7 +810,7 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];if(!up&&!dn)r
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
 function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.act[k][ci][0]>0;
   return act?`<span class="lk off" title="${n} 條粘連，粘連力 ×${f}；已被七殺解開，七殺力度 ×${f}">解 ×${f}</span>`:`<span class="lk" title="${n} 條粘連，粘連力 ×${f}">粘 ×${f}</span>`;}
-const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:true,aux:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false};
+const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:false,aux:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false};
 function drawChains(){
   document.querySelectorAll('td.chain').forEach(td=>{
     const k=+td.dataset.k,up=td.dataset.up==='1',mv=td.dataset.m==='v',links=((S.links||[])[k]||[]).filter(l=>(mv?l.vx!=null&&VIEW.virt:l.vx==null)&&((mv?VIEW.dynZg:VIEW.dyn)||(!S.cols[l.a].dyn&&(l.b==null||!S.cols[l.b].dyn))));
