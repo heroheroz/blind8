@@ -1461,8 +1461,8 @@ function caseTokens(c){const k=c.id+JSON.stringify(c.input);if(GZ_CACHE.has(k))r
   GZ_CACHE.set(k,t);return t;}
 const gzMatch=(c,q)=>{const ws=q.split(/\s+/).filter(Boolean);return ws.length&&ws.every(w=>caseTokens(c).has(w.replace(/^日主/,'日')));};
 function renderCases(){
-  // 搜尋唔分大細楷（Eric／eric 一樣搵到）
-  const lc=x=>String(x||'').toLowerCase(),ql=lc(Q);
+  // 搜尋唔分大細楷同繁簡（Eric／eric、陳／陈 一樣搵到）
+  const lc=srchNorm,ql=lc(Q);
   const list=CASES.map((c,i)=>[c,i]).sort((a,b)=>caseScore(b[0])-caseScore(a[0])||a[1]-b[1]).map(x=>x[0]).filter(c=>(!Q||gzMatch(c,Q)||lc(c.name).includes(ql)||lc(c.notes).includes(ql)||(c.tags||[]).some(t=>lc(t).includes(ql)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
   const cnt={};CASES.forEach(c=>(c.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
   const tq=TQ.toLowerCase(),tl=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b)).filter(t=>TAGF.has(t)||!tq||t.toLowerCase().includes(tq));
@@ -1657,7 +1657,10 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-png]');if(
 document.addEventListener('click',e=>{if(!e.target.closest('[data-share]')||!LAST_V)return;const url=SHARE_BASE+'?'+toQuery(LAST_V),msg=$('pngMsg');
   const done=()=>{msg.textContent='已複製連結';setTimeout(()=>{if(msg.textContent.startsWith('已複製連結'))msg.textContent='';},4000);};
   (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(done).catch(()=>{prompt('複製呢條連結：',url);});});
-$('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();});
+// 搜尋用：轉細楷，再用 OpenCC 轉簡體，咁繁簡都對得上；轉換程式第一次搜尋先載入，載入前只比大細楷
+const SRCH=new Map();
+function srchNorm(x){x=String(x||'').toLowerCase();if(!ZH.cv||!x)return x;let y=SRCH.get(x);if(y==null){try{y=ZH.cv(x).toLowerCase();}catch(e){y=x;}SRCH.set(x,y);}return y;}
+$('caseQ').addEventListener('input',e=>{Q=e.target.value.trim();renderCases();if(Q&&!ZH.cv)zhLoad().then(()=>{SRCH.clear();renderCases();}).catch(()=>{});});
 $('tagQ').addEventListener('input',e=>{TQ=e.target.value.trim();renderCases();});
 $('tagQ').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const b=[...document.querySelectorAll('#tagBar [data-tagf]')].find(x=>!TAGF.has(x.dataset.tagf));if(b){TAGF.add(b.dataset.tagf);TQ='';e.target.value='';renderCases();}});
 $('caseImport').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;
