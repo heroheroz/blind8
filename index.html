@@ -1461,7 +1461,9 @@ function caseTokens(c){const k=c.id+JSON.stringify(c.input);if(GZ_CACHE.has(k))r
   GZ_CACHE.set(k,t);return t;}
 const gzMatch=(c,q)=>{const ws=q.split(/\s+/).filter(Boolean);return ws.length&&ws.every(w=>caseTokens(c).has(w.replace(/^日主/,'日')));};
 function renderCases(){
-  const list=CASES.map((c,i)=>[c,i]).sort((a,b)=>caseScore(b[0])-caseScore(a[0])||a[1]-b[1]).map(x=>x[0]).filter(c=>(!Q||gzMatch(c,Q)||c.name.includes(Q)||(c.notes||'').includes(Q)||(c.tags||[]).some(t=>t.includes(Q)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
+  // 搜尋唔分大細楷（Eric／eric 一樣搵到）
+  const lc=x=>String(x||'').toLowerCase(),ql=lc(Q);
+  const list=CASES.map((c,i)=>[c,i]).sort((a,b)=>caseScore(b[0])-caseScore(a[0])||a[1]-b[1]).map(x=>x[0]).filter(c=>(!Q||gzMatch(c,Q)||lc(c.name).includes(ql)||lc(c.notes).includes(ql)||(c.tags||[]).some(t=>lc(t).includes(ql)))&&[...TAGF].every(t=>(c.tags||[]).includes(t)));
   const cnt={};CASES.forEach(c=>(c.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
   const tq=TQ.toLowerCase(),tl=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b)).filter(t=>TAGF.has(t)||!tq||t.toLowerCase().includes(tq));
   $('findInfo').textContent=(Q||TAGF.size)?`搵到 ${list.length} 個命例`+(TAGF.size?`（標籤：${[...TAGF].join('、')}）`:''):(TQ&&!tl.length?'冇呢個標籤':'');
