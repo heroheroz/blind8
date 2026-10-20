@@ -926,7 +926,7 @@ function zhaogan(cols){
 function zhaogan2(ext){const r=zhaogan(ext.map(c=>({gz:c.gz,dyn:c.dyn,lbl:c.lbl})));const fix=z=>{const src=z.src.map(j=>ext[j].i);const a=ext[z.pa].i,b=ext[z.pb].i;return {...z,src,pa:a,pb:b,pos:(a+b)/2+0.5};};return {st:r.st.map(fix),br:r.br.map(fix)};}
 // 招感字：未啟動顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，每多一層啟動多一個 ↑（Z5、Q3）
 function zgArrows(k,vi){const a=S.vact&&S.vact[k]&&S.vact[k][vi],dn=(S.vdown&&S.vdown[k]&&S.vdown[k][vi])||0;
-  if(a&&a[0]>0)return `<span class="act zgon" title="被${a[1]}啟動">${'<b>↑</b>'.repeat(a[0])}</span>`;
+  if(a&&a[0]>0)return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+((S.zg||[])[k]||[])[vi]?.c||'')}">${'<b>↑</b>'.repeat(a[0])}</span>`;
   return dn?`<span class="act" title="${dn} 條粘連（未被啟動，唔會招感或者啟動其他字）">${'<b class="dn">↓</b>'.repeat(dn)}</span>`:'';}
 function zgStrip(list,isGan,ncol){
   if(!list.length)return '<span class="tiny" style="padding:4px 0">—</span>';
@@ -1052,18 +1052,21 @@ function yangren(z,cols,dmG,ci){const gs=[...new Set(cols.filter(c=>c.gz).map(c=
 const KUIGANG=['庚辰','庚戌','壬辰','戊戌'];
 function chenxu(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';const kg=KUIGANG.includes(gz);
   return `<span class="cx${kg?' kg':''}" title="${kg?'魁罡：庚辰、庚戌、壬辰、戊戌。':''}天干坐辰戌，做功特別有力；用得唔好係天羅地網。">${kg?'魁罡':'坐辰戌'}</span>`;}
+// 啟動原因由源頭順住寫：「七殺流年干乙（七殺運干辛（七殺年干丁（招感殺星癸）））」→「招感殺星癸 >>> 年干丁 >>> 運干辛 >>> 流年干乙 >>> 日干己」
+const chainTxt=(why,self)=>why.replace(/）/g,'').split('（').map(p=>p.replace(/^(七殺|沖|害|刑)/,'')).reverse().concat(self).map(p=>p.replace(/^運(?=[干支])/,'大運')).join(' >>> ');
+const selfLbl=(k,ci)=>{const c=S.cols[ci];return (c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0])+(k?'支':'干')+c.gz[k];};
 function status(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];
   if(!up)return '<span class="st st-off">&nbsp;</span>';
-  return `<span class="st" title="被${S.act[k][ci][1]}啟動">啟動</span>`;}
+  return `<span class="st" title="啟動：${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}">啟動</span>`;}
 // 全盤連鎖：啟動鏈繞住七殺（地支沖害刑）圈兜返去鏈入面已經有嘅字；同一個字只計一次，所以 ↑ 唔會再加
 function loopNote(){const t=[0,1].map(k=>S.act&&S.act[k]&&S.act[k].loop&&S.act[k].loop.length?`${k?'地支':'天干'}${S.act[k].loop.join('、')}`:'').filter(Boolean);
   return t.length?`<div class="hint loopnote" title="啟動鏈兜圈，同一個字喺同一條鏈只計一次（規則 Q3）">⚠ 全盤連鎖：${t.join('；')} 嘅啟動鏈兜返轉頭，同一個字只計一次</div>`:'';}
 function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,why:[]};if(!up&&!dn&&!pw.n)return '';
   const pwB='<b class="pw">↑</b>'.repeat(pw.n),pwT=pw.n?`　力度 ↑${pw.n}（${pw.why.join('，')}）`:'';
   // 招感殺星（Q6）去到招佢嘅字：↓ 變 ↑（同招感字被啟動一樣）
-  if(up&&((S.sha||[])[k]||[]).some(sh=>sh.callers.some(cl=>cl.i===ci&&!cl.st)))return `<span class="act" title="↑${up}（被${S.act[k][ci][1]}啟動，${dn} 條粘連已解開）${pwT}">${'<b>↑</b>'.repeat(up)}${pwB}</span>`;
+  if(up&&((S.sha||[])[k]||[]).some(sh=>sh.callers.some(cl=>cl.i===ci&&!cl.st)))return `<span class="act" title="↑${up}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}，${dn} 條粘連已解開）${pwT}">${'<b>↑</b>'.repeat(up)}${pwB}</span>`;
   // 啟動咗嘅字：向下箭咀照顯示，但劃走
-  const tip=`↑${up}${up?`（被${S.act[k][ci][1]}啟動）`:''}　↓${dn}（${dn} 條粘連${up&&dn?'，已解開':''}）${pwT}`;
+  const tip=`↑${up}${up?`（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}）`:''}　↓${dn}（${dn} 條粘連${up&&dn?'，已解開':''}）${pwT}`;
   return `<span class="act" title="${tip}">${'<b>↑</b>'.repeat(up)}${pwB}${`<b class="${up?'dnx':'dn'}">↓</b>`.repeat(dn)}</span>`;}
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
 function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.act[k][ci][0]>0;
@@ -1227,7 +1230,7 @@ function render(){
         cur.push({...z,pa:null,pb:null,second:true});added++;});});
     if(!added)break;
   }
-  S.vact=S.act.map(a=>a.vact);S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
+  S.vact=S.act.map(a=>a.vact);S.zg=[ZG.st,ZG.br];S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
   // 粘連力：每條粘連乘二
   S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).length));
   // 天干力度（Q7）：坐辰戌 +1；盤上每見一個佢嘅陽刃地支 +1；盤上每見一個同五行嘅地支 +1。只係顯示多啲 ↑，唔影響啟動計算
