@@ -262,14 +262,14 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .intoggle{display:none}
 .mfold>summary{display:none}
 /* 手機版：底部分頁（排盤／命盤／命例／更多），每次只顯示一頁；桌面版唔顯示呢啲 */
-.mtop,.mguide,.mbar,.mcasehint{display:none}
+.mtop,.mguide,.mbar,.mcasehint,.mbr{display:none}
 @media (max-width:700px),(pointer:coarse) and (max-width:1000px){
   body{padding-block:0 32px;font-size:16px}
   .mtop{display:block;position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 4px;margin:0 -16px 12px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
   .mauth{display:flex;align-items:center;gap:8px;font-size:14px;min-height:28px}.mauth .who{font-weight:600;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
   .mauth .adm{font-size:12px}
-  .mnav{display:flex}
+  .mnav{display:flex}.mbr{display:inline}
   #casePager select{font-size:15px}.mnav button[hidden]{display:none}
   table.audit thead{display:none}table.audit,table.audit tbody{display:block}table.audit tr{display:block;border-top:1px solid var(--line);padding:8px 0}
   table.audit td{display:inline;border:0;padding:0 8px 0 0;font-size:14px}table.audit td small{display:inline;margin-left:4px}table.audit td:last-child{display:block;margin-top:4px}
@@ -1127,6 +1127,7 @@ function render(){
     <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${yangren(col.gz[1],cols,P[2][0],ci)}${nlList(1,ci,cols)}`)}</tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="1" data-m="v" data-up="1"></td></tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[1],false,N)}</td></tr>
+    <tr><th class="rl">地支<br class="mbr">十神</th>${td((col,g,z)=>`<span class="ss">${shishen(dm,gi(HIDE[col.gz[1]][0]))}</span>`)}</tr>
     <tr><th class="rl">藏干</th>${td((col,g,z)=>`<div class="hid">${[...HIDE[col.gz[1]]].map(h=>{const hg=gi(h);return `<span><b class="w${gw(hg)}">${h}</b>${shishen(dm,hg)}</span>`;}).join('')}</div>`)}</tr>
     <tr><th class="rl">星運</th>${td((col,g,z)=>cs(dm,z))}</tr>
     <tr><th class="rl">自坐</th>${td((col,g,z)=>cs(g,z))}</tr>
