@@ -404,7 +404,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <p><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
   <p>地支格標「坐辰戌」：該柱天干坐喺辰或戌上面，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。地支標「X刃」：盤上有陽干 X，呢個地支係佢嘅陽刃（甲卯、丙午、戊午、庚酉、壬子，陰干冇陽刃）；標「日主陽刃」就係日主嘅陽刃。盤上另一柱有沖陽刃嘅字（卯酉、子午）就標「X刃逢沖」並加外框；如果同時有字同陽刃六合或半合（例如卯見戌、亥、未），旁邊標「X合護」，即係要等個合被解開、再有天干引動先應事。</p>
-  <p>元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、身宮用傳統算法；命宮嘅月份用中氣計，出生喺本月中氣之後就當下一個月（例如寅月雨水後當卯月）。小運由時柱起，陽男陰女順行、陰男陽女逆行，每歲（虛歲）行一柱；剔「顯示小運」先顯示，顯示咗就同大運流年一齊計招感粘連。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
+  <p>元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、身宮用傳統算法；命宮嘅月份用中氣計，出生喺本月中氣之後就當下一個月（例如寅月雨水後當卯月）。月柱預設以節分月；喺顯示選項揀「過中氣當下月」，出生喺中氣之後嘅月柱就當下一個月，大運由新月柱排，胎元跟月柱；起運歲數、流月、人元司令照用節氣，命宮唔受影響。小運由時柱起，陽男陰女順行、陰男陽女逆行，每歲（虛歲）行一柱；剔「顯示小運」先顯示，顯示咗就同大運流年一齊計招感粘連。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
   <div class="rules">
   <p><b>本派規則列表</b>　排盤嘅招感、粘連、啟動全部跟以下規則計。要加或者改規則，講返編號就得。</p>
   <h4>甲・計算範圍</h4>
@@ -905,7 +905,7 @@ function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.
 const isMob=()=>matchMedia('(max-width:700px)').matches;
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
-const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false};
+const VIEW={virt:true,dyn:false,dynZg:false,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,qiMonth:false};
 function drawChains(){
   document.querySelectorAll('td.chain').forEach(td=>{
     const k=+td.dataset.k,up=td.dataset.up==='1',mv=td.dataset.m==='v',links=((S.links||[])[k]||[]).filter(l=>(mv?l.vx!=null&&VIEW.virt:l.vx==null)&&((mv?VIEW.dynZg:VIEW.dyn)||(!S.cols[l.a].dyn&&(l.b==null||!S.cols[l.b].dyn))));
@@ -932,10 +932,12 @@ function drawChains(){
   });
 }
 window.addEventListener('resize',()=>{if(S)drawChains();});
-document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
+document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.name==='qim'){VIEW.qiMonth=e.target.value==='qi';const o=S;S=compute(o.inp);for(const k of ['ref','di','li','mos','mi','ds','dd','act','lock'])if(k in o)S[k]=o[k];render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
 
 /* ---------- state & render ---------- */
 let S=null;
+const gzNext=gz=>GAN[(GAN.indexOf(gz[0])+1)%10]+ZHI[(ZHI.indexOf(gz[1])+1)%12];
+const taiYuan=()=>S.qiShift?gzNext(S.ec.getTaiYuan()):S.ec.getTaiYuan();
 function compute(inp){
   let y=inp.y,m=inp.m,d=inp.d;
   if(inp.lunar){const ls=Lunar.fromYmdHms(inp.y,inp.leap?-inp.m:inp.m,inp.d,inp.h,inp.mi,0).getSolar();y=ls.getYear();m=ls.getMonth();d=ls.getDay();}
@@ -946,7 +948,11 @@ function compute(inp){
   const yun=ec.getYun(inp.sex,1);
   const dys=yun.getDaYun(13);
   const P=[ec.getYear(),ec.getMonth(),ec.getDay(),ec.getTime()];
-  return {inp,birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,dm:gi(P[2][0])};
+  // 「過中氣當下月」：出生喺本月中氣之後，月柱當下一個月（例如寅月雨水後當卯月），大運由新月柱排、胎元跟月柱；
+  // 起運歲數、流月、人元司令照用節氣；命宮有自己嘅中氣計法，唔受影響
+  const qiShift=VIEW.qiMonth&&lun.getPrevJie(false).getSolar().isBefore(lun.getPrevQi(false).getSolar());
+  if(qiShift){P[1]=gzNext(P[1]);dys.forEach(dy=>{const f=dy.getGanZhi.bind(dy);dy.getGanZhi=()=>{const g=f();return g?gzNext(g):g;};});}
+  return {inp,qiShift,P0m:ec.getMonth(),birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,dm:gi(P[2][0])};
 }
 function pickToday(){
   const today=refDay();const Y=gzYear(today);
@@ -996,7 +1002,7 @@ function render(){
   // 三桓（胎元、胎息、身宮）同命宮，放喺時柱左邊
   if(!VIEW.only4&&!VIEW.core&&VIEW.aux){
     // 計算永遠用「身宮 胎息 胎元 命宮」呢個次序；「命宮放三桓左邊」只係顯示時調位（見 DO）
-    const sg=[{h:'身宮',sub:'三桓',gz:ec.getShenGong(),aux:true},{h:'胎息',sub:'三桓',gz:ec.getTaiXi(),aux:true},{h:'胎元',sub:'三桓',gz:ec.getTaiYuan(),aux:true}],
+    const sg=[{h:'身宮',sub:'三桓',gz:ec.getShenGong(),aux:true},{h:'胎息',sub:'三桓',gz:ec.getTaiXi(),aux:true},{h:'胎元',sub:'三桓',gz:taiYuan(),aux:true}],
       mg={h:'命宮',sub:'命主所居',gz:mingGong(lun,ec),aux:true};
     cols.unshift(...sg,mg);
     cols[4].first=true;
@@ -1067,9 +1073,9 @@ function render(){
   const cnt=[0,0,0,0,0];P.forEach(p=>{cnt[gw(gi(p[0]))]++;cnt[ZWX[zi(p[1])]]++;});
   // 人元司令：按出生時離上一個「節」幾多日，決定月支藏干邊個當令（月令分日用事）
   const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
-  const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
+  const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slM=S.P0m[1],slT=SL[slM],jn=JIE[(zi(slM)+10)%12];
   let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
-  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`;
+  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${slM}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`;
   const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
@@ -1108,7 +1114,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">月柱：</span><label class="chk"><input type="radio" name="qim" value="no" ${VIEW.qiMonth?'':'checked'}>忽視中氣（以節分月）</label><label class="chk"><input type="radio" name="qim" value="qi" ${VIEW.qiMonth?'checked':''}>過中氣當下月</label>${S.qiShift?'<span class="hint">（已過中氣：月柱、大運、胎元用下一個月）</span>':''}</div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label><label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
   <section class="panel">
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
@@ -1117,7 +1123,7 @@ function render(){
   </section>
   <div class="grid2">
     <section class="panel"><h2>胎元 · 命宮 · 身宮</h2>
-      <div class="cards">${card('胎元',ec.getTaiYuan())}${card('命宮',mingGong(lun,ec))}${card('身宮',ec.getShenGong())}</div>
+      <div class="cards">${card('胎元',taiYuan())}${card('命宮',mingGong(lun,ec))}${card('身宮',ec.getShenGong())}</div>
     </section>
     <section class="panel"><h2>元運（三元九運）</h2>
       <div class="yun"><div class="gua w${'木火土金水'.indexOf(yb.name.slice(-1))}">${yb.name.slice(0,2)}</div>
