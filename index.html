@@ -354,6 +354,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <p class="hint" id="findInfo"></p>
 </div>
 <ul id="caseList" class="clist"></ul>
+<div class="gbpager" id="casePager"></div>
 <details class="tagmgr"><summary>管理標籤</summary>
   <div id="tagMgrList" class="tagbar"></div>
   <p class="hint" id="tagMgrLogin" hidden>登入先可以加標籤。</p>
@@ -1248,6 +1249,7 @@ try{if(!localStorage.getItem('b8-guide-off'))$('mGuide').hidden=false;}catch(e){
 document.addEventListener('click',e=>{
   if(e.target.closest('[data-mguide-close]')){$('mGuide').hidden=true;try{localStorage.setItem('b8-guide-off','1');}catch(x){}return;}
   const g=e.target.closest('[data-mtab-go]');if(g){mTab(g.dataset.mtabGo);return;}
+  const cpb=e.target.closest('[data-cpage]');if(cpb){if(cpb.disabled)return;CP=+cpb.dataset.cpage;renderCases();$('caseList').scrollIntoView({block:'start'});scrollBy(0,-130);return;}
   if(e.target.closest('[data-mlogin]')){mTab('case');$('caseAuth').scrollIntoView({block:'center'});return;}
   if(e.target.closest('[data-msave]')){mTab('case');const n=$('caseName');if(n&&!$('caseAdd').hidden)n.focus();}
 });
@@ -1333,7 +1335,7 @@ const Store={
     await api('cases?id=eq.'+encodeURIComponent(id),{method:'DELETE'});}
 };
 
-let CASES=[],CUR=null,EDIT=false,Q='',TQ='';const TAGF=new Set();
+let CASES=[],CUR=null,EDIT=false,Q='',TQ='',CP=1,CP_KEY='';const CP_N=10;const TAGF=new Set();
 // 常用標籤：可以自己加減，記喺呢個瀏覽器
 let TAG_SUG=(()=>{try{const v=JSON.parse(localStorage.getItem('b8-tagsug'));if(Array.isArray(v))return v;}catch(e){}return ['雙胞胎','結婚','離婚','生死','生仔','兄弟數目','父母','事業','財運','疾病'];})();
 const saveSug=()=>{try{localStorage.setItem('b8-tagsug',JSON.stringify(TAG_SUG));}catch(e){}};
@@ -1417,7 +1419,12 @@ function renderCases(){
   $('findInfo').textContent=(Q||TAGF.size)?`搵到 ${list.length} 個命例`+(TAGF.size?`（標籤：${[...TAGF].join('、')}）`:''):(TQ&&!tl.length?'冇呢個標籤':'');
   $('tagBar').innerHTML=tl.map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}" aria-pressed="${TAGF.has(t)}">#${esc(t)} <small>${cnt[t]}</small></button>`).join('')+(TAGF.size?'<button type="button" class="lnk" data-tagclear>清除篩選</button>':'');
   $('caseCount').textContent=CASES.length;
-  $('caseList').innerHTML=list.length?list.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
+  // 手機版：命例每 10 個一頁；搜尋或者標籤篩選改咗就返第一頁。桌面版照舊全部列出
+  const fk=Q+'|'+[...TAGF].join(',');if(fk!==CP_KEY){CP_KEY=fk;CP=1;}
+  const np=isMob()?Math.max(1,Math.ceil(list.length/CP_N)):1;CP=Math.min(CP,np);
+  const shown=np>1?list.slice((CP-1)*CP_N,CP*CP_N):list;
+  $('casePager').innerHTML=np>1?`<button type="button" class="lnk" data-cpage="${CP-1}" ${CP===1?'disabled':''}>‹ 上一頁</button>${Array.from({length:np},(_,i)=>i+1).filter(i=>i===1||i===np||Math.abs(i-CP)<=2).map((i,k,a)=>(k&&i-a[k-1]>1?'<span class="hint">…</span>':'')+`<button type="button" class="pg${i===CP?' on':''}" data-cpage="${i}" aria-current="${i===CP}">${i}</button>`).join('')}<button type="button" class="lnk" data-cpage="${CP+1}" ${CP===np?'disabled':''}>下一頁 ›</button>`:'';
+  $('caseList').innerHTML=list.length?shown.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
     :`<li class="hint">${CASES.length?'搵唔到。':'未有命例。'+(can.add()?'排好盤之後，喺上面打名再撳「儲存」。':'')}</li>`;
   showCase(CASES.find(c=>c.id===CUR));
   renderSug();renderAuth();
