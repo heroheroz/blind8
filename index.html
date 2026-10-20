@@ -52,6 +52,10 @@ header p{margin:0;color:var(--muted);font-size:13px}
 .gbpager .pg{font:inherit;font-size:13px;min-width:30px;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);cursor:pointer}
 .gbpager .pg.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .gbpager .lnk:disabled{opacity:.4;cursor:default}
+.auf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}.auf select,.auf input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.auwrap{overflow-x:auto}table.audit{width:100%;border-collapse:collapse;font-size:13px}table.audit th,table.audit td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}table.audit th{color:var(--muted);font-weight:600;white-space:nowrap}
+table.audit td.t{white-space:nowrap;color:var(--muted)}table.audit small{color:var(--muted);display:block}table.audit .op-INSERT{color:var(--good,#2e7d32)}table.audit .op-DELETE{color:var(--bad)}table.audit .op-UPDATE{color:var(--accent)}
+table.audit .chg{display:block;margin-top:2px}table.audit details pre{white-space:pre-wrap;word-break:break-all;font-size:11px;max-height:240px;overflow:auto;margin:4px 0 0}
 .gblist .when{color:var(--muted);font-size:12px;margin-left:8px}
 .gblist .body{margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}
 #gbAdd,.gbreply{display:block}
@@ -639,6 +643,13 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <p class="hint" id="gbMsg"></p>
   <ul class="gblist" id="gbList"></ul>
   <div class="gbpager" id="gbPager"></div>
+</section>
+<section class="panel" id="audit" hidden>
+  <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
+  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="admins">管理員</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><button type="button" class="lnk" data-aureload>重新載入</button></div>
+  <p class="hint" id="auMsg"></p>
+  <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
+  <div class="gbpager" id="auPager"></div>
 </section>
 <footer class="madeby">Created by 隱姓師父天字第一號小粉絲 - 叉油雞飯多汁</footer>
 </div>
@@ -1282,7 +1293,38 @@ function renderSug(){
   const all=byUse([...new Set([...TAG_SUG,...Object.keys(used)])],used);
   $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${(CLOUD?can.tagdel():!used[t]||can.tagdel())?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
 }
+// 審計紀錄：管理員睇邊個用戶新增、修改、刪除咗乜（資料由 supabase/005_audit.sql 嘅 trigger 寫入）
+const AU={p:0,n:50,loaded:false};
+const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員'};
+const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除'},AU_V={'1':'準','-1':'唔準','0':'撤回'};
+const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者'};
+const auS=v=>v==null?'':typeof v==='string'?v:JSON.stringify(v);
+const auCut=(v,n=60)=>{const x=auS(v);return x.length>n?x.slice(0,n)+'…':x;};
+const auCase=id=>{const c=CASES.find(c=>c.id===id);return c?`「${c.name}」`:'';};
+function auWhat(r){const o=r.row_new||r.row_old||{};
+  switch(r.tbl){case 'cases':return `「${o.name||''}」`;case 'comments':return auCase(o.case_id)+' '+auCut(o.body);case 'guestbook':return auCut(o.body);case 'tags':return '#'+(o.name||'');
+    case 'votes':return auCase(o.case_id)+' '+(AU_V[o.vote]||o.vote);case 'comment_votes':return AU_V[o.vote]||o.vote;case 'event_votes':return auCase(o.case_id)+' '+(o.ev||'')+' '+(AU_V[o.vote]||o.vote);default:return o.user_id||'';}}
+function auDiff(r){if(r.op!=='UPDATE'||!r.row_old||!r.row_new)return [];const a=r.row_old,b=r.row_new,out=[];
+  for(const k of Object.keys(b)){if(k==='created_at'||JSON.stringify(a[k])===JSON.stringify(b[k]))continue;
+    if(k==='input'&&a[k]&&b[k]&&typeof a[k]==='object'){for(const j of new Set([...Object.keys(a[k]),...Object.keys(b[k])]))if(JSON.stringify(a[k][j])!==JSON.stringify(b[k][j]))out.push(`出生資料.${j}：${auCut(a[k][j],30)} → ${auCut(b[k][j],30)}`);}
+    else out.push(`${AU_K[k]||k}：${auCut(a[k],40)} → ${auCut(b[k],40)}`);}
+  return out;}
+async function loadAudit(){
+  if(!(CLOUD&&ADMIN))return;
+  const f=[],t=$('auTbl').value,op=$('auOp').value,q=$('auQ').value.trim().replace(/[,()*%]/g,'');
+  if(t)f.push('tbl=eq.'+t);if(op)f.push('op=eq.'+op);if(q)f.push('or='+encodeURIComponent(`(actor_name.ilike.*${q}*,actor_email.ilike.*${q}*)`));
+  $('auMsg').textContent='載入緊…';
+  try{const rows=await api(`audit_log?select=*&order=at.desc&limit=${AU.n+1}&offset=${AU.p*AU.n}${f.length?'&'+f.join('&'):''}`);
+    const more=rows.length>AU.n;rows.length=Math.min(rows.length,AU.n);
+    $('auMsg').textContent=rows.length?'':'冇紀錄。';
+    $('auList').innerHTML=rows.map(r=>`<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.actor?`${esc(r.actor_name||'')}<small>${esc(r.actor_email||'')}</small>`:'<small>系統／SQL</small>'}</td><td class="op-${r.op}">${AU_OP[r.op]||esc(r.op)}</td><td>${esc(AU_T[r.tbl]||r.tbl)}</td><td>${esc(auWhat(r))}${auDiff(r).map(x=>`<span class="chg">${esc(x)}</span>`).join('')}<details><summary class="hint">詳細</summary><pre>${esc(JSON.stringify(r.op==='UPDATE'?{改之前:r.row_old,改之後:r.row_new}:(r.row_new||r.row_old),null,1))}</pre></details></td></tr>`).join('');
+    $('auPager').innerHTML=AU.p||more?`<button type="button" class="lnk" data-aupage="-1" ${AU.p?'':'disabled'}>‹ 新啲</button><span class="hint">第 ${AU.p+1} 頁</span><button type="button" class="lnk" data-aupage="1" ${more?'':'disabled'}>舊啲 ›</button>`:'';
+  }catch(e){$('auList').innerHTML='';$('auPager').innerHTML='';$('auMsg').textContent=/audit_log|42P01|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/005_audit.sql。':'載入唔到：'+e.message;}
+}
+$('audit').addEventListener('change',e=>{if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'){AU.p=0;loadAudit();}});
+$('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,AU.p+ +b.dataset.aupage);$('audit').scrollIntoView({block:'start'});}loadAudit();});
 function renderAuth(){
+  $('audit').hidden=!(CLOUD&&ADMIN);if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadAudit();}else if(!ADMIN)AU.loaded=false;
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
   $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();
   const box=$('caseAuth');if(!CLOUD){box.hidden=true;return;}box.hidden=false;
