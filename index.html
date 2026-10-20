@@ -1524,7 +1524,10 @@ function caseFromRow(o){
 // 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變「確定？」，三秒內再撳先執行
 function twice(btn,label){if(btn.dataset.armed)return true;btn.dataset.armed='1';const old=btn.innerHTML;btn.innerHTML=label;btn.classList.add('armed');
   setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},3000);return false;}
-const busy=async(fn)=>{try{await fn();}catch(e){$('caseMsg').textContent='出錯：'+e.message;await reloadCases();$('caseMsg').textContent='出錯：'+e.message;return;}await reloadCases();};
+// 同名又同出生資料（性別、曆法、年月日時分、子時、經度、時區、夏令、真太陽時）當係同一個命例
+const caseKey=c=>{const i=c.input||{};return [String(c.name||'').trim(),i.sex,!!i.lunar,!!i.leap,i.y,i.m,i.d,i.h,i.mi,i.zi,i.lon,i.tz,!!i.dst,!!i.tst].join('|');};
+let SAVING=false;
+const busy=async(fn)=>{try{await fn();}catch(e){const m=(e.dup?'':'出錯：')+e.message;$('caseMsg').textContent=m;await reloadCases();$('caseMsg').textContent=m;return;}await reloadCases();};
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-evgo],[data-evdel],[data-resend],[data-open],[data-vote],[data-cvote],[data-evote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
   if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
@@ -1562,7 +1565,10 @@ document.addEventListener('submit',e=>{
   if(f.id==='caseAdd'){e.preventDefault();const input=S&&S.inp?{...S.inp}:readForm();
     const name=$('caseName').value.trim()||input.name||'未命名',notes=$('caseNotes').value.trim();
     const tags=parseTags($('caseTags').value);
-    busy(async()=>{CUR=await Store.add({name,input,notes,tags});const nw=tags.filter(x=>!TAG_SUG.includes(x));if(nw.length)await TagStore.add(nw).catch(()=>{});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;});}
+    if(SAVING)return;SAVING=true;const btn=f.querySelector('button[type=submit]');if(btn)btn.disabled=true;
+    busy(async()=>{if(CLOUD)CASES=await Store.list();const k=caseKey({name,input}),dup=CASES.find(c=>caseKey(c)===k);
+      if(dup){CUR=dup.id;throw Object.assign(new Error(`已經有一個同名又同出生資料嘅命例「${dup.name}」，冇再儲存。`),{dup:true});}
+      CUR=await Store.add({name,input,notes,tags});const nw=tags.filter(x=>!TAG_SUG.includes(x));if(nw.length)await TagStore.add(nw).catch(()=>{});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;}).finally(()=>{SAVING=false;if(btn)btn.disabled=false;});}
   else if(f.id==='loginF'){e.preventDefault();
     auth('token?grant_type=password',{email:$('lgEmail').value.trim(),password:$('lgPass').value}).then(async j=>{saveSess(sessFrom(j));await checkAdmin();reloadCases();}).catch(err=>{const m=$('caseMsg');if(/not confirmed/i.test(err.message))m.innerHTML='電郵未確認。請去收件匣（包括垃圾郵件）撳確認連結。<button type="button" class="lnk" data-resend>重寄確認電郵</button>';else m.textContent='登入失敗：'+err.message;});}
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
