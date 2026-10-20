@@ -1252,6 +1252,9 @@ function run(v){
     LAST_V=v;try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
   catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
 }
+// 改命例時，「出生資料改做表格上面嘅資料」旁邊即時顯示表格而家嘅資料
+$('f').addEventListener('input',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
+$('f').addEventListener('change',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
 $('f').addEventListener('submit',e=>{e.preventDefault();const v=readForm();run(v);if(!$('err').textContent)track('chart',v);});
 // 手機版分頁：排盤 in、命盤 chart、命例 case、更多 more（桌面版 CSS 唔理呢個設定）
 function mTab(k){document.body.dataset.mtab=k;document.querySelectorAll('.mnav [data-mtab-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.mtabGo===k?'page':'false'));
@@ -1485,7 +1488,7 @@ function showCase(c){
   box.hidden=false;const ed=can.edit(c);
   const head=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">命例：${esc(c.name)}</h2><span class="row">${voteBtns(c)}${ed&&!EDIT?'<button type="button" class="lnk" data-edit>修改</button>':''}<button type="button" class="lnk" data-close>收埋</button>${can.del(c)?`<button type="button" class="lnk del" data-del="${c.id}">刪除</button>`:''}</span></div>
     <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}${c.by?` · 由 ${esc(c.by)} 新增`:''}</p>`;
-  if(EDIT&&ed){box.innerHTML=head+`<form class="cadd" data-editf="${c.id}"><input type="text" name="name" maxlength="60" value="${esc(c.name)}" aria-label="命例名稱"><textarea name="notes" rows="4" maxlength="2000" aria-label="備註">${esc(c.notes||'')}</textarea><input type="text" name="tags" maxlength="200" value="${esc((c.tags||[]).join(' '))}" aria-label="標籤"><label class="chk"><input type="checkbox" name="birth"> 出生資料改做而家表格上面嘅資料</label><span class="row"><button type="submit" class="go sm">儲存</button><button type="button" class="lnk" data-editcancel>取消</button></span></form>`;return;}
+  if(EDIT&&ed){box.innerHTML=head+`<form class="cadd" data-editf="${c.id}"><span class="hint">名稱</span><input type="text" name="name" maxlength="60" value="${esc(c.name)}" aria-label="命例名稱"><span class="hint">備註</span><textarea name="notes" rows="4" maxlength="2000" aria-label="備註" placeholder="備註（可留空）">${esc(c.notes||'')}</textarea><span class="hint">標籤（用空格分開）</span><input type="text" name="tags" maxlength="200" value="${esc((c.tags||[]).join(' '))}" aria-label="標籤" placeholder="例如：財運 結婚"><span class="hint">出生資料：${esc(birthTxt(c.input))}<br>要改日子或時間：先喺排盤表格改好（電腦版喺最上面，手機版喺「排盤」分頁；可以撳排盤睇下啱唔啱），再返嚟剔下面呢格，然後撳儲存。</span><label class="chk"><input type="checkbox" name="birth"> 出生資料改做表格上面嘅資料：<b data-birthnow>${esc(birthTxt(readForm()))}</b></label><span class="row"><button type="submit" class="go sm">儲存</button><button type="button" class="lnk" data-editcancel>取消</button></span></form>`;return;}
   const have=c.tags||[],sug=byUse([...new Set([...TAG_SUG,...CASES.flatMap(x=>x.tags||[])])].filter(t=>!have.includes(t)));
   box.innerHTML=head+`<div class="ctags"><span class="cap">標籤</span>${have.length?tagChips(have,ed?c.id:''):'<span class="hint">未有標籤</span>'}</div>
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk">加</button></form></div>`:''}
@@ -1616,7 +1619,7 @@ document.addEventListener('submit',e=>{
     auth('token?grant_type=password',{email:$('lgEmail').value.trim(),password:$('lgPass').value}).then(async j=>{saveSess(sessFrom(j));await checkAdmin();reloadCases();}).catch(err=>{const m=$('caseMsg');if(/not confirmed/i.test(err.message))m.innerHTML='電郵未確認。請去收件匣（包括垃圾郵件）撳確認連結。<button type="button" class="lnk" data-resend>重寄確認電郵</button>';else m.textContent='登入失敗：'+err.message;});}
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
     const patch={name:String(fd.get('name')).trim()||c.name,notes:String(fd.get('notes')).trim(),tags:parseTags(fd.get('tags'))};
-    if(fd.get('birth'))patch.input=S&&S.inp?{...S.inp}:readForm();
+    if(fd.get('birth'))patch.input={...readForm(),...(c.input&&c.input.events?{events:c.input.events}:{})};// 事件唔喺表格度，保留返
     busy(async()=>{await Store.update(c.id,patch);EDIT=false;if(patch.input){writeForm(patch.input);run(patch.input);}});}
   else if(f.id==='tagMgrAdd'){e.preventDefault();const add=parseTags($('tagMgrIn').value).filter(x=>!TAG_SUG.includes(x));$('tagMgrIn').value='';if(add.length){if(CLOUD&&!can.add()){$('caseMsg').textContent='登入先可以加標籤。';return;}busy(()=>TagStore.add(add));}}
   else if(f.dataset.addev){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addev);if(!c)return;const fd=new FormData(f);
