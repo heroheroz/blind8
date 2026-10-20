@@ -484,7 +484,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-z2"><b>Z2 重字只招一個</b>　幾多個重字都只招一個字，擺喺最近嗰兩個重字中間。三個重字加一個 ↑，之後每多一個重字多一個 ↑，冇上限。</li>
     <li id="r-z3"><b>Z3 夾拱</b>　兩個字喺天干或地支次序相差兩位，招出中間嗰個字，例如丙戊夾拱丁、子寅夾拱丑。次序循環計，所以壬甲夾拱癸、亥丑夾拱子。</li>
     <li id="r-z4"><b>Z4 夾拱一對一</b>　每個字喺同一種夾拱只可以用一次，兩邊字一對一配，最近嘅先配，所以兩丙兩戊只夾拱兩個丁。</li>
-    <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字本身唔會再招感，亦唔會啟動其他字，直至招感字本身被啟動（天干被七殺剋，地支被沖、害、刑，條件同 Q1、Q2）。未啟動嘅招感字旁邊顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，佢同來源字嘅粘連解開，之後就可以同其他字招感、亦可以去啟動其他字。新招出嚟嘅字同樣要等自己被啟動先有作用。</li>
+    <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字未被啟動之前唔會啟動其他字，直至招感字本身被啟動（天干被七殺剋，地支被沖、害、刑，條件同 Q1、Q2）。未啟動嘅招感字旁邊顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，佢同來源字嘅粘連解開，之後就可以做七殺（地支就係沖、害、刑）去啟動其他字。招感字只會同招佢出嚟嗰兩個字合或者粘連，永遠唔會同其他天干地支合、粘連或者再招感。</li>
     <li id="r-z6"><b>Z6 合併顯示（選項）</b>　剔咗「同一招感字合併顯示」，同一行同一個招感字只顯示一個，寫 ×次數；只改顯示，唔改計算。</li>
   </ol>
   <h4>丙・粘連</h4>
@@ -926,8 +926,6 @@ function zhaogan(cols){
   side(cs,1,12,ZHI,'支',ch=>HE6[ch],br);
   return {st,br};
 }
-// 同 zhaogan 一樣，但柱已經有自己嘅位置 i（假柱用小數位）
-function zhaogan2(ext){const r=zhaogan(ext.map(c=>({gz:c.gz,dyn:c.dyn,lbl:c.lbl})));const fix=z=>{const src=z.src.map(j=>ext[j].i);const a=ext[z.pa].i,b=ext[z.pb].i;return {...z,src,pa:a,pb:b,pos:(a+b)/2+0.5};};return {st:r.st.map(fix),br:r.br.map(fix)};}
 // 招感字：未啟動顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，每多一層啟動多一個 ↑（Z5、Q3）
 function zgArrows(k,vi){const a=S.vact&&S.vact[k]&&S.vact[k][vi],dn=(S.vdown&&S.vdown[k]&&S.vdown[k][vi])||0;
   if(a&&a[0]>0)return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+((S.zg||[])[k]||[])[vi]?.c||'')}">${'<b>↑</b>'.repeat(a[0])}</span>`;
@@ -1207,34 +1205,10 @@ function render(){
   const zcols=cc.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0]}));
   const ZG=zhaogan(zcols);
   S.cols=cols;
-  // Z5：招感字被啟動之後，可以同其他字再招感、再啟動；新招出嚟嘅字同樣要等被啟動先有作用。一路計到冇新嘢為止
-  for(let round=0;round<4;round++){
-    S.links=[0,1].map(k=>chains(cc,k,k?ZG.br:ZG.st));
-    const prev=S.act&&round?S.act:null;
-    S.sha=[0,1].map(k=>VIEW.sha?shaCalc(cc,S.links[k],k):[]);
-    S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st,S.sha[k]));
-    // 之前一輪已經啟動咗嘅字保持啟動（新招出嚟嘅字加咗粘連，唔會反過嚟令佢哋失效）
-    if(prev)[0,1].forEach(k=>{const A=S.act[k],P=prev[k];A.forEach((x,i)=>{if(P[i]&&P[i][0]>x[0])A[i]=P[i];});A.vact.forEach((x,i)=>{if(P.vact[i]&&P.vact[i][0]>x[0])A.vact[i]=P.vact[i];});
-      S.links[k].forEach(l=>{l.broken=A[l.a][0]>0||(l.b!=null&&A[l.b][0]>0)||(l.vi!=null&&A.vact[l.vi][0]>0);});});
-    const used=ZG.used||(ZG.used=new Set());
-    const pseudo=[0,1].flatMap(k=>(k?ZG.br:ZG.st).map((z,vi)=>({z,vi,k})).filter(({vi,k})=>S.act[k].vact[vi][0]>0&&!used.has(k+'-'+vi)));
-    if(!pseudo.length)break;
-    pseudo.forEach(({vi,k})=>used.add(k+'-'+vi));
-    // 已啟動嘅招感字當做一條假柱（只有嗰一行有字），擺喺佢自己位置，再計一次招感，只要有佢參與嘅新結果
-    const act=[0,1].flatMap(k=>(k?ZG.br:ZG.st).map((z,vi)=>({z,vi,k})).filter(({vi,k})=>used.has(k+'-'+vi)));
-    const pc=act.map(({z,k},j)=>({i:z.pos-0.5+0.001*(j+1),gz:k?'　'+z.c:z.c+'　',dyn:z.dyn,lbl:'招感',pseudo:true}));
-    const ext=zcols.map((c,i)=>({...c,i})).concat(pc).sort((a,b)=>a.i-b.i);
-    const Z2=zhaogan2(ext);
-    let added=0;
-    [['st',0],['br',1]].forEach(([key,k])=>{const cur=ZG[key];
-      Z2[key].filter(z=>z.src.some(i=>!Number.isInteger(i))).forEach(z=>{
-        const real=z.src.filter(i=>Number.isInteger(i));
-        if(z.kind==='he'){const ex=cur.find(o=>o.kind==='he'&&o.c===z.c&&o.src.every(i=>z.src.includes(i)));if(ex){ex.boost=Math.max(ex.boost||0,z.boost);return;}}
-        else if(cur.some(o=>o.kind==='jia'&&o.c===z.c&&o.src.some(i=>real.includes(i))))return;
-        if(cur.some(o=>o.c===z.c&&o.src.length===z.src.length&&o.src.every(i=>z.src.includes(i))))return;
-        cur.push({...z,pa:null,pb:null,second:true});added++;});});
-    if(!added)break;
-  }
+  // Z5：招感字只同招佢出嚟嗰兩個字合或者粘連，唔會同其他字再招感、合或者粘連；佢被啟動之後可以做七殺（地支沖害刑）去啟動其他字
+  S.links=[0,1].map(k=>chains(cc,k,k?ZG.br:ZG.st));
+  S.sha=[0,1].map(k=>VIEW.sha?shaCalc(cc,S.links[k],k):[]);
+  S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st,S.sha[k]));
   S.vact=S.act.map(a=>a.vact);S.zg=[ZG.st,ZG.br];S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
   // 粘連力：每條粘連乘二
   S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).length));
