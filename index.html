@@ -132,6 +132,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .tiny{font-size:11px;color:var(--muted);display:block}
 .cx{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--accent);color:var(--accent);line-height:1.5}
 .cx.kg{background:var(--accent);color:var(--paper)}
+.wk{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px dashed var(--muted);color:var(--muted);line-height:1.5}.wk.done{border:1.5px solid var(--good);background:var(--good);color:var(--paper)}
 .yr{display:inline-block;margin-top:3px;margin-left:2px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--bad);color:var(--bad);line-height:1.5}
 .yr.own{background:var(--bad);color:var(--paper)}
 .yr.hit{box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--bad)}
@@ -506,6 +507,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，↓ 照顯示但劃走，粘連標籤亦劃走。</li>
     <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：原局地支有粘連，而原局冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示；呢個選項只開畀進階用戶、高級用戶同管理員。</li>
     <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣加一個橙色 ↑：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到佢嘅陽刃地支（甲卯、丙午、戊午、庚酉、壬子），每見一個加一；③ 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一。三樣可以疊加，例如戊坐戌，盤上另外有兩個午、一個未：坐戌 1＋陽刃午 2＋土地支戌未 2＝↑5（坐住嘅戌都算同五行）。橙色 ↑ 只係表示力度，唔代表啟動，亦唔影響招感、粘連同啟動嘅計算。</li>
+    <li id="r-w1"><b>W1 做功</b>　每個字剋一種五行（例如甲木剋土）。盤上嗰種五行嘅字（天干睇天干，地支睇地支本氣）如果有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
   </div>
   </div>
@@ -1052,6 +1054,8 @@ function yangren(z,cols,dmG,ci){const gs=[...new Set(cols.filter(c=>c.gz).map(c=
   return `<span class="yr${own?' own':''}${hit?' hit':''}" title="${tip}">${lab}</span>${guard.length?`<span class="yrh" title="${tip}">${guard.join('')}合護</span>`:''}`;}
 // 坐辰戌：天干坐喺辰或戌上面，做功特別有力；魁罡（庚辰、庚戌、壬辰、戊戌）係其中四柱
 const KUIGANG=['庚辰','庚戌','壬辰','戊戌'];
+function workTag(k,ci){const w=S.work&&S.work[k]&&S.work[k][ci];if(!w)return '';
+  return `<span class="wk${w.done?' done':''}" title="剋嘅${w.tg.join('、')}有伏吟或者粘連，所以要做功；${w.done?'本身已經被啟動，做到功':'本身未被啟動，做唔到功'}（規則 W1）">${w.done?'做到功':'做唔到功'}</span>`;}
 function chenxu(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';const kg=KUIGANG.includes(gz);
   return `<span class="cx${kg?' kg':''}" title="${kg?'魁罡：庚辰、庚戌、壬辰、戊戌。':''}天干坐辰戌，做功特別有力；用得唔好係天羅地網。">${kg?'魁罡':'坐辰戌'}</span>`;}
 // 啟動原因由源頭順住寫：「七殺流年干乙（七殺運干辛（七殺年干丁（招感殺星癸）））」→「招感殺星癸 >>> 年干丁 >>> 運干辛 >>> 流年干乙 >>> 日干己」
@@ -1212,6 +1216,10 @@ function render(){
   S.vact=S.act.map(a=>a.vact);S.zg=[ZG.st,ZG.br];S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
   // 粘連力：每條粘連乘二
   S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).length));
+  // 做功（W1）：呢個字所剋嘅五行（同一行：天干睇天干，地支睇地支本氣五行）有伏吟或者粘連，就要做功；要做功而本身被啟動（有已啟動或冇粘連嘅七殺剋佢），就係做到功
+  S.work=[0,1].map(k=>cc.map((c,i)=>{if(!c.gz)return null;const el=x=>k?ZWX[zi(x.gz[1])]:gw(gi(x.gz[0])),t=(el(c)+2)%5;
+    const tg=cc.map((x,j)=>j).filter(j=>j!==i&&cc[j].gz&&el(cc[j])===t&&S.lock[k][j]>0);if(!tg.length)return null;
+    return {done:S.act[k][i][0]>0,tg:tg.map(j=>(cc[j].dyn?cc[j].h.replace('大運','運'):cc[j].aux?cc[j].h:cc[j].h[0])+cc[j].gz[k])};}));
   // 天干力度（Q7）：坐辰戌 +1；盤上每見一個佢嘅陽刃地支 +1；盤上每見一個同五行嘅地支 +1。只係顯示多啲 ↑，唔影響啟動計算
   const bz=cc.filter(c=>c.gz).map(c=>c.gz[1]);
   S.pw=cc.map(c=>{if(!c.gz)return null;const g=c.gz[0],gx=gi(g),why=[];
@@ -1240,10 +1248,10 @@ function render(){
     <tr><th class="rl">十神</th>${td((col,g)=>col.dm?`<span class="ss dm">日主</span><span class="tiny">${inp.sex===1?'元男':'元女'}</span>`:`<span class="ss">${shishen(dm,g)}</span>`)}</tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[0],true,N)}</td></tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="0" data-m="v" data-up="0"></td></tr>
-    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${nlList(0,ci,cols)}`,shaCell(0))}</tr>
+    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${workTag(0,ci)}${nlList(0,ci,cols)}`,shaCell(0))}</tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="0" data-m="p" data-up="1"></td></tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="1" data-m="p" data-up="0"></td></tr>
-    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${yangren(col.gz[1],cols,P[2][0],ci)}${nlList(1,ci,cols)}`,shaCell(1))}</tr>
+    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${yangren(col.gz[1],cols,P[2][0],ci)}${workTag(1,ci)}${nlList(1,ci,cols)}`,shaCell(1))}</tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="1" data-m="v" data-up="1"></td></tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[1],false,N)}</td></tr>
     <tr><th class="rl">地支<br class="mbr">十神</th>${td((col,g,z)=>`<span class="ss">${shishen(dm,gi(HIDE[col.gz[1]][0]))}</span>`)}</tr>
