@@ -819,7 +819,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <h2>用戶等級 <span class="hint">（只有管理員睇到；進階用戶同高級用戶免費開招感殺星；最強五行暫時所有人都睇到）</span></h2>
   <div class="auf"><input id="tuQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
   <p class="hint" id="tuMsg"></p>
-  <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
+  <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>加入命例</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
   <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload>重新載入</button></div>
   <p class="hint" id="auMsg"></p>
@@ -1171,7 +1171,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('.cell .tk,.swtag
   let el=$('tipPop');if(el&&!el.hidden&&el._cell===t){el.hidden=true;el._cell=null;return;}
   if(!el){el=document.createElement('div');el.id='tipPop';el.setAttribute('role','dialog');document.body.appendChild(el);}
   const c=t.closest('.cell')||t,gz=(c.querySelector('.gz')||{}).textContent||'',top=(c.querySelector('.top')||{}).textContent||'';
-  el.innerHTML=`<button type="button" class="x" aria-label="閂">×</button>`+(t.dataset.sec?`<b class="tt">${esc(t.textContent)}</b>`+JSON.parse(t.dataset.sec).map(([h,a])=>`<div class="sec"><i>${esc(h)}</i><ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join(''):`<b class="tt">${esc(top)} ${esc(gz)}　天剋地沖／天合地合</b><ul>${t.dataset.tk.split('|').map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`);
+  el.innerHTML=`<button type="button" class="x" aria-label="閂">×</button>`+(t.dataset.swsec?`<b class="tt">${esc(t.textContent)}</b>`+JSON.parse(t.dataset.swsec).map(([h,a])=>`<div class="sec"><i>${esc(h)}</i><ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join(''):`<b class="tt">${esc(top)} ${esc(gz)}　天剋地沖／天合地合</b><ul>${t.dataset.tk.split('|').map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`);
   wxColor(el);el.hidden=false;el._y=scrollY;el._cell=t;const r=t.getBoundingClientRect(),w=el.offsetWidth,hh=el.offsetHeight;
   el.style.left=Math.max(12,Math.min(r.left+r.width/2-w/2,innerWidth-w-12))+'px';el.style.top=(r.bottom+8+hh>innerHeight-8?Math.max(8,r.top-hh-8):r.bottom+8)+'px';},true);
 document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;if(e.target.closest('.cell .tk,.swtag'))return;
@@ -1447,7 +1447,7 @@ function render(){
   const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
   const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
   let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
-  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-sec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） ${sw.g||''}${WX[sw.el]}</span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
+  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-swsec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） ${sw.g||''}${WX[sw.el]}</span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
   const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
@@ -1793,7 +1793,9 @@ const US={p:0,n:50,rows:[]};
 const TU={loaded:false,rows:[]};
 async function loadTiers(){
   if(!(CLOUD&&ADMIN))return;
-  try{TU.rows=await api('rpc/admin_users',{method:'POST',body:'{}'});$('tuMsg').textContent='';}
+  try{TU.rows=await api('rpc/admin_users',{method:'POST',body:'{}'});$('tuMsg').textContent='';
+    // 每個用戶加入咗幾多個命例（逐頁攞 cases.owner 自己數）
+    TU.nc={};try{for(let o=0;;o+=1000){const r=await api(`cases?select=owner&order=id&limit=1000&offset=${o}`);r.forEach(c=>{if(c.owner)TU.nc[c.owner]=(TU.nc[c.owner]||0)+1;});if(r.length<1000)break;}}catch(e){TU.nc=null;}}
   catch(e){TU.rows=[];$('tuList').innerHTML='';$('tuMsg').textContent=/admin_users|42883|PGRST20|42P01/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/007_tiers.sql。':'載入唔到：'+e.message;return;}
   drawTiers();drawBonusUsers();loadBonus();}
 // 手動加分（管理員）：point_bonus 表（012_bonus.sql）；排行榜會計埋
@@ -1813,7 +1815,7 @@ async function delBonus(id){if(!confirm('取消呢筆加分？'))return;
   catch(e){$('bnMsg').textContent='取消唔到：'+e.message;}}
 function drawTiers(){const q=($('tuQ').value||'').trim().toLowerCase(),d=t=>t?new Date(t).toLocaleString('zh-HK',{hour12:false}):'—';
   const rows=TU.rows.filter(u=>!q||(u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q));
-  $('tuList').innerHTML=rows.map(u=>`<tr><td>${esc(u.name||'')}<br><span class="hint">${esc(u.email||'')}</span></td><td>${d(u.created_at)}</td><td>${d(u.last_sign_in_at)}</td><td>${u.admin?'<b class="adm">管理員</b>':`<select data-tier="${u.id}" aria-label="等級"><option value="">普通用戶</option><option value="advance"${u.tier==='advance'?' selected':''}>進階用戶</option><option value="premium"${u.tier==='premium'?' selected':''}>高級用戶</option></select>`}</td></tr>`).join('')||'<tr><td colspan="4" class="hint">冇用戶</td></tr>';}
+  $('tuList').innerHTML=rows.map(u=>`<tr><td>${esc(u.name||'')}<br><span class="hint">${esc(u.email||'')}</span></td><td>${TU.nc?TU.nc[u.id]||0:'—'}</td><td>${d(u.created_at)}</td><td>${d(u.last_sign_in_at)}</td><td>${u.admin?'<b class="adm">管理員</b>':`<select data-tier="${u.id}" aria-label="等級"><option value="">普通用戶</option><option value="advance"${u.tier==='advance'?' selected':''}>進階用戶</option><option value="premium"${u.tier==='premium'?' selected':''}>高級用戶</option></select>`}</td></tr>`).join('')||'<tr><td colspan="5" class="hint">冇用戶</td></tr>';}
 async function setTier(id,tier){const msg=$('tuMsg');
   try{if(tier)await api('user_tiers?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({user_id:id,tier,updated_at:new Date().toISOString()})});
     else await api('user_tiers?user_id=eq.'+id,{method:'DELETE'});
