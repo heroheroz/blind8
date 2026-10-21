@@ -127,6 +127,11 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .act b.dnx,.actl.dnx{color:var(--water);opacity:.55;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--bad)}
 .st{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;padding:0 7px;border-radius:9px;background:var(--bad);color:var(--paper);line-height:1.6}
 .st-off{background:none}
+.chart tr.ganrow .big,.chart tr.zhirow .big{cursor:pointer}
+#tipPop{position:fixed;z-index:60;max-width:min(360px,calc(100vw - 24px));background:var(--paper);color:var(--ink,inherit);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.18);padding:10px 30px 10px 12px;font-size:14px;line-height:1.6}
+#tipPop b.tt{display:block;font-size:15px;margin-bottom:4px}#tipPop ul{margin:0;padding-left:18px}#tipPop li{margin:2px 0}
+#tipPop .sec{margin-top:4px}#tipPop .sec i{font-style:normal;font-size:12px;color:var(--muted,#888)}
+#tipPop .x{position:absolute;top:4px;right:6px;border:0;background:none;font-size:18px;cursor:pointer;color:inherit;line-height:1}
 .nl{display:flex;flex-direction:column;gap:0;margin-top:2px;font-size:11px;line-height:1.35;font-weight:500}
 .nl-fu{color:var(--chuan)}.nl-he,.nl-banhe{color:var(--good)}.nl-lian{color:var(--warn)}
 .nlx{text-decoration:line-through;opacity:.7}
@@ -478,7 +483,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="npane" id="np-calc">
   <p><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
-  <p>地支格標「坐辰戌」：該柱天干坐喺辰或戌上面，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。地支標「X刃」：盤上有陽干 X，呢個地支係佢嘅陽刃（甲卯、丙午、戊午、庚酉、壬子，陰干冇陽刃）；標「日主陽刃」就係日主嘅陽刃。盤上另一柱有沖陽刃嘅字（卯酉、子午）就標「X刃逢沖」並加外框；如果同時有字同陽刃六合或半合（例如卯見戌、亥、未），旁邊標「X合護」，即係要等個合被解開、再有天干引動先應事。</p>
+  <p>地支係辰或戌就標「辰戌強旺」，坐喺上面嗰個天干就標「坐辰戌」，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。地支標「X刃」：盤上有陽干 X，呢個地支係佢嘅陽刃（甲卯、丙午、戊午、庚酉、壬子，陰干冇陽刃）；標「日主陽刃」就係日主嘅陽刃。盤上另一柱有沖陽刃嘅字（卯酉、子午）就標「X刃逢沖」並加外框；如果同時有字同陽刃六合或半合（例如卯見戌、亥、未），旁邊標「X合護」，即係要等個合被解開、再有天干引動先應事。</p>
   <p>元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、身宮用傳統算法；命宮嘅月份預設用中氣計，出生喺本月中氣之後就當下一個月（例如寅月雨水後當卯月）；喺顯示選項揀「忽視中氣」就直接用月令計。小運由時柱起，陽男陰女順行、陰男陽女逆行，每歲（虛歲）行一柱；剔「顯示小運」先顯示，顯示咗就同大運流年一齊計招感粘連。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
   <div class="rules">
   <p><b>本派規則列表</b>　排盤嘅招感、粘連、啟動全部跟以下規則計。要加或者改規則，講返編號就得。</p>
@@ -1098,7 +1103,9 @@ const KUIGANG=['庚辰','庚戌','壬辰','戊戌'];
 function workTag(k,ci){const w=S.work&&S.work[k]&&S.work[k][ci];if(!w)return '';
   return `<span class="wk${w.done?' done':''}" title="剋嘅${w.tg.join('、')}有伏吟或者粘連，所以要做功；${w.done?'本身已經被啟動，做到功':'本身未被啟動，做唔到功'}（規則 W1）">${w.done?'做到功':'做唔到功'}</span>`;}
 function chenxu(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';const kg=KUIGANG.includes(gz);
-  return `<span class="cx${kg?' kg':''}" title="${kg?'魁罡：庚辰、庚戌、壬辰、戊戌。':''}天干坐辰戌，做功特別有力；用得唔好係天羅地網。">${kg?'魁罡':'坐辰戌'}</span>`;}
+  return `<span class="cx${kg?' kg':''}" title="${kg?'魁罡：庚辰、庚戌、壬辰、戊戌。':''}辰戌強旺：上面嘅天干坐辰戌，做功特別有力；用得唔好係天羅地網。">${kg?'魁罡':'辰戌強旺'}</span>`;}
+// 天干坐辰戌：標喺天干下面（地支本身標「辰戌強旺」）
+function zuoCx(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';return `<span class="cx" title="天干${gz[0]}坐${gz[1]}，做功特別有力；用得唔好係天羅地網。">坐辰戌</span>`;}
 // 啟動原因由源頭順住寫：「七殺流年干乙（七殺運干辛（七殺年干丁（招感殺星癸）））」→「招感殺星癸 >>> 年干丁 >>> 運干辛 >>> 流年干乙 >>> 日干己」
 const chainTxt=(why,self)=>why.replace(/）/g,'').split('（').map(p=>p.replace(/^(七殺|沖|害|刑)/,'')).reverse().concat(self).map(p=>p.replace(/^運(?=[干支])/,'大運')).join(' >>> ');
 const selfLbl=(k,ci)=>{const c=S.cols[ci];return (c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0])+(k?'支':'干')+c.gz[k];};
@@ -1117,6 +1124,27 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&
     return `<span class="act" title="${tip}">${U(n)}</span>`;}
   if(!dn)return pw.n+yr?`<span class="act" title="${pwT.trim()}">${U(pw.n+yr)}</span>`:'';
   return `<span class="act" title="↓${dn+pw.n}（${dn} 條粘連，未啟動）${yr?'，↑'+yr:''}${pwT}">${D(dn+pw.n)}${U(yr)}</span>`;}
+// 撳天干／地支：彈出點樣啟動同箭咀點計（電腦同手機都得；同滑鼠提示一樣內容）
+function tipPop(cell,x,y){let el=$('tipPop');if(!el){el=document.createElement('div');el.id='tipPop';el.setAttribute('role','dialog');document.body.appendChild(el);}
+  const big=cell.querySelector('.big .ch'),ch=big?big.firstChild.textContent:'',row=cell.closest('tr').classList.contains('ganrow')?'天干':'地支';
+  const ci=[...cell.parentElement.children].indexOf(cell)-1,col=S.cols&&S.cols[ci],h=col?(col.h||''):'';
+  const ts=[...cell.querySelectorAll('.st[title],.act[title]')].map(e=>e.title).filter(Boolean);
+  const items=ts.flatMap(t=>t.split(/　|；/)).map(t=>t.trim()).filter(Boolean);
+  const wk=cell.querySelector('.wk'),cx=cell.querySelector('.cx');
+  const nl=[...cell.querySelectorAll('.nl>span')].map(x=>x.textContent.replace(/招$/,'')+(x.querySelector('sup')?'（同招感字）':'')+(x.classList.contains('nlx')?'（已解開）':''));
+  const sec=(t,a)=>a.length?`<div class="sec"><i>${t}</i><ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:'';
+  const body=sec('啟動同箭咀',items)+sec('做功',wk?[wk.textContent,...wk.title.split('；')]:[])+sec('粘連',nl)+sec('其他',cx?[cx.textContent+'：'+cx.title]:[]);
+  el.innerHTML=`<button type="button" class="x" aria-label="閂">×</button><b class="tt">${esc(h)}${row} ${esc(ch)}</b>${body||'<span class="hint">未啟動，冇粘連，唔使做功。</span>'}`;
+  el.hidden=false;el._y=scrollY;const w=el.offsetWidth,hh=el.offsetHeight,vw=innerWidth,vh=innerHeight;
+  el.style.left=Math.max(12,Math.min(x-w/2,vw-w-12))+'px';el.style.top=(y+16+hh>vh-8?Math.max(8,y-hh-16):y+16)+'px';}
+document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;
+  if(pop&&!pop.hidden&&(e.target.closest('#tipPop .x')||!e.target.closest('#tipPop'))){pop.hidden=true;if(e.target.closest('#tipPop .x'))return;}
+  const b=e.target.closest('.chart tr.ganrow .big,.chart tr.zhirow .big');if(!b)return;const td=b.closest('td');
+  // 再撳同一個字就收返
+  if(pop&&pop._cell===td&&pop._was){pop._cell=null;return;}
+  tipPop(td,e.clientX,e.clientY);$('tipPop')._cell=td;});
+// 碌開咗先收（細微郁動唔收）
+addEventListener('scroll',()=>{const p=$('tipPop');if(p&&!p.hidden&&Math.abs(scrollY-(p._y||0))>40)p.hidden=true;},{passive:true});
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
 function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.act[k][ci][0]>0;
   return act?`<span class="lk off" title="${n} 條粘連，粘連力 ×${f}；已被七殺解開，七殺力度 ×${f}">解 ×${f}</span>`:`<span class="lk" title="${n} 條粘連，粘連力 ×${f}">粘 ×${f}</span>`;}
@@ -1331,7 +1359,7 @@ function render(){
     <tr><th class="rl">十神</th>${td((col,g)=>col.dm?`<span class="ss dm">日主</span><span class="tiny">${inp.sex===1?'元男':'元女'}</span>`:`<span class="ss">${shishen(dm,g)}</span>`)}</tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[0],true,N)}</td></tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="0" data-m="v" data-up="0"></td></tr>
-    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${workTag(0,ci)}${nlList(0,ci,cols)}`,shaCell(0))}</tr>
+    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${zuoCx(col.gz)}${workTag(0,ci)}${nlList(0,ci,cols)}`,shaCell(0))}</tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="0" data-m="p" data-up="1"></td></tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="1" data-m="p" data-up="0"></td></tr>
     <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${yangren(col.gz[1],cols,P[2][0],ci)}${workTag(1,ci)}${nlList(1,ci,cols)}`,shaCell(1))}</tr>
