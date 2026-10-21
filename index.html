@@ -499,10 +499,10 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   </ol>
   <h4>丁・啟動</h4>
   <ol>
-    <li id="r-q1"><b>Q1 天干</b>　盤上有呢個字嘅七殺（同陰陽、剋我，例如庚之於甲），而嗰個七殺冇粘連，或者七殺本身已經啟動，呢個字就啟動。</li>
+    <li id="r-q1"><b>Q1 天干</b>　盤上有呢個字嘅七殺（同陰陽、剋我，例如庚之於甲），呢個字就啟動，唔理嗰個七殺本身有冇粘連。只有招感字例外：招感字要自己已經被啟動，先可以做七殺去啟動其他字（Z5）。</li>
     <li id="r-q2"><b>Q2 地支</b>　盤上有同呢個字相沖、相害或相刑嘅字（刑計寅巳、巳申、申寅、丑戌、戌未、未丑、子卯；自刑唔計），條件同 Q1。</li>
-    <li id="r-q3"><b>Q3 遞迴</b>　啟動可以一層層傳落去：甲靠庚，庚有粘連但壬啟動咗庚，咁甲都啟動。每多一層多一個 ↑：如果啟動呢個字嘅字本身又被啟動，↑ 就再加一。同一個字喺同一條鏈入面只計一次，唔會繞住七殺圈（甲←庚←丙←壬←戊←甲）兜圈加 ↑，最多計 6 層。如果有字兜返轉頭（本身又已經啟動），命盤上面會顯示「⚠ 全盤連鎖」。招感字都一樣計，例如乙啟動招感字己，而乙本身被辛啟動，己就有兩個 ↑。</li>
-    <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
+    <li id="r-q3"><b>Q3 遞迴</b>　啟動可以一層層傳落去：庚啟動甲，而壬又啟動咗庚，甲就有兩個 ↑。每多一層多一個 ↑：如果啟動呢個字嘅字本身又被啟動，↑ 就再加一。同一個字喺同一條鏈入面只計一次，唔會繞住七殺圈（甲←庚←丙←壬←戊←甲）兜圈加 ↑，最多計 6 層。如果有字兜返轉頭（本身又已經啟動），命盤上面會顯示「⚠ 全盤連鎖」。招感字都一樣計，例如乙啟動招感字己，而乙本身被辛啟動，己就有兩個 ↑。</li>
+    <li id="r-q4"><b>Q4 粘連算唔算</b>　七殺（地支沖害刑嘅字）本身有冇粘連都唔影響佢啟動其他字。招感字就唔同：未被啟動嘅招感字唔會啟動其他字。</li>
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，↓ 照顯示但劃走，粘連標籤亦劃走。</li>
     <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：原局地支有粘連，而原局冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示；呢個選項只開畀進階用戶、高級用戶同管理員。</li>
     <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣加一個橙色 ↑：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到佢嘅陽刃地支（甲卯、丙午、戊午、庚酉、壬子），每見一個加一；③ 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一。三樣可以疊加，例如戊坐戌，盤上另外有兩個午、一個未：坐戌 1＋陽刃午 2＋土地支戌未 2＝↑5（坐住嘅戌都算同五行）。橙色 ↑ 只係表示力度，唔代表啟動，亦唔影響招感、粘連同啟動嘅計算。</li>
@@ -949,7 +949,7 @@ function chainPaths(d,c1,c2){
   return (c1===c2?P(c1,4.5,'6 4'):P(c1,4.5,'6 14')+P(c2,4.5,'6 14',-10))+P('var(--paper)',1.6,'6 4');
 }
 const elOf=(k,ch)=>k?ZWX[zi(ch)]:gw(gi(ch));
-const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動</span><span><b class="actl">↑</b>七殺激活（每級一個）　<b class="actl dn">↓</b>每條粘連一個　<b class="actl dnx">↓</b>字已啟動，粘連已解開</span></div>`;
+const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：被七殺剋；地支：被沖、害、刑</span><span><b class="actl">↑</b>七殺激活（每級一個）　<b class="actl dn">↓</b>每條粘連一個　<b class="actl dnx">↓</b>字已啟動，粘連已解開</span></div>`;
 function chains(cols,k,virt){
   const n=k?12:10,chars=k?ZHI:GAN,out=[];
   const cs=cols.map((c,i)=>({i,gz:c.gz})).filter(c=>c.gz).map(c=>({i:c.i,v:chars.indexOf(c.gz[k])}));
@@ -967,7 +967,7 @@ function chains(cols,k,virt){
     out.push({a:ci,vx:z.pos,vi,vc:z.c,vname:`招感${z.c}（${z.tag}）`,t,tip:`${t==='he'?'合':'連續'} 招感${z.c}（${z.tag}）· ${cols[ci].h}${k?'支':'干'}${cols[ci].gz[k]}`});}));
   return out;
 }
-// 七殺激活：冇粘連嘅七殺破除該字粘連；七殺本身再被激活就多一級
+// 七殺激活：盤上有七殺就破除該字粘連；七殺本身再被激活就多一級
 // 天干：七殺激活；地支：沖、害、刑激活（自刑唔計）
 const BR_ACT={};[[CHONG,'沖'],[CHUAN,'害'],[['寅巳','巳申','申寅','丑戌','戌未','未丑','子卯'],'刑']].forEach(([l,n])=>l.forEach(p=>{(BR_ACT[p[0]]=BR_ACT[p[0]]||{})[p[1]]=n;(BR_ACT[p[1]]=BR_ACT[p[1]]||{})[p[0]]=n;}));
 function killers(k,v){if(!k)return [(v+6)%10];return Object.keys(BR_ACT[ZHI[v]]||{}).map(c=>zi(c));}
@@ -992,16 +992,14 @@ function activation(cols,k,links,virt=[],sha=[]){
   const chars=k?ZHI:GAN,N=cols.length,lbl0=c=>c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0];
   const vals=[...cols.map(c=>c.gz?chars.indexOf(c.gz[k]):-1),...virt.map(z=>chars.indexOf(z.c))];
   const lbl=j=>j<N?lbl0(cols[j]):'招感';
-  const chained=new Set();links.forEach(l=>{chained.add(l.a);if(l.b!=null)chained.add(l.b);if(l.vi!=null)chained.add(N+l.vi);});
-  virt.forEach((_,vi)=>chained.add(N+vi));
   // 招感殺星：途中阻擋字全部已啟動（或者冇阻擋），就啟動招佢嗰個字（殺星本身冇粘連，算一層）；反覆計到穩定
   let seed={},memo=new Map(),loopC=[];
   // 同一個字（例如甲）喺同一條啟動鏈入面只可以出現一次，唔會繞住七殺圈兜（Q3）；seen 記低鏈入面已經有嘅字，最多追 6 層，同一輪入面記住計過嘅結果
   // 兜返轉頭嘅字（本身又已經啟動）記低，畫面標「全盤連鎖」
   const lvl=(i,seen)=>{const key=i+'|'+[...seen].sort((a,b)=>a-b).join(',');if(memo.has(key))return memo.get(key);let best=seed[i]||[0,''];if(seen.size>=6)return best;
-    // 七殺冇粘連，或者七殺本身已經啟動，先啟動得到呢個字
+    // 盤上有七殺（地支：沖、害、刑）就啟動，唔理七殺本身有冇粘連；招感字（j≥N）要自己已經被啟動先啟動到其他字（Z5）
     for(let j=0;j<vals.length;j++){if(j===i||vals[j]<0||!killers(k,vals[i]).includes(vals[j]))continue;if(vals[j]===vals[i]||seen.has(vals[j])){loopC.push(j);continue;}
-      const [n,why]=lvl(j,new Set([...seen,vals[i]]));if(chained.has(j)&&n===0)continue;if(n+1>best[0])best=[n+1,`${actName(k,vals[i],vals[j])}${lbl(j)}${k?'支':'干'}${chars[vals[j]]}${why?'（'+why+'）':''}`];}
+      const [n,why]=lvl(j,new Set([...seen,vals[i]]));if(j>=N&&n===0)continue;if(n+1>best[0])best=[n+1,`${actName(k,vals[i],vals[j])}${lbl(j)}${k?'支':'干'}${chars[vals[j]]}${why?'（'+why+'）':''}`];}
     memo.set(key,best);return best;};
   let all;
   for(let r=0;r<6;r++){memo=new Map();loopC=[];all=vals.map((v,i)=>v<0?[0,'']:lvl(i,new Set()));
@@ -1039,7 +1037,7 @@ function nlList(k,ci,cols){
     ks.slice(1).forEach(o=>{delete seen[o];order.splice(order.indexOf(o),1);});});
   return `<div class="nl">${order.map(k2=>{const x=seen[k2];return `<span class="nl-${x.t}${x.broken?' nlx':''}" title="${x.virt?'同招感字':''}${x.broken?'（已被七殺解開）':''}">${x.txt}${x.virt?'<sup>招</sup>':''}${x.n>1&&VIEW.lianSplit?'×'+x.n:''}</span>`;}).join('')}</div>`;
 }
-// 啟動：佢嘅天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動
+// 啟動：天干被七殺剋；地支被沖、害、刑（招感字要已啟動先算）
 // 陽刃：陽干最旺嘅地支（甲卯、丙午、戊午、庚酉、壬子）；陰干冇陽刃。盤上有邊個陽干，佢嘅陽刃地支就標出嚟，日主嘅陽刃特別突出
 const YANGREN={甲:'卯',丙:'午',戊:'午',庚:'酉',壬:'子'};
 // 陽刃逢沖：盤上另一柱有沖陽刃嘅地支；有六合或半合嘅字就係「有合護」，要等合被解開先應
