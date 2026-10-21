@@ -41,6 +41,19 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 h1{font-family:var(--f-display);font-weight:900;font-size:30px;margin:0;letter-spacing:.06em}
 header p{margin:0;color:var(--muted);font-size:13px}
+.awt td{vertical-align:middle}.awt small{display:block;color:var(--muted)}.awt input{width:4.5em}.awv{display:flex;gap:6px;flex-wrap:wrap}.awv button{all:unset;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:1px 8px;font-size:13px;white-space:nowrap}.awv button[aria-pressed=true]{background:var(--accent);color:var(--paper);border-color:var(--accent)}.awv button:disabled{opacity:.5;cursor:default}
+#ptFx{position:fixed;inset:0;z-index:90;display:grid;place-items:center;pointer-events:auto;background:rgba(0,0,0,.08);animation:ptBg .25s ease-out}
+#ptFx.out{opacity:0;transition:opacity .4s}
+#ptFx .card{background:linear-gradient(135deg,#fff7d6,#ffe08a);color:#7a4a00;border:2px solid #f2b705;border-radius:18px;padding:16px 28px;text-align:center;box-shadow:0 10px 40px rgba(242,183,5,.45);animation:ptPop .6s cubic-bezier(.2,1.6,.4,1)}
+#ptFx .card.big{padding:22px 36px}
+#ptFx .lbl{font-size:16px;font-weight:700}#ptFx .num{font-size:44px;font-weight:900;line-height:1.2;text-shadow:0 2px 0 #fff}#ptFx .card.big .num{font-size:60px}#ptFx .sub{font-size:14px;margin-top:4px}
+#ptFx i{position:fixed;left:50%;top:50%;font-style:normal;font-size:22px;opacity:0;animation:ptSpark 1.1s ease-out forwards}
+@keyframes ptPop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes ptBg{from{background:rgba(0,0,0,0)}}
+@keyframes ptSpark{0%{transform:translate(-50%,-50%) scale(.4);opacity:1}100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.1);opacity:0}}
+.pts.bump{animation:ptBump .8s ease-out}@keyframes ptBump{0%,100%{transform:scale(1)}30%{transform:scale(1.5);color:#f2b705}}
+.pts{display:inline-block}
+@media (prefers-reduced-motion:reduce){#ptFx .card,#ptFx i,.pts.bump{animation:none}#ptFx i{display:none}}
 .lbhow ul{margin:4px 0 6px;padding-left:4px;list-style:none}.lbhow li{margin:3px 0;font-size:14px}.lbwhy{margin:0 0 6px;font-size:14px;line-height:1.6}.pts{font-size:12px;font-weight:700;color:#b45309;white-space:nowrap}.lbt tr.me td{background:var(--soft);font-weight:700}
 .gblist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .gblist li{border-top:1px solid var(--line);padding-top:10px}
@@ -135,12 +148,13 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 #tipPop .sec{margin-top:4px}#tipPop .sec i{font-style:normal;font-size:12px;color:var(--muted,#888)}
 #tipPop .x{position:absolute;top:4px;right:6px;border:0;background:none;font-size:18px;cursor:pointer;color:inherit;line-height:1}
 .nl{display:flex;flex-direction:column;gap:0;margin-top:2px;font-size:11px;line-height:1.35;font-weight:500}
-.nl-fu{color:var(--chuan)}.nl-he,.nl-banhe{color:var(--good)}.nl-lian{color:var(--warn)}
+.nl-fu{color:var(--chuan)}.nl-he,.nl-banhe,.nl-sanhe{color:var(--good)}.nl-lian{color:var(--warn)}
 .nlx{text-decoration:line-through;opacity:.7}
 .nl sup{font-size:8px;margin-left:1px}
 .act.even,.actl.even{color:var(--muted);font-size:12px}
 .ch>.act{display:flex;flex-wrap:wrap;width:52px;letter-spacing:0;line-height:1;gap:0 1px}
 .ch>.act b{font-weight:900;width:8.5px;text-align:center}
+.act b.sm{font-size:.62em;width:6px;vertical-align:.15em}
 .lk{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 6px;border-radius:8px;border:1px solid var(--muted);color:var(--ink);font-variant-numeric:tabular-nums}
 .lk.off{border-color:var(--bad);color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,transparent)}
 .tiny{font-size:11px;color:var(--muted);display:block}
@@ -189,7 +203,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .p-he{background:var(--good)}.p-chong{background:var(--bad)}.p-xing{background:var(--warn)}.p-chuan{background:var(--chuan)}.p-po{background:var(--muted)}
 .rel .dyn{color:var(--accent);font-size:12px}
 .p-zg{background:var(--accent)}
-.p-nl-fu{background:var(--chuan)}.p-nl-lian{background:var(--warn)}.p-nl-he,.p-nl-banhe{background:var(--good)}
+.p-nl-fu{background:var(--chuan)}.p-nl-lian{background:var(--warn)}.p-nl-he,.p-nl-banhe,.p-nl-sanhe{background:var(--good)}
 table.chart{table-layout:fixed}
 .chart tr.zgrow td{padding:4px 0}
 .chart tr.chainrow th,.chart tr.chainrow td{padding:0;border-bottom:0}
@@ -301,7 +315,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   body[data-mtab]:not([data-mtab=in]) header,body[data-mtab]:not([data-mtab=in]) #inPanel,body[data-mtab]:not([data-mtab=in]) .mguide{display:none!important}
   body[data-mtab]:not([data-mtab=chart]):not([data-mtab=rel]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
   body[data-mtab=chart] #relBox,body[data-mtab=rel] #out>:not(#relBox){display:none!important}
-  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
+  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=more]) #aw,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
   .layout{display:block}
   .mguide:not([hidden]){display:block;position:relative;font-size:15px;line-height:1.65;background:var(--paper);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;margin:0 0 12px}
   .mguide h2{font-size:18px;margin:0 0 6px}.mguide ol{margin:0;padding-left:22px}.mguide li{margin:4px 0}
@@ -504,7 +518,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <h4>乙・招感</h4>
   <ol>
     <li id="r-z1"><b>Z1 重字招合</b>　同一行有兩個或以上同一個字，招出佢嘅合字：天干五合（甲己、乙庚、丙辛、丁壬、戊癸），地支六合（子丑、寅亥、卯戌、辰酉、巳申、午未）。</li>
-    <li id="r-z2"><b>Z2 重字只招一個</b>　幾多個重字都只招一個字，擺喺最近嗰兩個重字中間。三個重字加一個箭咀，之後每多一個重字多一個，冇上限；方向跟招感字嘅狀態（啟動咗 ↑，粘住未啟動 ↓），同一個字唔會同時有 ↑ 同 ↓。</li>
+    <li id="r-z2"><b>Z2 重字只招一個</b>　幾多個重字都只招一個字，擺喺最近嗰兩個重字中間。三個重字加半個箭咀，之後每多一個重字多半個，冇上限；方向跟招感字嘅狀態（啟動咗 ↑，粘住未啟動 ↓），同一個字唔會同時有 ↑ 同 ↓。</li>
     <li id="r-z3"><b>Z3 夾拱</b>　兩個字喺天干或地支次序相差兩位，招出中間嗰個字，例如丙戊夾拱丁、子寅夾拱丑。次序循環計，所以壬甲夾拱癸、亥丑夾拱子。</li>
     <li id="r-z4"><b>Z4 夾拱一對一</b>　每個字喺同一種夾拱只可以用一次，兩邊字一對一配，最近嘅先配，所以兩丙兩戊只夾拱兩個丁。</li>
     <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字未被啟動之前唔會啟動其他字，直至招感字本身被啟動（天干被七殺剋，地支被沖、害、刑，條件同 Q1、Q2）。未啟動嘅招感字旁邊顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，佢同來源字嘅粘連解開，之後就可以做七殺（地支就係沖、害、刑）去啟動其他字。招感字只會同招佢出嚟嗰兩個字合或者粘連，永遠唔會同其他天干地支合、粘連或者再招感。</li>
@@ -513,11 +527,11 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <h4>丙・粘連</h4>
   <ol>
     <li id="r-n1"><b>N1 伏吟</b>　同一個字。多過兩個時，按柱嘅次序逐個相連（例如三個己有兩條）。</li>
-    <li id="r-n2"><b>N2 連續</b>　次序相差一位嘅兩個字，例如甲乙、乙丙、子丑；循環計，所以癸甲、亥子都算。兩個字已經成立。</li>
-    <li id="r-n3"><b>N3 合</b>　天干五合、地支六合（同 Z1 嘅合字表）。</li>
-    <li id="r-n4"><b>N4 地支半合</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）其中兩個字，而且要包括中神（子、卯、午、酉），例如申子、子辰、午戌。只計地支。</li>
-    <li id="r-n5"><b>N5 招感字粘連</b>　招感字只同招佢出嚟嗰幾個來源字粘連：夾拱出嚟嘅算連續，招合出嚟嘅算合，唔同其他字粘連。</li>
-    <li id="r-n6"><b>N6 粘連力</b>　每條粘連喺字旁邊加一個 ↓，用加法，唔係乘數。</li>
+    <li id="r-n2"><b>N2 連續</b>　次序相差一位嘅兩個字，例如甲乙、乙丙、子丑；循環計，所以癸甲、亥子都算。兩個字已經成立。每條連續只計半個箭咀。</li>
+    <li id="r-n3"><b>N3 合</b>　天干五合、地支六合（同 Z1 嘅合字表）。每條合計一個箭咀；伏吟都係一個。</li>
+    <li id="r-n4"><b>N4 地支半合</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）其中兩個字，而且要包括中神（子、卯、午、酉），例如申子、子辰、午戌。只計地支。每條半合計半個箭咀。三合局三個字齊（申子辰合水、寅午戌合火、巳酉丑合金、亥卯未合木），就唔再計半合，改計「三合局」：三個字兩兩相連（例如申子、子辰、申辰），每條半個箭咀，所以三個字每個合共一個箭咀；只得兩頭冇中神（例如淨係申辰）就唔計。</li>
+    <li id="r-n5"><b>N5 招感字粘連</b>　招感字只同招佢出嚟嗰幾個來源字粘連：夾拱出嚟嘅算連續，招合出嚟嘅算合，唔同其他字粘連。招感字嘅粘連（無論連續定合）每條都只計半個箭咀。</li>
+    <li id="r-n6"><b>N6 粘連力</b>　粘連喺字旁邊加 ↓，用加法，唔係乘數：伏吟、合每條一個 ↓；連續、半合、三合局每對、招感字粘連每條半個 ↓。半個箭咀用細箭咀表示，兩個細箭咀等於一個大箭咀（例如 1.5 個就係一大一細）。理念：三合局三個字齊、合同伏吟都係大力嘅粘連，所以計一個；普通連續（甲乙）同兩個字嘅半合力度細啲，計半個。呢度寫嘅係預設數值，實際用緊嘅數值（連坐辰戌、見同五行地支、陽刃、啟動鏈每層、最強五行倍數）喺「箭咀力度」度所有人都睇到，管理員可以調，大家可以投「應該加／應該減」。</li>
     <li id="r-n7"><b>N7 線</b>　柱與柱之間嘅粘連線畫喺天干同地支中間；招感字嘅線畫喺外面。線色跟兩端字嘅五行，兩端唔同五行就兩色交替。</li>
   </ol>
   <h4>丁・啟動</h4>
@@ -528,8 +542,8 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，粘連標籤劃走；原本嘅 ↓ 全部變做 ↑（見 Q8）。</li>
     <li id="r-q6"><b>Q6 招感殺星</b>　天干有粘連，而盤上冇佢嘅七殺，就會自動招一個七殺（殺星）。顯示選項「招殺星計全部柱」預設開：盤上顯示緊嘅所有柱（原局、大運、流年、流月、流日，開咗元運柱或者三桓都計埋）都會招，亦都睇全盤有冇七殺；閂咗就只係原局四柱招，只睇原局有冇七殺。同一個殺星會由右至左逐個啟動沿路招佢嘅字，例如流日乙、流年乙同原局乙都招辛，辛先啟動流日乙，再啟動流年乙，俾人擋走之後，後面嘅字就啟動唔到，擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：地支有粘連，而盤上（或者原局，跟選項）冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示；呢個選項只開畀進階用戶、高級用戶同管理員。</li>
-    <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣加一個箭咀（同其他箭咀一隻色）：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一；③ 盤上任何位置見到<b>佢自己</b>嘅陽刃地支（甲見卯、丙見午、戊見午、庚見酉、壬見子；陰干冇陽刃），每見一個加一個，唔理其他天干嘅陽刃。三樣可以疊加，例如戊坐戌，盤上另外有一個未、一個午：坐戌 1＋土地支戌未 2＋陽刃午 1＝4（坐住嘅戌都算同五行）。三樣箭咀方向全部跟住個字嘅狀態：已經啟動，加 ↑，激活更大力；有粘連但未啟動，加 ↓，粘得更實；冇粘連又未啟動，就係 ↑。同一個字永遠只會有一個方向，唔會同時有 ↑ 同 ↓。魁罡（庚辰、庚戌、壬辰、戊戌）都係坐辰戌，已經計咗 ①。力度箭咀唔改變啟動與否，亦唔影響招感、粘連同啟動嘅計算。</li>
-    <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：未啟動嘅字，每條粘連一個 ↓，↓ 越多粘連程度越高；啟動咗之後，呢啲 ↓ 全部變做 ↑（係轉方向，唔會另外再加 ↑）。本身冇粘連嘅字啟動咗唔加箭咀，只顯示「啟動」。啟動鏈（Q3）第一層係基本，之後每多一層加一個 ↑。例如 3 條粘連嘅字被七殺直接啟動，就係 ↑3；經兩層鏈先被啟動（七殺本身都係被人啟動），就係 ↑4；冇粘連嘅字經兩層鏈先被啟動，就係 ↑1。天干再加 Q7 嘅力度箭咀，啟動咗加 ↑，未啟動粘住加 ↓。所有箭咀都係同一隻色。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
+    <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣預設加一個箭咀（同其他箭咀一隻色；實際數值喺「箭咀力度」度可以調）：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一；③ 盤上任何位置見到<b>佢自己</b>嘅陽刃地支（甲見卯、丙見午、戊見午、庚見酉、壬見子；陰干冇陽刃），每見一個加一個，唔理其他天干嘅陽刃。三樣可以疊加，例如戊坐戌，盤上另外有一個未、一個午：坐戌 1＋土地支戌未 2＋陽刃午 1＝4（坐住嘅戌都算同五行）。三樣箭咀方向全部跟住個字嘅狀態：已經啟動，加 ↑，激活更大力；有粘連但未啟動，加 ↓，粘得更實；冇粘連又未啟動，就係 ↑。同一個字永遠只會有一個方向，唔會同時有 ↑ 同 ↓。魁罡（庚辰、庚戌、壬辰、戊戌）都係坐辰戌，已經計咗 ①。力度箭咀唔改變啟動與否，亦唔影響招感、粘連同啟動嘅計算。</li>
+    <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：同最強五行（有顯示嘅時候）同一五行嘅字，箭咀總數再乘 1.5（喺「箭咀力度」可以調），四捨五入到半個。未啟動嘅字，粘連按 N6 計 ↓（合、伏吟一個，連續、半合、三合局、招感粘連半個，半個用細箭咀），↓ 越多粘連程度越高；啟動咗之後，呢啲 ↓ 全部變做 ↑（係轉方向，唔會另外再加 ↑）。本身冇粘連嘅字啟動咗唔加箭咀，只顯示「啟動」。啟動鏈（Q3）第一層係基本，之後每多一層加一個 ↑。例如 3 條粘連嘅字被七殺直接啟動，就係 ↑3；經兩層鏈先被啟動（七殺本身都係被人啟動），就係 ↑4；冇粘連嘅字經兩層鏈先被啟動，就係 ↑1。天干再加 Q7 嘅力度箭咀，啟動咗加 ↑，未啟動粘住加 ↓。所有箭咀都係同一隻色。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
     <li id="r-s1"><b>最強五行（推測）</b>　顯示選項可以揀三種推論。<b>推論1：月令人元並用</b>，只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），最強五行就係命宮地支嘅五行，計完。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局沖、刑或害，但未被啟動，天干陰陽倒轉，例如丁變丙。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例推出嚟，五行 25 個全中，有寫天干嘅 14 個全中；①③④ 係睇住呢批命例調出嚟，① 只有一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。<br><b>推論2：月令印星</b>：直接取月令本氣嘅正印，例如月令巳本氣丙，取乙木。<b>推論3：人元司令印星</b>：直接取人元司令嘅正印，例如司令戊，取丁火。推論2、3 唔理命宮、做功同陰陽倒轉。立春日出世嘅人，月令同司令一定係寅同戊，所以用推論2、3，每年立春日出世都一樣（推論2 係水，推論3 係火）；用推論1 就會因應做功同命宮而唔同。<br>指住或者撳「最強五行」標籤會彈出：盤上顯示緊嘅天干有冇剋最強五行（同陰陽嘅標「七殺」）、屬最強五行嘅地支有冇被沖、刑、害，有冇地支五行剋佢，同埋盤上屬最強五行嘅天干地支有冇粘連、粘緊乜。最上面會俾結論：天干剋、地支沖刑害、地支剋任何一樣有，就算「有觸犯最強五行」（唔好），標籤會變紅框加 ⚠；粘連唔計觸犯。呢度只係列出嚟參考，唔改最強五行嘅計法。</li>
     <li id="r-w1"><b>W1 做功</b>　每個字剋一種五行（例如甲木剋土）。盤上嗰種五行嘅字（天干睇天干，地支睇地支本氣）如果有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
@@ -788,10 +802,17 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <ul>
     <li>🔮 <b>招感殺星</b>：每個盤每日扣 <b data-pcostv="sha">1</b> 分（進階用戶、高級用戶免費）。</li>
   </ul>
-  <p class="hint">同一個盤當日開過就唔會再扣；分唔夠就開唔到。夠「準」之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳「準」嘅人唔可以係命例或者筆記嘅主人。標籤唔計分。管理員唔上榜。</p>
+  <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。夠「準」之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳「準」嘅人唔可以係命例或者筆記嘅主人。標籤唔計分。管理員唔上榜。</p>
   </div>
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
+</section>
+<section class="panel fold folded" id="aw" data-sec="aw">
+  <h2 class="foldh">箭咀力度 <span class="hint">（大家一齊完善）</span></h2>
+  <p class="lbwhy">💡 <b>理念</b>：做功同粘連嘅力度點計，冇一個絕對嘅答案。我希望師兄師姐一齊參與，用大家手上嘅命例去印證，一齊完善做功力度嘅計法。下面每個數值都係而家盤上用緊嘅箭咀數（1 = 一個大箭咀，0.5 = 一個細箭咀）。覺得某個數應該大啲就撳 👍 應該加，細啲就撳 👎 應該減；登入咗先投到，每人每項一票，再撳一次就取消。管理員會參考大家嘅投票調整。</p>
+  <p class="hint" id="awMsg"></p>
+  <div class="auwrap"><table class="audit awt"><thead><tr><th>項目</th><th>箭咀</th><th>意見</th></tr></thead><tbody id="awList"></tbody></table></div>
+  <div class="row" id="awAdmin" hidden><button type="button" class="pri" data-awsave>儲存箭咀力度</button><span class="hint" id="awSaveMsg"></span></div>
 </section>
 <section class="panel" id="gb">
   <h2>留言版</h2>
@@ -983,18 +1004,19 @@ function zhaogan(cols){
   return {st,br};
 }
 // 招感字：未啟動顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，每多一層啟動多一個 ↑（Z5、Q3）
-function zgArrows(k,vi,bo=0){const a=S.vact&&S.vact[k]&&S.vact[k][vi],dn=(S.vdown&&S.vdown[k]&&S.vdown[k][vi])||0;
-  // 重字（Z2）加嘅箭咀同樣跟狀態：啟動咗 ↑，粘住未啟動 ↓；同一個字唔會有 ↑ 又有 ↓
-  // 同 Q8 一樣：粘連嘅 ↓ 變 ↑，啟動鏈每多一層加一個 ↑
-  if(a&&a[0]>0){const n=dn+a[0]-1+bo;return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+((S.zg||[])[k]||[])[vi]?.c||'')}　↑${n}（${dn} 條粘連被破除，↓${dn} 變 ↑${dn}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${a[0]-1}`:''}${bo?`；重字加 ↑${bo}`:''}）">${'<b>↑</b>'.repeat(n)}</span>`;}
-  if(dn)return `<span class="act" title="${dn} 條粘連（未被啟動，唔會招感或者啟動其他字）${bo?`；重字加 ↓${bo}`:''}">${'<b class="dn">↓</b>'.repeat(dn+bo)}</span>`;
-  return bo?`<span class="act" title="${bo+2} 個重字招合">${'<b>↑</b>'.repeat(bo)}</span>`:'';}
+function zgArrows(k,vi,bo=0){const a=S.vact&&S.vact[k]&&S.vact[k][vi],dn=(S.vdown&&S.vdown[k]&&S.vdown[k][vi])||0,nl=(S.links&&S.links[k]||[]).filter(l=>l.vi===vi).length;
+  // 重字（Z2）加嘅箭咀同樣跟狀態：啟動咗 ↑，粘住未啟動 ↓；同一個字唔會有 ↑ 又有 ↓；招感字粘連同重字嘅權重睇「箭咀力度」
+  // 同 Q8 一樣：粘連嘅 ↓ 變 ↑，啟動鏈每多一層加；最強五行同五行嘅招感字都乘 AW.sw
+  const ch=((S.zg||[])[k]||[])[vi]?.c||'',m=ch?swMul(k,ch):1,R=n=>Math.round(n*m*2)/2;
+  if(a&&a[0]>0){const c=(a[0]-1)*AW.chain,n=R(dn+c+bo);return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+ch)}　↑${fmtN(n)}（${nl} 條粘連（計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${fmtN(c)}`:''}${bo?`；重字加 ↑${fmtN(bo)}`:''}${swNote(m)}）">${ARW(n,0)}</span>`;}
+  if(dn)return `<span class="act" title="${nl} 條粘連，計 ${fmtN(dn)} 個箭咀（未被啟動，唔會招感或者啟動其他字）${bo?`；重字加 ↓${fmtN(bo)}`:''}${swNote(m)}">${ARW(R(dn+bo),1)}</span>`;
+  return bo?`<span class="act" title="重字招合，加 ↑${fmtN(bo)}${swNote(m)}">${ARW(R(bo),0)}</span>`:'';}
 function zgStrip(list,isGan,ncol){
   if(!list.length)return '<span class="tiny" style="padding:4px 0">—</span>';
   const rows=[];
   const items=list.map((x,oi)=>({oi,...x})).sort((a,b)=>a.pos-b.pos).map(x=>{let r=0;while(rows[r]&&rows[r].some(p=>Math.abs(p-x.pos)<0.75))r++;(rows[r]=rows[r]||[]).push(x.pos);return {...x,row:r};});
   return `<div class="zgstrip" style="height:${rows.length*52}px">${items.map(x=>{const w=isGan?gw(gi(x.c)):ZWX[zi(x.c)];
-    return `<span class="zg w${w}${x.dyn?' zgd':''}" data-zg="${isGan?0:1}-${x.oi}" style="left:${x.pos/ncol*100}%;top:${x.row*52}px" title="${x.from}">${x.c}${x.n>1?`<b class="zgn">×${x.n}</b>`:''}<i>${x.tag}</i>${zgArrows(isGan?0:1,x.oi,Math.max(0,x.boost||0))}</span>`;}).join('')}</div>`;
+    return `<span class="zg w${w}${x.dyn?' zgd':''}" data-zg="${isGan?0:1}-${x.oi}" style="left:${x.pos/ncol*100}%;top:${x.row*52}px" title="${x.from}">${x.c}${x.n>1?`<b class="zgn">×${x.n}</b>`:''}<i>${x.tag}</i>${zgArrows(isGan?0:1,x.oi,Math.max(0,x.boost||0)*AW.zgb)}</span>`;}).join('')}</div>`;
 }
 
 /* ---------- 粘連：伏吟、連續、五合六合 ---------- */
@@ -1009,6 +1031,11 @@ function chainPaths(d,c1,c2){
 }
 const elOf=(k,ch)=>k?ZWX[zi(ch)]:gw(gi(ch));
 const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動</span><span><b class="actl">↑</b>啟動：每條被破除嘅粘連一個（冇粘連就一個），啟動鏈每多一層再加一個（↑ 越多激活越大力）　<b class="actl dn">↓</b>未啟動：每條粘連一個（↓ 越多粘得越實）</span></div>`;
+// 箭咀力度（015_arrow_weights.sql）：管理員喺「箭咀力度」改，所有人睇到；讀唔到就用呢度嘅預設
+const AW={fu:1,he:1,lian:0.5,banhe:0.5,sanhe:1,zg:0.5,zgb:0.5,chain:1,cx:1,se:1,yr:1,sw:1.5};
+const AW_META=[['fu','伏吟（每條）','同一個字，例如丙丙'],['he','合（每條）','天干五合、地支六合'],['lian','連續（每條）','次序相差一位，例如甲乙、子丑'],['banhe','半合（每條）','三合局其中兩個字，要有中神'],
+  ['sanhe','三合局（每個字）','三個字齊，例如申子辰，每個字合共計幾多'],['zg','招感字粘連（每條）','招感字同來源字嘅連續或合'],['zgb','招感重字（第三個起每多一個）','例如三個丙招合'],
+  ['chain','啟動鏈（每多一層）','第一層係基本，之後每層加'],['cx','坐辰戌','天干坐辰或戌'],['se','見同五行地支（每個）','天干見同五行嘅地支'],['yr','見自己陽刃（每個）','甲卯、丙午、戊午、庚酉、壬子'],['sw','最強五行同五行嘅字（倍數）','同最強五行同一五行嘅字，箭咀總數乘呢個數']];
 function chains(cols,k,virt){
   const n=k?12:10,chars=k?ZHI:GAN,out=[];
   const cs=cols.map((c,i)=>({i,gz:c.gz})).filter(c=>c.gz).map(c=>({i:c.i,v:chars.indexOf(c.gz[k])}));
@@ -1024,6 +1051,12 @@ function chains(cols,k,virt){
   // 招感出嚟嘅字只同招佢出嚟嗰兩個字粘連：夾 → 連續，招合 → 合
   (virt||[]).forEach((z,vi)=>z.src.filter(ci=>Number.isInteger(ci)&&cols[ci]).forEach(ci=>{const t=z.kind==='jia'?'lian':'he';
     out.push({a:ci,vx:z.pos,vi,vc:z.c,vname:`招感${z.c}（${z.tag}）`,t,tip:`${t==='he'?'合':'連續'} 招感${z.c}（${z.tag}）· ${cols[ci].h}${k?'支':'干'}${cols[ci].gz[k]}`});}));
+  // 三合局（申子辰、亥卯未、寅午戌、巳酉丑）三個字齊：唔再計半合，三個字兩兩相連（每條半個箭咀），即係每個字合共一個箭咀
+  if(k)for(const [g,e] of SANHE){const at=c=>cs.filter(x=>chars[x.v]===c);if(![...g].every(c=>at(c).length))continue;
+    for(let j=out.length-1;j>=0;j--){const l=out[j];if(l.t==='banhe'&&g.includes(chars[cs.find(x=>x.i===l.a).v])&&g.includes(chars[cs.find(x=>x.i===l.b).v]))out.splice(j,1);}
+    [[0,1],[1,2],[0,2]].forEach(([p,q])=>{for(const A of at(g[p]))for(const B of at(g[q]))out.push({a:Math.min(A.i,B.i),b:Math.max(A.i,B.i),t:'sanhe',tip:`${g}三合${e}局（${g[p]}${g[q]}）`});});}
+  // 箭咀權重（AW）：預設伏吟、合一個；連續、半合、招感字粘連半個；三合局每個字一個（每個字有兩對，每對一半）
+  out.forEach(l=>l.w=l.vx!=null?AW.zg:l.t==='sanhe'?AW.sanhe/2:AW[l.t]??1);
   return out;
 }
 // 七殺激活：冇粘連嘅七殺破除該字粘連；七殺本身再被激活就多一級
@@ -1080,7 +1113,7 @@ function nlList(k,ci,cols){
   const me=cols[ci].gz[k],seen={},order=[];
   S.links[k].forEach(l=>{if(l.a!==ci&&l.b!==ci)return;
     const virt=l.vx!=null,other=virt?l.vc:cols[l.a===ci?l.b:l.a].gz[k];
-    const txt=l.t==='fu'?me+other+'伏吟粘連':l.t==='he'?me+other+'合':l.t==='banhe'?me+other+'半合':me+other+'連';
+    const txt=l.t==='fu'?me+other+'伏吟粘連':l.t==='he'?me+other+'合':l.t==='banhe'?me+other+'半合':l.t==='sanhe'?me+other+'三合局':me+other+'連';
     const key=l.t+txt+(virt?'v':'')+(l.broken?'x':'');
     if(!seen[key]){seen[key]={t:l.t,txt,virt,broken:l.broken,n:0,other};order.push(key);}seen[key].n++;});
   if(!order.length)return '';
@@ -1126,16 +1159,22 @@ function status(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];
 // 全盤連鎖：啟動鏈繞住七殺（地支沖害刑）圈兜返去鏈入面已經有嘅字；同一個字只計一次，所以 ↑ 唔會再加
 function loopNote(){const t=[0,1].map(k=>S.act&&S.act[k]&&S.act[k].loop&&S.act[k].loop.length?`${k?'地支':'天干'}${S.act[k].loop.join('、')}`:'').filter(Boolean);
   return t.length?`<div class="hint loopnote" title="啟動鏈兜圈，同一個字喺同一條鏈只計一次（規則 Q3）">⚠ 全盤連鎖：${t.join('；')} 嘅啟動鏈兜返轉頭，同一個字只計一次</div>`:'';}
-function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,yr:0,why:[]},yr=pw.yr||0;
-  // 激活力度（Q8）：未啟動每條粘連一個 ↓；啟動咗 ↓ 全部變 ↑（唔會另外再加），冇粘連嘅字啟動唔加 ↑；啟動鏈第一層係基本，之後每多一層加一個 ↑
-  // 天干力度（Q7，連陽刃）方向全部跟個字：啟動咗 ↑，粘住未啟動 ↓，冇粘連 ↑。同一個字永遠只有一個方向
+// 箭咀：整數一個大箭咀，半個用細箭咀（兩個細等於一個大）
+const fmtN=n=>Number.isInteger(n)?''+n:(+n.toFixed(2))+'';
+// 最強五行同五行嘅字：箭咀乘 AW.sw（最強五行有顯示先計）
+const swMul=(k,ch)=>S&&S.swEl!=null&&S.swEl>=0&&(k?ZWX[zi(ch)]:gw(gi(ch)))===S.swEl&&AW.sw!==1?AW.sw:1;
+const swNote=m=>m!==1?`；最強五行同五行，×${fmtN(m)}`:'';
+const ARW=(n,dn)=>{n=Math.round(n*2)/2;const b=dn?'<b class="dn">↓</b>':'<b>↑</b>',sm=dn?'<b class="dn sm">↓</b>':'<b class="sm">↑</b>',f=Math.floor(n+1e-9);return b.repeat(f)+(n-f>0.25?sm:'');};
+function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,yr:0,why:[]},yr=pw.yr||0,m=swMul(k,S.cols[ci].gz[k]);
+  // 激活力度（Q8）：未啟動粘連計 ↓（權重睇「箭咀力度」）；啟動咗 ↓ 全部變 ↑（唔會另外再加），冇粘連嘅字啟動唔加 ↑；啟動鏈第一層係基本，之後每多一層加
+  // 天干力度（Q7，連陽刃）方向全部跟個字：啟動咗 ↑，粘住未啟動 ↓，冇粘連 ↑。同一個字永遠只有一個方向；最強五行同五行嘅字總數再乘 AW.sw
   const pwDn=!up&&dn>0,ex=pw.n+yr,dir=pwDn?' ↓':' ↑',st=pwDn?'；未啟動，粘得更實':up?'；已啟動，激活更大力':'';
-  const pwT=(pw.n?`　力度${dir}${pw.n}（${pw.why.join('，')}${st}）`:'')+(yr?`　陽刃${dir}${yr}（見自己嘅陽刃${YANGREN[S.cols[ci].gz[0]]}×${yr}${st}）`:'');
-  const U=n=>'<b>↑</b>'.repeat(n),D=n=>'<b class="dn">↓</b>'.repeat(n);
-  if(up){const n=dn+up-1+ex;if(!n)return '';const tip=`↑${n}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${dn} 條粘連被破除，↓${dn} 變 ↑${dn}`:'；本身冇粘連'}${up>1?`；啟動鏈 ${up} 層，多 ${up-1} 層加 ↑${up-1}`:''}）${pwT}`;
+  const pwT=(pw.n?`　力度${dir}${fmtN(pw.n)}（${pw.why.join('，')}${st}）`:'')+(yr?`　陽刃${dir}${fmtN(yr)}（見自己嘅陽刃${YANGREN[S.cols[ci].gz[0]]}×${pw.yrN}${st}）`:'');
+  const U=n=>ARW(n,0),D=n=>ARW(n,1),nl=S.links[k].filter(l=>l.a===ci||l.b===ci).length,R=n=>Math.round(n*m*2)/2;
+  if(up){const c=(up-1)*AW.chain,n=R(dn+c+ex);if(!n)return '';const tip=`↑${fmtN(n)}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${nl} 條粘連（計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}`:'；本身冇粘連'}${up>1?`；啟動鏈 ${up} 層，多 ${up-1} 層加 ↑${fmtN(c)}`:''}${swNote(m)}）${pwT}`;
     return `<span class="act" title="${tip}">${U(n)}</span>`;}
-  if(!dn)return ex?`<span class="act" title="${pwT.trim()}">${U(ex)}</span>`:'';
-  return `<span class="act" title="↓${dn+ex}（${dn} 條粘連，未啟動）${pwT}">${D(dn+ex)}</span>`;}
+  if(!dn)return ex?`<span class="act" title="${pwT.trim()}${m!==1?`　↑${fmtN(R(ex))}${swNote(m)}`:''}">${U(R(ex))}</span>`:'';
+  return `<span class="act" title="↓${fmtN(R(dn+ex))}（${nl} 條粘連，計 ${fmtN(dn)} 個箭咀，未啟動${swNote(m)}）${pwT}">${D(R(dn+ex))}</span>`;}
 // 撳天干／地支／招感字：彈出點樣啟動、箭咀點計、做功同粘連（電腦同手機都得；電腦版滑鼠提示照舊）
 // 彈框入面嘅天干、地支同五行字加返五行顏色（「自己」、「未啟動」、「子女」呢類唔係干支嘅字唔變色）
 const WXRE=/(?<!自)己|未(?![啟被起有解開確])|子(?!女)|[甲乙丙丁戊庚辛壬癸丑寅卯辰巳午申酉戌亥木火土金水]/g;
@@ -1382,6 +1421,12 @@ function render(){
   // VIEW.sw 未撳過（null）就預設開
   S.swOn=(VIEW.sw==null?can.sw():VIEW.sw)&&can.sw();
   S.swOk=can.sw();S.swShow=S.swOn&&S.swOk;{const li=document.getElementById('r-s1');if(li)li.hidden=!S.swOk;}
+  // 人元司令：按出生時離上一個「節」幾多日，決定月支藏干邊個當令（月令分日用事）
+  const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
+  const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
+  let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
+  // 最強五行（有顯示先計）：同五行嘅字箭咀乘 AW.sw
+  S.swEl=S.swShow?strongestBy(VIEW.swm,P,mingGong(lun,ec),slG).el:-1;
   if(useSha)cols.push({h:'招殺星',sub:VIEW.shaAll?'盤上冇七殺':'原局冇七殺',gz:null,sha:true});
   const N=cols.length;
   // 元運柱同三桓命宮柱預設唔參與招感同粘連，只係顯示
@@ -1394,9 +1439,9 @@ function render(){
   S.links=[0,1].map(k=>chains(cc,k,k?ZG.br:ZG.st));
   S.sha=[0,1].map(k=>useSha?shaCalc(cc,S.links[k],k,VIEW.shaAll):[]);
   S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st,S.sha[k]));
-  S.vact=S.act.map(a=>a.vact);S.zg=[ZG.st,ZG.br];S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
+  S.vact=S.act.map(a=>a.vact);S.zg=[ZG.st,ZG.br];S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).reduce((t,l)=>t+l.w,0)));
   // 粘連力：每條粘連乘二
-  S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).length));
+  S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).reduce((t,l)=>t+l.w,0)));
   // 做功（W1）：呢個字所剋嘅五行（同一行：天干睇天干，地支睇地支本氣五行）有伏吟或者粘連，就要做功；要做功而本身被啟動（有已啟動或冇粘連嘅七殺剋佢），就係做到功
   S.work=[0,1].map(k=>cc.map((c,i)=>{if(!c.gz)return null;const el=x=>k?ZWX[zi(x.gz[1])]:gw(gi(x.gz[0])),t=(el(c)+2)%5;
     const tg=cc.map((x,j)=>j).filter(j=>j!==i&&cc[j].gz&&el(cc[j])===t&&S.lock[k][j]>0);if(!tg.length)return null;
@@ -1407,7 +1452,7 @@ function render(){
     if(c.gz[1]==='辰'||c.gz[1]==='戌')why.push(`坐${c.gz[1]}`);
     const yr=bz.filter(z=>z===YANGREN[g]).length;
     const se=bz.filter(z=>ZWX[zi(z)]===gw(gx));if(se.length)why.push(`見同五行地支${se.join('')}×${se.length}`);
-    return {n:(why[0]&&why[0][0]==='坐'?1:0)+se.length,yr,why};});
+    return {n:(why[0]&&why[0][0]==='坐'?AW.cx:0)+se.length*AW.se,yr:yr*AW.yr,yrN:yr,why};});
   // 同一個招感字出現多次：選項開咗就只顯示一個，後面寫 ×次數（只影響顯示，粘連照計）
   S.zgAlias=[{},{}];
   // 顯示次序：DO[顯示位置]=計算用嘅柱號；只有「命宮放三桓左邊」會調位
@@ -1445,10 +1490,6 @@ function render(){
 
   // 五行 tally of 8 chars
   const cnt=[0,0,0,0,0];P.forEach(p=>{cnt[gw(gi(p[0]))]++;cnt[ZWX[zi(p[1])]]++;});
-  // 人元司令：按出生時離上一個「節」幾多日，決定月支藏干邊個當令（月令分日用事）
-  const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
-  const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
-  let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
   const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-swsec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） ${sw.g||''}${WX[sw.el]}</span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
   const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`;
 
@@ -1463,7 +1504,7 @@ function render(){
   const rels=relations(items);
   const pillName={he:'合',chong:'沖',xing:'刑',chuan:'穿',po:'破'};
   const lab=(i,k)=>(cols[i].dyn||cols[i].aux?cols[i].h:cols[i].h[0])+(k?'支':'干')+cols[i].gz[k];
-  const LN={fu:'伏吟',lian:'連續',he:'合',banhe:'半合'};
+  const LN={fu:'伏吟',lian:'連續',he:'合',banhe:'半合',sanhe:'三合局'};
   const nlHtml=[0,1].flatMap(k=>S.links[k].map(l=>({k,l,dyn:!!(cols[l.a].dyn||(l.vx==null&&cols[l.b].dyn))}))).sort((a,b)=>a.dyn-b.dyn||a.k-b.k)
     .map(({k,l,dyn})=>`<div class="rel"><span class="pill p-nl-${l.t}">粘</span><b>${LN[l.t]}</b><span>${l.vx!=null?l.vname+' · '+lab(l.a,k):lab(l.a,k)+' · '+lab(l.b,k)}</span>${l.broken?'<span class="dyn" style="color:var(--bad)">已被七殺解開</span>':''}${dyn?'<span class="dyn">行運引動</span>':''}</div>`).join('');
   const zgHtml=[...ZG.st,...ZG.br].sort((a,b)=>a.dyn-b.dyn).map(x=>`<div class="rel"><span class="pill p-zg">感</span><b>${x.tag}出${x.c}</b><span>${x.from}</span>${x.dyn?'<span class="dyn">行運引動</span>':''}</div>`).join('');
@@ -1620,7 +1661,16 @@ function ptSoon(){clearTimeout(PT.t);PT.t=setTimeout(()=>{if(SESSION)loadPoints(
 async function loadPoints(){PT.loaded=true;
   try{PT.rows=await api('rpc/points_board',{method:'POST',body:'{}'});PT.err='';}
   catch(e){PT.rows=null;PT.err=/points_board|42883|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/008_points.sql。':'載入唔到：'+e.message;}
-  drawPoints();renderAuthPts();}
+  drawPoints();renderAuthPts();
+  // 分數多咗就放加分動畫（第一次載入只記低，唔放）
+  const uid=SESSION&&SESSION.user.id;if(PT.uid!==uid){PT.uid=uid;PT.mine=null;}
+  const now=myPts();if(now!=null&&PT.mine!=null&&now>PT.mine)ptFx(now-PT.mine,'貢獻分增加');PT.mine=now;}
+// 加分動畫：畫面中間彈個金色「+N 分」，星星散開，個 ⭐ 分數跳一跳；撳一下或者過兩秒半自動收
+function ptFx(n,label,big){if(!(n>0))return;let el=$('ptFx');if(el)el.remove();el=document.createElement('div');el.id='ptFx';el.setAttribute('role','status');
+  const sp=Array.from({length:big?18:10},(_,i)=>{const a=i/(big?18:10)*Math.PI*2,d=(big?120:80)+Math.random()*40;return `<i style="--x:${(Math.cos(a)*d).toFixed(0)}px;--y:${(Math.sin(a)*d).toFixed(0)}px;animation-delay:${(Math.random()*.15).toFixed(2)}s">${['⭐','✨','🌟','💫'][i%4]}</i>`;}).join('');
+  el.innerHTML=`<div class="card${big?' big':''}"><div class="lbl">${esc(label)}</div><div class="num">+${n} 分</div>${big?'<div class="sub">多謝你今日嚟睇盤，聽日記得再嚟！</div>':''}</div>${sp}`;
+  document.body.appendChild(el);el.addEventListener('click',()=>el.remove());setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),400);},big?3200:2400);
+  document.querySelectorAll('.pts').forEach(p=>{p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump');});}
 function myPts(){if(!SESSION||!PT.rows)return null;const r=PT.rows.find(x=>x.user_id===SESSION.user.id);return r?r.points:0;}
 // 招感、計法說明、貢獻排行榜：電腦版撳標題打開／收埋，每次開網預設收埋（手機版係獨立分頁，唔受影響）
 const SECF={};
@@ -1632,13 +1682,15 @@ const CK={busy:false};
 async function checkin(){const uid=SESSION&&SESSION.user&&SESSION.user.id,day=new Date(Date.now()+8*3600e3).toISOString().slice(0,10),key='b8-ck-'+uid;
   if(!uid||CK.busy)return;try{if(localStorage.getItem(key)===day)return;}catch(e){}CK.busy=true;
   try{const r=await api('rpc/daily_checkin',{method:'POST',body:'{}'});try{localStorage.setItem(key,day);}catch(e){}
-    if(r&&r.new){BUY.msg=`☀️ 每日登入 +${r.points} 分`;loadPoints();if(S&&S.dys)render();}}
+    if(r&&r.new){BUY.msg=`☀️ 每日登入 +${r.points} 分`;ptFx(r.points,'☀️ 每日登入獎勵',true);if(PT.mine!=null)PT.mine+=r.points;loadPoints();if(S&&S.dys)render();}}
   catch(e){}finally{CK.busy=false;}}
 function ptTag(){if(ADMIN)return '';const n=myPts();return n==null?'':`<span class="pts" title="貢獻分（睇「貢獻排行榜」）">⭐ ${n} 分</span>`;}
 function renderAuthPts(){document.querySelectorAll('[data-pts]').forEach(e=>e.innerHTML=ptTag());}
 function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSION);if(box.hidden)return;
-  $('lbMsg').textContent=PT.err;const rows=(PT.rows||[]).filter(r=>r.points>0).slice(0,30);
-  $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.bonus?`獎勵 ${r.bonus>0?'+':''}${r.bonus}`:'',r.logins?`登入 ${r.logins} 日`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人有分</td></tr>');}
+  $('lbMsg').textContent=PT.err;// 最活躍排最頂：活躍度＝加命例、事件、投票、筆記、留言、登入日數、用分次數（用過分當 1）、獎勵；乜都未做過嘅唔顯示
+  const act=r=>(r.cases||0)+(r.events||0)+(r.votes||0)+(r.notes||0)+(r.posts||0)+(r.logins||0)+(r.spent?1:0)+(r.bonus?1:0);
+  const rows=(PT.rows||[]).filter(r=>act(r)>0).sort((x,y)=>act(y)-act(x)||y.points-x.points).slice(0,30);
+  $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.bonus?`獎勵 ${r.bonus>0?'+':''}${r.bonus}`:'',r.logins?`登入 ${r.logins} 日`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人參與</td></tr>');}
 // 使用統計：開網、排盤、開命例各寫一行去 public.usage（supabase/006_stats.sql），每部機一個隨機編號；寫唔到就算
 const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('b8-anon',a);}return a;}catch(e){return Math.random().toString(36).slice(2,12)+'x';}})();
 function track(kind,input){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
@@ -1661,6 +1713,28 @@ const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN|
 const BUY={paid:new Set(),busy:new Set(),msg:''};
 // 扣分數：由 point_costs 表讀（管理員喺「扣分設定」改，011_cost_settings.sql）；未設定就用預設
 const COST={sha:1,sw:2,work:5,loaded:false},PS={need:3,start:100,vday:5,gday:2,daily:0};
+// 箭咀力度：arrow_weights（015_arrow_weights.sql）所有人讀；arrow_votes 每人每項一票；改咗就重新排盤
+const AWV={cnt:{},mine:{},ok:null,busy:false};
+async function loadAW(){if(!CLOUD){drawAW();return;}
+  try{const r=await api('arrow_weights?select=key,value');let ch=false;r.forEach(x=>{const v=+x.value;if(x.key in AW&&AW[x.key]!==v){AW[x.key]=v;ch=true;}});AWV.ok=true;if(ch&&S&&S.dys)render();}catch(e){AWV.ok=false;}
+  try{const r=await api('rpc/arrow_vote_counts',{method:'POST',body:'{}'});AWV.cnt={};r.forEach(x=>AWV.cnt[x.key]=x);}catch(e){}
+  AWV.mine={};if(SESSION)try{(await api('arrow_votes?select=key,dir')).forEach(x=>AWV.mine[x.key]=x.dir);}catch(e){}
+  drawAW();}
+function drawAW(){const b=$('awList');if(!b)return;const adm=!!(CLOUD&&ADMIN&&AWV.ok);
+  b.innerHTML=AW_META.map(([k,n,d])=>{const c=AWV.cnt[k]||{up:0,down:0},my=AWV.mine[k],dis=!(CLOUD&&SESSION&&AWV.ok)?'disabled':'';
+    return `<tr><td>${esc(n)}<small>${esc(d)}</small></td><td>${adm?`<input type="number" min="0" max="10" step="0.1" data-aw="${k}" value="${AW[k]}" aria-label="${esc(n)}">`:`<b>${k==='sw'?'×':''}${fmtN(AW[k])}</b>`}</td>
+      <td><span class="awv"><button type="button" data-awvote="${k}" data-dir="1" aria-pressed="${my===1}" ${dis}>👍 應該加 ${c.up||0}</button><button type="button" data-awvote="${k}" data-dir="-1" aria-pressed="${my===-1}" ${dis}>👎 應該減 ${c.down||0}</button></span></td></tr>`;}).join('');
+  $('awAdmin').hidden=!adm;
+  $('awMsg').textContent=!CLOUD?'離線版：顯示緊預設數值。':AWV.ok===false?'未設定：管理員要喺 Supabase SQL Editor 行一次 supabase/015_arrow_weights.sql（而家用緊預設數值）。':!SESSION?'登入之後就可以投票。':'';}
+async function voteAW(k,dir){if(AWV.busy||!SESSION)return;AWV.busy=true;const cur=AWV.mine[k];
+  try{if(cur===dir)await api(`arrow_votes?key=eq.${k}&user_id=eq.${SESSION.user.id}`,{method:'DELETE'});
+    else await api('arrow_votes?on_conflict=key,user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({key:k,user_id:SESSION.user.id,dir,at:new Date().toISOString()})});}
+  catch(e){$('awMsg').textContent='投唔到：'+e.message;}finally{AWV.busy=false;}await loadAW();}
+async function saveAW(){const msg=$('awSaveMsg');msg.textContent='儲存緊…';
+  try{for(const i of document.querySelectorAll('[data-aw]')){const k=i.dataset.aw,v=Math.round(+i.value*100)/100;if(!(v>=0&&v<=10))throw new Error(`${k} 要喺 0 至 10 之間`);
+      if(v!==AW[k]){await api('arrow_weights?key=eq.'+k,{method:'PATCH',body:JSON.stringify({value:v,updated_at:new Date().toISOString()})});AW[k]=v;}}
+    msg.textContent='已儲存，盤已經用新數值重新計。';if(S&&S.dys)render();drawAW();}catch(e){msg.textContent='儲存唔到：'+e.message;}}
+$('aw').addEventListener('click',e=>{const v=e.target.closest('[data-awvote]');if(v){voteAW(v.dataset.awvote,+v.dataset.dir);return;}if(e.target.closest('[data-awsave]'))saveAW();});
 async function loadCosts(){COST.loaded=true;try{const r=await api('point_costs?select=kind,cost');r.forEach(x=>{COST[x.kind]=x.cost;});COST.ok=true;}catch(e){COST.ok=false;}
   // 開戶分同「準」門檻：point_settings（012_points_admin.sql）；未設定就係舊規則 100 分、3 個準
   try{const r=await api('point_settings?select=key,value');r.forEach(x=>{PS[x.key]=x.value;});PS.has_vday=r.some(x=>x.key==='vday');PS.has_daily=r.some(x=>x.key==='daily');PS.ok=true;}catch(e){PS.ok=false;}
@@ -1856,6 +1930,7 @@ function calcVis(){const ok=can.sha();document.body.classList.toggle('nocalc',!o
 function renderAuth(){calcVis();
   const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION))render();
   if(CLOUD&&!COST.loaded)loadCosts();
+  {const u=SESSION&&SESSION.user.id||'';if(AWV.sess!==u){AWV.sess=u;loadAW();}}
   if(CLOUD&&SESSION)checkin();
   if(CLOUD&&SESSION&&!PT.loaded)loadPoints();else if(!SESSION){PT.loaded=false;PT.rows=null;}drawPoints();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
