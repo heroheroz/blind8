@@ -195,6 +195,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .lvl+.lvl{margin-top:14px}
 .swtag{cursor:pointer}.swtag.swbad{outline:2px solid var(--bad);outline-offset:1px;color:var(--bad)!important}
 #tipPop .wxc{font-weight:600}
+#swVote li{margin:4px 0}#swVote .awv{margin:2px 0}#swVote small{display:block}
 .tkopt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:10px;font-size:13px}.tkopt .cap{color:var(--muted)}
 .lvl h3{margin:0;font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.08em}
 .rels{display:flex;flex-direction:column;gap:6px;font-size:14px}
@@ -549,9 +550,9 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q4"><b>Q4 粘連算唔算</b>　同招感字嘅粘連都算有粘連，會阻住佢去啟動其他字。</li>
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，粘連標籤劃走；原本嘅 ↓ 全部變做 ↑（見 Q8）。</li>
     <li id="r-q6"><b>Q6 招感殺星</b>　天干有粘連，而盤上冇佢嘅七殺，就會自動招一個七殺（殺星）。顯示選項「招殺星計全部柱」預設開：盤上顯示緊嘅所有柱（原局、大運、流年、流月、流日，開咗元運柱或者三桓都計埋）都會招，亦都睇全盤有冇七殺；閂咗就只係原局四柱招，只睇原局有冇七殺。同一個殺星會由右至左逐個啟動沿路招佢嘅字，例如流日乙、流年乙同原局乙都招辛，辛先啟動流日乙，再啟動流年乙，俾人擋走之後，後面嘅字就啟動唔到，擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：地支有粘連，而盤上（或者原局，跟選項）冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示；呢個選項只開畀進階用戶、高級用戶同管理員。</li>
-    <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣預設加一個箭咀（同其他箭咀一隻色；實際數值喺「箭咀力度」度可以調）：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加半個；③ 盤上任何位置見到<b>佢自己</b>嘅陽刃地支（甲見卯、丙見午、戊見午、庚見酉、壬見子；陰干冇陽刃），每見一個加一個，唔理其他天干嘅陽刃。三樣可以疊加，例如戊坐戌，盤上另外有一個未、一個午：坐戌 1＋土地支戌未 2＋陽刃午 1＝4（坐住嘅戌都算同五行）。三樣箭咀方向全部跟住個字嘅狀態：已經啟動，加 ↑，激活更大力；有粘連但未啟動，加 ↓，粘得更實；冇粘連又未啟動，就係 ↑。同一個字永遠只會有一個方向，唔會同時有 ↑ 同 ↓。魁罡（庚辰、庚戌、壬辰、戊戌）都係坐辰戌，已經計咗 ①。力度箭咀唔改變啟動與否，亦唔影響招感、粘連同啟動嘅計算。</li>
+    <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣預設加一個箭咀（同其他箭咀一隻色；實際數值喺「箭咀力度」度可以調）：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加半個（見多過一個嗰陣再乘「多個同五行地支」倍數，預設 ×1）；③ 盤上任何位置見到<b>佢自己</b>嘅陽刃地支（甲見卯、丙見午、戊見午、庚見酉、壬見子；陰干冇陽刃），每見一個加一個，唔理其他天干嘅陽刃。三樣可以疊加，例如戊坐戌，盤上另外有一個未、一個午：坐戌 1＋土地支戌未 2＋陽刃午 1＝4（坐住嘅戌都算同五行）。三樣箭咀方向全部跟住個字嘅狀態：已經啟動，加 ↑，激活更大力；有粘連但未啟動，加 ↓，粘得更實；冇粘連又未啟動，就係 ↑。同一個字永遠只會有一個方向，唔會同時有 ↑ 同 ↓。魁罡（庚辰、庚戌、壬辰、戊戌）都係坐辰戌，已經計咗 ①。力度箭咀唔改變啟動與否，亦唔影響招感、粘連同啟動嘅計算。</li>
     <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：同最強五行（有顯示嘅時候）同一五行嘅字，箭咀總數再乘 1.5（喺「箭咀力度」可以調），四捨五入到半個。未啟動嘅字，粘連按 N6 計 ↓（合、伏吟一個，連續、半合、三合局、招感粘連半個，半個用細箭咀），↓ 越多粘連程度越高；啟動咗之後，呢啲 ↓ 全部變做 ↑（係轉方向，唔會另外再加 ↑）。本身冇粘連嘅字啟動咗唔加箭咀，只顯示「啟動」。啟動鏈（Q3）第一層係基本，之後每多一層加一個 ↑。例如 3 條粘連嘅字被七殺直接啟動，就係 ↑3；經兩層鏈先被啟動（七殺本身都係被人啟動），就係 ↑4；冇粘連嘅字經兩層鏈先被啟動，就係 ↑1。天干再加 Q7 嘅力度箭咀，啟動咗加 ↑，未啟動粘住加 ↓。所有箭咀都係同一隻色。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
-    <li id="r-s1"><b>最強五行（推測）</b>　顯示選項可以揀三種推論。<b>推論1：月令人元並用</b>，只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），最強五行就係命宮地支嘅五行，計完。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局沖、刑或害，但未被啟動，天干陰陽倒轉，例如丁變丙。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例推出嚟，五行 25 個全中，有寫天干嘅 14 個全中；①③④ 係睇住呢批命例調出嚟，① 只有一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。<br><b>推論2：月令印星</b>：直接取月令本氣嘅正印，例如月令巳本氣丙，取乙木。<b>推論3：人元司令印星</b>：直接取人元司令嘅正印，例如司令戊，取丁火。推論2、3 唔理命宮、做功同陰陽倒轉。立春日出世嘅人，月令同司令一定係寅同戊，所以用推論2、3，每年立春日出世都一樣（推論2 係水，推論3 係火）；用推論1 就會因應做功同命宮而唔同。<br>指住或者撳「最強五行」標籤會彈出：盤上顯示緊嘅天干有冇剋最強五行（同陰陽嘅標「七殺」）、屬最強五行嘅地支有冇被沖、刑、害，有冇地支五行剋佢，同埋盤上屬最強五行嘅天干地支有冇粘連、粘緊乜。最上面會俾結論：天干剋、地支沖刑害、地支剋，或者屬最強五行嘅字有粘連而要做功又做唔到功（W1），任何一樣有，就算「有觸犯最強五行」（唔好），標籤會變紅框加 ⚠；淨係有粘連而做到功（或者唔使做功）就唔計觸犯。呢度只係列出嚟參考，唔改最強五行嘅計法。</li>
+    <li id="r-s1"><b>最強五行（推測）</b>　顯示選項可以揀三種推論。<b>推論1：月令人元並用</b>，只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），最強五行就係命宮地支嘅五行，計完。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局沖、刑或害，但未被啟動，天干陰陽倒轉，例如丁變丙。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例推出嚟，五行 25 個全中，有寫天干嘅 14 個全中；①③④ 係睇住呢批命例調出嚟，① 只有一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。<br><b>推論2：月令印星</b>：直接取月令本氣嘅正印，例如月令巳本氣丙，取乙木。<b>推論3：人元司令印星</b>：直接取人元司令嘅正印，例如司令戊，取丁火。推論2、3 唔理命宮、做功同陰陽倒轉。立春日出世嘅人，月令同司令一定係寅同戊，所以用推論2、3，每年立春日出世都一樣（推論2 係水，推論3 係火）；用推論1 就會因應做功同命宮而唔同。<br>指住或者撳「最強五行」標籤會彈出：盤上顯示緊嘅天干有冇剋最強五行（同陰陽嘅標「七殺」）、屬最強五行嘅地支有冇被沖、刑、害，有冇地支五行剋佢，同埋盤上屬最強五行嘅天干地支有冇粘連、粘緊乜。最上面會俾結論：天干剋、地支沖刑害、地支剋，或者屬最強五行嘅字有粘連而要做功又做唔到功（W1），任何一樣有，就算「有觸犯最強五行」（唔好），標籤會變紅框加 ⚠；淨係有粘連而做到功（或者唔使做功）就唔計觸犯。彈框最尾會列出三個推論喺呢個盤嘅結果，登入咗可以逐個撳 👍（準）或者 👎（唔準），仲會顯示全站總票數，等大家一齊驗證邊個推論最準。呢度只係列出嚟參考，唔改最強五行嘅計法。</li>
     <li id="r-w1"><b>W1 做功</b>　每個字剋一種五行（例如甲木剋土）。盤上嗰種五行嘅字（天干睇天干，地支睇地支本氣）如果有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
   </div>
@@ -1004,12 +1005,12 @@ function zhaogan(cols){
   return {st,br};
 }
 // 招感字：未啟動顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，每多一層啟動多一個 ↑（Z5、Q3）
-function zgArrows(k,vi,bo=0){const a=S.vact&&S.vact[k]&&S.vact[k][vi],dn=(S.vdown&&S.vdown[k]&&S.vdown[k][vi])||0,nl=(S.links&&S.links[k]||[]).filter(l=>l.vi===vi).length;
+function zgArrows(k,vi,bo=0){const a=S.vact&&S.vact[k]&&S.vact[k][vi],dn=(S.vdown&&S.vdown[k]&&S.vdown[k][vi])||0,ls=(S.links&&S.links[k]||[]).filter(l=>l.vi===vi),nl=ls.length;
   // 重字（Z2）加嘅箭咀同樣跟狀態：啟動咗 ↑，粘住未啟動 ↓；同一個字唔會有 ↑ 又有 ↓；招感字粘連同重字嘅權重睇「箭咀力度」
   // 同 Q8 一樣：粘連嘅 ↓ 變 ↑，啟動鏈每多一層加；最強五行同五行嘅招感字都乘 AW.sw
   const ch=((S.zg||[])[k]||[])[vi]?.c||'',m=ch?swMul(k,ch):1,R=n=>Math.round(n*m*2)/2;
-  if(a&&a[0]>0){const c=(a[0]-1)*AW.chain,n=R(dn+c+bo);return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+ch)}　↑${fmtN(n)}（${nl} 條粘連（計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${fmtN(c)}`:''}${bo?`；重字加 ↑${fmtN(bo)}`:''}${swNote(m)}）">${ARW(n,0)}</span>`;}
-  if(dn)return `<span class="act" title="${nl} 條粘連，計 ${fmtN(dn)} 個箭咀（未被啟動，唔會招感或者啟動其他字）${bo?`；重字加 ↓${fmtN(bo)}`:''}${swNote(m)}">${ARW(R(dn+bo),1)}</span>`;
+  if(a&&a[0]>0){const c=(a[0]-1)*AW.chain,n=R(dn+c+bo);return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+ch)}　↑${fmtN(n)}（${nl} 條粘連（${lkBrk(ls)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${fmtN(c)}`:''}${bo?`；重字加 ↑${fmtN(bo)}`:''}${swNote(m)}）">${ARW(n,0)}</span>`;}
+  if(dn)return `<span class="act" title="${nl} 條粘連（${lkBrk(ls)}），計 ${fmtN(dn)} 個箭咀（未被啟動，唔會招感或者啟動其他字）${bo?`；重字加 ↓${fmtN(bo)}`:''}${swNote(m)}">${ARW(R(dn+bo),1)}</span>`;
   return bo?`<span class="act" title="重字招合，加 ↑${fmtN(bo)}${swNote(m)}">${ARW(R(bo),0)}</span>`:'';}
 function zgStrip(list,isGan,ncol){
   if(!list.length)return '<span class="tiny" style="padding:4px 0">—</span>';
@@ -1032,10 +1033,10 @@ function chainPaths(d,c1,c2){
 const elOf=(k,ch)=>k?ZWX[zi(ch)]:gw(gi(ch));
 const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動</span><span><b class="actl">↑</b>啟動：每條被破除嘅粘連一個（冇粘連就一個），啟動鏈每多一層再加一個（↑ 越多激活越大力）　<b class="actl dn">↓</b>未啟動：每條粘連一個（↓ 越多粘得越實）</span></div>`;
 // 箭咀力度（015_arrow_weights.sql）：管理員喺「箭咀力度」改，所有人睇到；讀唔到就用呢度嘅預設
-const AW={fu:1,he:1,lian:0.5,banhe:0.5,sanhe:1,zg:0.5,zgb:0.5,chain:1,cx:1,se:0.5,yr:1,sw:1.5};
+const AW={fu:1,he:1,lian:0.5,banhe:0.5,sanhe:1,zg:0.5,zgb:0.5,chain:1,cx:1,se:0.5,yr:1,sw:1.5,sem:1};
 const AW_META=[['fu','伏吟（每條）','同一個字，例如丙丙'],['he','合（每條）','天干五合、地支六合'],['lian','連續（每條）','次序相差一位，例如甲乙、子丑'],['banhe','半合（每條）','三合局其中兩個字，要有中神'],
   ['sanhe','三合局（每個字）','三個字齊，例如申子辰，每個字合共計幾多'],['zg','招感字粘連（每條）','招感字同來源字嘅連續或合'],['zgb','招感重字（第三個起每多一個）','例如三個丙招合'],
-  ['chain','啟動鏈（每多一層）','第一層係基本，之後每層加'],['cx','坐辰戌','天干坐辰或戌'],['se','見同五行地支（每個）','天干見同五行嘅地支'],['yr','見自己陽刃（每個）','甲卯、丙午、戊午、庚酉、壬子'],['sw','最強五行同五行嘅字（倍數）','同最強五行同一五行嘅字，箭咀總數乘呢個數']];
+  ['chain','啟動鏈（每多一層）','第一層係基本，之後每層加'],['cx','坐辰戌','天干坐辰或戌'],['se','見同五行地支（每個）','天干見同五行嘅地支'],['yr','見自己陽刃（每個）','甲卯、丙午、戊午、庚酉、壬子'],['sem','多個同五行地支（倍數）','見同五行地支多過一個嗰陣，見同五行嗰部分再乘呢個數'],['sw','最強五行同五行嘅字（倍數）','同最強五行同一五行嘅字，箭咀總數乘呢個數']];
 function chains(cols,k,virt){
   const n=k?12:10,chars=k?ZHI:GAN,out=[];
   const cs=cols.map((c,i)=>({i,gz:c.gz})).filter(c=>c.gz).map(c=>({i:c.i,v:chars.indexOf(c.gz[k])}));
@@ -1163,6 +1164,9 @@ function loopNote(){const t=[0,1].map(k=>S.act&&S.act[k]&&S.act[k].loop&&S.act[k
 const fmtN=n=>Number.isInteger(n)?''+n:(+n.toFixed(2))+'';
 // 最強五行同五行嘅字：箭咀乘 AW.sw（最強五行有顯示先計）
 const swMul=(k,ch)=>S&&S.swEl!=null&&S.swEl>=0&&(k?ZWX[zi(ch)]:gw(gi(ch)))===S.swEl&&AW.sw!==1?AW.sw:1;
+// 粘連分類：帶伏吟、帶合、連、半合、三合局、招感連／招感合，每類幾多條同每條幾多個箭咀
+const lkBrk=ls=>{const m=new Map();ls.forEach(l=>{const n=l.vx!=null?'招感'+(l.t==='he'?'合':'連'):{fu:'帶伏吟',he:'帶合',lian:'連',banhe:'半合',sanhe:'三合局'}[l.t]||l.t,k=n+'|'+l.w;m.set(k,(m.get(k)||0)+1);});
+  return [...m].map(([k,c])=>{const [n,w]=k.split('|');return `${n} ${c} 條×${fmtN(+w)}`;}).join('、');};
 const swNote=m=>m!==1?`；最強五行同五行，×${fmtN(m)}`:'';
 const ARW=(n,dn)=>{n=Math.round(n*2)/2;const b=dn?'<b class="dn">↓</b>':'<b>↑</b>',sm=dn?'<b class="dn sm">↓</b>':'<b class="sm">↑</b>',f=Math.floor(n+1e-9);return b.repeat(f)+(n-f>0.25?sm:'');};
 function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,yr:0,why:[]},yr=pw.yr||0,m=swMul(k,S.cols[ci].gz[k]);
@@ -1170,11 +1174,11 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&
   // 天干力度（Q7，連陽刃）方向全部跟個字：啟動咗 ↑，粘住未啟動 ↓，冇粘連 ↑。同一個字永遠只有一個方向；最強五行同五行嘅字總數再乘 AW.sw
   const pwDn=!up&&dn>0,ex=pw.n+yr,dir=pwDn?' ↓':' ↑',st=pwDn?'；未啟動，粘得更實':up?'；已啟動，激活更大力':'';
   const pwT=(pw.n?`　力度${dir}${fmtN(pw.n)}（${pw.why.join('，')}${st}）`:'')+(yr?`　陽刃${dir}${fmtN(yr)}（見自己嘅陽刃${YANGREN[S.cols[ci].gz[0]]}×${pw.yrN}${st}）`:'');
-  const U=n=>ARW(n,0),D=n=>ARW(n,1),nl=S.links[k].filter(l=>l.a===ci||l.b===ci).length,R=n=>Math.round(n*m*2)/2;
-  if(up){const c=(up-1)*AW.chain,n=R(dn+c+ex);if(!n)return '';const tip=`↑${fmtN(n)}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${nl} 條粘連（計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}`:'；本身冇粘連'}${up>1?`；啟動鏈 ${up} 層，多 ${up-1} 層加 ↑${fmtN(c)}`:''}${swNote(m)}）${pwT}`;
+  const U=n=>ARW(n,0),D=n=>ARW(n,1),ls=S.links[k].filter(l=>l.a===ci||l.b===ci),nl=ls.length,R=n=>Math.round(n*m*2)/2;
+  if(up){const c=(up-1)*AW.chain,n=R(dn+c+ex);if(!n)return '';const tip=`↑${fmtN(n)}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${nl} 條粘連（${lkBrk(ls)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}`:'；本身冇粘連'}${up>1?`；啟動鏈 ${up} 層，多 ${up-1} 層加 ↑${fmtN(c)}`:''}${swNote(m)}）${pwT}`;
     return `<span class="act" title="${tip}">${U(n)}</span>`;}
   if(!dn)return ex?`<span class="act" title="${pwT.trim()}${m!==1?`　↑${fmtN(R(ex))}${swNote(m)}`:''}">${U(R(ex))}</span>`:'';
-  return `<span class="act" title="↓${fmtN(R(dn+ex))}（${nl} 條粘連，計 ${fmtN(dn)} 個箭咀，未啟動${swNote(m)}）${pwT}">${D(R(dn+ex))}</span>`;}
+  return `<span class="act" title="↓${fmtN(R(dn+ex))}（${nl} 條粘連（${lkBrk(ls)}），計 ${fmtN(dn)} 個箭咀，未啟動${swNote(m)}）${pwT}">${D(R(dn+ex))}</span>`;}
 // 撳天干／地支／招感字：彈出點樣啟動、箭咀點計、做功同粘連（電腦同手機都得；電腦版滑鼠提示照舊）
 // 彈框入面嘅天干、地支同五行字加返五行顏色（「自己」、「未啟動」、「子女」呢類唔係干支嘅字唔變色）
 const WXRE=/(?<!自)己|未(?![啟被起有解開確])|子(?!女)|[甲乙丙丁戊庚辛壬癸丑寅卯辰巳午申酉戌亥木火土金水]/g;
@@ -1211,6 +1215,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('.cell .tk,.swtag
   if(!el){el=document.createElement('div');el.id='tipPop';el.setAttribute('role','dialog');document.body.appendChild(el);}
   const c=t.closest('.cell')||t,gz=(c.querySelector('.gz')||{}).textContent||'',top=(c.querySelector('.top')||{}).textContent||'';
   el.innerHTML=`<button type="button" class="x" aria-label="閂">×</button>`+(t.dataset.swsec?`<b class="tt">${esc(t.textContent)}</b>`+JSON.parse(t.dataset.swsec).map(([h,a])=>`<div class="sec"><i>${esc(h)}</i><ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join(''):`<b class="tt">${esc(top)} ${esc(gz)}　天剋地沖／天合地合</b><ul>${t.dataset.tk.split('|').map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`);
+  if(t.classList.contains('swtag')){el.insertAdjacentHTML('beforeend','<div class="sec" id="swVote"><i>三個推論邊個準？</i><div class="hint">載入緊…</div></div>');loadSwVotes();}
   wxColor(el);el.hidden=false;el._y=scrollY;el._cell=t;const r=t.getBoundingClientRect(),w=el.offsetWidth,hh=el.offsetHeight;
   el.style.left=Math.max(12,Math.min(r.left+r.width/2-w/2,innerWidth-w-12))+'px';el.style.top=(r.bottom+8+hh>innerHeight-8?Math.max(8,r.top-hh-8):r.bottom+8)+'px';},true);
 document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;if(e.target.closest('.cell .tk,.swtag'))return;
@@ -1429,6 +1434,7 @@ function render(){
   let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
   // 最強五行（有顯示先計）：同五行嘅字箭咀乘 AW.sw
   S.swEl=S.swShow?strongestBy(VIEW.swm,P,mingGong(lun,ec),slG).el:-1;
+  S.swAll=['s1','yue','sl'].map(m=>({m,...strongestBy(m,P,mingGong(lun,ec),slG)}));
   if(useSha)cols.push({h:'招殺星',sub:VIEW.shaAll?'盤上冇七殺':'原局冇七殺',gz:null,sha:true});
   const N=cols.length;
   // 元運柱同三桓命宮柱預設唔參與招感同粘連，只係顯示
@@ -1454,7 +1460,7 @@ function render(){
     if(c.gz[1]==='辰'||c.gz[1]==='戌')why.push(`坐${c.gz[1]}`);
     const yr=bz.filter(z=>z===YANGREN[g]).length;
     const se=bz.filter(z=>ZWX[zi(z)]===gw(gx));if(se.length)why.push(`見同五行地支${se.join('')}×${se.length}`);
-    return {n:(why[0]&&why[0][0]==='坐'?AW.cx:0)+se.length*AW.se,yr:yr*AW.yr,yrN:yr,why};});
+    return {n:(why[0]&&why[0][0]==='坐'?AW.cx:0)+se.length*AW.se*(se.length>1?AW.sem:1),yr:yr*AW.yr,yrN:yr,why};});
   // 同一個招感字出現多次：選項開咗就只顯示一個，後面寫 ×次數（只影響顯示，粘連照計）
   S.zgAlias=[{},{}];
   // 顯示次序：DO[顯示位置]=計算用嘅柱號；只有「命宮放三桓左邊」會調位
@@ -1715,6 +1721,19 @@ const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN|
 const BUY={paid:new Set(),busy:new Set(),msg:''};
 // 扣分數：由 point_costs 表讀（管理員喺「扣分設定」改，011_cost_settings.sql）；未設定就用預設
 const COST={sha:1,sw:2,work:5,loaded:false},PS={need:3,start:100,vday:5,gday:2,daily:0};
+// 最強五行投票（016_sw_votes.sql）：每個盤三個推論各自投「準／唔準」，每人每個推論一票，再撳一次取消
+const SWV={busy:false};const SWN={s1:'推論1：月令人元並用',yue:'推論2：月令印星',sl:'推論3：人元司令印星'};
+async function loadSwVotes(){const box=$('swVote');if(!box||!S||!S.swAll)return;const ck=chartKey();let cnt=null,mine={};
+  if(CLOUD){try{cnt=await api('rpc/sw_vote_counts',{method:'POST',body:JSON.stringify({p_chart:ck})});}catch(e){cnt=null;}
+    if(SESSION&&cnt)try{(await api('sw_votes?select=method,vote&chart=eq.'+encodeURIComponent(ck))).forEach(x=>mine[x.method]=x.vote);}catch(e){}}
+  const dis=!(CLOUD&&SESSION&&cnt)?'disabled':'',c=(o,m,k)=>((o||{})[m]||{})[k]||0;
+  box.innerHTML='<i>三個推論邊個準？</i><ul>'+S.swAll.map(x=>`<li>${SWN[x.m]}：<b>${x.g||''}${WX[x.el]}</b>${x.m===VIEW.swm?'（而家顯示緊）':''}<span class="awv"><button type="button" data-swv="${x.m}" data-v="1" title="準" aria-label="準" aria-pressed="${mine[x.m]===1}" ${dis}>👍 ${c(cnt&&cnt.chart,x.m,'up')}</button><button type="button" data-swv="${x.m}" data-v="-1" title="唔準" aria-label="唔準" aria-pressed="${mine[x.m]===-1}" ${dis}>👎 ${c(cnt&&cnt.chart,x.m,'down')}</button></span>${cnt?`<small class="hint">全站：👍 ${c(cnt.all,x.m,'up')}　👎 ${c(cnt.all,x.m,'down')}</small>`:''}</li>`).join('')+'</ul>'+
+    (!CLOUD?'<div class="hint">離線版投唔到票。</div>':!cnt?'<div class="hint">未設定：管理員要行一次 supabase/016_sw_votes.sql。</div>':!SESSION?'<div class="hint">登入之後就可以投票。</div>':'');
+  wxColor(box);}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-swv]');if(!b||SWV.busy||!SESSION)return;SWV.busy=true;const m=b.dataset.swv,v=+b.dataset.v,ck=chartKey(),on=b.getAttribute('aria-pressed')==='true';
+  try{if(on)await api(`sw_votes?chart=eq.${encodeURIComponent(ck)}&method=eq.${m}&user_id=eq.${SESSION.user.id}`,{method:'DELETE'});
+    else await api('sw_votes?on_conflict=chart,method,user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({chart:ck,method:m,user_id:SESSION.user.id,vote:v,at:new Date().toISOString()})});}
+  catch(e){}finally{SWV.busy=false;}loadSwVotes();});
 // 箭咀力度：arrow_weights（015_arrow_weights.sql）所有人讀；arrow_votes 每人每項一票；改咗就重新排盤
 const AWV={cnt:{},mine:{},ok:null,busy:false};
 async function loadAW(){if(!CLOUD){drawAW();return;}
@@ -1724,7 +1743,7 @@ async function loadAW(){if(!CLOUD){drawAW();return;}
   drawAW();}
 function drawAW(){const b=$('awList');if(!b)return;const adm=!!(CLOUD&&ADMIN&&AWV.ok);
   b.innerHTML=AW_META.map(([k,n,d])=>{const c=AWV.cnt[k]||{up:0,down:0},my=AWV.mine[k],dis=!(CLOUD&&SESSION&&AWV.ok)?'disabled':'';
-    return `<tr><td>${esc(n)}<small>${esc(d)}</small></td><td>${adm?`<input type="number" min="0" max="10" step="0.1" data-aw="${k}" value="${AW[k]}" aria-label="${esc(n)}">`:`<b>${k==='sw'?'×':''}${fmtN(AW[k])}</b>`}</td>
+    return `<tr><td>${esc(n)}<small>${esc(d)}</small></td><td>${adm?`<input type="number" min="0" max="10" step="0.1" data-aw="${k}" value="${AW[k]}" aria-label="${esc(n)}">`:`<b>${k==='sw'||k==='sem'?'×':''}${fmtN(AW[k])}</b>`}</td>
       <td><span class="awv"><button type="button" data-awvote="${k}" data-dir="1" aria-pressed="${my===1}" ${dis}>👍 應該加 ${c.up||0}</button><button type="button" data-awvote="${k}" data-dir="-1" aria-pressed="${my===-1}" ${dis}>👎 應該減 ${c.down||0}</button></span></td></tr>`;}).join('');
   $('awAdmin').hidden=!adm;
   $('awMsg').textContent=!CLOUD?'離線版：顯示緊預設數值。':AWV.ok===false?'未設定：管理員要喺 Supabase SQL Editor 行一次 supabase/015_arrow_weights.sql（而家用緊預設數值）。':!SESSION?'登入之後就可以投票。':'';}
