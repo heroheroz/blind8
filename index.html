@@ -507,7 +507,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q5"><b>Q5 啟動之後</b>　字上面顯示紅色「啟動」，佢所有粘連線變斷線，粘連標籤劃走；原本嘅 ↓ 全部變做 ↑（見 Q8）。</li>
     <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：原局地支有粘連，而原局冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示；呢個選項只開畀進階用戶、高級用戶同管理員。</li>
     <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣加一個橙色 ↑：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到佢嘅陽刃地支（甲卯、丙午、戊午、庚酉、壬子），每見一個加一；③ 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一。三樣可以疊加，例如戊坐戌，盤上另外有兩個午、一個未：坐戌 1＋陽刃午 2＋土地支戌未 2＝↑5（坐住嘅戌都算同五行）。橙色 ↑ 只係表示力度，唔代表啟動，亦唔影響招感、粘連同啟動嘅計算。</li>
-    <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：啟動咗嘅字，↑ 數 = 啟動鏈層數 + 被破除嘅粘連數，↑ 越多激活程度越大；未啟動嘅字顯示 ↓，每條粘連一個，↓ 越多粘連程度越高。例如有兩條粘連嘅字被冇粘連嘅七殺啟動，就係 ↑3；冇粘連嘅字被同一個七殺啟動，就係 ↑1。</li>
+    <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：未啟動嘅字顯示 ↓，每條粘連一個，↓ 越多粘連程度越高；啟動咗之後，↓ 全部變做 ↑，↑ 越多激活程度越大；本身冇粘連嘅字啟動咗就係 ↑1。例如有三條粘連（↓3）嘅字被啟動，就係 ↑3；冇粘連嘅字被啟動，就係 ↑1。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
     <li id="r-w1"><b>W1 做功</b>　每個字剋一種五行（例如甲木剋土）。盤上嗰種五行嘅字（天干睇天干，地支睇地支本氣）如果有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
   </div>
@@ -952,7 +952,7 @@ function chainPaths(d,c1,c2){
   return (c1===c2?P(c1,4.5,'6 4'):P(c1,4.5,'6 14')+P(c2,4.5,'6 14',-10))+P('var(--paper)',1.6,'6 4');
 }
 const elOf=(k,ch)=>k?ZWX[zi(ch)]:gw(gi(ch));
-const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動</span><span><b class="actl">↑</b>啟動：每級啟動鏈一個，再加每條被破除嘅粘連一個（↑ 越多激活越大力）　<b class="actl dn">↓</b>未啟動：每條粘連一個（↓ 越多粘得越實）</span></div>`;
+const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動</span><span><b class="actl">↑</b>啟動：每條被破除嘅粘連一個，冇粘連就一個（↑ 越多激活越大力）　<b class="actl dn">↓</b>未啟動：每條粘連一個（↓ 越多粘得越實）</span></div>`;
 function chains(cols,k,virt){
   const n=k?12:10,chars=k?ZHI:GAN,out=[];
   const cs=cols.map((c,i)=>({i,gz:c.gz})).filter(c=>c.gz).map(c=>({i:c.i,v:chars.indexOf(c.gz[k])}));
@@ -1071,9 +1071,9 @@ function loopNote(){const t=[0,1].map(k=>S.act&&S.act[k]&&S.act[k].loop&&S.act[k
 function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,why:[]};if(!up&&!dn&&!pw.n)return '';
   const pwB='<b class="pw">↑</b>'.repeat(pw.n),pwT=pw.n?`　力度 ↑${pw.n}（${pw.why.join('，')}）`:'';
   // 招感殺星（Q6）去到招佢嘅字：↓ 變 ↑（同招感字被啟動一樣）
-  // 激活力度（Q8）：啟動咗嘅字，每條被沖刑害（七殺）破除嘅粘連都變一個 ↑，所以本身有粘連嘅字激活得大力過冇粘連嘅字；未啟動就係 ↓，↓ 越多粘得越實
-  if(up){const tip=`↑${up+dn}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${dn} 條粘連被破除，再加 ↑${dn}，激活更大力`:'；本身冇粘連'}）${pwT}`;
-    return `<span class="act" title="${tip}">${'<b>↑</b>'.repeat(up+dn)}${pwB}</span>`;}
+  // 激活力度（Q8）：啟動咗嘅字，每條被沖刑害（七殺）破除嘅粘連由 ↓ 變 ↑；本身冇粘連就係 ↑1。未啟動就係 ↓，↓ 越多粘得越實
+  if(up){const n=dn||1,tip=`↑${n}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${dn} 條粘連被破除，↓${dn} 變 ↑${dn}`:'；本身冇粘連，一般激活'}）${pwT}`;
+    return `<span class="act" title="${tip}">${'<b>↑</b>'.repeat(n)}${pwB}</span>`;}
   return `<span class="act" title="↓${dn}（${dn} 條粘連，未啟動）${pwT}">${pwB}${'<b class="dn">↓</b>'.repeat(dn)}</span>`;}
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
 function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.act[k][ci][0]>0;
