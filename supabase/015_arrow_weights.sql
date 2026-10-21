@@ -9,7 +9,7 @@ create table if not exists public.arrow_weights (
 );
 insert into public.arrow_weights (key, value) values
   ('fu', 1), ('he', 1), ('lian', 0.5), ('banhe', 0.5), ('sanhe', 1), ('zg', 0.5), ('zgb', 0.5),
-  ('chain', 1), ('cx', 1), ('se', 1), ('yr', 1), ('sw', 1.5)
+  ('chain', 1), ('cx', 1), ('se', 0.5), ('yr', 1), ('sw', 1.5)
 on conflict (key) do nothing;
 alter table public.arrow_weights enable row level security;
 drop policy if exists "read arrow weights" on public.arrow_weights;
