@@ -41,7 +41,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 h1{font-family:var(--f-display);font-weight:900;font-size:30px;margin:0;letter-spacing:.06em}
 header p{margin:0;color:var(--muted);font-size:13px}
-.pts{font-size:12px;font-weight:700;color:#b45309;white-space:nowrap}.lbt tr.me td{background:var(--soft);font-weight:700}
+.lbwhy{margin:0 0 6px;font-size:14px;line-height:1.6}.pts{font-size:12px;font-weight:700;color:#b45309;white-space:nowrap}.lbt tr.me td{background:var(--soft);font-weight:700}
 .gblist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .gblist li{border-top:1px solid var(--line);padding-top:10px}
 .gbreplies{list-style:none;margin:8px 0 4px 18px;padding:0 0 0 12px;border-left:3px solid var(--line);display:flex;flex-direction:column;gap:8px}
@@ -754,6 +754,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 </section>
 <section class="panel" id="lb" hidden>
   <h2>貢獻排行榜 <button type="button" class="lnk" data-lbreload>↻ 更新</button></h2>
+  <p class="lbwhy">點解要有貢獻分？我哋希望大家一齊將命例資料庫做得越嚟越齊全：多啲收集真實命例，再喺每個命例補充事件同筆記，令每個盤都有更多可以印證嘅資料。資料越充足，大家研究同驗證計法就越有根據。貢獻分係對每位出力嘅師兄師姐嘅一點回饋，亦可以用嚟換取進階功能。</p>
   <p class="hint">註冊咗就有 100 分。命例有 3 個或以上其他人撳「準」：+100，每個事件 +20（每個命例最多計 5 個；標籤唔加分）；喺其他人嘅命例撳準或唔準：每個命例 +10（每日最多計 5 個）；筆記有 3 個或以上其他人撳「準」：+30；留言版每條留言 +5（每日最多計 2 條）。用分：冇等級嘅功能可以用分換，每個盤每日扣一次（招感殺星 1 分、最強五行 2 分）。夠 3 個準之後有人撤回都唔扣分，命例或筆記刪咗先冇分。管理員唔上榜。</p>
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
