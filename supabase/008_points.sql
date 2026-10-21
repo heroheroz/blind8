@@ -1,13 +1,14 @@
--- 008：貢獻分。分數每次即時由現有資料計，唔會儲起，所以命例刪咗、投票改咗，分數會自動跟住變。
+-- 008：貢獻分。分數每次即時計。命例或者筆記一旦夠 3 個準，就記低（point_awards），之後有人撤回準都唔扣分；命例或者筆記刪咗先冇分。
 --   命例：有 3 個或以上其他人撳「準」，命例主人 +100；每個事件 +20（每個命例最多計 5 個）；標籤唔加分，免得有人亂加標籤
---   投票：喺唔屬於自己嘅命例撳準或者唔準，每個命例 +10（改票都係計一次，撤回唔計）
+--   投票：喺唔屬於自己嘅命例撳準或者唔準，每個命例 +10，每日（香港時間）最多計 5 個（改票都係計一次，撤回都唔扣）
+--   防假帳號：註冊未夠 7 日嘅帳號撳嘅準，唔計入命例同筆記嘅 3 個準
 --   筆記：一條筆記有 3 個或以上其他人撳「準」，寫筆記嘅人 +30
 --   留言版：每條留言（包括回覆）+5，每日（香港時間）最多計 2 條；刪咗嘅留言唔計
 -- 事件只有命例主人（同管理員）改得，所以計俾命例主人。
 -- 用分：等級本身有嘅功能唔扣分（進階用戶：招感殺星；高級用戶：招感殺星、最強五行；管理員：全部）。
 --   冇嗰個等級就用分換，每個盤（同一組出生資料）每日每個功能扣一次：招感殺星 10、最強五行 30、做功 50（做功除咗管理員人人都扣）。
 --   只可以經 spend_points() 扣，佢會檢查等級同分數夠唔夠，網頁冇得自己改。
--- 登入咗嘅用戶先睇到排行榜；唔會顯示電郵。要先行過 007_tiers.sql。Run once in the SQL Editor. Safe to run again.
+-- 登入咗嘅用戶先睇到排行榜；管理員唔上榜；唔會顯示電郵。要先行過 007_tiers.sql。Run once in the SQL Editor. Safe to run again.
 
 create table if not exists public.point_spends (
   id bigint generated always as identity primary key,
@@ -25,6 +26,66 @@ create policy "see own spends" on public.point_spends for select to authenticate
 revoke all on public.point_spends from anon, authenticated;
 grant select on public.point_spends to authenticated;
 
+-- 帳號註冊夠 7 日先計佢撳嘅準
+create or replace function public.voter_ok(u uuid) returns boolean
+language sql stable security definer set search_path = public
+as $$ select exists (select 1 from auth.users where id = u and created_at <= now() - interval '7 days') $$;
+revoke execute on function public.voter_ok(uuid) from public, anon, authenticated;
+
+-- 夠 3 個準嘅命例同筆記記低喺度，撤回準都唔會刪
+create table if not exists public.point_awards (
+  kind text not null check (kind in ('case', 'note')),
+  ref uuid not null,
+  created_at timestamptz not null default now(),
+  primary key (kind, ref)
+);
+alter table public.point_awards enable row level security;
+revoke all on public.point_awards from anon, authenticated;
+-- 命例或者筆記刪咗就連記錄一齊刪
+create or replace function public.award_gc() returns trigger
+language plpgsql security definer set search_path = public
+as $$ begin
+  delete from public.point_awards where kind = tg_argv[0] and ref = old.id; return old;
+end $$;
+drop trigger if exists award_gc on public.cases;
+create trigger award_gc after delete on public.cases for each row execute function public.award_gc('case');
+drop trigger if exists award_gc on public.comments;
+create trigger award_gc after delete on public.comments for each row execute function public.award_gc('note');
+
+create or replace function public.award_case_trg() returns trigger
+language plpgsql security definer set search_path = public
+as $$ begin
+  if new.vote = 1 and (select count(*) from public.votes v join public.cases c on c.id = v.case_id
+                       where v.case_id = new.case_id and v.vote = 1 and v.voter <> c.owner and public.voter_ok(v.voter)) >= 3 then
+    insert into public.point_awards (kind, ref) values ('case', new.case_id) on conflict do nothing;
+  end if;
+  return new;
+end $$;
+drop trigger if exists award on public.votes;
+create trigger award after insert or update on public.votes for each row execute function public.award_case_trg();
+
+create or replace function public.award_note_trg() returns trigger
+language plpgsql security definer set search_path = public
+as $$ begin
+  if new.vote = 1 and (select count(*) from public.comment_votes x join public.comments m on m.id = x.comment_id
+                       where x.comment_id = new.comment_id and x.vote = 1 and x.voter <> m.author and public.voter_ok(x.voter)) >= 3 then
+    insert into public.point_awards (kind, ref) values ('note', new.comment_id) on conflict do nothing;
+  end if;
+  return new;
+end $$;
+drop trigger if exists award on public.comment_votes;
+create trigger award after insert or update on public.comment_votes for each row execute function public.award_note_trg();
+
+-- 行呢個檔之前已經夠 3 個準嘅都補記
+insert into public.point_awards (kind, ref)
+  select 'case', c.id from public.cases c
+  where (select count(*) from public.votes v where v.case_id = c.id and v.vote = 1 and v.voter <> c.owner and public.voter_ok(v.voter)) >= 3
+  on conflict do nothing;
+insert into public.point_awards (kind, ref)
+  select 'note', m.id from public.comments m
+  where (select count(*) from public.comment_votes x where x.comment_id = m.id and x.vote = 1 and x.voter <> m.author and public.voter_ok(x.voter)) >= 3
+  on conflict do nothing;
+
 drop function if exists public.points_board();
 
 create or replace function public.points_board() returns table (
@@ -36,13 +97,17 @@ as $$
            least(case when jsonb_typeof(c.input->'events') = 'array' then jsonb_array_length(c.input->'events') else 0 end, 5) as ne
     from public.cases c
     where c.owner is not null
-      and (select count(*) from public.votes v where v.case_id = c.id and v.vote = 1 and v.voter <> c.owner) >= 3),
+      and (exists (select 1 from public.point_awards a where a.kind = 'case' and a.ref = c.id)
+           or (select count(*) from public.votes v where v.case_id = c.id and v.vote = 1 and v.voter <> c.owner and public.voter_ok(v.voter)) >= 3)),
   cs as (select u, count(*) as n, sum(nt) as t, sum(ne) as e from ok group by u),
-  cv as (select v.voter as u, count(*) as n from public.votes v join public.cases c on c.id = v.case_id
-         where v.vote <> 0 and v.voter is distinct from c.owner group by v.voter),
+  cv as (select u, sum(least(n, 5)) as n from (
+           select v.voter as u, (v.created_at at time zone 'Asia/Hong_Kong')::date as d, count(*) as n
+           from public.votes v join public.cases c on c.id = v.case_id
+           where v.voter is distinct from c.owner group by 1, 2) x group by u),
   nv as (select m.author as u, count(*) as n from public.comments m
          where m.author is not null
-           and (select count(*) from public.comment_votes x where x.comment_id = m.id and x.vote = 1 and x.voter <> m.author) >= 3
+           and (exists (select 1 from public.point_awards a where a.kind = 'note' and a.ref = m.id)
+                or (select count(*) from public.comment_votes x where x.comment_id = m.id and x.vote = 1 and x.voter <> m.author and public.voter_ok(x.voter)) >= 3)
          group by m.author),
   gb as (select u, sum(least(n, 2)) as n from (
            select g.author as u, (g.created_at at time zone 'Asia/Hong_Kong')::date as d, count(*) as n
@@ -63,6 +128,7 @@ as $$
   left join gb on gb.u = us.u
   left join sp on sp.u = us.u
   left join auth.users au on au.id = us.u
+  where not exists (select 1 from public.admins a where a.user_id = us.u)
   order by 3 desc, 2
 $$;
 revoke execute on function public.points_board() from public, anon;

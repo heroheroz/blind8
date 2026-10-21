@@ -754,7 +754,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 </section>
 <section class="panel" id="lb" hidden>
   <h2>貢獻排行榜 <button type="button" class="lnk" data-lbreload>↻ 更新</button></h2>
-  <p class="hint">命例有 3 個或以上其他人撳「準」：+100，每個事件 +20（每個命例最多計 5 個；標籤唔加分）；喺其他人嘅命例撳準或唔準：每個命例 +10；筆記有 3 個或以上其他人撳「準」：+30；留言版每條留言 +5（每日最多計 2 條）。用分：冇等級嘅功能可以用分換，每個盤每日扣一次（招感殺星 10 分、最強五行 30 分）。分數即時計，命例刪咗或者投票改咗會跟住變。</p>
+  <p class="hint">命例有 3 個或以上其他人撳「準」：+100，每個事件 +20（每個命例最多計 5 個；標籤唔加分）；喺其他人嘅命例撳準或唔準：每個命例 +10（每日最多計 5 個）；筆記有 3 個或以上其他人撳「準」：+30；留言版每條留言 +5（每日最多計 2 條）。用分：冇等級嘅功能可以用分換，每個盤每日扣一次（招感殺星 10 分、最強五行 30 分）。註冊未夠 7 日嘅帳號撳嘅準唔計入 3 個準。夠 3 個準之後有人撤回都唔扣分，命例或筆記刪咗先冇分。管理員唔上榜。</p>
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
 </section>
@@ -1482,7 +1482,7 @@ async function loadPoints(){PT.loaded=true;
   catch(e){PT.rows=null;PT.err=/points_board|42883|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/008_points.sql。':'載入唔到：'+e.message;}
   drawPoints();renderAuthPts();}
 function myPts(){if(!SESSION||!PT.rows)return null;const r=PT.rows.find(x=>x.user_id===SESSION.user.id);return r?r.points:0;}
-function ptTag(){const n=myPts();return n==null?'':`<span class="pts" title="貢獻分（睇「貢獻排行榜」）">⭐ ${n} 分</span>`;}
+function ptTag(){if(ADMIN)return '';const n=myPts();return n==null?'':`<span class="pts" title="貢獻分（睇「貢獻排行榜」）">⭐ ${n} 分</span>`;}
 function renderAuthPts(){document.querySelectorAll('[data-pts]').forEach(e=>e.innerHTML=ptTag());}
 function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSION);if(box.hidden)return;
   $('lbMsg').textContent=PT.err;const rows=(PT.rows||[]).filter(r=>r.points>0).slice(0,30);
