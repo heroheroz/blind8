@@ -315,7 +315,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   body[data-mtab]:not([data-mtab=in]) header,body[data-mtab]:not([data-mtab=in]) #inPanel,body[data-mtab]:not([data-mtab=in]) .mguide{display:none!important}
   body[data-mtab]:not([data-mtab=chart]):not([data-mtab=rel]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
   body[data-mtab=chart] #relBox,body[data-mtab=rel] #out>:not(#relBox){display:none!important}
-  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=more]) #aw,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
+  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=calc]) #aw,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
   .layout{display:block}
   .mguide:not([hidden]){display:block;position:relative;font-size:15px;line-height:1.65;background:var(--paper);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;margin:0 0 12px}
   .mguide h2{font-size:18px;margin:0 0 6px}.mguide ol{margin:0;padding-left:22px}.mguide li{margin:4px 0}
@@ -496,6 +496,13 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <section id="caseNote" class="panel casenote" hidden></section>
 <div id="out" class="wrap" style="gap:18px"></div>
 
+<section class="panel fold" id="aw" data-sec="aw">
+  <h2 class="foldh">箭咀力度 <span class="hint">（大家一齊完善）</span></h2>
+  <p class="lbwhy">💡 <b>理念</b>：做功同粘連嘅力度點計，冇一個絕對嘅答案。我希望師兄師姐一齊參與，用大家手上嘅命例去印證，一齊完善做功力度嘅計法。下面每個數值都係而家盤上用緊嘅箭咀數（1 = 一個大箭咀，0.5 = 一個細箭咀）。覺得某個數應該大啲就撳 👍 應該加，細啲就撳 👎 應該減；登入咗先投到，每人每項一票，再撳一次就取消。管理員會參考大家嘅投票調整。</p>
+  <p class="hint" id="awMsg"></p>
+  <div class="auwrap"><table class="audit awt"><thead><tr><th>項目</th><th>箭咀</th><th>意見</th></tr></thead><tbody id="awList"></tbody></table></div>
+  <div class="row" id="awAdmin" hidden><button type="button" class="pri" data-awsave>儲存箭咀力度</button><span class="hint" id="awSaveMsg"></span></div>
+</section>
 <section class="panel notes fold folded" data-sec="calc">
   <h2 class="foldh">計法說明 · 盲派八字摘要 · 八字口訣</h2>
   <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="calc" checked>計法說明</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="kj">八字口訣</label></div>
@@ -806,13 +813,6 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   </div>
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
-</section>
-<section class="panel fold folded" id="aw" data-sec="aw">
-  <h2 class="foldh">箭咀力度 <span class="hint">（大家一齊完善）</span></h2>
-  <p class="lbwhy">💡 <b>理念</b>：做功同粘連嘅力度點計，冇一個絕對嘅答案。我希望師兄師姐一齊參與，用大家手上嘅命例去印證，一齊完善做功力度嘅計法。下面每個數值都係而家盤上用緊嘅箭咀數（1 = 一個大箭咀，0.5 = 一個細箭咀）。覺得某個數應該大啲就撳 👍 應該加，細啲就撳 👎 應該減；登入咗先投到，每人每項一票，再撳一次就取消。管理員會參考大家嘅投票調整。</p>
-  <p class="hint" id="awMsg"></p>
-  <div class="auwrap"><table class="audit awt"><thead><tr><th>項目</th><th>箭咀</th><th>意見</th></tr></thead><tbody id="awList"></tbody></table></div>
-  <div class="row" id="awAdmin" hidden><button type="button" class="pri" data-awsave>儲存箭咀力度</button><span class="hint" id="awSaveMsg"></span></div>
 </section>
 <section class="panel" id="gb">
   <h2>留言版</h2>
@@ -1675,7 +1675,7 @@ function ptFx(n,label,big){if(!(n>0))return;let el=$('ptFx');if(el)el.remove();e
   document.querySelectorAll('.pts').forEach(p=>{p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump');});}
 function myPts(){if(!SESSION||!PT.rows)return null;const r=PT.rows.find(x=>x.user_id===SESSION.user.id);return r?r.points:0;}
 // 招感、計法說明、貢獻排行榜：電腦版撳標題打開／收埋，每次開網預設收埋（手機版係獨立分頁，唔受影響）
-const SECF={};
+const SECF={aw:true};
 function applySec(){document.querySelectorAll('[data-sec]').forEach(el=>el.classList.toggle('folded',!SECF[el.dataset.sec]));}
 document.addEventListener('click',e=>{const h=e.target.closest('.foldh');if(!h||e.target.closest('button,a,input,select'))return;const el=h.closest('[data-sec]');if(!el)return;
   SECF[el.dataset.sec]=!SECF[el.dataset.sec];applySec();});
