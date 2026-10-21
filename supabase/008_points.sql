@@ -1,7 +1,7 @@
 -- 008：貢獻分。分數每次即時計。命例或者筆記一旦夠 3 個準，就記低（point_awards），之後有人撤回準都唔扣分；命例或者筆記刪咗先冇分。
 --   命例：有 3 個或以上其他人撳「準」，命例主人 +100；每個事件 +20（每個命例最多計 5 個）；標籤唔加分，免得有人亂加標籤
 --   投票：喺唔屬於自己嘅命例撳準或者唔準，每個命例 +10，每日（香港時間）最多計 5 個（改票都係計一次，撤回都唔扣）
---   防假帳號：註冊未夠 7 日嘅帳號撳嘅準，唔計入命例同筆記嘅 3 個準
+--   防假帳號（暫時閂咗）：將 voter_ok 入面嘅 0 days 改做 7 days，註冊未夠 7 日嘅帳號撳嘅準就唔計入 3 個準
 --   筆記：一條筆記有 3 個或以上其他人撳「準」，寫筆記嘅人 +30
 --   留言版：每條留言（包括回覆）+5，每日（香港時間）最多計 2 條；刪咗嘅留言唔計
 -- 事件只有命例主人（同管理員）改得，所以計俾命例主人。
@@ -26,10 +26,10 @@ create policy "see own spends" on public.point_spends for select to authenticate
 revoke all on public.point_spends from anon, authenticated;
 grant select on public.point_spends to authenticated;
 
--- 帳號註冊夠 7 日先計佢撳嘅準
+-- 帳號註冊夠幾多日先計佢撳嘅準；而家係 0（即係全部都計），用戶多咗之後可以改做 7
 create or replace function public.voter_ok(u uuid) returns boolean
 language sql stable security definer set search_path = public
-as $$ select exists (select 1 from auth.users where id = u and created_at <= now() - interval '7 days') $$;
+as $$ select exists (select 1 from auth.users where id = u and created_at <= now() - interval '0 days') $$;
 revoke execute on function public.voter_ok(uuid) from public, anon, authenticated;
 
 -- 夠 3 個準嘅命例同筆記記低喺度，撤回準都唔會刪
