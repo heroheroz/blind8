@@ -1215,6 +1215,11 @@ function tipPop(cell,x,y){let el=$('tipPop');if(!el){el=document.createElement('
   const place=()=>{wxColor(el);el.hidden=false;el._y=scrollY;const w=el.offsetWidth,hh=el.offsetHeight,vw=innerWidth,vh=innerHeight;
     el.style.left=Math.max(12,Math.min(x-w/2,vw-w-12))+'px';el.style.top=(y+16+hh>vh-8?Math.max(8,y-hh-16):y+16)+'px';popIn(el,x,y);};
   const close='<button type="button" class="x" aria-label="閂">×</button>';
+  // 招殺星：一格可以有幾個字，逐個字彈；講邊個字招佢、啟動咗邊個（電腦版指住都睇到）
+  if(cell.classList.contains('shabox')){const ch=cell.querySelector('.ch').textContent,k=cell.closest('tr').classList.contains('ganrow')?'天干':'地支';
+    const ls=[...cell.querySelectorAll('.tiny')].map(e=>{const t=e.textContent.trim(),tt=(e.title||'').trim();return tt&&!t.replace(/→/g,'').includes(tt)?`${t}（${tt}）`:t;}).filter(Boolean);
+    el.innerHTML=`${close}<b class="tt">招殺星${k} ${esc(ch)}</b>`+sec('招殺星同啟動',ls.length?ls:['未啟動任何字'])+sec('規則',[k==='天干'?'天干有粘連而盤上冇佢嘅七殺，就招一個七殺，由右至左行去啟動佢；途中被合住或者擋走就啟動唔到（規則 Q6）':'地支有粘連而盤上冇字沖害刑佢，就招佢嘅沖，由右至左行去啟動佢；途中被合住或者擋走就啟動唔到（規則 Q6）']);
+    place();return;}
   // 招感字：講佢點樣招出嚟、有幾多個重字、啟動咗未
   if(cell.classList.contains('zg')){const k=+cell.dataset.zg.split('-')[0],ch=cell.firstChild.textContent,tag=(cell.querySelector('i')||{}).textContent||'',nn=(cell.querySelector('.zgn')||{}).textContent||'';
     const acts=[...cell.querySelectorAll('.act[title]')].flatMap(e=>e.title.split('　')).map(t=>t.trim()).filter(Boolean);
@@ -1246,7 +1251,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.vb,[data-swv],[
   const t=setInterval(()=>{const x=document.querySelector(sel);if(x&&x!==b){bump(x);clearInterval(t);}else if(++n>40)clearInterval(t);},50);},true);
 document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;if(e.target.closest('.cell .tk,.swtag'))return;
   if(pop&&!pop.hidden&&(e.target.closest('#tipPop .x')||!e.target.closest('#tipPop'))){pop.hidden=true;if(e.target.closest('#tipPop .x'))return;}
-  const b=e.target.closest('.chart tr.ganrow .big,.chart tr.zhirow .big,.chart .zg');if(!b)return;const td=b.classList.contains('zg')?b:b.closest('td');
+  const b=e.target.closest('.chart tr.ganrow .big,.chart tr.zhirow .big,.chart .zg');if(!b)return;const td=b.classList.contains('zg')?b:(b.closest('.shabox')||b.closest('td'));
   // 再撳同一個字就收返
   if(pop&&pop._cell===td&&pop._was){pop._cell=null;return;}
   tipPop(td,e.clientX,e.clientY);$('tipPop')._cell=td;});
