@@ -1,4 +1,4 @@
--- 010：用分再改平（要先行過 009_points_v2.sql）：招感殺星 1 分、最強五行 2 分、做功 4 分。Run once in the SQL Editor. Safe to run again.
+-- 010：用分再改平（要先行過 009_points_v2.sql）：招感殺星 1 分、最強五行 2 分、做功 3 分。Run once in the SQL Editor. Safe to run again.
 
 -- 用分開功能。今日同一個盤開過就唔再扣。回覆 {ok, charged, cost, balance, reason}
 create or replace function public.spend_points(p_kind text, p_chart text) returns jsonb
@@ -6,7 +6,7 @@ language plpgsql volatile security definer set search_path = public
 as $$
 declare
   uid uuid := auth.uid();
-  c int := case p_kind when 'sha' then 1 when 'sw' then 2 when 'work' then 4 end;
+  c int := case p_kind when 'sha' then 1 when 'sw' then 2 when 'work' then 3 end;
   t text;
   bal int;
   today date := (now() at time zone 'Asia/Hong_Kong')::date;

@@ -6,7 +6,7 @@
 --   留言版：每條留言（包括回覆）+5，每日（香港時間）最多計 2 條；刪咗嘅留言唔計
 -- 事件只有命例主人（同管理員）改得，所以計俾命例主人。
 -- 用分：等級本身有嘅功能唔扣分（進階用戶：招感殺星；高級用戶：招感殺星、最強五行；管理員：全部）。
---   冇嗰個等級就用分換，每個盤（同一組出生資料）每日每個功能扣一次：招感殺星 1、最強五行 2、做功 4（做功除咗管理員人人都扣）。
+--   冇嗰個等級就用分換，每個盤（同一組出生資料）每日每個功能扣一次：招感殺星 1、最強五行 2、做功 3（做功除咗管理員人人都扣）。
 --   只可以經 spend_points() 扣，佢會檢查等級同分數夠唔夠，網頁冇得自己改。
 -- 登入咗嘅用戶先睇到排行榜；管理員唔上榜；唔會顯示電郵。要先行過 007_tiers.sql。Run once in the SQL Editor. Safe to run again.
 
@@ -140,7 +140,7 @@ language plpgsql volatile security definer set search_path = public
 as $$
 declare
   uid uuid := auth.uid();
-  c int := case p_kind when 'sha' then 1 when 'sw' then 2 when 'work' then 4 end;
+  c int := case p_kind when 'sha' then 1 when 'sw' then 2 when 'work' then 3 end;
   t text;
   bal int;
   today date := (now() at time zone 'Asia/Hong_Kong')::date;
