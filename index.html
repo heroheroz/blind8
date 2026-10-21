@@ -67,6 +67,7 @@ header .credit a:hover{color:var(--accent)}
 .zhbtn{align-self:center;display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;padding:0;background:var(--paper);cursor:pointer;font:inherit}
 .zhbtn span{padding:3px 10px;font-size:14px;color:var(--muted)}
 .zhbtn span.on{background:var(--accent);color:var(--paper)}
+#darkBtn{margin-left:-8px}
 header .credit{margin-left:auto;font-size:17px;font-weight:700;color:var(--ink);letter-spacing:.02em}
 h2{font-family:var(--f-display);font-size:18px;margin:0 0 10px;font-weight:700;letter-spacing:.04em}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
@@ -376,6 +377,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <p>測試中，希望師兄師姐多多支持</p>
   <p class="credit">Inspired by <a href="https://www.youtube.com/@%E9%9A%B1%E5%A7%93%E5%9F%8B%E5%90%8D%E8%AB%87%E8%A1%93%E6%95%B8" target="_blank" rel="noopener">隱姓師父</a> &amp; <a href="https://www.youtube.com/@toneming" target="_blank" rel="noopener">通明師兄</a></p>
   <button type="button" id="zhBtn" class="zhbtn" data-nozh aria-label="繁簡轉換" title="繁簡轉換"><span class="t on">繁</span><span class="s">简</span></button>
+  <button type="button" id="darkBtn" class="zhbtn" data-nozh aria-label="深色模式" title="深色模式開／關"><span class="lt">☀</span><span class="dk">☾</span></button>
 </header>
 
 <div class="mguide" id="mGuide" hidden>
@@ -508,6 +510,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
     <li id="r-q6"><b>Q6 招感殺星</b>　原局（年月日時）天干有粘連，而原局冇佢嘅七殺，就會自動招一個七殺（殺星），擺喺流日右邊嘅「招殺星」欄。殺星由右至左行：流日 → 流月 → 流年 → 大運 → 元運 → 年柱 → 月柱 → 日柱 → 時柱，一路行到招佢嗰個字。途中如果有字同殺星五合，就係「合住」；有字係殺星嘅七殺，就係「擋走」，殺星就去唔到、啟動唔到。不過如果嗰個阻擋字本身已經被啟動，殺星可以行過佢繼續行。殺星去到目的地，就啟動招佢嘅字（算一層，Q3 照加），嗰個字嘅 ↓ 變 ↑。例如原局甲有粘連、冇庚，招庚；年干乙合住庚，或者月干丙擋走庚，甲就啟動唔到。地支一樣：原局地支有粘連，而原局冇字同佢相沖、相害或者相刑，就招佢嘅沖（例如子招午）；途中有字六合殺星就「合住」，有字沖殺星就「沖走」，已啟動嘅照樣行得過。顯示選項「招感殺星」預設閂住，開咗先計同顯示；呢個選項只開畀進階用戶、高級用戶同管理員。</li>
     <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣加一個橙色箭咀：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到佢嘅陽刃地支（甲卯、丙午、戊午、庚酉、壬子），每見一個加一；③ 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加一。三樣可以疊加，例如戊坐戌，盤上另外有兩個午、一個未：坐戌 1＋陽刃午 2＋土地支戌未 2＝↑5（坐住嘅戌都算同五行）。箭咀方向跟住個字嘅狀態：已經啟動，力度加做橙色 ↑，激活更大力；有粘連但未啟動，力度加做橙色 ↓，粘得更實；冇粘連又未啟動，照顯示橙色 ↑。魁罡（庚辰、庚戌、壬辰、戊戌）都係坐辰戌，已經計咗 ①。力度箭咀唔改變啟動與否，亦唔影響招感、粘連同啟動嘅計算。</li>
     <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：未啟動嘅字顯示 ↓，每條粘連一個，↓ 越多粘連程度越高；啟動咗之後，↓ 全部變做 ↑，↑ 越多激活程度越大；本身冇粘連嘅字啟動咗就係 ↑1。啟動鏈（Q3）第一層係基本，之後每多一層再加一個 ↑，例如 3 條粘連嘅字經兩層鏈先被啟動（七殺本身都係被人啟動），就係 ↑4。啟動只會係 ↑。天干再加 Q7 嘅力度箭咀（橙色），啟動咗加 ↑，未啟動粘住加 ↓。例如有三條粘連（↓3）嘅字被冇粘連嘅七殺直接啟動，就係 ↑3；冇粘連嘅字被啟動，就係 ↑1。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
+    <li id="r-s1"><b>S1 最強五行（推測）</b>　只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），最強五行就係命宮地支嘅五行，計完。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局沖、刑或害，但未被啟動，天干陰陽倒轉，例如丁變丙。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例推出嚟，五行 25 個全中，有寫天干嘅 14 個全中；①③④ 係睇住呢批命例調出嚟，① 只有一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。</li>
     <li id="r-w1"><b>W1 做功</b>　每個字剋一種五行（例如甲木剋土）。盤上嗰種五行嘅字（天干睇天干，地支睇地支本氣）如果有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
   </div>
@@ -1162,6 +1165,35 @@ function mingGong(lun,ec){
   let g=(lun.getYearGanIndexExact()+1)*2+off;while(g>10)g-=10;
   return '甲乙丙丁戊己庚辛壬癸'[g-1]+MZ[off-1];
 }
+// 最強五行（推測，規則 S1）：只用原局四柱計（唔計大運流年、三桓），25 個命例推出嚟
+// 1. 命宮地支沖原局地支，而命宮天干同原局天干冇七殺相剋（唔係天剋地沖），就用命宮地支五行
+// 2. 日主要做功（日主所剋五行嘅天干有粘連或伏吟）取人元司令嘅正印，唔使做功取月令本氣嘅正印
+// 3. 日支被原局沖刑害但未啟動，陰陽倒轉　4. 正印五行同日主一樣，就取日主天干
+const BENQI='癸己甲乙戊丙丁己庚辛戊壬';
+function strongest(P,mg,slG){
+  const pair=(a,b,l)=>l.some(x=>x===a+b||x===b+a);
+  const CHONG=['子午','丑未','寅申','卯酉','辰戌','巳亥'],XH=['子未','丑午','寅巳','卯辰','申亥','酉戌','巳申','申寅','丑戌','戌未','未丑','子卯'];
+  const kill=(a,b)=>(gw(gi(a))+2)%5===gw(gi(b))&&gi(a)%2===gi(b)%2;
+  const zyin=g=>GAN[((gw(gi(g))+4)%5)*2+(1-gi(g)%2)];
+  const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2],dm:true},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}];
+  const steps=[];
+  const cz=c4.filter(c=>pair(mg[1],c.gz[1],CHONG)),sk=c4.filter(c=>kill(mg[0],c.gz[0])||kill(c.gz[0],mg[0]));
+  if(cz.length&&!sk.length){const e=ZWX[zi(mg[1])];
+    return {el:e,g:null,why:`命宮${mg}地支${mg[1]}沖${cz.map(c=>c.h[0]+'支'+c.gz[1]).join('、')}，命宮天干${mg[0]}同原局天干冇相剋（唔係天剋地沖），用命宮五行${WX[e]}`};}
+  if(cz.length)steps.push(`命宮${mg}沖原局但係天剋地沖（${sk.map(c=>c.h[0]+'干'+c.gz[0]).join('、')}），唔用命宮`);
+  const zc=c4.map(c=>({gz:c.gz,dyn:false,lbl:c.h[0]})),ZG4=zhaogan(zc),L=[0,1].map(k=>chains(c4,k,k?ZG4.br:ZG4.st));
+  const lk=i=>L[0].filter(l=>l.a===i||l.b===i).length;
+  const dm=P[2][0],t=(gw(gi(dm))+2)%5,wk=c4.map((c,i)=>i).filter(i=>gw(gi(c4[i].gz[0]))===t&&lk(i)>0);
+  let g;
+  if(wk.length){g=zyin(slG);steps.push(`日主${dm}所剋嘅${wk.map(i=>c4[i].h[0]+'干'+c4[i].gz[0]).join('、')}有粘連或伏吟，日主要做功，取人元司令${slG}嘅正印${g}`);}
+  else{const bq=BENQI[zi(P[1][1])];g=zyin(bq);steps.push(`日主${dm}唔使做功，取月令${P[1][1]}本氣${bq}嘅正印${g}`);}
+  const dz=P[2][1],att=c4.filter(c=>!c.dm&&c.gz[1]!==dz&&(pair(dz,c.gz[1],CHONG)||pair(dz,c.gz[1],XH)));
+  if(att.length){const a1=activation(c4,1,L[1],ZG4.br,[]);
+    if(!a1[1][0]){g=GAN[gi(g)^1];steps.push(`日支${dz}被${att.map(c=>c.h[0]+'支'+c.gz[1]).join('、')}沖刑害但未啟動，陰陽倒轉變${g}`);}
+    else steps.push(`日支${dz}被沖刑害而且已啟動，唔倒轉`);}
+  if(gw(gi(g))===gw(gi(dm))&&g!==dm){steps.push(`${g}同日主${dm}同五行，取日主${dm}`);g=dm;}
+  return {el:gw(gi(g)),g,why:steps.join('；')};
+}
 function render(){
   const {inp,c,sol,lun,ec,yun,dys,P,dm}=S;
   const today=refDay().toYmd();
@@ -1205,6 +1237,7 @@ function render(){
   }
   // 招感殺星（Q6）：擺喺最右邊（流日右邊），本身唔參與招感粘連，只負責啟動招佢嘅字
   S.shaOk=can.sha();if(VIEW.sha&&!S.shaOk)VIEW.sha=false;
+  S.swOk=can.sw();{const li=document.getElementById('r-s1');if(li)li.hidden=!S.swOk;}
   if(VIEW.sha)cols.push({h:'招殺星',sub:'原局冇七殺',gz:null,sha:true});
   const N=cols.length;
   // 元運柱同三桓命宮柱預設唔參與招感同粘連，只係顯示
@@ -1272,7 +1305,7 @@ function render(){
   const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
   const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
   let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
-  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`;
+  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swOk?'':(sw=>`<span class="bg${sw.el} w${sw.el}" title="${sw.why}（規則 S1，推測）">最強五行（推測） ${sw.g||''}${WX[sw.el]}</span>`)(strongest(P,mingGong(lun,ec),slG)));
   const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
@@ -1443,7 +1476,9 @@ const myName=()=>CLOUD?(SESSION&&(SESSION.user.name||SESSION.user.email))||'':'�
 // 權限：本機模式乜都做得；雲端模式要登入先加得，自己加嘅自己改同刪，管理員改同刪任何命例
 const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN,
   // 招感殺星：只限進階用戶、高級用戶同管理員（本機模式照開）
-  sha:()=>!CLOUD||ADMIN||TIER==='advance'||TIER==='premium'};
+  sha:()=>!CLOUD||ADMIN||TIER==='advance'||TIER==='premium',
+  // 最強五行（推測，規則 S1）：淨係高級用戶同管理員先睇到
+  sw:()=>!CLOUD||ADMIN||TIER==='premium'};
 
 const Store={
   async list(){
@@ -1590,7 +1625,7 @@ $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],
 $('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun',e.target.value);}catch(x){}}if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,AU.p+ +b.dataset.aupage);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
 function renderAuth(){
-  const shaOk=can.sha();if(!shaOk)VIEW.sha=false;if(S&&S.dys&&S.shaOk!==shaOk)render();
+  const shaOk=can.sha();if(!shaOk)VIEW.sha=false;if(S&&S.dys&&(S.shaOk!==shaOk||S.swOk!==can.sw()))render();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
   $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();}else if(!ADMIN)AU.loaded=false;
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
@@ -1885,6 +1920,12 @@ function zhApply(on){
   else{if(ZH.obs)ZH.obs.disconnect();
     for(const [n,o] of ZH.orig){if(!n.isConnected)continue;if(typeof o==='string')n.nodeValue=o;else for(const a in o)n.setAttribute(a,o[a]);}
     ZH.orig.clear();document.title='盲派八字排盤';}}
+// 深色模式：右上角掣喺淺色同深色之間轉；冇揀過就跟系統設定，揀咗就記低喺呢部機
+const THEME={get dark(){const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;}};
+function themeBtn(){const b=document.getElementById('darkBtn'),d=THEME.dark;b.querySelector('.lt').classList.toggle('on',!d);b.querySelector('.dk').classList.toggle('on',d);b.setAttribute('aria-pressed',d);}
+try{const t=localStorage.getItem('b8theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}
+themeBtn();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',themeBtn);
+document.getElementById('darkBtn').addEventListener('click',()=>{const t=THEME.dark?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('b8theme',t);}catch(e){}themeBtn();});
 document.getElementById('zhBtn').addEventListener('click',()=>{if(ZH.on)zhApply(false);else zhLoad().then(()=>zhApply(true)).catch(e=>alert(e.message));});
 try{if(localStorage.getItem('b8-zh')==='cn')zhLoad().then(()=>zhApply(true)).catch(()=>{});}catch(e){}
 
