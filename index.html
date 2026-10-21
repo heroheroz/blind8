@@ -201,6 +201,7 @@ td.chain{position:relative;overflow:visible}
 .rules li b{color:var(--ink);margin-right:4px}
 .notes p{margin:0 0 4px}
 .ntabs{margin-bottom:10px}
+body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj{display:none}
 .sifu{font-size:14px;color:var(--ink);line-height:1.7;max-width:900px}
 .sifu h3{margin:0 0 6px;font-size:18px}
@@ -1477,7 +1478,7 @@ const myName=()=>CLOUD?(SESSION&&(SESSION.user.name||SESSION.user.email))||'':'�
 const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN,
   // 招感殺星：只限進階用戶、高級用戶同管理員（本機模式照開）
   sha:()=>!CLOUD||ADMIN||TIER==='advance'||TIER==='premium',
-  // 最強五行（推測，規則 S1）：淨係高級用戶同管理員先睇到
+  // 最強五行（推測，規則 S1）：結果同 S1 說明淨係高級用戶同管理員先睇到
   sw:()=>!CLOUD||ADMIN||TIER==='premium'};
 
 const Store={
@@ -1624,7 +1625,10 @@ $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],
   const v=US.rows[+b.dataset.usopen].input;writeForm(v);run(v);mTab('chart');$('out').scrollIntoView({block:'start'});});
 $('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun',e.target.value);}catch(x){}}if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,AU.p+ +b.dataset.aupage);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
-function renderAuth(){
+// 計法說明：淨係進階用戶、高級用戶同管理員先睇到（跟 can.sha）；普通用戶同未登入就收埋，自動轉去「盲派八字摘要」
+function calcVis(){const ok=can.sha();document.body.classList.toggle('nocalc',!ok);
+  const c=document.querySelector('input[name=ntab][value=calc]');if(!ok&&c&&c.checked){const s=document.querySelector('input[name=ntab][value=sifu]');if(s)s.checked=true;}}
+function renderAuth(){calcVis();
   const shaOk=can.sha();if(!shaOk)VIEW.sha=false;if(S&&S.dys&&(S.shaOk!==shaOk||S.swOk!==can.sw()))render();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
   $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();}else if(!ADMIN)AU.loaded=false;
