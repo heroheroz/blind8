@@ -179,6 +179,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .lvl{display:flex;flex-direction:column;gap:6px}
 .lvl+.lvl{margin-top:14px}
 .swtag{cursor:pointer}
+#tipPop .wxc{font-weight:600}
 .tkopt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:10px;font-size:13px}.tkopt .cap{color:var(--muted)}
 .lvl h3{margin:0;font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.08em}
 .rels{display:flex;flex-direction:column;gap:6px;font-size:14px}
@@ -1135,11 +1136,18 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&
   if(!dn)return ex?`<span class="act" title="${pwT.trim()}">${U(ex)}</span>`:'';
   return `<span class="act" title="↓${dn+ex}（${dn} 條粘連，未啟動）${pwT}">${D(dn+ex)}</span>`;}
 // 撳天干／地支／招感字：彈出點樣啟動、箭咀點計、做功同粘連（電腦同手機都得；電腦版滑鼠提示照舊）
+// 彈框入面嘅天干、地支同五行字加返五行顏色（「自己」、「未啟動」、「子女」呢類唔係干支嘅字唔變色）
+const WXRE=/(?<!自)己|未(?![啟被起有解開確])|子(?!女)|[甲乙丙丁戊庚辛壬癸丑寅卯辰巳午申酉戌亥木火土金水]/g;
+function wxColor(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())if(!w.currentNode.parentElement.closest('.x,.wxc'))ns.push(w.currentNode);
+  ns.forEach(n=>{const t=n.nodeValue;WXRE.lastIndex=0;if(!WXRE.test(t))return;WXRE.lastIndex=0;const f=document.createDocumentFragment();let i=0;
+    t.replace(WXRE,(m,o)=>{if(o>i)f.appendChild(document.createTextNode(t.slice(i,o)));const sp=document.createElement('span');const g=GAN.indexOf(m),z=ZHI.indexOf(m);
+      sp.className='wxc w'+(g>=0?gw(g):z>=0?ZWX[z]:WX.indexOf(m));sp.textContent=m;f.appendChild(sp);i=o+m.length;return m;});
+    if(i<t.length)f.appendChild(document.createTextNode(t.slice(i)));n.replaceWith(f);});}
 function tipPop(cell,x,y){let el=$('tipPop');if(!el){el=document.createElement('div');el.id='tipPop';el.setAttribute('role','dialog');document.body.appendChild(el);}
   // 同一行重複出現就併埋，後面加 ×N
   const sec=(t,a)=>{const m=new Map();a.forEach(x=>{const r=/^(.*)×(\d+)$/.exec(x),k=r?r[1]:x,n=r?+r[2]:1;m.set(k,(m.get(k)||0)+n);});
     return m.size?`<div class="sec"><i>${t}</i><ul>${[...m].map(([x,n])=>`<li>${esc(x)}${n>1?` <b>×${n}</b>`:''}</li>`).join('')}</ul></div>`:'';};
-  const place=()=>{el.hidden=false;el._y=scrollY;const w=el.offsetWidth,hh=el.offsetHeight,vw=innerWidth,vh=innerHeight;
+  const place=()=>{wxColor(el);el.hidden=false;el._y=scrollY;const w=el.offsetWidth,hh=el.offsetHeight,vw=innerWidth,vh=innerHeight;
     el.style.left=Math.max(12,Math.min(x-w/2,vw-w-12))+'px';el.style.top=(y+16+hh>vh-8?Math.max(8,y-hh-16):y+16)+'px';};
   const close='<button type="button" class="x" aria-label="閂">×</button>';
   // 招感字：講佢點樣招出嚟、有幾多個重字、啟動咗未
@@ -1163,7 +1171,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('.cell .tk,.swtag
   if(!el){el=document.createElement('div');el.id='tipPop';el.setAttribute('role','dialog');document.body.appendChild(el);}
   const c=t.closest('.cell')||t,gz=(c.querySelector('.gz')||{}).textContent||'',top=(c.querySelector('.top')||{}).textContent||'';
   el.innerHTML=`<button type="button" class="x" aria-label="閂">×</button>`+(t.dataset.sec?`<b class="tt">${esc(t.textContent)}</b>`+JSON.parse(t.dataset.sec).map(([h,a])=>`<div class="sec"><i>${esc(h)}</i><ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join(''):`<b class="tt">${esc(top)} ${esc(gz)}　天剋地沖</b><ul>${t.dataset.tk.split('|').map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`);
-  el.hidden=false;el._y=scrollY;el._cell=t;const r=t.getBoundingClientRect(),w=el.offsetWidth,hh=el.offsetHeight;
+  wxColor(el);el.hidden=false;el._y=scrollY;el._cell=t;const r=t.getBoundingClientRect(),w=el.offsetWidth,hh=el.offsetHeight;
   el.style.left=Math.max(12,Math.min(r.left+r.width/2-w/2,innerWidth-w-12))+'px';el.style.top=(r.bottom+8+hh>innerHeight-8?Math.max(8,r.top-hh-8):r.bottom+8)+'px';},true);
 document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;if(e.target.closest('.cell .tk,.swtag'))return;
   if(pop&&!pop.hidden&&(e.target.closest('#tipPop .x')||!e.target.closest('#tipPop'))){pop.hidden=true;if(e.target.closest('#tipPop .x'))return;}
