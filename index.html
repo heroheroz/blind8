@@ -827,7 +827,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="auwrap"><table class="audit usage" id="usSum"></table></div>
   <details class="usd"><summary>最近 14 日</summary><div class="auwrap"><table class="audit usage" id="usDaily"></table></div></details>
   <h3>最近排盤</h3>
-  <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
+  <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><select id="usN" aria-label="每頁幾多個"><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="50">每頁 50 個</option><option value="1000">全部</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>出生資料</th><th></th></tr></thead><tbody id="usList"></tbody></table></div>
   <div class="gbpager" id="usPager"></div>
   <h2>計分設定 <span class="hint">（只有管理員睇到；冇等級嘅用戶用貢獻分換功能，每個盤每日扣一次，扣分設做 0 就免費；改「準」門檻唔會扣返已經加咗嘅分）</span></h2>
@@ -1866,7 +1866,7 @@ async function loadAudit(){
     $('auPager').innerHTML=pagerHtml(AU.p+1,np,'aupage');
   }catch(e){$('auList').innerHTML='';$('auPager').innerHTML='';$('auMsg').textContent=/audit_log|42P01|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/005_audit.sql。':'載入唔到：'+e.message;}
 }
-const US={p:0,n:50,rows:[]};
+const US={p:0,n:10,rows:[]};
 // 用戶等級（管理員）：列出全部用戶，揀普通／進階／高級；管理員本身唔使揀
 const TU={loaded:false,rows:[]};
 async function loadTiers(){
@@ -1917,7 +1917,7 @@ async function loadUsage(){
     $('usPager').innerHTML=pagerHtml(US.p+1,np,'uspage');
   }catch(e){$('usList').innerHTML='';$('usPager').innerHTML='';$('usMsg').textContent='載入唔到：'+e.message;}
 }
-$('audit').addEventListener('change',e=>{if(e.target.dataset.tier!==undefined){setTier(e.target.dataset.tier,e.target.value);return;}if(e.target.id==='usKind'||e.target.id==='usQ'){US.p=0;loadUsage();}});
+$('audit').addEventListener('change',e=>{if(e.target.dataset.tier!==undefined){setTier(e.target.dataset.tier,e.target.value);return;}if(e.target.id==='usN'){US.n=+e.target.value;US.p=0;loadUsage();return;}if(e.target.id==='usKind'||e.target.id==='usQ'){US.p=0;loadUsage();}});
 $('tuQ').addEventListener('input',drawTiers);
 $('audit').addEventListener('click',e=>{if(e.target.closest('[data-pcsave]'))saveCosts();if(e.target.closest('[data-bnadd]'))addBonus();const d=e.target.closest('[data-bndel]');if(d)delBonus(d.dataset.bndel);});
 $('lb').addEventListener('click',e=>{if(e.target.closest('[data-lbreload]'))loadPoints();});
