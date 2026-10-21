@@ -41,6 +41,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 h1{font-family:var(--f-display);font-weight:900;font-size:30px;margin:0;letter-spacing:.06em}
 header p{margin:0;color:var(--muted);font-size:13px}
+.pts{font-size:12px;font-weight:700;color:#b45309;white-space:nowrap}.lbt tr.me td{background:var(--soft);font-weight:700}
 .gblist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .gblist li{border-top:1px solid var(--line);padding-top:10px}
 .gbreplies{list-style:none;margin:8px 0 4px 18px;padding:0 0 0 12px;border-left:3px solid var(--line);display:flex;flex-direction:column;gap:8px}
@@ -285,7 +286,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   body[data-mtab]:not([data-mtab=in]) header,body[data-mtab]:not([data-mtab=in]) #inPanel,body[data-mtab]:not([data-mtab=in]) .mguide{display:none!important}
   body[data-mtab]:not([data-mtab=chart]):not([data-mtab=rel]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
   body[data-mtab=chart] #relBox,body[data-mtab=rel] #out>:not(#relBox){display:none!important}
-  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
+  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
   .layout{display:block}
   .mguide:not([hidden]){display:block;position:relative;font-size:15px;line-height:1.65;background:var(--paper);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;margin:0 0 12px}
   .mguide h2{font-size:18px;margin:0 0 6px}.mguide ol{margin:0;padding-left:22px}.mguide li{margin:4px 0}
@@ -750,6 +751,12 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   </ul>
   <p class="hint">出處：<a href="http://m.udxd.com/news/show-102920.html" target="_blank" rel="noopener">udxd.com</a>、<a href="https://zhuanlan.zhihu.com/p/1976362559935366444" target="_blank" rel="noopener">知乎</a>、<a href="https://zhuanlan.zhihu.com/p/2081950982699800162" target="_blank" rel="noopener">知乎</a>、<a href="https://www.163.com/dy/article/KDM937E80521DJ4J.html" target="_blank" rel="noopener">網易</a></p>
   </div>
+</section>
+<section class="panel" id="lb" hidden>
+  <h2>貢獻排行榜 <button type="button" class="lnk" data-lbreload>↻ 更新</button></h2>
+  <p class="hint">命例有 3 個或以上其他人撳「準」：+100，每個事件 +20（每個命例最多計 5 個；標籤唔加分）；喺其他人嘅命例撳準或唔準：每個命例 +10；筆記有 3 個或以上其他人撳「準」：+30；留言版每條留言 +5（每日最多計 2 條）。用分：冇等級嘅功能可以用分換，每個盤每日扣一次（招感殺星 10 分、最強五行 30 分）。分數即時計，命例刪咗或者投票改咗會跟住變。</p>
+  <p class="hint" id="lbMsg"></p>
+  <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
 </section>
 <section class="panel" id="gb">
   <h2>留言版</h2>
@@ -1237,9 +1244,12 @@ function render(){
     if(cols[n4])cols[n4].first=true;
   }
   // 招感殺星（Q6）：擺喺最右邊（流日右邊），本身唔參與招感粘連，只負責啟動招佢嘅字
-  S.shaOk=can.sha();if(VIEW.sha&&!S.shaOk)VIEW.sha=false;
-  S.swOk=can.sw();{const li=document.getElementById('r-s1');if(li)li.hidden=!S.swOk;}
-  if(VIEW.sha)cols.push({h:'招殺星',sub:'原局冇七殺',gz:null,sha:true});
+  // 招感殺星：進階、高級用戶同管理員免費；其他登入咗嘅用戶每個盤用 10 分換（008_points.sql）
+  S.shaOk=can.sha()||can.buy();if(VIEW.sha&&!S.shaOk)VIEW.sha=false;S.ck=chartKey();S.sess=!!SESSION;S.shaFree=can.sha();
+  const useSha=VIEW.sha&&(can.sha()||paid('sha'));
+  // 最強五行：高級用戶同管理員免費；其他登入咗嘅用戶每個盤用 30 分換；S1 說明照舊淨係高級用戶同管理員睇到
+  S.swOk=can.sw();S.swShow=S.swOk||paid('sw');{const li=document.getElementById('r-s1');if(li)li.hidden=!S.swOk;}
+  if(useSha)cols.push({h:'招殺星',sub:'原局冇七殺',gz:null,sha:true});
   const N=cols.length;
   // 元運柱同三桓命宮柱預設唔參與招感同粘連，只係顯示
   // 收埋咗嘅柱本身唔喺 cols 入面，所以唔計；大運流年流月流日條線閂咗照計，只係收埋條線
@@ -1249,7 +1259,7 @@ function render(){
   S.cols=cols;
   // Z5：招感字只同招佢出嚟嗰兩個字合或者粘連，唔會同其他字再招感、合或者粘連；佢被啟動之後可以做七殺（地支沖害刑）去啟動其他字
   S.links=[0,1].map(k=>chains(cc,k,k?ZG.br:ZG.st));
-  S.sha=[0,1].map(k=>VIEW.sha?shaCalc(cc,S.links[k],k):[]);
+  S.sha=[0,1].map(k=>useSha?shaCalc(cc,S.links[k],k):[]);
   S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st,S.sha[k]));
   S.vact=S.act.map(a=>a.vact);S.zg=[ZG.st,ZG.br];S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).length));
   // 粘連力：每條粘連乘二
@@ -1306,7 +1316,7 @@ function render(){
   const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
   const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
   let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
-  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swOk?'':(sw=>`<span class="bg${sw.el} w${sw.el}" title="${sw.why}（規則 S1，推測）">最強五行（推測） ${sw.g||''}${WX[sw.el]}</span>`)(strongest(P,mingGong(lun,ec),slG)));
+  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swShow?(can.buy()?`<button type="button" class="lnk swbuy" data-swbuy title="高級用戶免費；其他用戶每個盤每日扣一次">最強五行（推測）：撳開（30 分）</button>`:''):(sw=>`<span class="bg${sw.el} w${sw.el}" title="${sw.why}（規則 S1，推測）">最強五行（推測） ${sw.g||''}${WX[sw.el]}</span>`)(strongest(P,mingGong(lun,ec),slG)));
   const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
@@ -1345,7 +1355,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label>${can.sha()?`<label class="chk" title="原局有粘連但原局冇七殺嘅天干（地支冇沖害刑），自動由最右邊招殺星（規則 Q6）"><input type="checkbox" id="vSha" ${VIEW.sha?'checked':''}>招感殺星</label>`:''}<label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${loopNote()}${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label>${S.shaOk?`<label class="chk" title="原局有粘連但原局冇七殺嘅天干（地支冇沖害刑），自動由最右邊招殺星（規則 Q6）"><input type="checkbox" id="vSha" ${VIEW.sha?'checked':''}>招感殺星${can.sha()?'':'（每個盤 10 分）'}</label>`:''}<label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${BUY.msg?`<div class="hint loopnote">${esc(BUY.msg)}</div>`:''}${loopNote()}${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
   <section class="panel">
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
@@ -1462,7 +1472,21 @@ async function api(path,opt={}){
   const tk=await token();
   const r=await fetch(CLOUD.url+'/rest/v1/'+path,{...opt,headers:{apikey:CLOUD.key,...(tk?{Authorization:'Bearer '+tk}:{}),'Content-Type':'application/json',...(opt.headers||{})}});
   if(!r.ok){const t=await r.text();throw new Error(r.status===401||r.status===403||/row-level security/.test(t)?'冇權限做呢樣嘢':r.status+' '+t.slice(0,120));}
+  if(opt.method&&opt.method!=='GET'&&!path.startsWith('rpc/')&&!path.startsWith('usage'))ptSoon();
   const t=await r.text();return t?JSON.parse(t):null;}
+// 貢獻分（008_points.sql）：登入咗先計；分數由伺服器即時計，加命例、投票、寫筆記之後自動再攞一次
+const PT={rows:null,loaded:false,err:'',t:0};
+function ptSoon(){clearTimeout(PT.t);PT.t=setTimeout(()=>{if(SESSION)loadPoints();},800);}
+async function loadPoints(){PT.loaded=true;
+  try{PT.rows=await api('rpc/points_board',{method:'POST',body:'{}'});PT.err='';}
+  catch(e){PT.rows=null;PT.err=/points_board|42883|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/008_points.sql。':'載入唔到：'+e.message;}
+  drawPoints();renderAuthPts();}
+function myPts(){if(!SESSION||!PT.rows)return null;const r=PT.rows.find(x=>x.user_id===SESSION.user.id);return r?r.points:0;}
+function ptTag(){const n=myPts();return n==null?'':`<span class="pts" title="貢獻分（睇「貢獻排行榜」）">⭐ ${n} 分</span>`;}
+function renderAuthPts(){document.querySelectorAll('[data-pts]').forEach(e=>e.innerHTML=ptTag());}
+function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSION);if(box.hidden)return;
+  $('lbMsg').textContent=PT.err;const rows=(PT.rows||[]).filter(r=>r.points>0).slice(0,30);
+  $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人有分</td></tr>');}
 // 使用統計：開網、排盤、開命例各寫一行去 public.usage（supabase/006_stats.sql），每部機一個隨機編號；寫唔到就算
 const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('b8-anon',a);}return a;}catch(e){return Math.random().toString(36).slice(2,12)+'x';}})();
 function track(kind,input){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
@@ -1479,7 +1503,21 @@ const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN|
   // 招感殺星：只限進階用戶、高級用戶同管理員（本機模式照開）
   sha:()=>!CLOUD||ADMIN||TIER==='advance'||TIER==='premium',
   // 最強五行（推測，規則 S1）：結果同 S1 說明淨係高級用戶同管理員先睇到
-  sw:()=>!CLOUD||ADMIN||TIER==='premium'};
+  sw:()=>!CLOUD||ADMIN||TIER==='premium',
+  // 冇等級嘅功能可以用貢獻分換（要登入）
+  buy:()=>!!CLOUD&&!!SESSION};
+// 用分換功能：同一組出生資料當一個盤；伺服器（spend_points）檢查分數同記錄，今日開過就唔再扣
+const BUY={paid:new Set(),busy:new Set(),msg:''};
+function chartKey(){const v=S&&S.inp;return v?['y','m','d','h','mi','sex','lunar','leap','zi','lon','tz','dst','tst'].map(k=>v[k]).join(','):'';}
+function paid(kind){if(!CLOUD)return true;const k=kind+'|'+chartKey();if(BUY.paid.has(k))return true;if(kind==='sha'&&SESSION)buyFeat('sha');return false;}
+async function buyFeat(kind){const key=chartKey(),k=kind+'|'+key;if(!key||BUY.busy.has(k)||BUY.paid.has(k))return;BUY.busy.add(k);
+  const nm={sha:'招感殺星',sw:'最強五行'}[kind];
+  try{const r=await api('rpc/spend_points',{method:'POST',body:JSON.stringify({p_kind:kind,p_chart:key})});
+    if(r&&r.ok){BUY.paid.add(k);BUY.msg=r.charged?`已用 ${r.cost} 分開${nm}（今日再開呢個盤唔使再扣）`:'';loadPoints();}
+    else{if(kind==='sha')VIEW.sha=false;BUY.msg=r&&r.reason==='points'?`分數唔夠開${nm}：要 ${r.cost} 分，你而家有 ${r.balance} 分`:`開唔到${nm}`;}}
+  catch(e){if(kind==='sha')VIEW.sha=false;BUY.msg=/spend_points|42883|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/008_points.sql。':`開唔到${nm}：${e.message}`;}
+  finally{BUY.busy.delete(k);}
+  if(S&&S.dys)render();}
 
 const Store={
   async list(){
@@ -1620,6 +1658,8 @@ async function loadUsage(){
 }
 $('audit').addEventListener('change',e=>{if(e.target.dataset.tier!==undefined){setTier(e.target.dataset.tier,e.target.value);return;}if(e.target.id==='usKind'||e.target.id==='usQ'){US.p=0;loadUsage();}});
 $('tuQ').addEventListener('input',drawTiers);
+document.addEventListener('click',e=>{if(e.target.closest('[data-swbuy]'))buyFeat('sw');});
+$('lb').addEventListener('click',e=>{if(e.target.closest('[data-lbreload]'))loadPoints();});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],[data-usopen]');if(!b)return;
   if(b.dataset.uspage){US.p=Math.max(0,US.p+ +b.dataset.uspage);loadUsage();return;}
   const v=US.rows[+b.dataset.usopen].input;writeForm(v);run(v);mTab('chart');$('out').scrollIntoView({block:'start'});});
@@ -1629,15 +1669,16 @@ $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],
 function calcVis(){const ok=can.sha();document.body.classList.toggle('nocalc',!ok);
   const c=document.querySelector('input[name=ntab][value=calc]');if(!ok&&c&&c.checked){const s=document.querySelector('input[name=ntab][value=sifu]');if(s)s.checked=true;}}
 function renderAuth(){calcVis();
-  const shaOk=can.sha();if(!shaOk)VIEW.sha=false;if(S&&S.dys&&(S.shaOk!==shaOk||S.swOk!==can.sw()))render();
+  const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION))render();
+  if(CLOUD&&SESSION&&!PT.loaded)loadPoints();else if(!SESSION){PT.loaded=false;PT.rows=null;}drawPoints();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
   $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();}else if(!ADMIN)AU.loaded=false;
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
   $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();
   const box=$('caseAuth'),ma=$('mAuth');if(!CLOUD){box.hidden=true;ma.innerHTML='';return;}box.hidden=false;
   // 手機版頂部左邊嘅登入狀態；未登入撳「登入」去命例頁嘅登入選項
-  ma.innerHTML=SESSION?`<span class="who">👤 ${esc(SESSION.user.name||SESSION.user.email||'')}</span>${tierTag()}<button type="button" data-logout>登出</button>`:`<button type="button" data-mlogin>登入</button><span class="hint">登入先可以加命例同投票</span>`;
-  box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||SESSION.user.name||'')}${tierTag()?' · '+tierTag():''}</span> <button type="button" class="lnk" data-logout>登出</button>`
+  ma.innerHTML=SESSION?`<span class="who">👤 ${esc(SESSION.user.name||SESSION.user.email||'')}</span>${tierTag()}<span data-pts>${ptTag()}</span><button type="button" data-logout>登出</button>`:`<button type="button" data-mlogin>登入</button><span class="hint">登入先可以加命例同投票</span>`;
+  box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||SESSION.user.name||'')}${tierTag()?' · '+tierTag():''} <span data-pts>${ptTag()}</span></span> <button type="button" class="lnk" data-logout>登出</button>`
     :`${[['google','G','#4285f4','Google'],['discord','D','#5865f2','Discord']].map(([pv,ic,col,nm])=>`<a class="gbtn" href="${CLOUD.url}/auth/v1/authorize?provider=${pv}&redirect_to=${encodeURIComponent(location.origin+location.pathname)}"><b style="color:${col}">${ic}</b> 用 ${nm} 登入</a>`).join('')}<p class="hint" style="text-align:center;margin:6px 0">或者用電郵</p><form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
   
 }
