@@ -800,10 +800,10 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <ul>
     <li>🎁 <b>註冊就送 <span data-pstart>200</span> 分</b>，一開始已經可以試用進階功能。</li>
     <li>☀️ <b>每日登入</b>：每日第一次登入開網站，自動加 <b data-pdaily>10</b> 分。</li>
-    <li>📖 <b>加命例</b>：分享你知道嘅真實命例，有 <b data-pneed>1</b> 位師兄師姐撳「準」，你就有 <b>100 分</b>。</li>
-    <li>📅 <b>補充事件</b>：喺命例加結婚、生仔、轉工呢類事件同日期，每個 <b>20 分</b>（每個命例最多計 5 個，命例要有 <b data-pneed>1</b> 個「準」先計）。</li>
-    <li>📝 <b>寫筆記</b>：喺命例寫低你嘅分析或者補充資料，有 <b data-pneed>1</b> 位撳「準」就有 <b>30 分</b>。</li>
-    <li>👍 <b>幫人投票</b>：睇其他人嘅命例，撳「準」或者「唔準」，每個 <b>10 分</b>（每日最多計 <b data-pvday>3</b> 個；自己嘅命例唔計）。</li>
+    <li>📖 <b>加命例</b>：分享你知道嘅真實命例，有 <b data-pneed>1</b> 位師兄師姐撳 👍，你就有 <b>100 分</b>。</li>
+    <li>📅 <b>補充事件</b>：喺命例加結婚、生仔、轉工呢類事件同日期，每個 <b>20 分</b>（每個命例最多計 5 個，命例要有 <b data-pneed>1</b> 個 👍先計）。</li>
+    <li>📝 <b>寫筆記</b>：喺命例寫低你嘅分析或者補充資料，有 <b data-pneed>1</b> 位撳 👍就有 <b>30 分</b>。</li>
+    <li>👍 <b>幫人投票</b>：睇其他人嘅命例，撳 👍 或者 👎，每個 <b>10 分</b>（每日最多計 <b data-pvday>3</b> 個；自己嘅命例唔計）。</li>
     <li>💬 <b>留言版留言</b>：每條 <b>5 分</b>（每日最多計 <b data-pgday>3</b> 條）。</li>
     <li>🏅 <b>獎勵分</b>：管理員會不定期向特別有貢獻嘅師兄師姐發獎勵分。</li>
   </ul>
@@ -811,7 +811,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <ul>
     <li>🔮 <b>招感殺星</b>：每個盤每日扣 <b data-pcostv="sha">1</b> 分（進階用戶、高級用戶免費）。</li>
   </ul>
-  <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。夠「準」之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳「準」嘅人唔可以係命例或者筆記嘅主人。標籤唔計分。管理員唔上榜。</p>
+  <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。夠👍之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳 👍嘅人唔可以係命例或者筆記嘅主人。標籤唔計分。管理員唔上榜。</p>
   </div>
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
@@ -832,7 +832,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><select id="usN" aria-label="每頁幾多個"><option value="6" selected>每頁 6 個</option><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="100000">全部</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>出生資料</th><th></th></tr></thead><tbody id="usList"></tbody></table></div>
   <div class="gbpager" id="usPager"></div>
-  <h2>計分設定 <span class="hint">（只有管理員睇到；冇等級嘅用戶用貢獻分換功能，每個盤每日扣一次，扣分設做 0 就免費；改「準」門檻唔會扣返已經加咗嘅分）</span></h2>
+  <h2>計分設定 <span class="hint">（只有管理員睇到；冇等級嘅用戶用貢獻分換功能，每個盤每日扣一次，扣分設做 0 就免費；改👍門檻唔會扣返已經加咗嘅分）</span></h2>
   <div class="row" id="pcBox"></div>
   <p class="hint" id="pcMsg"></p>
   <h2>手動加分 <span class="hint">（只有管理員睇到；例如補返之前做咗嘅貢獻；填負數就係扣分；每筆都入審計紀錄）</span></h2>
@@ -1723,7 +1723,7 @@ const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN|
 const BUY={paid:new Set(),busy:new Set(),msg:''};
 // 扣分數：由 point_costs 表讀（管理員喺「扣分設定」改，011_cost_settings.sql）；未設定就用預設
 const COST={sha:1,sw:2,work:5,loaded:false},PS={need:3,start:100,vday:5,gday:2,daily:0};
-// 最強五行投票（016_sw_votes.sql）：每個盤三個推論各自投「準／唔準」，每人每個推論一票，再撳一次取消
+// 最強五行投票（016_sw_votes.sql）：每個盤三個推論各自投👍／👎，每人每個推論一票，再撳一次取消
 const SWV={busy:false};const SWN={s1:'推論1：月令人元並用',yue:'推論2：月令印星',sl:'推論3：人元司令印星'};
 async function loadSwVotes(){const box=$('swVote');if(!box||!S||!S.swAll)return;const ck=chartKey();let cnt=null,mine={};
   if(CLOUD){try{cnt=await api('rpc/sw_vote_counts',{method:'POST',body:JSON.stringify({p_chart:ck})});}catch(e){cnt=null;}
@@ -1759,11 +1759,11 @@ async function saveAW(){const msg=$('awSaveMsg');msg.textContent='儲存緊…';
     msg.textContent='已儲存，盤已經用新數值重新計。';if(S&&S.dys)render();drawAW();}catch(e){msg.textContent='儲存唔到：'+e.message;}}
 $('aw').addEventListener('click',e=>{const v=e.target.closest('[data-awvote]');if(v){voteAW(v.dataset.awvote,+v.dataset.dir);return;}if(e.target.closest('[data-awsave]'))saveAW();});
 async function loadCosts(){COST.loaded=true;try{const r=await api('point_costs?select=kind,cost');r.forEach(x=>{COST[x.kind]=x.cost;});COST.ok=true;}catch(e){COST.ok=false;}
-  // 開戶分同「準」門檻：point_settings（012_points_admin.sql）；未設定就係舊規則 100 分、3 個準
+  // 開戶分同👍門檻：point_settings（012_points_admin.sql）；未設定就係舊規則 100 分、3 個準
   try{const r=await api('point_settings?select=key,value');r.forEach(x=>{PS[x.key]=x.value;});PS.has_vday=r.some(x=>x.key==='vday');PS.has_daily=r.some(x=>x.key==='daily');PS.ok=true;}catch(e){PS.ok=false;}
   drawCosts();if(S&&S.dys)render();}
 function drawCosts(){document.querySelectorAll('[data-pneed]').forEach(e=>e.textContent=PS.need);document.querySelectorAll('[data-pstart]').forEach(e=>e.textContent=PS.start);document.querySelectorAll('[data-pvday]').forEach(e=>e.textContent=PS.vday);document.querySelectorAll('[data-pgday]').forEach(e=>e.textContent=PS.gday);document.querySelectorAll('[data-pdaily]').forEach(e=>e.textContent=PS.daily||10);document.querySelectorAll('[data-pcostv]').forEach(e=>e.textContent=COST[e.dataset.pcostv]);
-  const b=$('pcBox');if(!b)return;b.innerHTML=[['sha','招感殺星'],['work','做功（未開）']].map(([k,n])=>`<label class="chk">${n} <input type="number" min="0" max="1000" step="1" data-pcost="${k}" value="${COST[k]}" style="width:5em"> 分</label>`).join('')+`<label class="chk">開戶送 <input type="number" min="0" max="100000" step="1" data-pset="start" value="${PS.start}" style="width:6em"> 分</label><label class="chk">命例／筆記要 <input type="number" min="1" max="100" step="1" data-pset="need" value="${PS.need}" style="width:4em"> 個「準」先加分</label><label class="chk">幫人投票每日最多計 <input type="number" min="0" max="100" step="1" data-pset="vday" value="${PS.vday}" style="width:4em"> 個</label><label class="chk">留言版每日最多計 <input type="number" min="0" max="100" step="1" data-pset="gday" value="${PS.gday}" style="width:4em"> 條</label><label class="chk">每日登入 <input type="number" min="0" max="1000" step="1" data-pset="daily" value="${PS.daily}" style="width:4em"> 分</label><button type="button" class="go sm" data-pcsave>儲存</button>`;
+  const b=$('pcBox');if(!b)return;b.innerHTML=[['sha','招感殺星'],['work','做功（未開）']].map(([k,n])=>`<label class="chk">${n} <input type="number" min="0" max="1000" step="1" data-pcost="${k}" value="${COST[k]}" style="width:5em"> 分</label>`).join('')+`<label class="chk">開戶送 <input type="number" min="0" max="100000" step="1" data-pset="start" value="${PS.start}" style="width:6em"> 分</label><label class="chk">命例／筆記要 <input type="number" min="1" max="100" step="1" data-pset="need" value="${PS.need}" style="width:4em"> 個 👍先加分</label><label class="chk">幫人投票每日最多計 <input type="number" min="0" max="100" step="1" data-pset="vday" value="${PS.vday}" style="width:4em"> 個</label><label class="chk">留言版每日最多計 <input type="number" min="0" max="100" step="1" data-pset="gday" value="${PS.gday}" style="width:4em"> 條</label><label class="chk">每日登入 <input type="number" min="0" max="1000" step="1" data-pset="daily" value="${PS.daily}" style="width:4em"> 分</label><button type="button" class="go sm" data-pcsave>儲存</button>`;
   $('pcMsg').textContent=COST.ok===false?'未設定：請喺 Supabase SQL Editor 行一次 supabase/011_cost_settings.sql。':PS.ok===false?'開戶分同準門檻未設定：請喺 Supabase SQL Editor 行一次 supabase/012_points_admin.sql。':PS.ok&&!PS.has_vday?'每日上限未設定：請喺 Supabase SQL Editor 行一次 supabase/013_daily_limits.sql。':PS.ok&&!PS.has_daily?'每日登入獎勵未設定：請喺 Supabase SQL Editor 行一次 supabase/014_daily_login.sql。':'';}
 async function saveCosts(){const ins=[...document.querySelectorAll('[data-pcost]')];
   try{for(const i of ins){const v=Math.max(0,Math.min(1000,Math.round(+i.value||0)));if(v===COST[i.dataset.pcost])continue;
@@ -1806,12 +1806,12 @@ const Store={
   async comment(id,body){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({id:'C'+Date.now()+'_'+x.comments.length,t:new Date().toISOString(),body,by:'我',likes:0,unlikes:0,myVote:0});lsSet(a);return;}
     await api('comments',{method:'POST',body:JSON.stringify({case_id:id,body,author_name:myName()})});},
-  // 每條備註都可以投準／唔準
+  // 每條備註都可以投 👍／👎
   async cvote(caseId,cid,v){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===caseId);if(!x)return;const m=x.comments.find((m,i)=>(m.id||'i'+i)===cid);if(!m)return;
       m.likes=m.likes||0;m.unlikes=m.unlikes||0;if(m.myVote===1)m.likes--;if(m.myVote===-1)m.unlikes--;m.myVote=v;if(v===1)m.likes++;if(v===-1)m.unlikes++;lsSet(a);return;}
     await api('comment_votes?on_conflict=comment_id,voter',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({comment_id:cid,voter:SESSION.user.id,vote:v})});},
-  // 每個事件都可以投準／唔準；事件用「內容|年-月-日」做記認
+  // 每個事件都可以投 👍／👎；事件用「內容|年-月-日」做記認
   async evote(caseId,key,v){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===caseId);if(!x)return;x.evVotes=x.evVotes||{};const m=x.evVotes[key]||(x.evVotes[key]={likes:0,unlikes:0,myVote:0});
       if(m.myVote===1)m.likes--;if(m.myVote===-1)m.unlikes--;m.myVote=v;if(v===1)m.likes++;if(v===-1)m.unlikes++;lsSet(a);return;}
@@ -1843,9 +1843,9 @@ const caseScore=c=>(c.likes||0)+(c.unlikes||0)+(c.comments||[]).length+(c.tags||
 const tagChips=(tags,id)=>(tags||[]).length?`<span class="tags">${byUse(tags).map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}">#${esc(t)}</button>${id?`<button type="button" class="tagx" data-untag="${esc(t)}" data-id="${id}" aria-label="移除標籤 ${esc(t)}">×</button>`:''}`).join('')}</span>`:'';
 const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${yearTxt(v.y)}-${pad(v.m)}-${pad(v.d)} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;
 const voteBtns=c=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
-  return `<span class="votes"><button type="button" class="vb${c.myVote===1?' on':''}" data-vote="1" data-id="${c.id}" aria-pressed="${c.myVote===1}"${dis}>準 ${c.likes}</button><button type="button" class="vb no${c.myVote===-1?' on':''}" data-vote="-1" data-id="${c.id}" aria-pressed="${c.myVote===-1}"${dis}>唔準 ${c.unlikes}</button></span>`;};
+  return `<span class="votes"><button type="button" class="vb${c.myVote===1?' on':''}" data-vote="1" data-id="${c.id}" aria-pressed="${c.myVote===1}" title="準"${dis}>👍 ${c.likes}</button><button type="button" class="vb no${c.myVote===-1?' on':''}" data-vote="-1" data-id="${c.id}" aria-pressed="${c.myVote===-1}" title="唔準"${dis}>👎 ${c.unlikes}</button></span>`;};
 const cvoteBtns=(c,m)=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
-  return `<span class="votes"><button type="button" class="vb${m.myVote===1?' on':''}" data-cvote="1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===1}"${dis}>準 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-cvote="-1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===-1}"${dis}>唔準 ${m.unlikes||0}</button></span>`;};
+  return `<span class="votes"><button type="button" class="vb${m.myVote===1?' on':''}" data-cvote="1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===1}" title="準"${dis}>👍 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-cvote="-1" data-case="${c.id}" data-cid="${m.id}" aria-pressed="${m.myVote===-1}" title="唔準"${dis}>👎 ${m.unlikes||0}</button></span>`;};
 function renderSug(){
   document.querySelector('.tagsug').innerHTML=byUse(TAG_SUG).map(t=>`<button type="button" class="tag sug" data-sug="${esc(t)}">+${esc(t)}</button>`).join('');
   const used={};CASES.forEach(c=>(c.tags||[]).forEach(t=>used[t]=(used[t]||0)+1));
@@ -1857,7 +1857,7 @@ function renderSug(){
 const AU={p:0,n:(()=>{try{const v=localStorage.getItem('b8-aun2');return v!=null&&['0','6','10','20','30','50','100'].includes(v)?+v:10;}catch(e){return 10;}})(),loaded:false};
 $('auN').value=String(AU.n);
 const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員',user_tiers:'用戶等級',point_bonus:'手動加分',point_costs:'扣分設定',point_settings:'計分設定',users:'用戶註冊',logins:'用戶登入'};
-const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'準','-1':'唔準','0':'撤回'};
+const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'👍 準','-1':'👎 唔準','0':'撤回'};
 const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者'};
 const auS=v=>v==null?'':typeof v==='string'?v:JSON.stringify(v);
 const auCut=(v,n=60)=>{const x=auS(v);return x.length>n?x.slice(0,n)+'…':x;};
@@ -2018,7 +2018,7 @@ const EV_SUG=['結婚','離婚','生仔','生女','過身','父親過身','母�
 const evTxt=v=>`${yearTxt(v.y)}-${pad(v.m)}-${pad(v.d)}${v.lun?`（農曆${v.lun.leap?'閏':''}${v.lun.m}月${v.lun.d}日）`:''}`;
 const evKey=v=>`${v.t}|${v.y}-${v.m}-${v.d}`.slice(0,60);
 const evoteBtns=(c,v)=>{const m=(c.evVotes||{})[evKey(v)]||{},k=esc(evKey(v)),dis=can.vote()?'':' disabled title="登入先可以投票"';
-  return `<span class="votes evv"><button type="button" class="vb${m.myVote===1?' on':''}" data-evote="1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===1}"${dis}>準 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-evote="-1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===-1}"${dis}>唔準 ${m.unlikes||0}</button></span>`;};
+  return `<span class="votes evv"><button type="button" class="vb${m.myVote===1?' on':''}" data-evote="1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===1}" title="準"${dis}>👍 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-evote="-1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===-1}" title="唔準"${dis}>👎 ${m.unlikes||0}</button></span>`;};
 function evBlock(c,ed){const evs=c.input.events||[];
   return `<div class="ctags"><span class="cap">事件</span>${evs.length?`<span class="tags">${evs.map((v,i)=>`<button type="button" class="tag ev" data-evgo="${i}" data-id="${c.id}" title="用呢日睇運">${esc(v.t)} ${evTxt(v)}</button>${evoteBtns(c,v)}${ed?`<button type="button" class="tagx" data-evedit="${i}" data-id="${c.id}" aria-label="修改事件 ${esc(v.t)}" title="修改">✎</button><button type="button" class="tagx" data-evdel="${i}" data-id="${c.id}" aria-label="刪除事件 ${esc(v.t)}">×</button>`:''}`).join('')}</span>`:'<span class="hint">未有事件日期</span>'}</div>
   ${ed?`<form class="row evadd" data-addev="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em" data-evcap>加事件</span><input type="hidden" name="idx" value=""><input name="t" list="evList" maxlength="30" required placeholder="例如結婚" aria-label="事件" style="width:7.5em"><select name="cal" aria-label="公曆／農曆"><option value="s">公曆</option><option value="l">農曆</option></select><select name="era" aria-label="公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" name="y" min="1" max="9999" required placeholder="年" aria-label="年" style="width:5em"><select name="m" aria-label="月">${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1} 月</option>`).join('')}</select><label class="evleap" title="農曆閏月先用"><input type="checkbox" name="leap"> 閏</label><select name="d" aria-label="日">${Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1} 日</option>`).join('')}</select><button type="submit" class="lnk" data-evsub>加</button><button type="button" class="lnk" data-evcancel hidden>取消</button><datalist id="evList">${[...new Set([...EV_SUG,...TAG_SUG])].map(x=>`<option value="${x}">`).join('')}</datalist></form>`:''}`;}
