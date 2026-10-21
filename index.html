@@ -769,6 +769,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="lbhow"><b>點樣賺分？好簡單：</b>
   <ul>
     <li>🎁 <b>註冊就送 <span data-pstart>200</span> 分</b>，一開始已經可以試用進階功能。</li>
+    <li>☀️ <b>每日登入</b>：每日第一次登入開網站，自動加 <b data-pdaily>10</b> 分。</li>
     <li>📖 <b>加命例</b>：分享你知道嘅真實命例，有 <b data-pneed>1</b> 位師兄師姐撳「準」，你就有 <b>100 分</b>。</li>
     <li>📅 <b>補充事件</b>：喺命例加結婚、生仔、轉工呢類事件同日期，每個 <b>20 分</b>（每個命例最多計 5 個，命例要有 <b data-pneed>1</b> 個「準」先計）。</li>
     <li>📝 <b>寫筆記</b>：喺命例寫低你嘅分析或者補充資料，有 <b data-pneed>1</b> 位撳「準」就有 <b>30 分</b>。</li>
@@ -1570,11 +1571,18 @@ const SECF={};
 function applySec(){document.querySelectorAll('[data-sec]').forEach(el=>el.classList.toggle('folded',!SECF[el.dataset.sec]));}
 document.addEventListener('click',e=>{const h=e.target.closest('.foldh');if(!h||e.target.closest('button,a,input,select'))return;const el=h.closest('[data-sec]');if(!el)return;
   SECF[el.dataset.sec]=!SECF[el.dataset.sec];applySec();});
+// 每日登入獎勵（014_daily_login.sql）：每日（香港時間）第一次登入開網就簽到；伺服器一日只計一次，呢度只係避免重複問
+const CK={busy:false};
+async function checkin(){const uid=SESSION&&SESSION.user&&SESSION.user.id,day=new Date(Date.now()+8*3600e3).toISOString().slice(0,10),key='b8-ck-'+uid;
+  if(!uid||CK.busy)return;try{if(localStorage.getItem(key)===day)return;}catch(e){}CK.busy=true;
+  try{const r=await api('rpc/daily_checkin',{method:'POST',body:'{}'});try{localStorage.setItem(key,day);}catch(e){}
+    if(r&&r.new){BUY.msg=`☀️ 每日登入 +${r.points} 分`;loadPoints();if(S&&S.dys)render();}}
+  catch(e){}finally{CK.busy=false;}}
 function ptTag(){if(ADMIN)return '';const n=myPts();return n==null?'':`<span class="pts" title="貢獻分（睇「貢獻排行榜」）">⭐ ${n} 分</span>`;}
 function renderAuthPts(){document.querySelectorAll('[data-pts]').forEach(e=>e.innerHTML=ptTag());}
 function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSION);if(box.hidden)return;
   $('lbMsg').textContent=PT.err;const rows=(PT.rows||[]).filter(r=>r.points>0).slice(0,30);
-  $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.bonus?`獎勵 ${r.bonus>0?'+':''}${r.bonus}`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人有分</td></tr>');}
+  $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.bonus?`獎勵 ${r.bonus>0?'+':''}${r.bonus}`:'',r.logins?`登入 ${r.logins} 日`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人有分</td></tr>');}
 // 使用統計：開網、排盤、開命例各寫一行去 public.usage（supabase/006_stats.sql），每部機一個隨機編號；寫唔到就算
 const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('b8-anon',a);}return a;}catch(e){return Math.random().toString(36).slice(2,12)+'x';}})();
 function track(kind,input){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
@@ -1596,14 +1604,14 @@ const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN|
 // 用分換功能：同一組出生資料當一個盤；伺服器（spend_points）檢查分數同記錄，今日開過就唔再扣
 const BUY={paid:new Set(),busy:new Set(),msg:''};
 // 扣分數：由 point_costs 表讀（管理員喺「扣分設定」改，011_cost_settings.sql）；未設定就用預設
-const COST={sha:1,sw:2,work:5,loaded:false},PS={need:3,start:100,vday:5,gday:2};
+const COST={sha:1,sw:2,work:5,loaded:false},PS={need:3,start:100,vday:5,gday:2,daily:0};
 async function loadCosts(){COST.loaded=true;try{const r=await api('point_costs?select=kind,cost');r.forEach(x=>{COST[x.kind]=x.cost;});COST.ok=true;}catch(e){COST.ok=false;}
   // 開戶分同「準」門檻：point_settings（012_points_admin.sql）；未設定就係舊規則 100 分、3 個準
-  try{const r=await api('point_settings?select=key,value');r.forEach(x=>{PS[x.key]=x.value;});PS.has_vday=r.some(x=>x.key==='vday');PS.ok=true;}catch(e){PS.ok=false;}
+  try{const r=await api('point_settings?select=key,value');r.forEach(x=>{PS[x.key]=x.value;});PS.has_vday=r.some(x=>x.key==='vday');PS.has_daily=r.some(x=>x.key==='daily');PS.ok=true;}catch(e){PS.ok=false;}
   drawCosts();if(S&&S.dys)render();}
-function drawCosts(){document.querySelectorAll('[data-pneed]').forEach(e=>e.textContent=PS.need);document.querySelectorAll('[data-pstart]').forEach(e=>e.textContent=PS.start);document.querySelectorAll('[data-pvday]').forEach(e=>e.textContent=PS.vday);document.querySelectorAll('[data-pgday]').forEach(e=>e.textContent=PS.gday);document.querySelectorAll('[data-pcostv]').forEach(e=>e.textContent=COST[e.dataset.pcostv]);
-  const b=$('pcBox');if(!b)return;b.innerHTML=[['sha','招感殺星'],['work','做功（未開）']].map(([k,n])=>`<label class="chk">${n} <input type="number" min="0" max="1000" step="1" data-pcost="${k}" value="${COST[k]}" style="width:5em"> 分</label>`).join('')+`<label class="chk">開戶送 <input type="number" min="0" max="100000" step="1" data-pset="start" value="${PS.start}" style="width:6em"> 分</label><label class="chk">命例／筆記要 <input type="number" min="1" max="100" step="1" data-pset="need" value="${PS.need}" style="width:4em"> 個「準」先加分</label><label class="chk">幫人投票每日最多計 <input type="number" min="0" max="100" step="1" data-pset="vday" value="${PS.vday}" style="width:4em"> 個</label><label class="chk">留言版每日最多計 <input type="number" min="0" max="100" step="1" data-pset="gday" value="${PS.gday}" style="width:4em"> 條</label><button type="button" class="go sm" data-pcsave>儲存</button>`;
-  $('pcMsg').textContent=COST.ok===false?'未設定：請喺 Supabase SQL Editor 行一次 supabase/011_cost_settings.sql。':PS.ok===false?'開戶分同準門檻未設定：請喺 Supabase SQL Editor 行一次 supabase/012_points_admin.sql。':PS.ok&&!PS.has_vday?'每日上限未設定：請喺 Supabase SQL Editor 行一次 supabase/013_daily_limits.sql。':'';}
+function drawCosts(){document.querySelectorAll('[data-pneed]').forEach(e=>e.textContent=PS.need);document.querySelectorAll('[data-pstart]').forEach(e=>e.textContent=PS.start);document.querySelectorAll('[data-pvday]').forEach(e=>e.textContent=PS.vday);document.querySelectorAll('[data-pgday]').forEach(e=>e.textContent=PS.gday);document.querySelectorAll('[data-pdaily]').forEach(e=>e.textContent=PS.daily||10);document.querySelectorAll('[data-pcostv]').forEach(e=>e.textContent=COST[e.dataset.pcostv]);
+  const b=$('pcBox');if(!b)return;b.innerHTML=[['sha','招感殺星'],['work','做功（未開）']].map(([k,n])=>`<label class="chk">${n} <input type="number" min="0" max="1000" step="1" data-pcost="${k}" value="${COST[k]}" style="width:5em"> 分</label>`).join('')+`<label class="chk">開戶送 <input type="number" min="0" max="100000" step="1" data-pset="start" value="${PS.start}" style="width:6em"> 分</label><label class="chk">命例／筆記要 <input type="number" min="1" max="100" step="1" data-pset="need" value="${PS.need}" style="width:4em"> 個「準」先加分</label><label class="chk">幫人投票每日最多計 <input type="number" min="0" max="100" step="1" data-pset="vday" value="${PS.vday}" style="width:4em"> 個</label><label class="chk">留言版每日最多計 <input type="number" min="0" max="100" step="1" data-pset="gday" value="${PS.gday}" style="width:4em"> 條</label><label class="chk">每日登入 <input type="number" min="0" max="1000" step="1" data-pset="daily" value="${PS.daily}" style="width:4em"> 分</label><button type="button" class="go sm" data-pcsave>儲存</button>`;
+  $('pcMsg').textContent=COST.ok===false?'未設定：請喺 Supabase SQL Editor 行一次 supabase/011_cost_settings.sql。':PS.ok===false?'開戶分同準門檻未設定：請喺 Supabase SQL Editor 行一次 supabase/012_points_admin.sql。':PS.ok&&!PS.has_vday?'每日上限未設定：請喺 Supabase SQL Editor 行一次 supabase/013_daily_limits.sql。':PS.ok&&!PS.has_daily?'每日登入獎勵未設定：請喺 Supabase SQL Editor 行一次 supabase/014_daily_login.sql。':'';}
 async function saveCosts(){const ins=[...document.querySelectorAll('[data-pcost]')];
   try{for(const i of ins){const v=Math.max(0,Math.min(1000,Math.round(+i.value||0)));if(v===COST[i.dataset.pcost])continue;
       await api('point_costs?kind=eq.'+i.dataset.pcost,{method:'PATCH',body:JSON.stringify({cost:v,updated_at:new Date().toISOString()})});COST[i.dataset.pcost]=v;}
@@ -1704,7 +1712,7 @@ const auCase=id=>{const c=CASES.find(c=>c.id===id);return c?`「${c.name}」`:''
 function auWhat(r){const o=r.row_new||r.row_old||{};
   switch(r.tbl){case 'cases':return `「${o.name||''}」`;case 'comments':return auCase(o.case_id)+' '+auCut(o.body);case 'guestbook':return auCut(o.body);case 'tags':return '#'+(o.name||'');
     case 'votes':return auCase(o.case_id)+' '+(AU_V[o.vote]||o.vote);case 'comment_votes':return AU_V[o.vote]||o.vote;case 'event_votes':return auCase(o.case_id)+' '+(o.ev||'')+' '+(AU_V[o.vote]||o.vote);
-    case 'users':case 'logins':{const pv=(o.providers&&o.providers.length?o.providers:[o.provider]).filter(Boolean).map(x=>AU_PV[x]||x);return pv.length?'方法：'+pv.join('／'):'';}case 'point_bonus':return `${auUser(o.user_id)} ${o.amount>0?'+':''}${o.amount} 分${o.reason?'（'+o.reason+'）':''}`;case 'point_settings':return `${{need:'準門檻',start:'開戶分',vday:'投票每日上限',gday:'留言每日上限'}[o.key]||o.key} ${o.value}`;case 'point_costs':return `${{sha:'招感殺星',sw:'最強五行',work:'做功'}[o.kind]||o.kind} ${o.cost} 分`;default:return o.user_id||'';}}
+    case 'users':case 'logins':{const pv=(o.providers&&o.providers.length?o.providers:[o.provider]).filter(Boolean).map(x=>AU_PV[x]||x);return pv.length?'方法：'+pv.join('／'):'';}case 'point_bonus':return `${auUser(o.user_id)} ${o.amount>0?'+':''}${o.amount} 分${o.reason?'（'+o.reason+'）':''}`;case 'point_settings':return `${{need:'準門檻',start:'開戶分',vday:'投票每日上限',gday:'留言每日上限',daily:'每日登入分'}[o.key]||o.key} ${o.value}`;case 'point_costs':return `${{sha:'招感殺星',sw:'最強五行',work:'做功'}[o.kind]||o.kind} ${o.cost} 分`;default:return o.user_id||'';}}
 function auUser(id){const u=TU.rows.find(x=>x.id===id);return u?(u.name||u.email||''):String(id||'').slice(0,8);}
 function auDiff(r){if(r.op!=='UPDATE'||!r.row_old||!r.row_new)return [];const a=r.row_old,b=r.row_new,out=[];
   for(const k of Object.keys(b)){if(k==='created_at'||JSON.stringify(a[k])===JSON.stringify(b[k]))continue;
@@ -1790,6 +1798,7 @@ function calcVis(){const ok=can.sha();document.body.classList.toggle('nocalc',!o
 function renderAuth(){calcVis();
   const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION))render();
   if(CLOUD&&!COST.loaded)loadCosts();
+  if(CLOUD&&SESSION)checkin();
   if(CLOUD&&SESSION&&!PT.loaded)loadPoints();else if(!SESSION){PT.loaded=false;PT.rows=null;}drawPoints();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
   $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();}else if(!ADMIN)AU.loaded=false;
