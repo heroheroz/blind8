@@ -127,6 +127,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .act b.dnx,.actl.dnx{color:var(--water);opacity:.55;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--bad)}
 .st{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;padding:0 7px;border-radius:9px;background:var(--bad);color:var(--paper);line-height:1.6}
 .st-off{background:none}
+.cell .tk{display:block;margin:2px auto 0;width:max-content;font-size:11px;font-weight:700;line-height:1.5;padding:0 6px;border-radius:9px;background:var(--bad);color:var(--paper);cursor:pointer}
 .chart tr.ganrow .big,.chart tr.zhirow .big,.chart .zg{cursor:pointer}
 #tipPop{position:fixed;z-index:60;max-width:min(360px,calc(100vw - 24px));background:var(--paper);color:var(--ink,inherit);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.18);padding:10px 30px 10px 12px;font-size:14px;line-height:1.6}
 #tipPop b.tt{display:block;font-size:15px;margin-bottom:4px}#tipPop ul{margin:0;padding-left:18px}#tipPop li{margin:2px 0}
@@ -177,6 +178,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .days{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:6px}
 .lvl{display:flex;flex-direction:column;gap:6px}
 .lvl+.lvl{margin-top:14px}
+.tkopt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:10px;font-size:13px}.tkopt .cap{color:var(--muted)}
 .lvl h3{margin:0;font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.08em}
 .rels{display:flex;flex-direction:column;gap:6px;font-size:14px}
 .rel{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
@@ -483,6 +485,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <div class="npane" id="np-calc">
   <p><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
+  <p>大運、流年、流月、流日每一格都會同原局四柱逐柱比對：天干相剋（同陰陽，即七殺）而且地支六沖（子午、丑未、寅申、卯酉、辰戌、巳亥），就喺格下面標「剋沖X」，X 係原局邊柱（年／月／日／時），例如「剋沖日」即係同日柱天剋地沖。上面有個選項：「只限原局四柱」（預設）就只同原局年月日時比；「盤上顯示緊嘅所有柱」就連盤上顯示緊嘅大運、流年、流月、流日（同開咗嘅命宮、元運等）都一齊比，標籤會寫埋係邊柱，例如「剋沖日·流年」。撳個標籤或者指住會講係同原局邊個干支剋、邊個支沖，再撳一下收返。</p>
   <p>地支係辰或戌就標「辰戌強旺」，坐喺上面嗰個天干就標「坐辰戌」，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。地支標「X刃」：盤上有陽干 X，呢個地支係佢嘅陽刃（甲卯、丙午、戊午、庚酉、壬子，陰干冇陽刃）；標「日主陽刃」就係日主嘅陽刃。盤上另一柱有沖陽刃嘅字（卯酉、子午）就標「X刃逢沖」並加外框；如果同時有字同陽刃六合或半合（例如卯見戌、亥、未），旁邊標「X合護」，即係要等個合被解開、再有天干引動先應事。</p>
   <p>元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、身宮用傳統算法；命宮嘅月份預設用中氣計，出生喺本月中氣之後就當下一個月（例如寅月雨水後當卯月）；喺顯示選項揀「忽視中氣」就直接用月令計。小運由時柱起，陽男陰女順行、陰男陽女逆行，每歲（虛歲）行一柱；剔「顯示小運」先顯示，顯示咗就同大運流年一齊計招感粘連。盲派看法：年月為賓、日時為主；地支「穿」即六害。</p>
   <div class="rules">
@@ -1152,7 +1155,15 @@ function tipPop(cell,x,y){let el=$('tipPop');if(!el){el=document.createElement('
   const body=sec('啟動同箭咀',items)+sec('做功',wk?wk.title.split('；'):[])+sec('粘連',nl)+sec('其他',cx?(cx.title.startsWith(cx.textContent)?cx.title:cx.textContent+'：'+cx.title).split('。').map(t=>t.trim()).filter(Boolean):[]);
   el.innerHTML=`${close}<b class="tt">${esc(h)}${row} ${esc(ch)}</b>${body||'<span class="hint">未啟動，冇粘連，唔使做功。</span>'}`;
   place();}
-document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;
+// 撳「剋沖」標籤：彈出同原局邊柱天剋地沖，唔會揀咗嗰格
+document.addEventListener('click',e=>{const t=e.target.closest('.cell .tk');if(!t)return;e.preventDefault();e.stopPropagation();
+  let el=$('tipPop');if(el&&!el.hidden&&el._cell===t){el.hidden=true;el._cell=null;return;}
+  if(!el){el=document.createElement('div');el.id='tipPop';el.setAttribute('role','dialog');document.body.appendChild(el);}
+  const c=t.closest('.cell'),gz=(c.querySelector('.gz')||{}).textContent||'',top=(c.querySelector('.top')||{}).textContent||'';
+  el.innerHTML=`<button type="button" class="x" aria-label="閂">×</button><b class="tt">${esc(top)} ${esc(gz)}　天剋地沖</b><ul>${t.dataset.tk.split('|').map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+  el.hidden=false;el._y=scrollY;el._cell=t;const r=t.getBoundingClientRect(),w=el.offsetWidth,hh=el.offsetHeight;
+  el.style.left=Math.max(12,Math.min(r.left+r.width/2-w/2,innerWidth-w-12))+'px';el.style.top=(r.bottom+8+hh>innerHeight-8?Math.max(8,r.top-hh-8):r.bottom+8)+'px';},true);
+document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;if(e.target.closest('.cell .tk'))return;
   if(pop&&!pop.hidden&&(e.target.closest('#tipPop .x')||!e.target.closest('#tipPop'))){pop.hidden=true;if(e.target.closest('#tipPop .x'))return;}
   const b=e.target.closest('.chart tr.ganrow .big,.chart tr.zhirow .big,.chart .zg');if(!b)return;const td=b.classList.contains('zg')?b:b.closest('td');
   // 再撳同一個字就收返
@@ -1166,7 +1177,7 @@ function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.
 const isMob=()=>matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
-const VIEW={virt:true,dyn:false,dynZg:true,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:false,shaAll:true,sw:null,swm:'s1'};
+const VIEW={virt:true,dyn:false,dynZg:true,only4:false,yuan:false,aux:false,ming:false,yuanCalc:false,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:true,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:false,shaAll:true,tkAll:false,sw:null,swm:'s1'};
 function drawChains(){
   document.querySelectorAll('td.chain').forEach(td=>{
     const k=+td.dataset.k,up=td.dataset.up==='1',mv=td.dataset.m==='v',links=((S.links||[])[k]||[]).filter(l=>(mv?l.vx!=null&&VIEW.virt:l.vx==null)&&((mv?VIEW.dynZg:VIEW.dyn)||(!S.cols[l.a].dyn&&(l.b==null||!S.cols[l.b].dyn))));
@@ -1193,7 +1204,7 @@ function drawChains(){
   });
 }
 window.addEventListener('resize',()=>{if(S)drawChains();});
-document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vPrevMo'){VIEW.prevMo=e.target.checked;render();}else if(e.target.id==='vSha'){VIEW.sha=e.target.checked;render();}else if(e.target.id==='vShaAll'){VIEW.shaAll=e.target.checked;render();}else if(e.target.id==='vSw'){VIEW.sw=e.target.checked;render();}else if(e.target.id==='vSwm'){VIEW.swm=e.target.value;render();}else if(e.target.name==='mgq'){VIEW.mgQi=e.target.value==='qi';render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
+document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vPrevMo'){VIEW.prevMo=e.target.checked;render();}else if(e.target.id==='vSha'){VIEW.sha=e.target.checked;render();}else if(e.target.id==='vShaAll'){VIEW.shaAll=e.target.checked;render();}else if(e.target.name==='tkm'){VIEW.tkAll=e.target.value==='all';render();}else if(e.target.id==='vSw'){VIEW.sw=e.target.checked;render();}else if(e.target.id==='vSwm'){VIEW.swm=e.target.value;render();}else if(e.target.name==='mgq'){VIEW.mgQi=e.target.value==='qi';render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
 
 /* ---------- state & render ---------- */
 let S=null;
@@ -1228,10 +1239,20 @@ function selectMonth(t){
   let k=S.ds.findIndex(x=>x.sol.toYmd()===t);S.dd=k<0?0:k;
 }
 
+// 天剋地沖：大運流年流月流日同原局某一柱，天干係七殺相剋（同陰陽），地支六沖
+const LIUCHONG=['子午','丑未','寅申','卯酉','辰戌','巳亥'];
+// 天剋地沖：天干同陰陽相剋（七殺）而且地支六沖；VIEW.tkAll 開就同盤上顯示緊嘅所有柱比，閂就只同原局四柱比
+function tkdc(gz){if(!gz||!S||!S.P)return [];const g=gi(gz[0]);
+  const tg=VIEW.tkAll&&S.cols?S.cols.filter(c=>c.gz&&!c.sha).map(c=>({h:c.h,q:c.gz,n4:/^[年月日時]柱$/.test(c.h)})):[['年柱',0],['月柱',1],['日柱',2],['時柱',3]].map(([h,i])=>({h,q:S.P[i],n4:true}));
+  return tg.map(({h,q,n4})=>{const h2=gi(q[0]);
+    const k1=(gw(g)+2)%5===gw(h2)&&g%2===h2%2,k2=(gw(h2)+2)%5===gw(g)&&g%2===h2%2,ch=LIUCHONG.some(x=>x===gz[1]+q[1]||x===q[1]+gz[1]);
+    return (k1||k2)&&ch?{h,s:n4?h[0]:h.replace('大運','運'),gz:q,txt:`同${n4?'原局':''}${h}${q}天剋地沖（${k1?gz[0]+'剋'+q[0]:q[0]+'剋'+gz[0]}、${gz[1]}沖${q[1]}）`}:null;}).filter(Boolean);}
+function tkTag(gz){const t=tkdc(gz);if(!t.length)return '';
+  return `<span class="tk" title="${t.map(x=>x.txt).join('\n')}" data-tk="${esc(t.map(x=>x.txt).join('|'))}">剋沖${t.map(x=>x.s).join(t.every(x=>x.s.length===1)?'':'·')}</span>`;}
 function gzCell(gz,top,sub,pressed,extra,data){
   if(!gz)return `<button type="button" class="cell ${extra||''}" aria-pressed="${pressed}" ${data}><span class="top">${top}</span><span class="gz" style="color:var(--muted)">—</span><span class="s">${sub}</span></button>`;
   const g=gi(gz[0]),z=zi(gz[1]);
-  return `<button type="button" class="cell ${extra||''}" aria-pressed="${pressed}" ${data}><span class="top">${top}</span><span class="gz"><span class="w${gw(g)}">${gz[0]}</span><span class="w${ZWX[z]}">${gz[1]}</span></span><span class="s">${sub}</span></button>`;
+  return `<button type="button" class="cell ${extra||''}" aria-pressed="${pressed}" ${data}><span class="top">${top}</span><span class="gz"><span class="w${gw(g)}">${gz[0]}</span><span class="w${ZWX[z]}">${gz[1]}</span></span><span class="s">${sub}</span>${tkTag(gz)}</button>`;
 }
 function ssShort(dm,g){return shishen(dm,g);}
 
@@ -1435,6 +1456,7 @@ function render(){
   </section>
   <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png>⤓ 存做圖片</button><button type="button" class="lnk pngbtn" data-share>🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label>${S.shaOk?`<label class="chk" title="有粘連但盤上冇七殺嘅天干（地支冇沖害刑），自動由最右邊招殺星（規則 Q6）"><input type="checkbox" id="vSha" ${VIEW.sha?'checked':''}>招感殺星${can.sha()?'':(COST.sha?`（會扣分：每個盤 ${COST.sha} 分）`:'')}</label><label class="chk" title="開：盤上顯示緊嘅所有柱（大運、流年、流月、流日等）都會招殺星；閂：只係原局四柱招（規則 Q6）"><input type="checkbox" id="vShaAll" ${VIEW.shaAll?'checked':''} ${VIEW.sha?'':'disabled'}>招殺星計全部柱</label>`:''}${can.sw()?`<label class="chk" title="計法未確定，暫時所有人都睇到"><input type="checkbox" id="vSw" ${S.swOn?'checked':''}>最強五行（推測）</label><select id="vSwm" aria-label="最強五行計法" title="最強五行用邊種計法" ${S.swOn?'':'disabled'}>${Object.entries(SWM).map(([k,n])=>`<option value="${k}"${VIEW.swm===k?' selected':''}>${n}</option>`).join('')}</select>`:''}<label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${BUY.msg?`<div class="hint loopnote">${esc(BUY.msg)}</div>`:''}${loopNote()}${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
   <section class="panel">
+    <div class="row tkopt"><span class="cap">天剋地沖標籤比對</span><label class="chk"><input type="radio" name="tkm" value="n4" ${VIEW.tkAll?'':'checked'}>只限原局四柱</label><label class="chk"><input type="radio" name="tkm" value="all" ${VIEW.tkAll?'checked':''}>盤上顯示緊嘅所有柱</label></div>
     <div class="lvl"><h3>大運（撳選）</h3><div class="strip">${dyStrip}</div></div>
     <div class="lvl"><h3>流年</h3><div class="strip">${lnStrip}</div></div>
     <div class="lvl"><h3>流月（以節氣分月）</h3><div class="strip">${moStrip}</div></div>
