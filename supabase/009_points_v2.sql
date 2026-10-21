@@ -1,6 +1,6 @@
 -- 009：貢獻分調整（要先行過 008_points.sql）。Run once in the SQL Editor. Safe to run again.
 --   每個註冊咗嘅用戶一開始有 100 分（登記獎勵）。
---   用分改平：招感殺星 5 分、最強五行 10 分、做功 20 分（每個盤每日扣一次；等級本身有嘅功能照舊免費，管理員全部免費）。
+--   用分改平：招感殺星 1 分、最強五行 2 分、做功 4 分（每個盤每日扣一次；等級本身有嘅功能照舊免費，管理員全部免費）。
 --   其他計分規則同 008 一樣。
 
 
@@ -56,7 +56,7 @@ language plpgsql volatile security definer set search_path = public
 as $$
 declare
   uid uuid := auth.uid();
-  c int := case p_kind when 'sha' then 5 when 'sw' then 10 when 'work' then 20 end;
+  c int := case p_kind when 'sha' then 1 when 'sw' then 2 when 'work' then 4 end;
   t text;
   bal int;
   today date := (now() at time zone 'Asia/Hong_Kong')::date;
