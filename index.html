@@ -41,7 +41,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 h1{font-family:var(--f-display);font-weight:900;font-size:30px;margin:0;letter-spacing:.06em}
 header p{margin:0;color:var(--muted);font-size:13px}
-.lbwhy{margin:0 0 6px;font-size:14px;line-height:1.6}.pts{font-size:12px;font-weight:700;color:#b45309;white-space:nowrap}.lbt tr.me td{background:var(--soft);font-weight:700}
+.lbhow ul{margin:4px 0 6px;padding-left:4px;list-style:none}.lbhow li{margin:3px 0;font-size:14px}.lbwhy{margin:0 0 6px;font-size:14px;line-height:1.6}.pts{font-size:12px;font-weight:700;color:#b45309;white-space:nowrap}.lbt tr.me td{background:var(--soft);font-weight:700}
 .gblist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .gblist li{border-top:1px solid var(--line);padding-top:10px}
 .gbreplies{list-style:none;margin:8px 0 4px 18px;padding:0 0 0 12px;border-left:3px solid var(--line);display:flex;flex-direction:column;gap:8px}
@@ -755,7 +755,17 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <section class="panel" id="lb" hidden>
   <h2>貢獻排行榜 <button type="button" class="lnk" data-lbreload>↻ 更新</button></h2>
   <p class="lbwhy">點解要有貢獻分？我哋希望大家一齊將命例資料庫做得越嚟越齊全：多啲收集真實命例，再喺每個命例補充事件同筆記，令每個盤都有更多可以印證嘅資料。資料越充足，大家研究同驗證計法就越有根據。貢獻分係對每位出力嘅師兄師姐嘅一點回饋，亦可以用嚟換取進階功能。</p>
-  <p class="hint">註冊咗就有 100 分。命例有 3 個或以上其他人撳「準」：+100，每個事件 +20（每個命例最多計 5 個；標籤唔加分）；喺其他人嘅命例撳準或唔準：每個命例 +10（每日最多計 5 個）；筆記有 3 個或以上其他人撳「準」：+30；留言版每條留言 +5（每日最多計 2 條）。用分：冇等級嘅功能可以用分換，每個盤每日扣一次，扣幾多分喺顯示選項度有寫。夠 3 個準之後有人撤回都唔扣分，命例或筆記刪咗先冇分。管理員唔上榜。</p>
+  <div class="lbhow"><b>點樣賺分？好簡單：</b>
+  <ul>
+    <li>🎁 <b>註冊就送 100 分</b>，一開始已經可以試用進階功能。</li>
+    <li>📖 <b>加命例</b>：分享你知道嘅真實命例，有 3 位師兄師姐撳「準」，你就有 <b>100 分</b>。</li>
+    <li>📅 <b>補充事件</b>：喺命例加結婚、生仔、轉工呢類事件同日期，每個 <b>20 分</b>（每個命例最多計 5 個，命例要有 3 個「準」先計）。</li>
+    <li>📝 <b>寫筆記</b>：喺命例寫低你嘅分析或者補充資料，有 3 位撳「準」就有 <b>30 分</b>。</li>
+    <li>👍 <b>幫人投票</b>：睇其他人嘅命例，撳「準」或者「唔準」，每個 <b>10 分</b>（每日最多計 5 個）。</li>
+    <li>💬 <b>留言版留言</b>：每條 <b>5 分</b>（每日最多計 2 條）。</li>
+  </ul>
+  <p class="hint">用分：未有等級嘅功能可以用分換，每個盤每日只扣一次，扣幾多分喺顯示選項度有寫。夠 3 個「準」之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。標籤唔計分。管理員唔上榜。</p>
+  </div>
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
 </section>
