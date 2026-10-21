@@ -1,4 +1,4 @@
--- 008：貢獻分。分數每次即時計。命例或者筆記一旦夠 3 個準，就記低（point_awards），之後有人撤回準都唔扣分；命例或者筆記刪咗先冇分。
+-- 008：貢獻分（新用戶一開始有 100 分）。分數每次即時計。命例或者筆記一旦夠 3 個準，就記低（point_awards），之後有人撤回準都唔扣分；命例或者筆記刪咗先冇分。
 --   命例：有 3 個或以上其他人撳「準」，命例主人 +100；每個事件 +20（每個命例最多計 5 個）；標籤唔加分，免得有人亂加標籤
 --   投票：喺唔屬於自己嘅命例撳準或者唔準，每個命例 +10，每日（香港時間）最多計 5 個（改票都係計一次，撤回都唔扣）
 --   防假帳號（暫時閂咗）：將 voter_ok 入面嘅 0 days 改做 7 days，註冊未夠 7 日嘅帳號撳嘅準就唔計入 3 個準
@@ -6,7 +6,7 @@
 --   留言版：每條留言（包括回覆）+5，每日（香港時間）最多計 2 條；刪咗嘅留言唔計
 -- 事件只有命例主人（同管理員）改得，所以計俾命例主人。
 -- 用分：等級本身有嘅功能唔扣分（進階用戶：招感殺星；高級用戶：招感殺星、最強五行；管理員：全部）。
---   冇嗰個等級就用分換，每個盤（同一組出生資料）每日每個功能扣一次：招感殺星 10、最強五行 30、做功 50（做功除咗管理員人人都扣）。
+--   冇嗰個等級就用分換，每個盤（同一組出生資料）每日每個功能扣一次：招感殺星 5、最強五行 10、做功 20（做功除咗管理員人人都扣）。
 --   只可以經 spend_points() 扣，佢會檢查等級同分數夠唔夠，網頁冇得自己改。
 -- 登入咗嘅用戶先睇到排行榜；管理員唔上榜；唔會顯示電郵。要先行過 007_tiers.sql。Run once in the SQL Editor. Safe to run again.
 
@@ -113,13 +113,13 @@ as $$
            select g.author as u, (g.created_at at time zone 'Asia/Hong_Kong')::date as d, count(*) as n
            from public.guestbook g group by 1, 2) x group by u),
   sp as (select p.user_id as u, sum(p.cost) as n from public.point_spends p group by p.user_id),
-  us as (select u from cs union select u from cv union select u from nv union select u from gb union select u from sp)
+  us as (select id as u from auth.users)
   select us.u,
          coalesce(nullif(au.raw_user_meta_data->>'full_name', ''), nullif(au.raw_user_meta_data->>'name', ''),
                   (select c.owner_name from public.cases c where c.owner = us.u and c.owner_name <> '' order by c.created_at desc limit 1),
                   (select m.author_name from public.comments m where m.author = us.u and m.author_name <> '' order by m.created_at desc limit 1),
                   '用戶'),
-         (coalesce(cs.n, 0) * 100 + coalesce(cs.e, 0) * 20 + coalesce(cv.n, 0) * 10 + coalesce(nv.n, 0) * 30 + coalesce(gb.n, 0) * 5 - coalesce(sp.n, 0))::int,
+         (100 + coalesce(cs.n, 0) * 100 + coalesce(cs.e, 0) * 20 + coalesce(cv.n, 0) * 10 + coalesce(nv.n, 0) * 30 + coalesce(gb.n, 0) * 5 - coalesce(sp.n, 0))::int,
          coalesce(cs.n, 0)::int, coalesce(cs.t, 0)::int, coalesce(cs.e, 0)::int, coalesce(cv.n, 0)::int, coalesce(nv.n, 0)::int, coalesce(gb.n, 0)::int, coalesce(sp.n, 0)::int
   from us
   left join cs on cs.u = us.u
@@ -140,7 +140,7 @@ language plpgsql volatile security definer set search_path = public
 as $$
 declare
   uid uuid := auth.uid();
-  c int := case p_kind when 'sha' then 10 when 'sw' then 30 when 'work' then 50 end;
+  c int := case p_kind when 'sha' then 5 when 'sw' then 10 when 'work' then 20 end;
   t text;
   bal int;
   today date := (now() at time zone 'Asia/Hong_Kong')::date;
