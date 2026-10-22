@@ -1201,7 +1201,7 @@ const lkBrk=ls=>{const m=new Map();ls.forEach(l=>{const n=l.vx!=null?'招感'+(l
   return [...m].map(([k,c])=>{const [n,w]=k.split('|');return `${n} ${c} 條×${fmtN(+w)}`;}).join('、');};
 const swNote=m=>m!==1?`；最強五行同五行，×${fmtN(m)}`:'';
 // 箭咀：電腦版逐個畫；手機版（CSS 揀）淨係一個箭咀加數字，例如 ↓3.5
-const ARW=(n,dn)=>{n=Math.round(n*2)/2;if(!n)return '';const b=dn?'<b class="dn">↓</b>':'<b>↑</b>',sm=dn?'<b class="dn sm">↓</b>':'<b class="sm">↑</b>',bg=dn?'<b class="dn bg" title="大箭咀＝5">↓</b>':'<b class="bg" title="大箭咀＝5">↑</b>',f=Math.ceil(n-1e-9);return `<span class="arF" title="${fmtN(n)} 個箭咀">${bg.repeat(Math.floor(f/5))+b.repeat(f%5)}</span><span class="arC${dn?' dn':''}">${dn?'↓':'↑'}<i>${fmtN(n)}</i></span>`;};
+const ARW=(n,dn)=>{n=Math.round(n*2)/2;if(!n)return '';const b=dn?'<b class="dn">↓</b>':'<b>↑</b>',sm=dn?'<b class="dn sm">↓</b>':'<b class="sm">↑</b>',bg=dn?'<b class="dn bg">↓</b>':'<b class="bg">↑</b>',f=Math.ceil(n-1e-9);return `<span class="arF">${bg.repeat(Math.floor(f/5))+b.repeat(f%5)}</span><span class="arC${dn?' dn':''}">${dn?'↓':'↑'}<i>${fmtN(n)}</i></span>`;};
 function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,yr:0,why:[]},yr=pw.yr||0,m=swMul(k,S.cols[ci].gz[k]);
   // 激活力度（Q8）：未啟動粘連計 ↓（權重睇「箭咀力度」）；啟動咗 ↓ 全部變 ↑（唔會另外再加），冇粘連嘅字啟動唔加 ↑；啟動鏈第一層係基本，之後每多一層加
   // 天干力度（Q7，連陽刃）方向全部跟個字：啟動咗 ↑，粘住未啟動 ↓，冇粘連 ↑。同一個字永遠只有一個方向；最強五行同五行嘅字總數再乘 AW.sw
