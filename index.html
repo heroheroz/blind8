@@ -135,7 +135,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .chart .dyn{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
 .big{font-family:var(--f-display);font-weight:900;font-size:40px;line-height:1.1;display:block}
 .ch{position:relative;display:inline-block}
-.wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wklist b[class^=w]{font-family:var(--f-display);font-size:1.15em;font-weight:900}.wklt{color:var(--muted);font-weight:400;margin:0 2px}.wkon{color:var(--good)}.wkoff{color:var(--muted)}.wkblk{color:var(--bad)}.wkr b[class^=w]{font-size:1.05em}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
+.wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wklist b[class^=w]{font-family:var(--f-display);font-size:1.15em;font-weight:900}.wklt{color:var(--muted);font-weight:400;margin:0 2px}.wkon{color:var(--good)}.wkoff{color:var(--muted)}.wkblk{color:var(--bad)}.wkr b[class^=w]{font-size:1.05em}.wkm{font-size:13px;color:var(--accent,#8a6d3b);margin-top:1px}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
 /* 啟動：字後面用返自己五行顏色嘅光暈；做到功右下角細綠剔、做唔到功細紅交叉（可以喺選項收埋）；全部靜止 */
 .gl{position:relative}.on .gl{text-shadow:0 0 .12em color-mix(in srgb,currentColor 70%,transparent),0 0 .35em color-mix(in srgb,currentColor 45%,transparent)}
 .wd .gl::after,.wn .gl::after{content:'✓';position:absolute;right:-.12em;bottom:.02em;font-family:var(--f-body);font-size:max(12px,.36em);font-weight:900;line-height:1;color:var(--good);text-shadow:0 0 2px var(--paper),0 0 2px var(--paper)}.wn .gl::after{content:'✗';color:var(--bad)}.chart.nowk .gl::after{content:none}
@@ -569,7 +569,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣預設加一個箭咀（同其他箭咀一隻色；實際數值喺「箭咀力度」度可以調）：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加半個（見多過一個嗰陣再乘「多個同五行地支」倍數，預設 ×1）；③ 盤上任何位置見到<b>佢自己</b>嘅陽刃地支（甲見卯、丙見午、戊見午、庚見酉、壬見子；陰干冇陽刃），每見一個加一個，唔理其他天干嘅陽刃。三樣可以疊加，例如丙坐戌，盤上另外有一個巳、一個午：坐戌 1＋火地支巳午 2×0.5＝1＋陽刃午 1＝3。三樣箭咀方向全部跟住個字嘅狀態：已經啟動，加 ↑，激活更大力；有粘連但未啟動，加 ↓，粘得更實；冇粘連又未啟動，就係 ↑。同一個字永遠只會有一個方向，唔會同時有 ↑ 同 ↓。魁罡（庚辰、庚戌、壬辰、戊戌）都係坐辰戌，不過喺「箭咀力度」度獨立一行「魁罡」，預設同樣係一個箭咀；魁罡用呢個數代替 ①，唔會兩樣疊加。力度箭咀唔改變啟動與否，亦唔影響招感、粘連同啟動嘅計算。</li>
     <li id="r-mk"><b>墓庫（顯示選項，預設唔開）</b>　剔咗「墓庫」，盤上嘅辰戌丑未會標庫：辰係水庫、戌係火庫、丑係金庫、未係木庫。<b>入墓</b>：盤上顯示緊嘅其他柱，天干五行或者地支本氣五行同個庫一樣，就算入咗呢個墓，彈框會列出邊個字同佢嘅十神（以日主計）；入墓嘅有偏財正財就標「財入墓」，有七殺正官就標「官入墓」。<b>開庫</b>：有地支沖佢（辰戌、丑未）或者刑佢（丑戌未互刑），就標「開」，實線框；冇就係閉庫，虛線框。開庫嘅字嚟自大運流年流月流日，就提示留意應期。墓庫淨係標籤，唔影響箭咀、粘連同啟動嘅計算。</li>
     <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：同最強五行（有顯示嘅時候）同一五行嘅字，箭咀總數再乘 1.5（喺「箭咀力度」可以調），四捨五入到半個。未啟動嘅字，粘連按 N6 計 ↓（合、伏吟一個，連續、半合、三合局、招感粘連半個，半個用細箭咀），↓ 越多粘連程度越高；啟動咗之後，呢啲 ↓ 全部變做 ↑（係轉方向，唔會另外再加 ↑）。本身冇粘連嘅字啟動咗唔加箭咀，只顯示「啟動」。啟動鏈（Q3）第一層係基本，之後每多一層加一個 ↑。例如 3 條粘連嘅字被七殺直接啟動，就係 ↑3；經兩層鏈先被啟動（七殺本身都係被人啟動），就係 ↑4；冇粘連嘅字經兩層鏈先被啟動，就係 ↑1。天干再加 Q7 嘅力度箭咀，啟動咗加 ↑，未啟動粘住加 ↓。所有箭咀都係同一隻色。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
-    <li id="r-wk"><b>做功計算（選項，每次剔扣分）</b>　只睇天干。日主同九個十神（劫財、食神、傷官、偏財、正財、七殺、正官、偏印、正印）各一行，寫成「日主 &lt; 七殺 &lt; 七殺嘅七殺 &lt; …」：先睇呢個十神有冇粘連，冇就唔使七殺；有就睇佢嘅七殺喺唔喺盤、啟動未、有冇粘連；盤上冇就睇由有粘連嗰個字嘅右邊招唔招得到（中途有字五合佢＝合住，有佢嘅七殺＝擋走，呢啲字已啟動就行得過）；七殺本身有粘連就再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。每行下面用盤上嘅計法（啟動同 W1 做功）寫每個位做唔做到功；做唔到就寫原因同粘連條數。呢個只係將盤上嘅計法逐步寫出嚟，唔會改到啟動或者做功嘅結果。</li>
+    <li id="r-wk"><b>做功計算（選項，每次剔扣分）</b>　先睇日主，再逐個睇原局四柱另外 7 個字（年干、月干、時干、年支、月支、日支、時支），每行寫埋個字嘅十神（地支用本氣）代表乜：日主＝自己；比劫＝兄弟姊妹、朋友；食傷＝才華、子女；財＝錢財，男命正財係妻子，女命財係父親；官殺＝男命事業、地位，女命丈夫；印＝母親、屋企、學業；另外寫埋宮位（年柱祖上早年、月柱父母兄弟、日支配偶宮、時柱子女晚年）。天干寫成「X &lt; 七殺 &lt; 七殺嘅七殺 &lt; …」：先睇呢個字有冇粘連，冇就唔使七殺；有就睇佢嘅七殺喺唔喺盤、啟動未、有冇粘連；盤上冇就睇由佢右邊招唔招得到（中途有字五合佢＝合住，有佢嘅七殺＝擋走，呢啲字已啟動就行得過）；七殺本身有粘連就再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。地支就睇沖、害、刑佢嘅字（包括招感字同招殺星）喺唔喺盤、啟動未，只列一層，再寫盤上計出嚟嘅啟動鏈。每行下面寫呢個位做唔做到功；做唔到就寫原因同粘連條數。最尾列出原局四柱招感出嚟嘅字（招合、夾拱，唔計大運流年）。呢個只係將盤上嘅計法逐步寫出嚟，唔會改到啟動或者做功嘅結果。</li>
     <li id="r-s1"><b>最強五行（推測）</b>　顯示選項可以揀三種推論。<b>推論1：月令人元並用</b>，只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），最強五行就係命宮地支嘅五行，計完。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局沖、刑或害，但未被啟動，天干陰陽倒轉，例如丁變丙。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例推出嚟，五行 25 個全中，有寫天干嘅 14 個全中；①③④ 係睇住呢批命例調出嚟，① 只有一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。<br><b>推論2：月令印星</b>：直接取月令本氣嘅正印，例如月令巳本氣丙，取乙木。<b>推論3：人元司令印星</b>：直接取人元司令嘅正印，例如司令戊，取丁火。推論2、3 唔理命宮、做功同陰陽倒轉。立春日出世嘅人，月令同司令一定係寅同戊，所以用推論2、3，每年立春日出世都一樣（推論2 係水，推論3 係火）；用推論1 就會因應做功同命宮而唔同。<br>指住或者撳「最強五行」標籤會彈出：盤上顯示緊嘅天干有冇剋最強五行（同陰陽嘅標「七殺」）、屬最強五行嘅地支有冇被沖、刑、害，有冇地支五行剋佢，同埋盤上屬最強五行嘅天干地支有冇粘連、粘緊乜。最上面會俾結論：只有屬最強五行嘅字有粘連而要做功又做唔到功（W1），先算「唔好」，標籤會變紅框加 ⚠。被天干剋、地支沖刑害或者地支剋，可以係做功，做到功係好事，所以只會列出處數，唔算唔好、唔會變紅；有粘連而做到功（或者唔使做功）都唔算唔好。彈框最尾會列出三個推論喺呢個盤嘅結果，登入咗可以逐個撳 👍（準）或者 👎（唔準），仲會顯示全站總票數，等大家一齊驗證邊個推論最準。呢度只係列出嚟參考，唔改最強五行嘅計法。</li>
     <li id="r-w1"><b>W1 做功</b>　每個字剋一種五行（例如甲木剋土）。盤上嗰種五行嘅字（天干睇天干，地支睇地支本氣）如果有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
@@ -1131,49 +1131,75 @@ function activation(cols,k,links,virt=[],sha=[]){
   links.forEach(l=>{l.broken=brk(l.a)||(l.b!=null&&brk(l.b))||(l.vi!=null&&vact[l.vi][0]>0);});
   act.vact=vact;act.loop=[...new Set(loopC.filter(j=>all[j][0]>0).map(j=>chars[vals[j]]))];return act;
 }
-// 做功計算（選項，每次剔扣分）：日主同九個十神逐行睇，只睇天干。
-// 每行由個十神開始：有冇粘連 → 佢嘅七殺喺唔喺盤、啟動未；盤上冇就睇招唔招得到（右邊有冇字合住／擋走）→ 再睇七殺嘅七殺，到字重複、七殺冇粘連或者 6 層為止。
-// 最後用盤上嘅計法（啟動、做功 W1）寫每個位做唔做到功；做唔到就寫原因同粘連條數。
-const WK_SS=['劫財','食神','傷官','偏財','正財','七殺','正官','偏印','正印'];
-function workRows(){
-  const cc=S.cc,act=S.act[0],links=S.links[0],dm=gi(S.cols.find(c=>c.h==='日柱').gz[0]);
-  const lb=i=>{const c=cc[i];return (c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0])+'干'+c.gz[0];};
-  const pos=v=>cc.map((c,i)=>i).filter(i=>cc[i].gz&&gi(cc[i].gz[0])===v);
-  const lk=i=>links.filter(l=>l.a===i||l.b===i);
-  const sha=shaCalc(cc,links,0,true);
-  const nodeTxt=(v,prevP)=>{const P=pos(v);
-    if(!P.length){// 盤上冇：由上一層有粘連嘅字，喺右邊招七殺；右邊有字合住或者擋走，未啟動就招唔到
-      const sh=sha.find(x=>x.c===GAN[v]),cl=sh?sh.callers.filter(c=>prevP.includes(c.i)):[];
-      if(!cl.length)return {t:'盤上冇',stop:1,ok:0};
-      const one=c=>{const st=c.path.find(b=>!(act[b.j][0]>0)),pass=c.path.filter(b=>act[b.j][0]>0);
-        return `由${lb(c.i)}招${pass.length?'（行過'+pass.map(b=>lb(b.j)).join('、')+'）':''}${st?`：被${lb(st.j)}${st.t}`:'：招得到'}`;};
-      const ok=cl.some(c=>!c.path.some(b=>!(act[b.j][0]>0)));
-      return {t:'盤上冇；'+cl.map(one).join('；')+(S.useSha?'':'（未開招感殺星，盤上冇計）'),stop:1,ok:ok&&S.useSha};}
-    const st=P.map(i=>{const n=lk(i).length;return lb(i)+(act[i][0]>0?' 已啟動':n?` 粘連 ${n} 條未啟動`:' 冇粘連');});
-    const free=P.some(i=>!lk(i).length),on=P.some(i=>act[i][0]>0);
-    return {t:st.join('、'),stop:free?2:0,ok:free||on,P};};
-  const line=(name,v)=>{const P=pos(v);
-    if(!P.length)return {name,c:GAN[v],chain:`${name}${GAN[v]}：盤上冇`,res:[]};
-    const parts=[`${name}${GAN[v]}（${P.map(i=>lb(i)+(lk(i).length?` 粘連 ${lk(i).length} 條`:' 冇粘連')).join('、')}）`];
-    if(P.every(i=>!lk(i).length))parts.push('冇粘連，唔使七殺');
-    else{const seen=new Set([v]);let cur=v,prevP=P.filter(i=>lk(i).length);
-      for(let d=0;d<6;d++){const k=(cur+6)%10;
-        if(seen.has(k)){parts.push(`七殺${GAN[k]}（已經喺條鏈度，停）`);break;}
-        const nd=nodeTxt(k,prevP);parts.push(`七殺${GAN[k]}（${nd.t}${nd.stop===2?'，冇粘連，本身就啟動得':''}）`);
-        if(nd.stop)break;seen.add(k);cur=k;prevP=nd.P.filter(i=>lk(i).length);if(!prevP.length)break;}}
-    const res=P.map(i=>{const w=S.work[0][i],n=lk(i).length,on=act[i][0]>0;
-      const why=on?'':n?`粘連 ${n} 條（${lkBrk(lk(i))}），七殺未啟動、招唔到，解唔開`:'冇七殺剋佢';
-      if(!w)return {i,txt:`${lb(i)}：唔使做功（佢剋嘅字冇粘連）${on?'，已啟動':''}`,cls:''};
-      return {i,txt:`${lb(i)}：${w.done?'做到功':'做唔到功'}（要剋 ${w.tg.join('、')}）${w.done?'':'：'+why}`,cls:w.done?'ok':'no'};});
-    return {name,c:GAN[v],chain:parts.join(' < '),res};};
-  const ss=g=>WK_SS.map(n=>[n,[...Array(10).keys()].find(x=>shishen(dm,x)===n)]);
-  return [line('日主',dm),...ss().map(([n,v])=>line(n,v))];}
-// 天干用返五行顏色，箭咀「<」淡色，已啟動綠、未啟動灰
-const wkHtml=t=>esc(t).replace(/[甲乙丙丁戊己庚辛壬癸]/g,c=>`<b class="w${gw(gi(c))}">${c}</b>`).replace(/ &lt; /g,' <span class="wklt">&lt;</span> ').replace(/已啟動|招得到/g,m=>`<span class="wkon">${m}</span>`).replace(/未啟動|盤上冇/g,m=>`<span class="wkoff">${m}</span>`).replace(/被[^：；（）]*?(合住|擋走)/g,m=>`<span class="wkblk">${m}</span>`);
-function workSec(){const rows=workRows();
-  return `<section class="panel" id="workBox"><h2>做功計算 <span class="hint">（只睇天干）</span></h2>
-  <p class="hint">每行由個十神開始：有冇粘連 → 佢嘅七殺喺唔喺盤、啟動未；盤上冇就睇招唔招得到（右邊有冇字合住或者擋走）→ 再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。下面嗰行係盤上計出嚟嘅結果。</p>
-  <ul class="wklist">${rows.map(r=>`<li><div class="wkc">${wkHtml(r.chain)}</div>${r.res.map(x=>`<div class="wkr ${x.cls}">${x.cls==='ok'?'✓ ':x.cls==='no'?'✗ ':''}${wkHtml(x.txt)}</div>`).join('')}</li>`).join('')}</ul></section>`;}
+// 做功計算（選項，每次剔扣分）：先睇日主，再逐個睇原局四柱另外 7 個字（年干、月干、時干、年支、月支、日支、時支），每個字寫埋十神代表乜（六親、宮位）。
+// 天干：有冇粘連 → 佢嘅七殺喺唔喺盤、啟動未；盤上冇就睇招唔招得到（右邊有冇字合住／擋走）→ 再睇七殺嘅七殺，到字重複、七殺冇粘連或者 6 層為止。
+// 地支：有冇粘連 → 沖、害、刑佢嘅字喺唔喺盤、啟動未（包括招感字同招殺星），只睇一層，再寫盤上計出嚟嘅啟動鏈。
+// 最後用盤上嘅計法（啟動、做功 W1）寫呢個位做唔做到功；做唔到就寫原因同粘連條數。最尾列出原局四柱招感出嚟嘅字。
+// 十神意思（盲派常用講法，男女命唔同嘅分開寫）
+const WK_MEAN=(ss,male)=>({日主:'自己',比肩:'兄弟姊妹、朋友、同輩',劫財:'兄弟姊妹、朋友、競爭者',
+  食神:'才華、享受、口福、子女',傷官:'才華、口才、表現、子女',
+  偏財:male?'錢財、父親、異性緣':'錢財、父親',正財:male?'錢財、妻子':'錢財、父親',
+  七殺:male?'事業、權力、壓力':'丈夫（情人）、壓力',正官:male?'事業、地位、名聲':'丈夫、地位',
+  偏印:'母親、屋企、學業、偏門學問',正印:'母親、屋企、學業、文書'})[ss]||'';
+const WK_GONG={年干:'祖上、早年',年支:'祖上、早年',月干:'父母、兄弟、青年',月支:'父母、兄弟、青年',日支:'配偶宮',時干:'子女、晚年',時支:'子女、晚年'};
+function workRows(male){
+  const cc=S.cc,day=S.cols.findIndex(c=>c.h==='日柱'),dm=gi(cc[day].gz[0]);
+  const NAT=c=>['年柱','月柱','日柱','時柱'].includes(c.h);
+  // 地支字前面加記號，等 wkHtml 只幫真係地支嘅字上色（唔會整到「未啟動」嘅未）
+  const ch=(k,v)=>k?'\x01'+ZHI[v]:GAN[v];
+  const lb=(i,k)=>{const c=cc[i];return (c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0])+(k?'支':'干')+ch(k,k?zi(c.gz[1]):gi(c.gz[0]));};
+  const val=(i,k)=>k?zi(cc[i].gz[1]):gi(cc[i].gz[0]);
+  const pos=(v,k)=>cc.map((c,i)=>i).filter(i=>cc[i].gz&&val(i,k)===v);
+  const lk=(i,k)=>S.links[k].filter(l=>l.a===i||l.b===i);
+  const shaTxt=(k,v,prevP)=>{// 盤上冇：由有粘連嘅字，喺右邊招殺星；右邊有字合住或者擋走，未啟動就招唔到
+    const act=S.act[k],sh=shaCalc(cc,S.links[k],k,true).find(x=>x.c===(k?ZHI:GAN)[v]),cl=sh?sh.callers.filter(c=>prevP.includes(c.i)):[];
+    if(!cl.length)return null;
+    const one=c=>{const st=c.path.find(b=>!(act[b.j][0]>0)),pass=c.path.filter(b=>act[b.j][0]>0);
+      return `由${lb(c.i,k)}招${pass.length?'（行過'+pass.map(b=>lb(b.j,k)).join('、')+'）':''}${st?`：被${lb(st.j,k)}${st.t}`:'：招得到'}`;};
+    return cl.map(one).join('；')+(S.useSha?'':'（未開招感殺星，盤上冇計）');};
+  const stTxt=(P,k)=>P.map(i=>{const n=lk(i,k).length;return lb(i,k)+(S.act[k][i][0]>0?' 已啟動':n?` 粘連 ${n} 條未啟動`:' 冇粘連');}).join('、');
+  const ganChain=(v,P)=>{const parts=[];const seen=new Set([v]);let cur=v,prevP=P;
+    for(let d=0;d<6;d++){const k=(cur+6)%10;
+      if(seen.has(k)){parts.push(`七殺${GAN[k]}（已經喺條鏈度，停）`);break;}
+      const Q=pos(k,0);
+      if(!Q.length){const t=shaTxt(0,k,prevP);parts.push(`七殺${GAN[k]}（盤上冇${t?'；'+t:''}）`);break;}
+      const free=Q.some(i=>!lk(i,0).length);parts.push(`七殺${GAN[k]}（${stTxt(Q,0)}${free?'，冇粘連，本身就啟動得':''}）`);
+      if(free)break;seen.add(k);cur=k;prevP=Q.filter(i=>lk(i,0).length);if(!prevP.length)break;}
+    return parts;};
+  const zhiChain=(i)=>{const v=val(i,1),ks=killers(1,v),parts=[];
+    ks.forEach(kv=>{const t=BR_ACT[ZHI[v]][ZHI[kv]],Q=pos(kv,1).filter(j=>j!==i);
+      const vz=(S.zg[1]||[]).map((z,vi)=>({z,vi})).filter(x=>x.z.c===ZHI[kv]);
+      const bits=[];if(Q.length)bits.push(stTxt(Q,1)+(Q.some(j=>!lk(j,1).length)?'，冇粘連，本身就沖得':''));
+      vz.forEach(x=>bits.push(`招感${ch(1,kv)}（${x.z.tag}）${S.vact[1][x.vi]&&S.vact[1][x.vi][0]>0?' 已啟動':' 未啟動'}`));
+      if(t==='沖'&&!Q.length&&!vz.length){const s=shaTxt(1,kv,[i]);if(s)bits.push('盤上冇；'+s);}
+      if(bits.length)parts.push(`${t}${ch(1,kv)}（${bits.join('；')}）`);});
+    return [parts.length?parts.join(' ／ '):'盤上冇字沖、害、刑佢'];};
+  const line=(i,k,name)=>{const v=val(i,k),ss=name||(k?shishen(dm,gi(HIDE[cc[i].gz[1]][0])):shishen(dm,v));
+    const p=cc[i].h[0]+(k?'支':'干'),n=lk(i,k).length,on=S.act[k][i][0]>0;
+    const head=`${name?'日主':p}${ch(k,v)}${k?'（本氣'+HIDE[cc[i].gz[1]][0]+'）':''}${name?'':'　'+ss}（${n?`粘連 ${n} 條`:'冇粘連'}）`;
+    const parts=[head];
+    if(!n)parts.push(k?'冇粘連，唔使沖':'冇粘連，唔使七殺');
+    else parts.push(...(k?zhiChain(i):ganChain(v,[i])));
+    const res=[];if(k&&n&&on&&S.act[1][i][1])res.push({txt:`盤上計法：${S.act[1][i][1].replace(/[子丑寅卯辰巳午未申酉戌亥]/g,m=>'\x01'+m)}`,cls:''});
+    const w=S.work[k][i],why=on?'':n?`粘連 ${n} 條（${lkBrk(lk(i,k))}），${k?'沖害刑佢嘅字未啟動':'七殺未啟動、招唔到'}，解唔開`:(k?'冇字沖害刑佢':'冇七殺剋佢');
+    if(!w)res.push({txt:`唔使做功（佢剋嘅字冇粘連）${on?'，已啟動':''}`,cls:''});
+    else res.push({txt:`${w.done?'做到功':'做唔到功'}（要剋 ${w.tg.map(t=>k?t.slice(0,-1)+'\x01'+t.slice(-1):t).join('、')}）${w.done?'':'：'+why}`,cls:w.done?'ok':'no'});
+    return {mean:WK_MEAN(name?'日主':ss,male)+(name?'':'　｜　'+(WK_GONG[p]||'')),chain:parts.join(' < '),res};};
+  const at=h=>cc.findIndex(c=>c.h===h);
+  const rows=[line(day,0,'日主')];
+  ['年柱','月柱','時柱'].forEach(h=>{const i=at(h);if(i>=0&&cc[i].gz)rows.push(line(i,0));});
+  ['年柱','月柱','日柱','時柱'].forEach(h=>{const i=at(h);if(i>=0&&cc[i].gz)rows.push(line(i,1));});
+  // 原局四柱招感出嚟嘅字（來源全部係原局，唔計大運流年同其他柱）
+  const zg=[0,1].flatMap(k=>(S.zg[k]||[]).map((z,vi)=>({z,vi,k}))).filter(x=>x.z.src.every(j=>NAT(cc[j])))
+    .map(x=>`${x.k?'支':'干'}${ch(x.k,(x.k?ZHI:GAN).indexOf(x.z.c))}（${x.z.tag.replace(/[子丑寅卯辰巳午未申酉戌亥]/g,m=>'\x01'+m)}，${x.z.from.replace(/[子丑寅卯辰巳午未申酉戌亥]/g,m=>'\x01'+m)}${S.vact[x.k][x.vi]&&S.vact[x.k][x.vi][0]>0?'，已啟動':''}）`);
+  return {rows,zg};}
+// 天干同地支用返五行顏色，箭咀「<」淡色，已啟動綠、未啟動灰
+const wkHtml=t=>esc(t).replace(/[甲乙丙丁戊己庚辛壬癸]/g,c=>`<b class="w${gw(gi(c))}">${c}</b>`).replace(/\x01(.)/g,(_,c)=>`<b class="w${ZWX[zi(c)]}">${c}</b>`).replace(/ &lt; /g,' <span class="wklt">&lt;</span> ').replace(/已啟動|招得到/g,m=>`<span class="wkon">${m}</span>`).replace(/未啟動|盤上冇/g,m=>`<span class="wkoff">${m}</span>`).replace(/被[^：；（）]*?(合住|擋走|沖走)/g,m=>`<span class="wkblk">${m}</span>`);
+function workSec(male){const {rows,zg}=workRows(male);
+  return `<section class="panel" id="workBox"><h2>做功計算</h2>
+  <p class="hint">先睇日主，再逐個睇原局另外 7 個字。天干：有冇粘連 → 佢嘅七殺喺唔喺盤、啟動未；盤上冇就睇招唔招得到（右邊有冇字合住或者擋走）→ 再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。地支：有冇粘連 → 沖、害、刑佢嘅字喺唔喺盤、啟動未。下面嗰行係盤上計出嚟嘅結果。</p>
+  <ul class="wklist">${rows.map(r=>`<li><div class="wkc">${wkHtml(r.chain)}</div><div class="wkm">${esc(r.mean)}</div>${r.res.map(x=>`<div class="wkr ${x.cls}">${x.cls==='ok'?'✓ ':x.cls==='no'?'✗ ':''}${wkHtml(x.txt)}</div>`).join('')}</li>`).join('')}
+  <li><div class="wkc">原局四柱招感嘅字</div>${zg.length?zg.map(t=>`<div class="wkr">${wkHtml(t)}</div>`).join(''):'<div class="wkr">冇</div>'}</li></ul></section>`;}
 // 每個字下面列出佢嘅粘連點樣嚟，例如「己己粘連」
 function nlList(k,ci,cols){
   const me=cols[ci].gz[k],seen={},order=[];
@@ -1658,7 +1684,7 @@ function render(){
       <p>而家行<b>${yn.yuan}${yn.name.slice(0,1)}運</b>（${yn.name}，${yn.start}–${yn.end}）</p></div></div>
     </section>
   </div>
-  ${VIEW.work?workSec():''}
+  ${VIEW.work?workSec(inp.sex===1):''}
   <section class="panel fold${SECF.rel?'':' folded'}" id="relBox" data-sec="rel"><h2 class="foldh">招感 · 粘連 · 刑沖合穿</h2><p class="hint" style="margin-bottom:8px">招感計原局四柱同大運、流年、流月、流日，任何兩柱都計；刑沖合穿計原局四柱，加上而家揀選嘅大運同流年。</p><div class="rels">${relHtml}</div></section>`;
   drawChains();
 }
