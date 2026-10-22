@@ -225,7 +225,9 @@ td.chain{position:relative;overflow:visible}
 .viewopt .cap{font-size:12px;color:var(--muted)}
 .chainleg span{font-weight:500;color:var(--muted);display:inline-flex;align-items:center;gap:6px;padding:0}
 .zgstrip{position:relative}
-.shabox{display:flex;flex-direction:column;align-items:center;margin-bottom:6px}.shabox .shx{color:var(--muted);text-decoration:line-through}.shabox .sho{color:var(--bad);font-weight:600}td.sha{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.06) 6px 12px)}
+.shabox{display:flex;flex-direction:column;align-items:center;margin-bottom:6px}
+/* 招殺星格唔撐高天干／地支行（只限電腦版）：多過兩個就排幾行，字細少少 */
+@media (min-width:701px) and (pointer:fine),(min-width:701px) and (pointer:none),(min-width:1001px){th.sha[style]{width:var(--shw)}td.sha>.shawrap{display:grid;grid-template-columns:repeat(var(--shc),minmax(104px,1fr));gap:2px 6px;align-items:start}td.sha .shabox{margin-bottom:2px}td.sha .shabox .big{font-size:40px;line-height:1.05}}.shabox .shx{color:var(--muted);text-decoration:line-through}.shabox .sho{color:var(--bad);font-weight:600}td.sha{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.06) 6px 12px)}
 .zg{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;width:64px;height:48px;justify-content:center;
   font-family:var(--f-display);font-weight:900;font-size:22px;line-height:1.05;border:1.5px dashed currentColor;border-radius:8px;background:var(--paper)}
 .zg{width:56px;z-index:3}
@@ -1635,9 +1637,12 @@ function render(){
   const td=(fn,shaCell)=>DO.map(ci=>[cols[ci],ci]).map(([col,ci])=>`<td class="${cls(col)}">${col.gz?fn(col,gi(col.gz[0]),zi(col.gz[1]),ci):col.sha?(shaCell||''):'<span class="tiny">—</span>'}</td>`).join('');
   const shLbl=(k,i)=>cols[i].h.replace('柱','')+(k?'支':'干')+cols[i].gz[k];
   const shCh=(k,j)=>cols[j].h.replace('柱','')+cols[j].gz[k];
-  const shaCell=k=>((S.sha||[])[k]||[]).length?S.sha[k].map(sh=>`<div class="shabox"><span class="big w${k?ZWX[zi(sh.c)]:gw(gi(sh.c))}"><span class="ch">${sh.c}</span></span>${sh.callers.map(cl=>`<span class="tiny ${cl.st?'shx':'sho'}" title="${cl.st?`被${cols[cl.st.j].h}${cols[cl.st.j].gz[k]}${cl.st.t}，啟動唔到${shLbl(k,cl.i)}`:`啟動${shLbl(k,cl.i)}`}">${cl.st?`${cl.st.t}（${shCh(k,cl.st.j)}）→${shLbl(k,cl.i)}`:`啟動→${shLbl(k,cl.i)}`}${cl.pass.length?`<br><small>（行過已啟動嘅${cl.pass.map(b=>shCh(k,b.j)).join('、')}）</small>`:''}</span>`).join('')}</div>`).join(''):'<span class="tiny">冇</span>';
+  // 招殺星多過兩個（電腦版）就排兩行或以上，等格唔會撐高天干／地支行
+  const shaCell=k=>((S.sha||[])[k]||[]).length?`<div class="shawrap" style="--shc:${S.sha[k].length>2?Math.ceil(S.sha[k].length/2):1}">`+S.sha[k].map(sh=>`<div class="shabox"><span class="big w${k?ZWX[zi(sh.c)]:gw(gi(sh.c))}"><span class="ch">${sh.c}</span></span>${sh.callers.map(cl=>`<span class="tiny ${cl.st?'shx':'sho'}" title="${cl.st?`被${cols[cl.st.j].h}${cols[cl.st.j].gz[k]}${cl.st.t}，啟動唔到${shLbl(k,cl.i)}`:`啟動${shLbl(k,cl.i)}`}">${cl.st?`${cl.st.t}（${shCh(k,cl.st.j)}）→${shLbl(k,cl.i)}`:`啟動→${shLbl(k,cl.i)}`}${cl.pass.length?`<br><small>（行過已啟動嘅${cl.pass.map(b=>shCh(k,b.j)).join('、')}）</small>`:''}</span>`).join('')}</div>`).join('')+'</div>':'<span class="tiny">冇</span>';
   const sex=inp.sex===1?'乾造':'坤造';
-  const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"><b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
+  // 招殺星多過兩個：電腦版個欄闊返幾倍（table-layout:fixed 跟表頭闊度）
+  const shC=Math.max(1,...[0,1].map(k=>{const n=((S.sha||[])[k]||[]).length;return n>2?Math.ceil(n/2):1;}));
+  const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"${col.sha&&shC>1?` style="--shw:${shC*112}px"`:''}><b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
   // 啟動同做到功嘅字加 on／wd，CSS 畫光暈同底線
   const fxc=(k,ci)=>(S.act[k][ci][0]?' on':'')+(S.work&&S.work[k]&&S.work[k][ci]?(S.work[k][ci].done?' wd':' wn'):'');
   const table=`<div class="tscroll"><table class="chart${VIEW.wkMark?'':' nowk'}${VIEW.ssTag?' sst':''}${VIEW.noMidL?' nomid':''}" style="--n:${N};--mw:${60+N*54}px">
