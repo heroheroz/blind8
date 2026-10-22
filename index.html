@@ -135,7 +135,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .chart .dyn{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
 .big{font-family:var(--f-display);font-weight:900;font-size:40px;line-height:1.1;display:block}
 .ch{position:relative;display:inline-block}
-.wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wklist b[class^=w]{font-family:var(--f-display);font-size:1.15em;font-weight:900}.wklt{color:var(--muted);font-weight:400;margin:0 2px}.wkon{color:var(--good)}.wkoff{color:var(--muted)}.wkblk{color:var(--bad)}.wkr b[class^=w]{font-size:1.05em}.wkm{font-size:13px;color:var(--accent,#8a6d3b);margin-top:1px}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
+.wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wklist b[class^=w]{font-family:var(--f-display);font-size:1.15em;font-weight:900}.wklt{color:var(--muted);font-weight:400;margin:0 2px}.wkon{color:var(--good)}.wkoff{color:var(--muted)}.wkblk{color:var(--bad)}.wkr b[class^=w]{font-size:1.05em}.wkx{text-decoration:line-through;text-decoration-thickness:1.5px;opacity:.75}.wkm{font-size:13px;color:var(--accent,#8a6d3b);margin-top:1px}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
 /* 啟動：字後面用返自己五行顏色嘅光暈；做到功右下角細綠剔、做唔到功細紅交叉（可以喺選項收埋）；全部靜止 */
 .gl{position:relative}.on .gl{text-shadow:0 0 .12em color-mix(in srgb,currentColor 70%,transparent),0 0 .35em color-mix(in srgb,currentColor 45%,transparent)}
 .wd .gl::after,.wn .gl::after{content:'✓';position:absolute;right:-.12em;bottom:.02em;font-family:var(--f-body);font-size:max(12px,.36em);font-weight:900;line-height:1;color:var(--good);text-shadow:0 0 2px var(--paper),0 0 2px var(--paper)}.wn .gl::after{content:'✗';color:var(--bad)}.chart.nowk .gl::after{content:none}
@@ -1157,7 +1157,8 @@ function workRows(male){
     const one=c=>{const st=c.path.find(b=>!(act[b.j][0]>0)),pass=c.path.filter(b=>act[b.j][0]>0);
       return `由${lb(c.i,k)}招${pass.length?'（行過'+pass.map(b=>lb(b.j,k)).join('、')+'）':''}${st?`：被${lb(st.j,k)}${st.t}`:'：招得到'}`;};
     return cl.map(one).join('；')+(S.useSha?'':'（未開招感殺星，盤上冇計）');};
-  const stTxt=(P,k)=>P.map(i=>{const n=lk(i,k).length;return lb(i,k)+(S.act[k][i][0]>0?' 已啟動':n?` 粘連 ${n} 條未啟動`:' 冇粘連');}).join('、');
+  // 未啟動嘅字用 \x02…\x03 包住，wkHtml 加橫線劃走（字照顯示）
+  const stTxt=(P,k)=>P.map(i=>{const n=lk(i,k).length;return S.act[k][i][0]>0?lb(i,k)+' 已啟動':n?`\x02${lb(i,k)} 粘連 ${n} 條未啟動\x03`:lb(i,k)+' 冇粘連';}).join('、');
   const ganChain=(v,P)=>{const parts=[];const seen=new Set([v]);let cur=v,prevP=P;
     for(let d=0;d<6;d++){const k=(cur+6)%10;
       if(seen.has(k)){parts.push(`七殺${GAN[k]}（已經喺條鏈度，停）`);break;}
@@ -1170,7 +1171,7 @@ function workRows(male){
     ks.forEach(kv=>{const t=BR_ACT[ZHI[v]][ZHI[kv]],Q=pos(kv,1).filter(j=>j!==i);
       const vz=(S.zg[1]||[]).map((z,vi)=>({z,vi})).filter(x=>x.z.c===ZHI[kv]);
       const bits=[];if(Q.length)bits.push(stTxt(Q,1)+(Q.some(j=>!lk(j,1).length)?'，冇粘連，本身就沖得':''));
-      vz.forEach(x=>bits.push(`招感${ch(1,kv)}（${x.z.tag}）${S.vact[1][x.vi]&&S.vact[1][x.vi][0]>0?' 已啟動':' 未啟動'}`));
+      vz.forEach(x=>bits.push(S.vact[1][x.vi]&&S.vact[1][x.vi][0]>0?`招感${ch(1,kv)}（${x.z.tag}） 已啟動`:`\x02招感${ch(1,kv)}（${x.z.tag}） 未啟動\x03`));
       if(t==='沖'&&!Q.length&&!vz.length){const s=shaTxt(1,kv,[i]);if(s)bits.push('盤上冇；'+s);}
       if(bits.length)parts.push(`${t}${ch(1,kv)}（${bits.join('；')}）`);});
     return [parts.length?parts.join(' ／ '):'盤上冇字沖、害、刑佢'];};
@@ -1194,7 +1195,7 @@ function workRows(male){
     .map(x=>`${x.k?'支':'干'}${ch(x.k,(x.k?ZHI:GAN).indexOf(x.z.c))}（${x.z.tag.replace(/[子丑寅卯辰巳午未申酉戌亥]/g,m=>'\x01'+m)}，${x.z.from.replace(/[子丑寅卯辰巳午未申酉戌亥]/g,m=>'\x01'+m)}${S.vact[x.k][x.vi]&&S.vact[x.k][x.vi][0]>0?'，已啟動':''}）`);
   return {rows,zg};}
 // 天干同地支用返五行顏色，箭咀「<」淡色，已啟動綠、未啟動灰
-const wkHtml=t=>esc(t).replace(/[甲乙丙丁戊己庚辛壬癸]/g,c=>`<b class="w${gw(gi(c))}">${c}</b>`).replace(/\x01(.)/g,(_,c)=>`<b class="w${ZWX[zi(c)]}">${c}</b>`).replace(/ &lt; /g,' <span class="wklt">&lt;</span> ').replace(/已啟動|招得到/g,m=>`<span class="wkon">${m}</span>`).replace(/未啟動|盤上冇/g,m=>`<span class="wkoff">${m}</span>`).replace(/被[^：；（）]*?(合住|擋走|沖走)/g,m=>`<span class="wkblk">${m}</span>`);
+const wkHtml=t=>esc(t).replace(/[甲乙丙丁戊己庚辛壬癸]/g,c=>`<b class="w${gw(gi(c))}">${c}</b>`).replace(/\x01(.)/g,(_,c)=>`<b class="w${ZWX[zi(c)]}">${c}</b>`).replace(/\x02/g,'<s class="wkx">').replace(/\x03/g,'</s>').replace(/ &lt; /g,' <span class="wklt">&lt;</span> ').replace(/已啟動|招得到/g,m=>`<span class="wkon">${m}</span>`).replace(/未啟動|盤上冇/g,m=>`<span class="wkoff">${m}</span>`).replace(/被[^：；（）]*?(合住|擋走|沖走)/g,m=>`<span class="wkblk">${m}</span>`);
 function workSec(male){const {rows,zg}=workRows(male);
   return `<section class="panel" id="workBox"><h2>做功計算</h2>
   <p class="hint">先睇日主，再逐個睇原局另外 7 個字。天干：有冇粘連 → 佢嘅七殺喺唔喺盤、啟動未；盤上冇就睇招唔招得到（右邊有冇字合住或者擋走）→ 再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。地支：有冇粘連 → 沖、害、刑佢嘅字喺唔喺盤、啟動未。下面嗰行係盤上計出嚟嘅結果。</p>
