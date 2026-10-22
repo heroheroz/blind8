@@ -134,7 +134,10 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .chart .aux{background:color-mix(in srgb,var(--line) 22%,transparent)}
 .chart .dyn{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
 .big{font-family:var(--f-display);font-weight:900;font-size:40px;line-height:1.1;display:block}
-.ch{position:relative;display:inline-block}.chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.ssc{position:absolute;right:-.3em;top:-.6em;font-size:max(16px,.4em);font-weight:700;line-height:1;color:var(--muted);font-family:var(--f-body);pointer-events:none}
+.ch{position:relative;display:inline-block}
+/* 啟動：字後面用返自己五行顏色嘅光暈，靜止唔郁（做到功嘅字有 wd，效果未定） */
+.gl{position:relative}.on .gl{text-shadow:0 0 .12em color-mix(in srgb,currentColor 70%,transparent),0 0 .35em color-mix(in srgb,currentColor 45%,transparent)}
+.chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.ssc{position:absolute;right:-.3em;top:-.6em;font-size:max(16px,.4em);font-weight:700;line-height:1;color:var(--muted);font-family:var(--f-body);pointer-events:none}
 .act{position:absolute;left:100%;bottom:2px;margin-left:1px;font-family:var(--f-body);font-size:15px;font-weight:900;line-height:1;color:var(--bad);letter-spacing:-2px;white-space:nowrap}
 .actl{color:var(--bad);font-weight:900}
 .act.dn,.actl.dn,.act b.dn{color:var(--water)}
@@ -1522,15 +1525,17 @@ function render(){
   const shaCell=k=>((S.sha||[])[k]||[]).length?S.sha[k].map(sh=>`<div class="shabox"><span class="big w${k?ZWX[zi(sh.c)]:gw(gi(sh.c))}"><span class="ch">${sh.c}</span></span>${sh.callers.map(cl=>`<span class="tiny ${cl.st?'shx':'sho'}" title="${cl.st?`被${cols[cl.st.j].h}${cols[cl.st.j].gz[k]}${cl.st.t}，啟動唔到${shLbl(k,cl.i)}`:`啟動${shLbl(k,cl.i)}`}">${cl.st?`${cl.st.t}（${shCh(k,cl.st.j)}）→${shLbl(k,cl.i)}`:`啟動→${shLbl(k,cl.i)}`}${cl.pass.length?`<br><small>（行過已啟動嘅${cl.pass.map(b=>shCh(k,b.j)).join('、')}）</small>`:''}</span>`).join('')}</div>`).join(''):'<span class="tiny">冇</span>';
   const sex=inp.sex===1?'乾造':'坤造';
   const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"><b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
+  // 啟動同做到功嘅字加 on／wd，CSS 畫光暈同底線
+  const fxc=(k,ci)=>(S.act[k][ci][0]?' on':'')+(S.work&&S.work[k]&&S.work[k][ci]&&S.work[k][ci].done?' wd':'');
   const table=`<div class="tscroll"><table class="chart${VIEW.ssTag?' sst':''}${VIEW.noMidL?' nomid':''}" style="--n:${N};--mw:${60+N*54}px">
     <thead><tr><th class="rl"></th>${head}</tr></thead><tbody>
     <tr><th class="rl">十神</th>${td((col,g)=>col.dm?`<span class="ss dm">日主</span><span class="tiny">${inp.sex===1?'元男':'元女'}</span>`:`<span class="ss">${shishen(dm,g)}</span>`)}</tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[0],true,N)}</td></tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="0" data-m="v" data-up="0"></td></tr>
-    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}"><span class="ch">${col.gz[0]}${VIEW.ssTag?`<sup class="ssc">${col.dm?(inp.sex===1?'男':'女'):SS1[shishen(dm,g)]}</sup>`:''}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${zuoCx(col.gz)}${workTag(0,ci)}${nlList(0,ci,cols)}`,shaCell(0))}</tr>
+    <tr class="ganrow"><th class="rl">天干</th>${td((col,g,z,ci)=>`${status(0,ci)}<span class="big w${gw(g)}${fxc(0,ci)}"><span class="ch"><span class="gl">${col.gz[0]}</span>${VIEW.ssTag?`<sup class="ssc">${col.dm?(inp.sex===1?'男':'女'):SS1[shishen(dm,g)]}</sup>`:''}${netArrows(0,ci)}</span></span><span class="tiny">${g%2?'陰':'陽'}${WX[gw(g)]}</span>${zuoCx(col.gz)}${workTag(0,ci)}${nlList(0,ci,cols)}`,shaCell(0))}</tr>
     ${VIEW.noMidL?'':`<tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="0" data-m="p" data-up="1"></td></tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="1" data-m="p" data-up="0"></td></tr>`}
-    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}"><span class="ch">${col.gz[1]}${VIEW.ssTag?`<sup class="ssc">${SS1[shishen(dm,gi(HIDE[col.gz[1]][0]))]}</sup>`:''}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${VIEW.muku?muku(col,ci,cols,dm):''}${yangren(col.gz[1],cols,P[2][0],ci)}${workTag(1,ci)}${nlList(1,ci,cols)}`,shaCell(1))}</tr>
+    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}${fxc(1,ci)}"><span class="ch"><span class="gl">${col.gz[1]}</span>${VIEW.ssTag?`<sup class="ssc">${SS1[shishen(dm,gi(HIDE[col.gz[1]][0]))]}</sup>`:''}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${chenxu(col.gz)}${VIEW.muku?muku(col,ci,cols,dm):''}${yangren(col.gz[1],cols,P[2][0],ci)}${workTag(1,ci)}${nlList(1,ci,cols)}`,shaCell(1))}</tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="1" data-m="v" data-up="1"></td></tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[1],false,N)}</td></tr>
     <tr><th class="rl">地支<br class="mbr">十神</th>${td((col,g,z)=>`<span class="ss">${shishen(dm,gi(HIDE[col.gz[1]][0]))}</span>`)}</tr>
