@@ -552,7 +552,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li id="r-n3"><b>N3 合</b>　天干五合、地支六合（同 Z1 嘅合字表）。每條合計一個箭咀；伏吟都係一個。</li>
     <li id="r-n4"><b>N4 地支半合</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）其中兩個字，而且要包括中神（子、卯、午、酉），例如申子、子辰、午戌。只計地支。每條半合計半個箭咀。三合局三個字齊（申子辰合水、寅午戌合火、巳酉丑合金、亥卯未合木），就唔再計半合，改計「三合局」：三個字兩兩相連（例如申子、子辰、申辰），每條半個箭咀，所以三個字每個合共一個箭咀；只得兩頭冇中神（例如淨係申辰）就唔計。</li>
     <li id="r-n5"><b>N5 招感字粘連</b>　招感字只同招佢出嚟嗰幾個來源字粘連：夾拱出嚟嘅算連續，招合出嚟嘅算合，唔同其他字粘連。招感字嘅粘連（無論連續定合）每條都只計半個箭咀。</li>
-    <li id="r-n6"><b>N6 粘連力</b>　粘連喺字旁邊加 ↓，用加法，唔係乘數：伏吟、合每條一個 ↓；連續、半合、三合局每對、招感字粘連每條半個 ↓。半個箭咀用細箭咀表示，兩個細箭咀等於一個箭咀；電腦版每 5 個箭咀合埋畫成一個大箭咀（例如 7.5 個就係一個大箭咀、兩個箭咀同一個細箭咀）；手機版同揀咗「箭咀用數字顯示」就一個箭咀加數字。理念：三合局三個字齊、合同伏吟都係大力嘅粘連，所以計一個；普通連續（甲乙）同兩個字嘅半合力度細啲，計半個。呢度寫嘅係預設數值，實際用緊嘅數值（連坐辰戌、見同五行地支、陽刃、啟動鏈每層、最強五行倍數）喺「箭咀力度」度所有人都睇到，管理員可以調，大家可以投「應該加／應該減」。</li>
+    <li id="r-n6"><b>N6 粘連力</b>　粘連喺字旁邊加 ↓，用加法，唔係乘數：伏吟、合每條一個 ↓；連續、半合、三合局每對、招感字粘連每條半個 ↓。電腦版畫箭咀嗰陣捨入（半個當一個），每 5 個合埋畫成一個大箭咀（例如 7.5 個就畫一個大箭咀加三個箭咀），計數照用準確數值；手機版同揀咗「箭咀用數字顯示」就一個箭咀加準確數字。理念：三合局三個字齊、合同伏吟都係大力嘅粘連，所以計一個；普通連續（甲乙）同兩個字嘅半合力度細啲，計半個。呢度寫嘅係預設數值，實際用緊嘅數值（連坐辰戌、見同五行地支、陽刃、啟動鏈每層、最強五行倍數）喺「箭咀力度」度所有人都睇到，管理員可以調，大家可以投「應該加／應該減」。</li>
     <li id="r-n7"><b>N7 線</b>　柱與柱之間嘅粘連線畫喺天干同地支中間；招感字嘅線畫喺外面。線色跟兩端字嘅五行，兩端唔同五行就兩色交替。</li>
   </ol>
   <h4>丁・啟動</h4>
@@ -1191,7 +1191,7 @@ function status(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci];
 // 全盤連鎖：啟動鏈繞住七殺（地支沖害刑）圈兜返去鏈入面已經有嘅字；同一個字只計一次，所以 ↑ 唔會再加
 function loopNote(){const t=[0,1].map(k=>S.act&&S.act[k]&&S.act[k].loop&&S.act[k].loop.length?`${k?'地支':'天干'}${S.act[k].loop.join('、')}`:'').filter(Boolean);
   return t.length?`<div class="hint loopnote" title="啟動鏈兜圈，同一個字喺同一條鏈只計一次（規則 Q3）">⚠ 全盤連鎖：${t.join('；')} 嘅啟動鏈兜返轉頭，同一個字只計一次</div>`:'';}
-// 箭咀：一個箭咀＝1，半個用細箭咀（兩個細等於一個）；電腦版每 5 個合埋用一個大箭咀
+// 箭咀：電腦版捨入（半個當一個），每 5 個合埋用一個大箭咀，其餘一個箭咀＝1；手機版同「箭咀用數字顯示」寫準確數字
 const fmtN=n=>Number.isInteger(n)?''+n:(+n.toFixed(2))+'';
 // 最強五行同五行嘅字：箭咀乘 AW.sw（最強五行有顯示先計）
 const swMul=(k,ch)=>S&&S.swEl!=null&&S.swEl>=0&&(k?ZWX[zi(ch)]:gw(gi(ch)))===S.swEl&&AW.sw!==1?AW.sw:1;
@@ -1200,7 +1200,7 @@ const lkBrk=ls=>{const m=new Map();ls.forEach(l=>{const n=l.vx!=null?'招感'+(l
   return [...m].map(([k,c])=>{const [n,w]=k.split('|');return `${n} ${c} 條×${fmtN(+w)}`;}).join('、');};
 const swNote=m=>m!==1?`；最強五行同五行，×${fmtN(m)}`:'';
 // 箭咀：電腦版逐個畫；手機版（CSS 揀）淨係一個箭咀加數字，例如 ↓3.5
-const ARW=(n,dn)=>{n=Math.round(n*2)/2;if(!n)return '';const b=dn?'<b class="dn">↓</b>':'<b>↑</b>',sm=dn?'<b class="dn sm">↓</b>':'<b class="sm">↑</b>',bg=dn?'<b class="dn bg" title="大箭咀＝5">↓</b>':'<b class="bg" title="大箭咀＝5">↑</b>',f=Math.floor(n+1e-9);return `<span class="arF">${bg.repeat(Math.floor(f/5))+b.repeat(f%5)+(n-f>0.25?sm:'')}</span><span class="arC${dn?' dn':''}">${dn?'↓':'↑'}<i>${fmtN(n)}</i></span>`;};
+const ARW=(n,dn)=>{n=Math.round(n*2)/2;if(!n)return '';const b=dn?'<b class="dn">↓</b>':'<b>↑</b>',sm=dn?'<b class="dn sm">↓</b>':'<b class="sm">↑</b>',bg=dn?'<b class="dn bg" title="大箭咀＝5">↓</b>':'<b class="bg" title="大箭咀＝5">↑</b>',f=Math.ceil(n-1e-9);return `<span class="arF" title="${fmtN(n)} 個箭咀">${bg.repeat(Math.floor(f/5))+b.repeat(f%5)}</span><span class="arC${dn?' dn':''}">${dn?'↓':'↑'}<i>${fmtN(n)}</i></span>`;};
 function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&S.pw[ci]?S.pw[ci]:{n:0,yr:0,why:[]},yr=pw.yr||0,m=swMul(k,S.cols[ci].gz[k]);
   // 激活力度（Q8）：未啟動粘連計 ↓（權重睇「箭咀力度」）；啟動咗 ↓ 全部變 ↑（唔會另外再加），冇粘連嘅字啟動唔加 ↑；啟動鏈第一層係基本，之後每多一層加
   // 天干力度（Q7，連陽刃）方向全部跟個字：啟動咗 ↑，粘住未啟動 ↓，冇粘連 ↑。同一個字永遠只有一個方向；最強五行同五行嘅字總數再乘 AW.sw
