@@ -549,7 +549,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li id="r-z2"><b>Z2 重字只招一個</b>　幾多個重字都只招一個字，擺喺最近嗰兩個重字中間。三個重字加半個箭咀，之後每多一個重字多半個，冇上限；方向跟招感字嘅狀態（啟動咗 ↑，粘住未啟動 ↓），同一個字唔會同時有 ↑ 同 ↓。</li>
     <li id="r-z3"><b>Z3 夾拱</b>　兩個字喺天干或地支次序相差兩位，招出中間嗰個字，例如丙戊夾拱丁、子寅夾拱丑。次序循環計，所以壬甲夾拱癸、亥丑夾拱子。</li>
     <li id="r-z4"><b>Z4 夾拱一對一</b>　每個字喺同一種夾拱只可以用一次，兩邊字一對一配，最近嘅先配，所以兩丙兩戊只夾拱兩個丁。</li>
-    <li id="r-z7"><b>Z7 三合拱（只限地支）</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）盤上有其中兩個字，而缺嗰個字盤上冇，就招出缺嗰個字，例如申辰拱子、申子拱辰、子辰拱申。兩邊字一對一配（最近嘅先配）。招出嚟嘅字同兩個來源字各有一條粘連，每條計一個箭咀（箭咀力度「三合拱」，預設 1）。三個字齊就係三合局，唔使招。</li>
+    <li id="r-z7"><b>Z7 三合拱（只限地支）</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）盤上有其中兩個字，而缺嗰個字盤上冇，就招出缺嗰個字，例如申辰拱子、申子拱辰、子辰拱申。只招一個，盤上所有嗰兩種字都同佢粘連（例如年支申、元運申同大運辰三個都連去同一個子），擺喺最近嗰對中間。每個來源字各有一條粘連，每條計一個箭咀（箭咀力度「三合拱」，預設 1）。三個字齊就係三合局，唔使招。</li>
     <li id="r-z5"><b>Z5 位置</b>　天干招感字擺喺天干上面，地支招感字擺喺地支下面，位於兩個來源字中間。招感字未被啟動之前唔會啟動其他字，直至招感字本身被啟動（天干被七殺剋，地支被沖、害、刑，條件同 Q1、Q2）。未啟動嘅招感字旁邊顯示 ↓（每條同來源字嘅粘連一個）；被啟動之後 ↓ 變 ↑，佢同來源字嘅粘連解開，之後就可以做七殺（地支就係沖、害、刑）去啟動其他字。招感字只會同招佢出嚟嗰兩個字合或者粘連，永遠唔會同其他天干地支合、粘連或者再招感。</li>
     <li id="r-z6"><b>Z6 合併顯示（選項）</b>　剔咗「同一招感字合併顯示」，同一行同一個招感字只顯示一個，寫 ×次數；只改顯示，唔改計算。</li>
   </ol>
@@ -1028,12 +1028,12 @@ function zhaogan(cols){
         const a=chars.indexOf(A.gz[k]),b=chars.indexOf(B.gz[k]);
         out.push({c:chars[m],pos:(A.i+B.i)/2+0.5,pa:A.i,pb:B.i,tag:chars[a]+chars[b]+'夾拱',kind:'jia',src:[A.i,B.i],dyn:A.dyn||B.dyn,from:`${A.lbl}${lbl}${chars[a]} · ${B.lbl}${lbl}${chars[b]}`});});
     }
-    // 三合拱（只限地支）：三合局（申子辰、亥卯未、寅午戌、巳酉丑）有兩個字、缺一個（盤上冇），就招感缺嗰個字出嚟；兩邊字一對一配（最近嘅先配）
+    // 三合拱（只限地支）：三合局（申子辰、亥卯未、寅午戌、巳酉丑）有兩個字、缺一個（盤上冇），就招感缺嗰個字出嚟；
+    // 只招一個，盤上所有嗰兩種字（例如兩個申、一個辰）都同佢粘連；擺喺最近嗰對中間
     if(k===1)SANHE.forEach(([g])=>{const vs=[...g].map(c=>chars.indexOf(c)),have=vs.filter(v=>seen[v]);if(have.length!==2)return;
       const miss=chars[vs.find(v=>!seen[v])],pr=[];seen[have[0]].forEach(P=>seen[have[1]].forEach(Q=>pr.push(P.i<Q.i?[P,Q]:[Q,P])));
-      pr.sort((p,q)=>(p[1].i-p[0].i)-(q[1].i-q[0].i));const used=new Set();
-      pr.forEach(([A,B])=>{if(used.has(A.i)||used.has(B.i))return;used.add(A.i);used.add(B.i);
-        out.push({c:miss,pos:(A.i+B.i)/2+0.5,pa:A.i,pb:B.i,tag:A.gz[k]+B.gz[k]+'拱',kind:'gong',src:[A.i,B.i],dyn:A.dyn||B.dyn,from:`${A.lbl}${lbl}${A.gz[k]} · ${B.lbl}${lbl}${B.gz[k]}（三合${g}缺${miss}）`});});});
+      pr.sort((p,q)=>(p[1].i-p[0].i)-(q[1].i-q[0].i));const [A,B]=pr[0],all=[...seen[have[0]],...seen[have[1]]].sort((p,q)=>p.i-q.i);
+      out.push({c:miss,pos:(A.i+B.i)/2+0.5,pa:A.i,pb:B.i,tag:chars[have[0]]+chars[have[1]]+'拱',kind:'gong',src:all.map(c=>c.i),dyn:all.every(c=>c.dyn),from:`${all.map(c=>c.lbl+lbl+c.gz[k]).join(' · ')}（三合${g}缺${miss}）`});});
     };
   side(cs,0,10,GAN,'干',ch=>GAN[(gi(ch)+5)%10],st);
   side(cs,1,12,ZHI,'支',ch=>HE6[ch],br);
