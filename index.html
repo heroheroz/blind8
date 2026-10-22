@@ -855,7 +855,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>加入命例</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
   <div class="gbpager" id="tuPager"></div>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
-  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload>重新載入</button></div>
+  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option><option value="VIEW">打開命例</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload>重新載入</button></div>
   <p class="hint" id="auMsg"></p>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
@@ -1273,7 +1273,7 @@ function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.
 const isMob=()=>matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
-const VIEW={virt:true,dyn:false,dynZg:true,only4:false,yuan:true,aux:false,ming:false,yuanCalc:true,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:null,shaAll:true,tkAll:false,jinqi:false,muku:false,ssTag:false,noMidL:false,arNum:false,natL:true,sw:null,swm:'s1'};
+const VIEW={virt:true,dyn:false,dynZg:true,only4:false,yuan:true,aux:false,ming:false,yuanCalc:true,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:null,shaAll:true,tkAll:false,jinqi:false,muku:false,ssTag:true,noMidL:true,arNum:false,natL:true,sw:null,swm:'s1'};
 // 招感殺星：未撳過（null）就跟等級，免費嘅（進階、高級、管理員）預設開，普通用戶預設閂（唔會自動扣分）
 const shaOn=()=>VIEW.sha==null?can.sha():VIEW.sha;
 function drawChains(){
@@ -1747,8 +1747,10 @@ function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSI
   $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.bonus?`獎勵 ${r.bonus>0?'+':''}${r.bonus}`:'',r.logins?`登入 ${r.logins} 日`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人參與</td></tr>');}
 // 使用統計：開網、排盤、開命例各寫一行去 public.usage（supabase/006_stats.sql），每部機一個隨機編號；寫唔到就算
 const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('b8-anon',a);}return a;}catch(e){return Math.random().toString(36).slice(2,12)+'x';}})();
-function track(kind,input){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
-  api('usage',{method:'POST',body:JSON.stringify({kind,anon:ANON,mobile,...(input?{input}:{})})}).catch(()=>{});}
+// 開命例會記埋 case_id（要行咗 020_case_views.sql，審計紀錄就會記低邊個打開咗邊個命例）；未行就唔帶 case_id 再寫一次
+function track(kind,input,caseId){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
+  const body={kind,anon:ANON,mobile,...(input?{input}:{})},post=b=>api('usage',{method:'POST',body:JSON.stringify(b)});
+  (caseId?post({...body,case_id:caseId}).catch(()=>post(body)):post(body)).catch(()=>{});}
 async function checkAdmin(){ADMIN=false;TIER='';if(CLOUD&&SESSION){try{ADMIN=(await api('admins?select=user_id')).length>0;}catch(e){}
   // 用戶等級（supabase/007_tiers.sql）：進階用戶 advance、高級用戶 premium；未設定就係普通用戶
   try{const r=await api('user_tiers?select=tier&user_id=eq.'+SESSION.user.id);TIER=(r[0]&&r[0].tier)||'';}catch(e){}}}
@@ -1903,7 +1905,7 @@ function renderSug(){
 const AU={p:0,n:(()=>{try{const v=localStorage.getItem('b8-aun2');return v!=null&&['0','6','10','20','30','50','100'].includes(v)?+v:10;}catch(e){return 10;}})(),loaded:false};
 $('auN').value=String(AU.n);
 const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員',user_tiers:'用戶等級',point_bonus:'手動加分',point_costs:'扣分設定',point_settings:'計分設定',users:'用戶註冊',logins:'用戶登入'};
-const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'👍 準','-1':'👎 唔準','0':'撤回'};
+const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入',VIEW:'打開'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'👍 準','-1':'👎 唔準','0':'撤回'};
 const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者',private:'私人'};
 const auS=v=>v==null?'':typeof v==='string'?v:JSON.stringify(v);
 const auCut=(v,n=60)=>{const x=auS(v);return x.length>n?x.slice(0,n)+'…':x;};
@@ -1930,7 +1932,7 @@ async function loadAudit(){
   try{const {rows,total}=await api(`audit_log?select=*&order=at.desc&limit=${n+1}&offset=${AU.p*n}${f.length?'&'+f.join('&'):''}`,{count:true,headers:{Prefer:'count=exact'}});
     const more=rows.length>n,np=total!=null?Math.ceil(total/n):AU.p+1+(more?1:0);rows.length=Math.min(rows.length,n);
     $('auMsg').textContent=rows.length?'':'冇紀錄。';
-    $('auList').innerHTML=rows.map(r=>`<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.actor?`${esc(r.actor_name||'')}<small>${esc(r.actor_email||'')}</small>`:'<small>系統／SQL</small>'}</td><td class="op-${r.op}">${r.tbl==='users'&&r.op==='INSERT'?'註冊':AU_OP[r.op]||esc(r.op)}</td><td>${esc(AU_T[r.tbl]||r.tbl)}</td><td>${esc(auWhat(r))}${auDiff(r).map(x=>`<span class="chg">${esc(x)}</span>`).join('')}<details><summary class="hint">詳細</summary><pre>${esc(JSON.stringify(r.op==='UPDATE'?{改之前:r.row_old,改之後:r.row_new}:(r.row_new||r.row_old),null,1))}</pre></details></td></tr>`).join('');
+    $('auList').innerHTML=rows.map(r=>`<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.actor?`${esc(r.actor_name||'')}<small>${esc(r.actor_email||'')}</small>`:r.op==='VIEW'?`<small>未登入${r.row_new&&r.row_new.anon?'（機號 '+esc(String(r.row_new.anon).slice(0,8))+'）':''}</small>`:'<small>系統／SQL</small>'}</td><td class="op-${r.op}">${r.tbl==='users'&&r.op==='INSERT'?'註冊':AU_OP[r.op]||esc(r.op)}</td><td>${esc(AU_T[r.tbl]||r.tbl)}</td><td>${esc(auWhat(r))}${auDiff(r).map(x=>`<span class="chg">${esc(x)}</span>`).join('')}<details><summary class="hint">詳細</summary><pre>${esc(JSON.stringify(r.op==='UPDATE'?{改之前:r.row_old,改之後:r.row_new}:(r.row_new||r.row_old),null,1))}</pre></details></td></tr>`).join('');
     $('auPager').innerHTML=pagerHtml(AU.p+1,np,'aupage');
   }catch(e){$('auList').innerHTML='';$('auPager').innerHTML='';$('auMsg').textContent=/audit_log|42P01|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/005_audit.sql。':'載入唔到：'+e.message;}
 }
@@ -2171,7 +2173,7 @@ document.addEventListener('click',e=>{
     return;}
   if(t.dataset.evdel!==undefined){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!twice(t,'確定？'))return;
     const evs=(c.input.events||[]).filter((_,i)=>i!==+t.dataset.evdel);busy(()=>Store.update(c.id,{input:{...c.input,events:evs}}));return;}
-  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);run(c.input);track('case',c.input);renderCases();
+  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);run(c.input);track('case',c.input,c.id);renderCases();
     if(matchMedia('(max-width:1099px)').matches)$('caseNote').scrollIntoView({behavior:'smooth'});}
   else if(t.dataset.evote){const c=CASES.find(x=>x.id===t.dataset.case),k=t.dataset.ev,v=+t.dataset.evote,m=c&&(c.evVotes||{})[k];if(c)busy(()=>Store.evote(c.id,k,m&&m.myVote===v?0:v));}
   else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
