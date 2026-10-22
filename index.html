@@ -1353,7 +1353,7 @@ function drawChains(){
   });
 }
 window.addEventListener('resize',()=>{if(S)drawChains();});
-document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNatL'){VIEW.natL=e.target.checked;drawChains();}else if(e.target.id==='vArNum'){VIEW.arNum=e.target.checked;document.body.classList.toggle('arnum',VIEW.arNum);}else if(e.target.id==='vNoMidL'){VIEW.noMidL=e.target.checked;render();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vPrevMo'){VIEW.prevMo=e.target.checked;render();}else if(e.target.id==='vSha'){VIEW.sha=e.target.checked;render();}else if(e.target.id==='vWork'){if(e.target.checked)buyWork(e.target);else{VIEW.work=false;render();}}else if(e.target.id==='vShaAll'){VIEW.shaAll=e.target.checked;render();}else if(e.target.id==='vJinqi'){VIEW.jinqi=e.target.checked;render();}else if(e.target.id==='vMuku'){VIEW.muku=e.target.checked;render();}else if(e.target.id==='vWkMark'){VIEW.wkMark=e.target.checked;render();}else if(e.target.id==='vSsTag'){VIEW.ssTag=e.target.checked;render();}else if(e.target.name==='tkm'){VIEW.tkAll=e.target.value==='all';render();}else if(e.target.id==='vSw'){VIEW.sw=e.target.checked;render();}else if(e.target.id==='vSwm'){VIEW.swm=e.target.value;render();}else if(e.target.name==='mgq'){VIEW.mgQi=e.target.value==='qi';render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
+document.addEventListener('change',e=>{if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNatL'){VIEW.natL=e.target.checked;drawChains();}else if(e.target.id==='vArNum'){VIEW.arNum=e.target.checked;document.body.classList.toggle('arnum',VIEW.arNum);}else if(e.target.id==='vNoMidL'){VIEW.noMidL=e.target.checked;render();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vPrevMo'){VIEW.prevMo=e.target.checked;render();}else if(e.target.id==='vSha'){VIEW.sha=e.target.checked;render();}else if(e.target.id==='vWork'){if(ADMIN)WORK_ADM(e.target.checked);if(e.target.checked)buyWork(e.target);else{VIEW.work=false;render();}}else if(e.target.id==='vShaAll'){VIEW.shaAll=e.target.checked;render();}else if(e.target.id==='vJinqi'){VIEW.jinqi=e.target.checked;render();}else if(e.target.id==='vMuku'){VIEW.muku=e.target.checked;render();}else if(e.target.id==='vWkMark'){VIEW.wkMark=e.target.checked;render();}else if(e.target.id==='vSsTag'){VIEW.ssTag=e.target.checked;render();}else if(e.target.name==='tkm'){VIEW.tkAll=e.target.value==='all';render();}else if(e.target.id==='vSw'){VIEW.sw=e.target.checked;render();}else if(e.target.id==='vSwm'){VIEW.swm=e.target.value;render();}else if(e.target.name==='mgq'){VIEW.mgQi=e.target.value==='qi';render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
 
 /* ---------- state & render ---------- */
 let S=null;
@@ -1518,7 +1518,9 @@ function render(){
   // 招感殺星（Q6）：擺喺最右邊（流日右邊），本身唔參與招感粘連，只負責啟動招佢嘅字
   // 招感殺星：進階、高級用戶同管理員免費；其他登入咗嘅用戶每個盤用 1 分換（008_points.sql）
   // 做功計算：換咗盤就閂返，要再剔（再扣分）
-  if(VIEW.work&&WORK_CK!==chartKey())VIEW.work=false;
+  // 管理員唔扣分，唔使每次再剔：記住喺呢部機，開網、換盤都保持
+  if(ADMIN&&!VIEW.work&&WORK_ADM())VIEW.work=true;
+  if(VIEW.work&&!ADMIN&&WORK_CK!==chartKey())VIEW.work=false;
   S.shaOk=can.sha()||can.buy();if(VIEW.sha&&!S.shaOk)VIEW.sha=false;S.ck=chartKey();S.sess=!!SESSION;S.shaFree=can.sha();
   const useSha=shaOn()&&(can.sha()||paid('sha'));
   // VIEW.sw 未撳過（null）就預設開
@@ -1876,6 +1878,7 @@ function chartKey(){const v=S&&S.inp;return v?['y','m','d','h','mi','sex','lunar
 function paid(kind){if(!CLOUD)return true;const k=kind+'|'+chartKey();if(BUY.paid.has(k))return true;if(SESSION)buyFeat(kind);return false;}
 // 做功計算：每次剔都扣分（唔同招感殺星，同一日同一個盤都會再扣）；管理員同本機模式免費
 let WORK_CK='';
+const WORK_ADM=v=>{try{if(v==null)return localStorage.getItem('b8-work-adm')==='1';localStorage.setItem('b8-work-adm',v?'1':'0');}catch(e){}return false;};
 async function buyWork(cb){const key=chartKey();
   if(!CLOUD||ADMIN||!COST.work){VIEW.work=true;WORK_CK=key;BUY.msg='';render();return;}
   if(!SESSION){cb.checked=false;BUY.msg='登入先可以用做功計算。';render();return;}
@@ -2069,7 +2072,7 @@ $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],
 function calcVis(){const ok=can.sha();document.body.classList.toggle('nocalc',!ok);
   const c=document.querySelector('input[name=ntab][value=calc]');if(!ok&&c&&c.checked){const s=document.querySelector('input[name=ntab][value=sifu]');if(s)s.checked=true;}}
 function renderAuth(){calcVis();
-  const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION))render();
+  const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION||(ADMIN&&!VIEW.work&&WORK_ADM())))render();
   if(CLOUD&&!COST.loaded)loadCosts();
   {const u=SESSION&&SESSION.user.id||'';if(AWV.sess!==u){AWV.sess=u;loadAW();}}
   if(CLOUD&&SESSION)checkin();
