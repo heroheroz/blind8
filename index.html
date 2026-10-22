@@ -280,7 +280,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cauth{margin:8px 0;font-size:13px}.cauth .adm{color:var(--good)}
 .cases input[type=email],.cases input[type=password],.casenote input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .vb:disabled{opacity:.6;cursor:default}
-.qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
+.cpriv{font-size:13px;color:var(--muted);margin-top:4px}.cname .lock{font-size:12px;margin-right:2px}.qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
 .more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
 .armed{color:var(--paper)!important;background:var(--bad);border-radius:6px;padding:2px 6px}
 .ctags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}.ctags .cap{font-size:12px;color:var(--muted);min-width:3.5em}.ctags .tags{margin:0}
@@ -385,6 +385,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 <div id="caseAuth" class="cauth" hidden></div>
 <form id="caseAdd" class="cadd">
   <div class="qsave"><input type="text" id="caseName" maxlength="60" placeholder="命例名稱" aria-label="命例名稱"><button type="submit" class="go sm">儲存</button></div>
+  <label class="chk cpriv" id="casePrivL" hidden><input type="checkbox" id="casePriv"> 🔒 私人（淨係自己同管理員睇到，唔計分）</label>
   <details class="more"><summary>加備註／標籤（可選）</summary>
     <textarea id="caseNotes" rows="3" maxlength="2000" placeholder="備註"></textarea>
     <input type="text" id="caseTags" maxlength="200" placeholder="標籤，用逗號或空格分隔">
@@ -817,7 +818,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
   <ul>
     <li>🔮 <b>招感殺星</b>：每個盤每日扣 <b data-pcostv="sha">1</b> 分（進階用戶、高級用戶免費）。</li>
   </ul>
-  <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。夠👍之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳 👍嘅人唔可以係命例或者筆記嘅主人。標籤唔計分。管理員唔上榜。</p>
+  <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。夠👍之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳 👍嘅人唔可以係命例或者筆記嘅主人。標籤唔計分。🔒 私人命例同佢嘅事件、筆記、投票都唔計分，轉返公開先計。管理員唔上榜。</p>
   </div>
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
@@ -1825,16 +1826,16 @@ const Store={
   async list(){
     if(!CLOUD)return lsGet().map(c=>({evVotes:{},...c,comments:(c.comments||[]).map((m,i)=>({likes:0,unlikes:0,myVote:0,by:'我',...m,id:m.id||'i'+i}))}));
     const sel='cases?select=id,created_at,owner,owner_name,name,input,notes,tags,votes(voter,vote),comments(id,created_at,body,author_name,comment_votes(voter,vote))';
-    // event_votes 要行咗 004_event_votes.sql 先有；未有就照舊載入，事件冇得投
-    let rows;try{rows=await api(sel+',event_votes(ev,voter,vote)&order=created_at.desc');}catch(e){rows=await api(sel+'&order=created_at.desc');}
+    // event_votes 要行咗 004_event_votes.sql、private 要行咗 019_private_cases.sql 先有；未有就照舊載入
+    let rows=null;for(const x of [',private,event_votes(ev,voter,vote)',',event_votes(ev,voter,vote)','']){try{rows=await api(sel+x+'&order=created_at.desc');PRIV_OK=x.includes('private');break;}catch(e){if(!x)throw e;}}
     const uid=me();
-    return rows.map(r=>({id:r.id,created:r.created_at,owner:r.owner,by:r.owner_name||'',name:r.name,input:r.input,notes:r.notes||'',tags:r.tags||[],
+    return rows.map(r=>({id:r.id,created:r.created_at,owner:r.owner,by:r.owner_name||'',name:r.name,private:!!r.private,input:r.input,notes:r.notes||'',tags:r.tags||[],
       likes:r.votes.filter(v=>v.vote===1).length,unlikes:r.votes.filter(v=>v.vote===-1).length,myVote:(r.votes.find(v=>v.voter===uid)||{}).vote||0,
       evVotes:(r.event_votes||[]).reduce((o,v)=>{const x=o[v.ev]||(o[v.ev]={likes:0,unlikes:0,myVote:0});if(v.vote===1)x.likes++;if(v.vote===-1)x.unlikes++;if(v.voter===uid)x.myVote=v.vote;return o;},{}),
       comments:(r.comments||[]).sort((a,b)=>a.created_at<b.created_at?-1:1).map(c=>{const cv=c.comment_votes||[];return {id:c.id,t:c.created_at,body:c.body,by:c.author_name||'',likes:cv.filter(v=>v.vote===1).length,unlikes:cv.filter(v=>v.vote===-1).length,myVote:(cv.find(v=>v.voter===uid)||{}).vote||0};})}));},
   async add(c){
     if(!CLOUD){const a=lsGet(),x={id:'L'+Date.now(),created:new Date().toISOString(),by:'我',likes:0,unlikes:0,myVote:0,comments:[],tags:[],...c};a.unshift(x);if(!lsSet(a))throw new Error('瀏覽器唔畀儲存');return x.id;}
-    const r=await api('cases',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({name:c.name,input:c.input,notes:c.notes,tags:c.tags||[],owner_name:myName()})});return r[0].id;},
+    const r=await api('cases',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({name:c.name,input:c.input,notes:c.notes,tags:c.tags||[],owner_name:myName(),...(c.private?{private:true}:{})})});return r[0].id;},
   async update(id,patch){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;Object.assign(x,patch);lsSet(a);return;}
     await api('cases?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify(patch)});},
@@ -1859,6 +1860,8 @@ const Store={
     await api('cases?id=eq.'+encodeURIComponent(id),{method:'DELETE'});}
 };
 
+// 私人命例：數據庫行咗 019 先有；冇就唔顯示私人選項
+let PRIV_OK=false;
 let CASES=[],CUR=null,EDIT=false,Q='',TQ='',CP=1,CP_KEY='';
 // 命例每頁幾多個：手機預設 10、電腦預設 20，0 即全部；兩邊分開記低
 const cpKey=()=>isMob()?'b8-cpn-m':'b8-cpn-d';
@@ -2001,7 +2004,7 @@ function renderAuth(){calcVis();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
   $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();}else if(!ADMIN)AU.loaded=false;
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
-  $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();
+  $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();$('casePrivL').hidden=!(CLOUD&&PRIV_OK);
   const box=$('caseAuth'),ma=$('mAuth');if(!CLOUD){box.hidden=true;ma.innerHTML='';return;}box.hidden=false;
   // 手機版頂部左邊嘅登入狀態；未登入撳「登入」去命例頁嘅登入選項
   ma.innerHTML=SESSION?`<span class="who">👤 ${esc(SESSION.user.name||SESSION.user.email||'')}</span>${tierTag()}<span data-pts>${ptTag()}</span><button type="button" data-logout>登出</button>`:`<button type="button" data-mlogin>登入</button><span class="hint">登入先可以加命例同投票</span>`;
@@ -2032,7 +2035,7 @@ function renderCases(){
   const shown=np>1?list.slice((CP-1)*CP_N,CP*CP_N):list;
   const per=list.length>10?`<label class="hint cpn">每頁 <select id="cpN" aria-label="每頁顯示幾多個命例">${[[10,'10 個'],[20,'20 個'],[30,'30 個'],[50,'50 個'],[0,'全部']].map(([v,t])=>`<option value="${v}"${v===CP_N?' selected':''}>${t}</option>`).join('')}</select></label>`:'';
   $('casePager').innerHTML=per+(np>1?`<button type="button" class="lnk" data-cpage="${CP-1}" ${CP===1?'disabled':''}>‹ 上一頁</button>${Array.from({length:np},(_,i)=>i+1).filter(i=>i===1||i===np||Math.abs(i-CP)<=2).map((i,k,a)=>(k&&i-a[k-1]>1?'<span class="hint">…</span>':'')+`<button type="button" class="pg${i===CP?' on':''}" data-cpage="${i}" aria-current="${i===CP}">${i}</button>`).join('')}<button type="button" class="lnk" data-cpage="${CP+1}" ${CP===np?'disabled':''}>下一頁 ›</button>`:'');
-  $('caseList').innerHTML=list.length?shown.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
+  $('caseList').innerHTML=list.length?shown.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${c.private?'<span class="lock" title="私人命例：淨係自己同管理員睇到">🔒</span>':''}${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
     :`<li class="hint">${CASES.length?'搵唔到。':'未有命例。'+(can.add()?'排好盤之後，喺上面打名再撳「儲存」。':'')}</li>`;
   showCase(CASES.find(c=>c.id===CUR));
   renderSug();renderAuth();
@@ -2041,7 +2044,7 @@ function showCase(c){
   const box=$('caseNote');if(!c){box.hidden=true;box.innerHTML='';return;}
   box.hidden=false;const ed=can.edit(c);
   const head=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">命例：${esc(c.name)}</h2><span class="row">${voteBtns(c)}${ed&&!EDIT?'<button type="button" class="lnk" data-edit>修改</button>':''}<button type="button" class="lnk" data-close>收埋</button>${can.del(c)?`<button type="button" class="lnk del" data-del="${c.id}">刪除</button>`:''}</span></div>
-    <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}${c.by?` · 由 ${esc(c.by)} 新增`:''}</p>`;
+    <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}${c.by?` · 由 ${esc(c.by)} 新增`:''}${c.private?' · 🔒 私人（淨係加入者同管理員睇到，唔計分）':''}${ed&&CLOUD&&PRIV_OK?` <button type="button" class="lnk" data-priv="${c.private?0:1}" data-id="${c.id}">${c.private?'改做公開':'改做私人'}</button>`:''}</p>`;
   if(EDIT&&ed){box.innerHTML=head+`<form class="cadd" data-editf="${c.id}"><span class="hint">名稱</span><input type="text" name="name" maxlength="60" value="${esc(c.name)}" aria-label="命例名稱"><span class="hint">備註</span><textarea name="notes" rows="4" maxlength="2000" aria-label="備註" placeholder="備註（可留空）">${esc(c.notes||'')}</textarea><span class="hint">標籤（用空格分開）</span><input type="text" name="tags" maxlength="200" value="${esc((c.tags||[]).join(' '))}" aria-label="標籤" placeholder="例如：財運 結婚"><span class="hint">出生資料：${esc(birthTxt(c.input))}<br>要改日子或時間：先喺排盤表格改好（電腦版喺最上面，手機版喺「排盤」分頁；可以撳排盤睇下啱唔啱），再返嚟剔下面呢格，然後撳儲存。</span><label class="chk"><input type="checkbox" name="birth"> 出生資料改做表格上面嘅資料：<b data-birthnow>${esc(birthTxt(readForm()))}</b></label><span class="row"><button type="submit" class="go sm">儲存</button><button type="button" class="lnk" data-editcancel>取消</button></span></form>`;return;}
   const have=c.tags||[],sug=byUse([...new Set([...TAG_SUG,...CASES.flatMap(x=>x.tags||[])])].filter(t=>!have.includes(t)));
   box.innerHTML=head+`<div class="ctags"><span class="cap">標籤</span>${have.length?tagChips(have,ed?c.id:''):'<span class="hint">未有標籤</span>'}</div>
@@ -2105,7 +2108,7 @@ async function reloadCases(){
 const CSV_COLS=[['名稱',c=>c.name],['性別',c=>c.input.sex===1?'男':'女'],['曆法',c=>c.input.lunar?'農曆':'公曆'],['閏月',c=>c.input.leap?'是':''],
   ['年',c=>c.input.y],['月',c=>c.input.m],['日',c=>c.input.d],['時',c=>c.input.h],['分',c=>c.input.mi],['子時換日',c=>c.input.zi],
   ['城市',c=>c.input.city],['經度',c=>c.input.lon],['時區',c=>c.input.tz],['夏令時間',c=>c.input.dst?'是':''],['真太陽時',c=>c.input.tst===false?'否':'是'],
-  ['姓名',c=>c.input.name||''],['備註',c=>c.notes||''],['標籤',c=>(c.tags||[]).join(' ')],['新增者',c=>c.by||''],['準',c=>c.likes||0],['唔準',c=>c.unlikes||0],
+  ['姓名',c=>c.input.name||''],['備註',c=>c.notes||''],['標籤',c=>(c.tags||[]).join(' ')],['新增者',c=>c.by||''],['準',c=>c.likes||0],['唔準',c=>c.unlikes||0],['私人',c=>c.private?'是':''],
   ['事件',c=>(c.input.events||[]).map(v=>`${v.t}:${v.y}-${v.m}-${v.d}`).join('; ')],['補充備註',c=>(c.comments||[]).map(m=>`${m.by?m.by+'：':''}${m.body}`).join('\n---\n')]];
 const csvCell=v=>{v=String(v??'');return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
 const toCSV=list=>'\ufeff'+[CSV_COLS.map(x=>x[0]).join(','),...list.map(c=>CSV_COLS.map(x=>csvCell(x[1](c))).join(','))].join('\r\n');
@@ -2123,7 +2126,7 @@ function caseFromRow(o){
     dst:/是|1|true/i.test(o['夏令時間']||''),tst:!/否|0|false/i.test(o['真太陽時']||'是')};
   const ev=[...(o['事件']||'').matchAll(/([^:;]+):(-?\d+)-(\d+)-(\d+)/g)].map(x=>({t:x[1].trim().slice(0,30),y:+x[2],m:+x[3],d:+x[4]}));if(ev.length)input.events=sortEv(ev);
   if(!o['名稱']||isNaN(input.y))return null;
-  return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤'])};}
+  return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤']),...(PRIV_OK&&/是|1|true/i.test(o['私人']||'')?{private:true}:{})};}
 // 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變「確定？」，三秒內再撳先執行
 function twice(btn,label){if(btn.dataset.armed)return true;btn.dataset.armed='1';const old=btn.innerHTML;btn.innerHTML=label;btn.classList.add('armed');
   setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},3000);return false;}
@@ -2132,7 +2135,7 @@ const caseKey=c=>{const i=c.input||{};return [String(c.name||'').trim(),i.sex,!!
 let SAVING=false;
 const busy=async(fn)=>{try{await fn();}catch(e){const m=(e.dup?'':'出錯：')+e.message;$('caseMsg').textContent=m;await reloadCases();$('caseMsg').textContent=m;return;}await reloadCases();};
 document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-evgo],[data-evdel],[data-evedit],[data-evcancel],[data-resend],[data-open],[data-vote],[data-cvote],[data-evote],[data-close],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
+  const t=e.target.closest('[data-evgo],[data-evdel],[data-evedit],[data-evcancel],[data-resend],[data-open],[data-vote],[data-cvote],[data-evote],[data-close],[data-priv],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
   if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
   if(t.hasAttribute('data-tagclear')){TAGF.clear();renderCases();return;}
   if(t.hasAttribute('data-edit')){EDIT=true;renderCases();return;}
@@ -2168,6 +2171,8 @@ document.addEventListener('click',e=>{
   else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
   else if(t.dataset.vote){const c=CASES.find(x=>x.id===t.dataset.id),v=+t.dataset.vote;busy(()=>Store.vote(c.id,c.myVote===v?0:v));}
   else if(t.hasAttribute('data-close')){CUR=null;EDIT=false;renderCases();}
+  else if(t.dataset.priv){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!can.edit(c))return;const v=t.dataset.priv==='1';
+    if(twice(t,v?'確定改做私人？其他人會睇唔到，亦唔再計分':'確定改做公開？所有人都會睇到'))busy(()=>Store.update(c.id,{private:v}));}
   else if(t.dataset.del){if(!can.del(CASES.find(x=>x.id===t.dataset.del)))return;if(twice(t,'確定刪除？'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
   else if(t.id==='caseExport'){if(!can.io())return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([toCSV(CASES)],{type:'text/csv;charset=utf-8'}));a.download='命例.csv';a.click();}
 });
@@ -2179,7 +2184,9 @@ document.addEventListener('submit',e=>{
     if(SAVING)return;SAVING=true;const btn=f.querySelector('button[type=submit]');if(btn)btn.disabled=true;
     busy(async()=>{if(CLOUD)CASES=await Store.list();const k=caseKey({name,input}),dup=CASES.find(c=>caseKey(c)===k);
       if(dup){CUR=dup.id;throw Object.assign(new Error(`已經有一個同名又同出生資料嘅命例「${dup.name}」，冇再儲存。`),{dup:true});}
-      CUR=await Store.add({name,input,notes,tags});const nw=tags.filter(x=>!TAG_SUG.includes(x));if(nw.length)await TagStore.add(nw).catch(()=>{});$('caseName').value='';$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;}).finally(()=>{SAVING=false;if(btn)btn.disabled=false;});}
+      const priv=CLOUD&&PRIV_OK&&$('casePriv').checked;
+      // 私人命例嘅新標籤唔加入共享標籤表，免得其他人見到
+      CUR=await Store.add({name,input,notes,tags,private:priv});const nw=tags.filter(x=>!TAG_SUG.includes(x));if(nw.length&&!priv)await TagStore.add(nw).catch(()=>{});$('caseName').value='';$('casePriv').checked=false;$('caseNotes').value='';$('caseTags').value='';document.querySelector('#caseAdd .more').open=false;}).finally(()=>{SAVING=false;if(btn)btn.disabled=false;});}
   else if(f.id==='loginF'){e.preventDefault();
     auth('token?grant_type=password',{email:$('lgEmail').value.trim(),password:$('lgPass').value}).then(async j=>{saveSess(sessFrom(j));await checkAdmin();reloadCases();}).catch(err=>{const m=$('caseMsg');if(/not confirmed/i.test(err.message))m.innerHTML='電郵未確認。請去收件匣（包括垃圾郵件）撳確認連結。<button type="button" class="lnk" data-resend>重寄確認電郵</button>';else m.textContent='登入失敗：'+err.message;});}
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
