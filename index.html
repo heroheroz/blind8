@@ -135,7 +135,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .chart .dyn{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
 .big{font-family:var(--f-display);font-weight:900;font-size:40px;line-height:1.1;display:block}
 .ch{position:relative;display:inline-block}
-.wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
+.wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wklist b[class^=w]{font-family:var(--f-display);font-size:1.15em;font-weight:900}.wklt{color:var(--muted);font-weight:400;margin:0 2px}.wkon{color:var(--good)}.wkoff{color:var(--muted)}.wkblk{color:var(--bad)}.wkr b[class^=w]{font-size:1.05em}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
 /* 啟動：字後面用返自己五行顏色嘅光暈；做到功右下角細綠剔、做唔到功細紅交叉（可以喺選項收埋）；全部靜止 */
 .gl{position:relative}.on .gl{text-shadow:0 0 .12em color-mix(in srgb,currentColor 70%,transparent),0 0 .35em color-mix(in srgb,currentColor 45%,transparent)}
 .wd .gl::after,.wn .gl::after{content:'✓';position:absolute;right:-.12em;bottom:.02em;font-family:var(--f-body);font-size:max(12px,.36em);font-weight:900;line-height:1;color:var(--good);text-shadow:0 0 2px var(--paper),0 0 2px var(--paper)}.wn .gl::after{content:'✗';color:var(--bad)}.chart.nowk .gl::after{content:none}
@@ -1159,7 +1159,7 @@ function workRows(){
     else{const seen=new Set([v]);let cur=v,prevP=P.filter(i=>lk(i).length);
       for(let d=0;d<6;d++){const k=(cur+6)%10;
         if(seen.has(k)){parts.push(`七殺${GAN[k]}（已經喺條鏈度，停）`);break;}
-        const nd=nodeTxt(k,prevP);parts.push(`七殺${GAN[k]}（${nd.t}${nd.stop===2?'，冇粘連自己就啟動得':''}）`);
+        const nd=nodeTxt(k,prevP);parts.push(`七殺${GAN[k]}（${nd.t}${nd.stop===2?'，冇粘連，本身就啟動得':''}）`);
         if(nd.stop)break;seen.add(k);cur=k;prevP=nd.P.filter(i=>lk(i).length);if(!prevP.length)break;}}
     const res=P.map(i=>{const w=S.work[0][i],n=lk(i).length,on=act[i][0]>0;
       const why=on?'':n?`粘連 ${n} 條（${lkBrk(lk(i))}），七殺未啟動、招唔到，解唔開`:'冇七殺剋佢';
@@ -1168,10 +1168,12 @@ function workRows(){
     return {name,c:GAN[v],chain:parts.join(' < '),res};};
   const ss=g=>WK_SS.map(n=>[n,[...Array(10).keys()].find(x=>shishen(dm,x)===n)]);
   return [line('日主',dm),...ss().map(([n,v])=>line(n,v))];}
+// 天干用返五行顏色，箭咀「<」淡色，已啟動綠、未啟動灰
+const wkHtml=t=>esc(t).replace(/[甲乙丙丁戊己庚辛壬癸]/g,c=>`<b class="w${gw(gi(c))}">${c}</b>`).replace(/ &lt; /g,' <span class="wklt">&lt;</span> ').replace(/已啟動|招得到/g,m=>`<span class="wkon">${m}</span>`).replace(/未啟動|盤上冇/g,m=>`<span class="wkoff">${m}</span>`).replace(/被[^：；（）]*?(合住|擋走)/g,m=>`<span class="wkblk">${m}</span>`);
 function workSec(){const rows=workRows();
   return `<section class="panel" id="workBox"><h2>做功計算 <span class="hint">（只睇天干）</span></h2>
   <p class="hint">每行由個十神開始：有冇粘連 → 佢嘅七殺喺唔喺盤、啟動未；盤上冇就睇招唔招得到（右邊有冇字合住或者擋走）→ 再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。下面嗰行係盤上計出嚟嘅結果。</p>
-  <ul class="wklist">${rows.map(r=>`<li><div class="wkc">${esc(r.chain)}</div>${r.res.map(x=>`<div class="wkr ${x.cls}">${x.cls==='ok'?'✓ ':x.cls==='no'?'✗ ':''}${esc(x.txt)}</div>`).join('')}</li>`).join('')}</ul></section>`;}
+  <ul class="wklist">${rows.map(r=>`<li><div class="wkc">${wkHtml(r.chain)}</div>${r.res.map(x=>`<div class="wkr ${x.cls}">${x.cls==='ok'?'✓ ':x.cls==='no'?'✗ ':''}${wkHtml(x.txt)}</div>`).join('')}</li>`).join('')}</ul></section>`;}
 // 每個字下面列出佢嘅粘連點樣嚟，例如「己己粘連」
 function nlList(k,ci,cols){
   const me=cols[ci].gz[k],seen={},order=[];
