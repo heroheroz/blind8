@@ -12,3 +12,5 @@ create policy "read guestbook" on public.guestbook for select to anon, authentic
 create policy "post guestbook" on public.guestbook for insert to authenticated with check (author = auth.uid());
 create policy "delete guestbook" on public.guestbook for delete to authenticated using (author = auth.uid() or public.is_admin());
 revoke update on public.guestbook from anon, authenticated;
+
+select '003 completed' as status;

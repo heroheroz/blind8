@@ -52,3 +52,5 @@ as $$
 $$;
 revoke execute on function public.arrow_vote_counts() from public;
 grant execute on function public.arrow_vote_counts() to anon, authenticated;
+
+select '015 completed' as status;

@@ -48,3 +48,5 @@ begin
   end loop;
 end $$;
 -- If you run 004_event_votes.sql after this file, run this file again so 事件 votes are logged too.
+
+select '005 completed' as status;

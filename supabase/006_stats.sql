@@ -109,3 +109,5 @@ drop policy if exists "admins delete cases" on public.cases;
 drop policy if exists "owners or admins delete cases" on public.cases;
 create policy "owners or admins delete cases" on public.cases for delete to authenticated
   using (owner = auth.uid() or public.is_admin());
+
+select '006 completed' as status;

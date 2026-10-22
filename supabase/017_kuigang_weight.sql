@@ -5,3 +5,5 @@ alter table public.arrow_weights drop constraint if exists arrow_weights_key_che
 alter table public.arrow_weights add constraint arrow_weights_key_check
   check (key in ('fu','he','lian','banhe','sanhe','zg','zgb','chain','cx','kg','se','yr','sw','sem'));
 insert into public.arrow_weights (key, value) values ('kg', 1) on conflict (key) do nothing;
+
+select '017 completed' as status;

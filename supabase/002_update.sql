@@ -29,3 +29,5 @@ alter table public.comment_votes enable row level security;
 create policy "read note votes" on public.comment_votes for select to anon, authenticated using (true);
 create policy "add note votes" on public.comment_votes for insert to authenticated with check (voter = auth.uid());
 create policy "change own note votes" on public.comment_votes for update to authenticated using (voter = auth.uid()) with check (voter = auth.uid());
+
+select '002 completed' as status;

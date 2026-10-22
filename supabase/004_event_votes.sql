@@ -12,3 +12,5 @@ alter table public.event_votes enable row level security;
 create policy "read event votes" on public.event_votes for select to anon, authenticated using (true);
 create policy "add event votes" on public.event_votes for insert to authenticated with check (voter = auth.uid());
 create policy "change own event votes" on public.event_votes for update to authenticated using (voter = auth.uid()) with check (voter = auth.uid());
+
+select '004 completed' as status;

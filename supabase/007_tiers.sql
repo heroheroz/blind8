@@ -35,3 +35,5 @@ begin
 end $$;
 revoke execute on function public.admin_users() from public, anon;
 grant execute on function public.admin_users() to authenticated;
+
+select '007 completed' as status;

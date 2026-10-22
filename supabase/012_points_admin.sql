@@ -146,3 +146,5 @@ as $$
 $$;
 revoke execute on function public.points_board() from public, anon;
 grant execute on function public.points_board() to authenticated;
+
+select '012 completed' as status;

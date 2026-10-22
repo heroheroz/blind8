@@ -41,3 +41,5 @@ as $$
 $$;
 revoke execute on function public.sw_vote_counts(text) from public;
 grant execute on function public.sw_vote_counts(text) to anon, authenticated;
+
+select '016 completed' as status;

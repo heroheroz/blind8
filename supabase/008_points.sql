@@ -163,3 +163,5 @@ begin
 end $$;
 revoke execute on function public.spend_points(text, text) from public, anon;
 grant execute on function public.spend_points(text, text) to authenticated;
+
+select '008 completed' as status;
