@@ -1904,12 +1904,12 @@ const AU={p:0,n:(()=>{try{const v=localStorage.getItem('b8-aun2');return v!=null
 $('auN').value=String(AU.n);
 const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員',user_tiers:'用戶等級',point_bonus:'手動加分',point_costs:'扣分設定',point_settings:'計分設定',users:'用戶註冊',logins:'用戶登入'};
 const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'👍 準','-1':'👎 唔準','0':'撤回'};
-const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者'};
+const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者',private:'私人'};
 const auS=v=>v==null?'':typeof v==='string'?v:JSON.stringify(v);
 const auCut=(v,n=60)=>{const x=auS(v);return x.length>n?x.slice(0,n)+'…':x;};
 const auCase=id=>{const c=CASES.find(c=>c.id===id);return c?`「${c.name}」`:'';};
 function auWhat(r){const o=r.row_new||r.row_old||{};
-  switch(r.tbl){case 'cases':return `「${o.name||''}」`;case 'comments':return auCase(o.case_id)+' '+auCut(o.body);case 'guestbook':return auCut(o.body);case 'tags':return '#'+(o.name||'');
+  switch(r.tbl){case 'cases':return `${o.private?'🔒 ':''}「${o.name||''}」`;case 'comments':return auCase(o.case_id)+' '+auCut(o.body);case 'guestbook':return auCut(o.body);case 'tags':return '#'+(o.name||'');
     case 'votes':return auCase(o.case_id)+' '+(AU_V[o.vote]||o.vote);case 'comment_votes':return AU_V[o.vote]||o.vote;case 'event_votes':return auCase(o.case_id)+' '+(o.ev||'')+' '+(AU_V[o.vote]||o.vote);
     case 'users':case 'logins':{const pv=(o.providers&&o.providers.length?o.providers:[o.provider]).filter(Boolean).map(x=>AU_PV[x]||x);return pv.length?'方法：'+pv.join('／'):'';}case 'point_bonus':return `${auUser(o.user_id)} ${o.amount>0?'+':''}${o.amount} 分${o.reason?'（'+o.reason+'）':''}`;case 'point_settings':return `${{need:'準門檻',start:'開戶分',vday:'投票每日上限',gday:'留言每日上限',daily:'每日登入分'}[o.key]||o.key} ${o.value}`;case 'point_costs':return `${{sha:'招感殺星',sw:'最強五行',work:'做功'}[o.kind]||o.kind} ${o.cost} 分`;default:return o.user_id||'';}}
 function auUser(id){const u=TU.rows.find(x=>x.id===id);return u?(u.name||u.email||''):String(id||'').slice(0,8);}
@@ -1918,6 +1918,7 @@ function auDiff(r){if(r.op!=='UPDATE'||!r.row_old||!r.row_new)return [];const a=
     if(k==='input'&&a[k]&&b[k]&&typeof a[k]==='object'){for(const j of new Set([...Object.keys(a[k]),...Object.keys(b[k])]))if(JSON.stringify(a[k][j])!==JSON.stringify(b[k][j]))out.push(`出生資料.${j}：${auCut(a[k][j],30)} → ${auCut(b[k][j],30)}`);}
     else if(k==='tags'&&Array.isArray(a[k])&&Array.isArray(b[k])){const add=b[k].filter(x=>!a[k].includes(x)),del=a[k].filter(x=>!b[k].includes(x));
       if(add.length)out.push('加咗標籤：'+add.map(x=>'#'+x).join(' '));if(del.length)out.push('刪咗標籤：'+del.map(x=>'#'+x).join(' '));}
+    else if(k==='private')out.push(b[k]?'🔒 改做私人':'改做公開');
     else out.push(`${AU_K[k]||k}：${auCut(a[k],40)} → ${auCut(b[k],40)}`);}
   return out;}
 async function loadAudit(){
