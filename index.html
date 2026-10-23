@@ -266,7 +266,7 @@ body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:non
 #caseBox>summary h2{display:inline;margin:0}#caseBox>summary::after{content:'▾';color:var(--muted);margin-left:6px}
 #caseBox:not([open])>summary::after{content:'▸'}
 .cadd{display:flex;flex-direction:column;gap:6px;margin:10px 0}
-.cnum{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.cnum label{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.cnum input{width:4.5em;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+.cnum{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.cnum label{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.cnum input{width:4.5em;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}.cnumf label{font-size:13px}.cnumf input{width:3.6em;padding:3px 6px}
 .cadd textarea,.cases input[type=search]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;resize:vertical}
 button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .clist{list-style:none;margin:10px 0 6px;padding:0;display:flex;flex-direction:column;gap:6px}
@@ -409,7 +409,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <label class="chk cpriv" id="casePrivL" title="淨係自己同管理員睇到，唔計分" hidden><input type="checkbox" id="casePriv"> 🔒 私人</label>
   <details class="more"><summary>加備註／標籤（可選）</summary>
     <textarea id="caseNotes" rows="3" maxlength="2000" placeholder="備註"></textarea>
-    <div class="cnum"><label>兄弟姊妹 <input type="number" id="caseSib" min="0" max="30" inputmode="numeric" placeholder="—" aria-label="兄弟姊妹數目（唔計自己）"></label><label>子女 <input type="number" id="caseKid" min="0" max="30" inputmode="numeric" placeholder="—" aria-label="子女數目"></label><span class="hint">（兄弟姊妹唔計自己；唔知就留空）</span></div>
+    <div class="cnum"><label>兄弟姊妹+命主合共 <input type="number" id="caseSib" min="0" max="30" inputmode="numeric" placeholder="—" aria-label="兄弟姊妹連命主自己合共幾多人"></label><label>子女 <input type="number" id="caseKid" min="0" max="30" inputmode="numeric" placeholder="—" aria-label="子女數目"></label><span class="hint">（連命主自己計，例如有一個哥哥就填 2；唔知就留空）</span></div>
     <input type="text" id="caseTags" maxlength="200" placeholder="標籤，用逗號或空格分隔">
     <div class="tagsug" aria-label="常用標籤"></div>
   </details>
@@ -2415,7 +2415,7 @@ function showCase(c){
   box.hidden=false;const ed=can.edit(c);
   const head=`<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">命例：${esc(c.name)}</h2><span class="row">${voteBtns(c)}${ed&&!EDIT?'<button type="button" class="lnk" data-edit>修改</button>':''}<button type="button" class="lnk" data-close>收埋</button>${can.del(c)?`<button type="button" class="lnk del" data-del="${c.id}">刪除</button>`:''}</span></div>
     <p class="hint" style="margin:4px 0 8px">${birthTxt(c.input)}${numTxt(c.input)?` · <b class="cnums">${numTxt(c.input)}</b>`:''}${c.by?` · 由 ${esc(c.by)} 新增`:''}${c.private?' · 🔒 私人（淨係加入者同管理員睇到，唔計分）':''}${ed&&CLOUD&&PRIV_OK?` <button type="button" class="lnk" data-priv="${c.private?0:1}" data-id="${c.id}">${c.private?'改做公開':'改做私人'}</button>`:''}</p>`;
-  if(EDIT&&ed){box.innerHTML=head+`<form class="cadd" data-editf="${c.id}"><span class="hint">名稱</span><input type="text" name="name" maxlength="60" value="${esc(c.name)}" aria-label="命例名稱"><span class="hint">備註</span><textarea name="notes" rows="4" maxlength="2000" aria-label="備註" placeholder="備註（可留空）">${esc(c.notes||'')}</textarea><span class="hint">標籤（用空格分開）</span><input type="text" name="tags" maxlength="200" value="${esc((c.tags||[]).join(' '))}" aria-label="標籤" placeholder="例如：財運 結婚"><div class="cnum"><label>兄弟姊妹 <input type="number" name="sib" min="0" max="30" inputmode="numeric" placeholder="—" value="${c.input&&c.input.sib!=null?c.input.sib:''}" aria-label="兄弟姊妹數目（唔計自己）"></label><label>子女 <input type="number" name="kid" min="0" max="30" inputmode="numeric" placeholder="—" value="${c.input&&c.input.kid!=null?c.input.kid:''}" aria-label="子女數目"></label><span class="hint">（兄弟姊妹唔計自己；唔知就留空）</span></div><span class="hint">出生資料：${esc(birthTxt(c.input))}<br>要改日子或時間：先喺排盤表格改好（電腦版喺最上面，手機版喺「排盤」分頁；可以撳排盤睇下啱唔啱），再返嚟剔下面呢格，然後撳儲存。</span><label class="chk"><input type="checkbox" name="birth"> 出生資料改做表格上面嘅資料：<b data-birthnow>${esc(birthTxt(readForm()))}</b></label><span class="row"><button type="submit" class="go sm">儲存</button><button type="button" class="lnk" data-editcancel>取消</button></span></form>`;return;}
+  if(EDIT&&ed){box.innerHTML=head+`<form class="cadd" data-editf="${c.id}"><span class="hint">名稱</span><input type="text" name="name" maxlength="60" value="${esc(c.name)}" aria-label="命例名稱"><span class="hint">備註</span><textarea name="notes" rows="4" maxlength="2000" aria-label="備註" placeholder="備註（可留空）">${esc(c.notes||'')}</textarea><span class="hint">標籤（用空格分開）</span><input type="text" name="tags" maxlength="200" value="${esc((c.tags||[]).join(' '))}" aria-label="標籤" placeholder="例如：財運 結婚"><span class="hint">出生資料：${esc(birthTxt(c.input))}<br>要改日子或時間：先喺排盤表格改好（電腦版喺最上面，手機版喺「排盤」分頁；可以撳排盤睇下啱唔啱），再返嚟剔下面呢格，然後撳儲存。</span><label class="chk"><input type="checkbox" name="birth"> 出生資料改做表格上面嘅資料：<b data-birthnow>${esc(birthTxt(readForm()))}</b></label><span class="row"><button type="submit" class="go sm">儲存</button><button type="button" class="lnk" data-editcancel>取消</button></span></form>`;return;}
   const have=c.tags||[],sug=byUse([...new Set([...TAG_SUG,...CASES.flatMap(x=>x.tags||[])])].filter(t=>!have.includes(t)));
   box.innerHTML=head+`<div class="ctags"><span class="cap">標籤</span>${have.length?tagChips(have,ed?c.id:''):'<span class="hint">未有標籤</span>'}</div>
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk">加</button></form></div>`:''}
@@ -2434,6 +2434,7 @@ const evoteBtns=(c,v)=>{const m=(c.evVotes||{})[evKey(v)]||{},k=esc(evKey(v)),di
   return `<span class="votes evv"><button type="button" class="vb${m.myVote===1?' on':''}" data-evote="1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===1}" title="準"${dis}>👍 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-evote="-1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===-1}" title="唔準"${dis}>👎 ${m.unlikes||0}</button></span>`;};
 function evBlock(c,ed){const evs=c.input.events||[];
   return `<div class="ctags"><span class="cap">事件</span>${evs.length?`<span class="tags">${evs.map((v,i)=>`<button type="button" class="tag ev" data-evgo="${i}" data-id="${c.id}" title="用呢日睇運">${esc(v.t)} ${evTxt(v)}</button>${evoteBtns(c,v)}${ed?`<button type="button" class="tagx" data-evedit="${i}" data-id="${c.id}" aria-label="修改事件 ${esc(v.t)}" title="修改">✎</button><button type="button" class="tagx" data-evdel="${i}" data-id="${c.id}" aria-label="刪除事件 ${esc(v.t)}">×</button>`:''}`).join('')}</span>`:'<span class="hint">未有事件日期</span>'}</div>
+  ${ed?`<form class="row cnum cnumf" data-cnumf="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em">人數</span><label>兄弟姊妹+命主合共 <input type="number" name="sib" min="0" max="30" inputmode="numeric" placeholder="—" value="${c.input&&c.input.sib!=null?c.input.sib:''}" aria-label="兄弟姊妹連命主自己合共幾多人"></label><label>子女 <input type="number" name="kid" min="0" max="30" inputmode="numeric" placeholder="—" value="${c.input&&c.input.kid!=null?c.input.kid:''}" aria-label="子女數目"></label><button type="submit" class="lnk">存</button><span class="hint">（兄弟姊妹連命主自己計；唔知就留空）</span></form>`:''}
   ${ed?`<form class="row evadd" data-addev="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em" data-evcap>加事件</span><input type="hidden" name="idx" value=""><input name="t" list="evList" maxlength="30" required placeholder="例如結婚" aria-label="事件" style="width:7.5em"><select name="cal" aria-label="公曆／農曆"><option value="s">公曆</option><option value="l">農曆</option></select><select name="era" aria-label="公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" name="y" min="1" max="9999" required placeholder="年" aria-label="年" style="width:5em"><select name="m" aria-label="月">${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1} 月</option>`).join('')}</select><label class="evleap" title="農曆閏月先用"><input type="checkbox" name="leap"> 閏</label><select name="d" aria-label="日">${Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1} 日</option>`).join('')}</select><button type="submit" class="lnk" data-evsub>加</button><button type="button" class="lnk" data-evcancel hidden>取消</button><datalist id="evList">${[...new Set([...EV_SUG,...TAG_SUG.filter(x=>!NODATE(x))])].map(x=>`<option value="${x}">`).join('')}</datalist></form><details class="bzpk" data-bzpk="ev" data-evf="${c.id}"><summary>🔎 用八字搵日子</summary><div class="row"><input type="text" class="bzq" maxlength="40" placeholder="例如：癸未 乙卯 甲辰（年 月 日柱）" aria-label="輸入八字"><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>`:''}`;}
 const sortEv=a=>a.slice().sort((p,q)=>p.y-q.y||p.m-q.m||p.d-q.d);
 // 留言版：所有人睇得到，登入先留得言；自己嘅留言或者管理員先刪得
@@ -2478,7 +2479,7 @@ async function reloadCases(){
 const CSV_COLS=[['名稱',c=>c.name],['性別',c=>c.input.sex===1?'男':'女'],['曆法',c=>c.input.lunar?'農曆':'公曆'],['閏月',c=>c.input.leap?'是':''],
   ['年',c=>c.input.y],['月',c=>c.input.m],['日',c=>c.input.d],['時',c=>c.input.h],['分',c=>c.input.mi],['子時換日',c=>c.input.zi],
   ['城市',c=>c.input.city],['經度',c=>c.input.lon],['時區',c=>c.input.tz],['夏令時間',c=>c.input.dst?'是':''],['真太陽時',c=>c.input.tst===false?'否':'是'],
-  ['姓名',c=>c.input.name||''],['備註',c=>c.notes||''],['標籤',c=>(c.tags||[]).join(' ')],['新增者',c=>c.by||''],['準',c=>c.likes||0],['唔準',c=>c.unlikes||0],['私人',c=>c.private?'是':''],['兄弟姊妹',c=>c.input.sib??''],['子女',c=>c.input.kid??''],
+  ['姓名',c=>c.input.name||''],['備註',c=>c.notes||''],['標籤',c=>(c.tags||[]).join(' ')],['新增者',c=>c.by||''],['準',c=>c.likes||0],['唔準',c=>c.unlikes||0],['私人',c=>c.private?'是':''],['兄弟姊妹+命主合共',c=>c.input.sib??''],['子女',c=>c.input.kid??''],
   ['事件',c=>(c.input.events||[]).map(v=>`${v.t}:${v.y}-${v.m}-${v.d}`).join('; ')],['補充備註',c=>(c.comments||[]).map(m=>`${m.by?m.by+'：':''}${m.body}`).join('\n---\n')]];
 const csvCell=v=>{v=String(v??'');return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
 const toCSV=list=>'\ufeff'+[CSV_COLS.map(x=>x[0]).join(','),...list.map(c=>CSV_COLS.map(x=>csvCell(x[1](c))).join(','))].join('\r\n');
@@ -2495,17 +2496,17 @@ function caseFromRow(o){
     y:num('年',NaN),m:num('月',1),d:num('日',1),h:num('時',0),mi:num('分',0),zi:num('子時換日',1),city:num('城市',0),lon:num('經度',114.17),tz:num('時區',8),
     dst:/是|1|true/i.test(o['夏令時間']||''),tst:!/否|0|false/i.test(o['真太陽時']||'是')};
   const ev=[...(o['事件']||'').matchAll(/([^:;]+):(-?\d+)-(\d+)-(\d+)/g)].map(x=>({t:x[1].trim().slice(0,30),y:+x[2],m:+x[3],d:+x[4]}));if(ev.length)input.events=sortEv(ev);
-  const sb=numIn(o['兄弟姊妹']),kd=numIn(o['子女']);if(sb!=null)input.sib=sb;if(kd!=null)input.kid=kd;
+  const sb=numIn(o['兄弟姊妹+命主合共']??o['兄弟姊妹']),kd=numIn(o['子女']);if(sb!=null)input.sib=sb;if(kd!=null)input.kid=kd;
   if(!o['名稱']||isNaN(input.y))return null;
   return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤']),...(PRIV_OK&&/是|1|true/i.test(o['私人']||'')?{private:true}:{})};}
 // 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變「確定？」，三秒內再撳先執行
 function twice(btn,label){if(btn.dataset.armed)return true;btn.dataset.armed='1';const old=btn.innerHTML;btn.innerHTML=label;btn.classList.add('armed');
   setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},3000);return false;}
 // 同名又同出生資料（性別、曆法、年月日時分、子時、經度、時區、夏令、真太陽時）當係同一個命例
-// 兄弟姊妹（唔計自己）同子女數目：存喺 input 入面（sib／kid），留空即係唔知
+// 兄弟姊妹連命主自己合共人數同子女數目：存喺 input 入面（sib／kid），留空即係唔知
 const numIn=v=>{v=String(v??'').trim();if(v==='')return null;const n=Math.round(+v);return isNaN(n)||n<0?null:Math.min(n,30);};
 const setNums=(inp,sib,kid)=>{const o={...inp};delete o.sib;delete o.kid;if(sib!=null)o.sib=sib;if(kid!=null)o.kid=kid;return o;};
-const numTxt=i=>[i&&i.sib!=null?`兄弟姊妹 ${i.sib}`:'',i&&i.kid!=null?`子女 ${i.kid}`:''].filter(Boolean).join(' · ');
+const numTxt=i=>[i&&i.sib!=null?`兄弟姊妹+命主合共 ${i.sib}`:'',i&&i.kid!=null?`子女 ${i.kid}`:''].filter(Boolean).join(' · ');
 const caseKey=c=>{const i=c.input||{};return [String(c.name||'').trim(),i.sex,!!i.lunar,!!i.leap,i.y,i.m,i.d,i.h,i.mi,i.zi,i.lon,i.tz,!!i.dst,!!i.tst].join('|');};
 let SAVING=false;
 const busy=async(fn)=>{try{await fn();}catch(e){const m=(e.dup?'':'出錯：')+e.message;$('caseMsg').textContent=m;await reloadCases();$('caseMsg').textContent=m;return;}await reloadCases();};
@@ -2568,8 +2569,10 @@ document.addEventListener('submit',e=>{
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
     const patch={name:String(fd.get('name')).trim()||c.name,notes:String(fd.get('notes')).trim(),tags:parseTags(fd.get('tags'))};
     const base=fd.get('birth')?{...readForm(),...(c.input&&c.input.events?{events:c.input.events}:{})}:c.input;// 事件唔喺表格度，保留返
-    const ni=setNums(base,numIn(fd.get('sib')),numIn(fd.get('kid')));if(fd.get('birth')||ni.sib!==c.input.sib||ni.kid!==c.input.kid)patch.input=ni;
+    if(fd.get('birth'))patch.input=setNums(base,c.input.sib,c.input.kid);
     busy(async()=>{await Store.update(c.id,patch);EDIT=false;if(fd.get('birth')){writeForm(patch.input);run(patch.input);}});}
+  else if(f.dataset.cnumf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.cnumf);if(!c)return;const fd=new FormData(f);
+    const ni=setNums(c.input,numIn(fd.get('sib')),numIn(fd.get('kid')));if(ni.sib===c.input.sib&&ni.kid===c.input.kid)return;busy(()=>Store.update(c.id,{input:ni}));}
   else if(f.id==='tagMgrAdd'){e.preventDefault();const add=parseTags($('tagMgrIn').value).filter(x=>!TAG_SUG.includes(x));$('tagMgrIn').value='';if(add.length){if(CLOUD&&!can.add()){$('caseMsg').textContent='登入先可以加標籤。';return;}busy(()=>TagStore.add(add));}}
   else if(f.dataset.addev){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addev);if(!c)return;const fd=new FormData(f);
     const t=String(fd.get('t')).trim(),n=+fd.get('y'),ly=fd.get('era')==='-1'?1-n:n,lm=+fd.get('m'),ld=+fd.get('d'),leap=!!fd.get('leap');
