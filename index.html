@@ -1608,6 +1608,12 @@ const isMob=()=>matchMedia('(max-width:700px),(pointer:coarse) and (max-width:10
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
 const VIEW={prevMoCalc:true,jinqiCalc:true,xiaoCalc:true,virt:true,dyn:false,dynZg:true,only4:false,yuan:true,aux:false,ming:false,yuanCalc:true,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:null,shaAll:true,tkAll:false,jinqi:false,muku:false,ssTag:true,noMidL:true,ganTop:true,wkMark:true,work:false,arNum:false,natL:true,sw:null,swm:'s1'};
+// 分享連結帶埋顯示選項（v=鍵.值,鍵.值，淨係寫同預設唔同嘅），打開連結嘅人見到同一個樣
+// 管理員專用、會員級別限定、會扣分嘅選項（做功、招感殺星、最強五行）唔帶
+const VIEW0={...VIEW},VIEW_NOSHARE=['work','sha','shaAll','sw','swm'];
+const viewQ=()=>Object.keys(VIEW0).filter(k=>!VIEW_NOSHARE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null).map(k=>k+'.'+(typeof VIEW[k]==='boolean'?+VIEW[k]:VIEW[k])).join(',');
+(()=>{const v=new URLSearchParams(location.search).get('v');if(!v)return;v.split(',').forEach(x=>{const [k,val]=x.split('.');if(!(k in VIEW0)||VIEW_NOSHARE.includes(k))return;
+  const d=VIEW0[k];VIEW[k]=typeof d==='string'?val:val==='1'?true:val==='0'?false:d;});})();
 // 招感殺星：未撳過（null）就跟等級，免費嘅（進階、高級、管理員）預設開，普通用戶預設閂（唔會自動扣分）
 const shaOn=()=>VIEW.sha==null?can.sha():VIEW.sha;
 function drawChains(){
@@ -2666,7 +2672,7 @@ async function savePng(btn){
   catch(e){msg.textContent='存唔到：'+(e.message||e);}
   finally{cap.remove();box.classList.remove('pngmode');box.style.width='';drawChains();btn.disabled=false;setTimeout(()=>{if(msg.textContent==='已存。')msg.textContent='';},3000);}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-png]');if(b)savePng(b);});
-document.addEventListener('click',e=>{if(!e.target.closest('[data-share]')||!LAST_V)return;const url=SHARE_BASE+'?'+toQuery(LAST_V),msg=$('pngMsg');
+document.addEventListener('click',e=>{if(!e.target.closest('[data-share]')||!LAST_V)return;const vq=viewQ(),url=SHARE_BASE+'?'+toQuery(LAST_V)+(vq?'&v='+vq:''),msg=$('pngMsg');
   const done=()=>{msg.textContent='已複製連結';setTimeout(()=>{if(msg.textContent.startsWith('已複製連結'))msg.textContent='';},4000);};
   (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(done).catch(()=>{prompt('複製呢條連結：',url);});});
 // 搜尋用：轉細楷，再用 OpenCC 轉簡體，咁繁簡都對得上；轉換程式第一次搜尋先載入，載入前只比大細楷
