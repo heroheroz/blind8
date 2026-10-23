@@ -136,6 +136,9 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .big{font-family:var(--f-display);font-weight:900;font-size:40px;line-height:1.1;display:block}
 .ch{position:relative;display:inline-block}
 .wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wklist b[class^=w]{font-family:var(--f-display);font-size:1.15em;font-weight:900}.wklt{color:var(--muted);font-weight:400;margin:0 2px}.wkon{color:var(--good)}.wkoff{color:var(--muted)}.wkblk{color:var(--bad)}.wkr b[class^=w]{font-size:1.05em}.wkx{text-decoration:line-through;text-decoration-thickness:1.5px;opacity:.75}.wksh{font-size:15px;margin:14px 0 6px}.wkscore{display:grid;gap:6px;max-width:760px}.wks{display:grid;grid-template-columns:5.5em 1fr 2.6em;gap:2px 8px;align-items:center}.wksn{font-weight:700}.wksb{height:10px;background:var(--line);border-radius:5px;overflow:hidden}.wksb i{display:block;height:100%;border-radius:5px}.wksb i.g{background:var(--good)}.wksb i.m{background:#d9a441}.wksb i.b{background:var(--bad)}.wksv{font-weight:800;text-align:right;font-family:var(--f-display)}.wksv.s{color:#c08a12}.wksb i.s{background:linear-gradient(90deg,#d9a441,#c08a12)}.wksv.m{color:#b7862b}.wksv.g{color:var(--good)}.wksv.b{color:var(--bad)}.wksd{grid-column:1/-1;font-size:12px;color:var(--muted)}.wksd b[class^=w]{font-size:1.05em}.wkm{font-size:13px;color:var(--accent,#8a6d3b);margin-top:1px}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
+.plh{display:inline;font-size:inherit}#plBox summary{cursor:pointer}#plBox summary h2{font-size:18px}.plg{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;margin-top:8px}.plw{width:300px;max-width:100%;height:auto;flex:none}.plc{fill:none;stroke:var(--line)}.plz{stroke:var(--line)}.pltk{stroke:var(--muted);stroke-width:.8}.plzg{font-size:13px;fill:var(--muted)}.plt{font-size:19px;fill:#c0662b}.pln{font-size:19px;fill:var(--ink)}.plt2{border-collapse:collapse;font-size:13px}.plt2 th,.plt2 td{padding:3px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.plt2 thead th{font-size:12px;color:var(--muted)}.plt2 thead small{display:block;font-weight:400}.plrx{color:var(--bad);font-size:11px}.plasp{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px}.plasp small{color:var(--muted)}
+@media(max-width:640px){.plt2 th,.plt2 td{padding:3px 4px;font-size:12px}}
+.bzpk{margin:4px 0 2px;font-size:13px}.bzpk summary{cursor:pointer;color:var(--accent,#3a4a8a);font-size:13px}.bzpk .bzq{flex:1;min-width:12em;font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}.bzres{display:flex;flex-wrap:wrap;gap:2px 10px;margin-top:4px}.bzopt{font-variant-numeric:tabular-nums}
 .calcnote{margin:4px 0 10px;padding:8px 12px;border:1.5px solid #d9a441;border-left-width:5px;border-radius:8px;background:color-mix(in srgb,#d9a441 10%,transparent);font-size:13.5px;line-height:1.55}.calcnote b{display:block;font-size:15px;margin-bottom:2px}.calcnote .cnx{display:block;color:var(--muted);margin-top:2px}@media(max-width:700px){.calcnote{font-size:12.5px;padding:6px 10px;line-height:1.45}.calcnote b{font-size:14px}}
 .xjt{border-collapse:collapse;font-size:14px;margin-top:2px}.xjt th,.xjt td{padding:4px 10px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}.xjt thead th{font-size:12px;color:var(--muted);font-weight:600}.xjt tbody th{text-align:left;font-weight:600}.xjt td.xi{background:color-mix(in srgb,var(--good) 7%,transparent)}.xjt td.ji{background:color-mix(in srgb,var(--bad) 7%,transparent)}.xjc{display:inline-flex;align-items:baseline;gap:1px;margin:0 3px}.xjc b{font-family:var(--f-display);font-size:1.3em;font-weight:900}.xjc small{font-size:11px;color:var(--muted)}.xjn{color:var(--muted)}.xjd{display:inline-block;width:1px;height:1.1em;background:var(--line);margin:0 6px;vertical-align:middle}.xjt thead small{font-weight:400}.xjh{margin-top:6px}
 @media(max-width:640px){.xjt{font-size:13px}.xjt th,.xjt td{padding:4px 3px;white-space:normal}.xjc{margin:0 1px}.xjd{margin:0 3px}}
@@ -475,6 +478,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
       <select id="d" aria-label="日"></select>
     </div>
     <label class="chk" id="leapWrap" hidden><input type="checkbox" id="leap">閏月</label>
+    <details class="bzpk" data-bzpk="birth"><summary>🔎 用八字搵日子</summary><div class="row"><input type="text" class="bzq" maxlength="40" placeholder="例如：丁亥 庚戌 己巳 庚午（年月日時，時柱可以唔填）" aria-label="輸入八字"><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>
     <label class="cap" for="aty" style="margin-top:6px">睇運日期（公曆，預設今日）</label>
     <div class="row">
       <select id="atEra" aria-label="睇運日期公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" id="aty" min="1" max="9999" aria-label="睇運日期年" style="width:5.2em"> 年
@@ -482,6 +486,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
       <select id="atd" aria-label="睇運日期日"></select>
       <button type="button" class="lnk" id="atClr">用今日</button>
     </div>
+    <details class="bzpk" data-bzpk="at"><summary>🔎 用八字搵日子</summary><div class="row"><input type="text" class="bzq" maxlength="40" placeholder="例如：癸未 乙卯 甲辰（流年 流月 流日）" aria-label="輸入八字"><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>
   </fieldset>
 
   <fieldset>
@@ -975,6 +980,63 @@ function months(Y){
 }
 function days(mo){const out=[];let d=Solar.fromYmd(mo.start.getYear(),mo.start.getMonth(),mo.start.getDay());const end=mo.end.toYmd();
   while(d.toYmd()<end){out.push({sol:d,gz:d.getLunar().getDayInGanZhi()});d=d.next(1);}return out;}
+
+// 用八字搵日子：輸入年月日（可加時）柱，喺公元 1600–2200 年搵晒符合嘅公曆日子；時柱就揀嗰個時辰中間（子 0 點、丑 2 點…）
+function bzFind(txt){const ps=(txt.match(/[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]/g)||[]);
+  if(ps.length<3)return {err:'最少要填年、月、日三柱，例如：癸未 乙卯 甲辰'};
+  const bad=ps.find(x=>gi(x[0])%2!==zi(x[1])%2);if(bad)return {err:`冇「${bad}」呢個干支（天干地支陰陽要一樣）`};
+  const [yg,mg,dg,hg]=ps,yi=JIAZI60.indexOf(yg),out=[];
+  for(let Y=1600+((yi-1600+4)%60+60)%60;Y<=2200;Y+=60){
+    const mo=months(Y).find(x=>x.gz===mg);if(!mo)continue;
+    days(mo).filter(x=>x.gz===dg).forEach(x=>{const so=x.sol;let h=null;
+      if(hg){const z=zi(hg[1]);h=z*2;const e=Solar.fromYmdHms(so.getYear(),so.getMonth(),so.getDay(),h,0,0).getLunar().getEightChar();if(e.getTime()!==hg)return;}
+      out.push({y:so.getYear(),m:so.getMonth(),d:so.getDay(),h});});}
+  return {list:out,ps};}
+document.addEventListener('click',e=>{const go=e.target.closest('[data-bzgo]'),pick=e.target.closest('[data-bzpick]');
+  if(go){const box=go.closest('.bzpk'),res=box.querySelector('.bzres'),r=bzFind(box.querySelector('.bzq').value);
+    if(r.err){res.innerHTML=`<span class="hint">${esc(r.err)}</span>`;return;}
+    if(!r.list.length){res.innerHTML='<span class="hint">1600–2200 年冇呢個八字（月柱要配年干，時柱要配日干）。</span>';return;}
+    res.innerHTML=`<span class="hint">搵到 ${r.list.length} 個（撳一下填入）：</span>`+r.list.map(x=>`<button type="button" class="lnk bzopt" data-bzpick="${x.y},${x.m},${x.d},${x.h??''}">${x.y}-${pad(x.m)}-${pad(x.d)}${x.h!=null?` ${pad(x.h)}:00`:''}</button>`).join('');return;}
+  if(pick){const box=pick.closest('.bzpk'),[y,m,d,h]=pick.dataset.bzpick.split(','),t=box.dataset.bzpk;
+    if(t==='birth'){$('calS').checked=true;refreshMD();$('era').value='1';$('y').value=y;$('m').value=m;$('m').dispatchEvent(new Event('change',{bubbles:true}));$('d').value=d;if(h!==''){$('h').value=h;$('mi').value=0;}}
+    else if(t==='at'){$('atEra').value='1';$('aty').value=y;$('atm').value=m;$('atd').value=d;}
+    else{const f=document.querySelector(`[data-addev="${box.dataset.evf}"]`);if(f){f.cal.value='s';f.era.value='1';f.y.value=y;f.m.value=m;f.d.value=d;f.t.focus();}}
+    box.querySelector('.bzres').innerHTML=`<span class="hint">已填入 ${y}-${pad(+m)}-${pad(+d)}${h!==''?` ${pad(+h)}:00`:''}${t==='ev'?'，填埋事件名再撳「加」':'，撳「排盤」就得'}。</span>`;}});
+
+// 行星位置（占星）：用 astronomy-engine（撳開先載入），計地心黃經（回歸黃道）同逆行；出世用出生鐘錶時間減時區（夏令再減 1 個鐘），睇運日用流日正午
+// 內圈＝出世（本命），外圈＝睇運日（流日）；下面列流日行星同本命行星嘅相位（合 0°、六合 60°、刑 90°、拱 120°、沖 180°，容許 3°，月亮 5°）
+const PL={open:false,lib:null};
+const PL_B=[['Sun','太陽','☉'],['Moon','月亮','☽'],['Mercury','水星','☿'],['Venus','金星','♀'],['Mars','火星','♂'],['Jupiter','木星','♃'],['Saturn','土星','♄'],['Uranus','天王星','♅'],['Neptune','海王星','♆'],['Pluto','冥王星','♇']];
+const PL_Z=[['白羊','♈'],['金牛','♉'],['雙子','♊'],['巨蟹','♋'],['獅子','♌'],['處女','♍'],['天秤','♎'],['天蠍','♏'],['射手','♐'],['摩羯','♑'],['水瓶','♒'],['雙魚','♓']];
+const PL_A=[[0,'合'],[60,'六合'],[90,'刑'],[120,'拱'],[180,'沖']];
+function plLoad(){if(window.Astronomy)return Promise.resolve();if(PL.lib)return PL.lib;
+  PL.lib=new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js';sc.onload=ok;sc.onerror=()=>{PL.lib=null;no(new Error('載入唔到天文程式庫'));};document.head.appendChild(sc);});return PL.lib;}
+function plCalc(date){const A=window.Astronomy,t=A.MakeTime(date),lon=(b,tt)=>b==='Sun'?A.SunPosition(tt).elon:b==='Moon'?A.EclipticGeoMoon(tt).lon:A.Ecliptic(A.GeoVector(A.Body[b],tt,true)).elon;
+  return PL_B.map(([b,n,g])=>{const l=lon(b,t),l2=lon(b,t.AddDays(1));let dl=l2-l;if(dl>180)dl-=360;if(dl<-180)dl+=360;return {b,n,g,lon:l,rx:b!=='Sun'&&b!=='Moon'&&dl<0};});}
+PL_Z.forEach(z=>z[1]+='\uFE0E');// 星座符號用文字樣式，唔好變彩色 emoji
+const plFmt=l=>{const z=Math.floor(l/30),d=l-z*30;return `${PL_Z[z][1]} ${PL_Z[z][0]} ${Math.floor(d)}°${pad(Math.floor((d%1)*60))}′`;};
+function plDraw(){const box=$('plOut');if(!box||!S)return;
+  plLoad().then(()=>{if(!$('plOut'))return;const inp=S.inp,b=S.birthSolar,dd=S.ds[S.dd].sol;
+    const utc=(y,m,d,h,mi,tz)=>new Date(Date.UTC(y,m-1,d,h,mi)-tz*3600e3);
+    const bd=utc(b.getYear(),b.getMonth(),b.getDay(),inp.h,inp.mi,inp.tz+(inp.dst?1:0)),td=utc(dd.getYear(),dd.getMonth(),dd.getDay(),12,0,inp.tz);
+    if(b.getYear()<-1999||b.getYear()>2999){box.textContent='呢個年份超出程式庫範圍。';return;}
+    const N=plCalc(bd),T=plCalc(td),asp=[];
+    T.forEach(t=>N.forEach(n=>{let d=Math.abs(t.lon-n.lon)%360;if(d>180)d=360-d;const orb=t.b==='Moon'||n.b==='Moon'?5:3;
+      PL_A.forEach(([a,nm])=>{if(Math.abs(d-a)<=orb)asp.push({t,n,nm,o:Math.abs(d-a)});});}));
+    asp.sort((x,y)=>x.o-y.o);
+    const W=300,c=W/2,pt=(r,l)=>{const a=Math.PI*(180-l)/180;return [c+r*Math.cos(a),c+r*Math.sin(a)];};
+    const spread=list=>{const s2=list.map(x=>({...x,dl:x.lon})).sort((p,q)=>p.lon-q.lon);for(let k=0;k<3;k++)for(let i=1;i<s2.length;i++)if(s2[i].dl-s2[i-1].dl<9)s2[i].dl=s2[i-1].dl+9;return s2;};
+    const ring=(list,r,cls)=>spread(list).map(x=>{const [px,py]=pt(r,x.dl),[qx,qy]=pt(r>100?118:96,x.lon);return `<line x1="${qx}" y1="${qy}" x2="${pt(r>100?126:88,x.lon).join('" y2="').replace('" y2="','" y2="')}" class="pltk"/><text x="${px}" y="${py}" class="${cls}" text-anchor="middle" dominant-baseline="central"><title>${x.n} ${plFmt(x.lon)}${x.rx?' 逆行':''}</title>${x.g}</text>`;}).join('');
+    const zod=PL_Z.map((z,i)=>{const [x1,y1]=pt(108,i*30),[x2,y2]=pt(148,i*30),[tx,ty]=pt(140,i*30+15);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="plz"/><text x="${tx}" y="${ty}" class="plzg" text-anchor="middle" dominant-baseline="central"><title>${z[0]}座</title>${z[1]}</text>`;}).join('');
+    const svg=`<svg viewBox="0 0 ${W} ${W}" class="plw" role="img" aria-label="行星位置圖"><circle cx="${c}" cy="${c}" r="148" class="plc"/><circle cx="${c}" cy="${c}" r="132" class="plc"/><circle cx="${c}" cy="${c}" r="108" class="plc"/><circle cx="${c}" cy="${c}" r="60" class="plc"/>${zod}${ring(T,118,'plt')}${ring(N,80,'pln')}</svg>`;
+    const row=(x,y)=>`<tr><th>${x.g} ${x.n}</th><td>${plFmt(x.lon)}${x.rx?' <span class="plrx">逆</span>':''}</td><td>${plFmt(y.lon)}${y.rx?' <span class="plrx">逆</span>':''}</td></tr>`;
+    box.classList.remove('hint');
+    box.innerHTML=`<div class="plg">${svg}<div><table class="plt2"><thead><tr><th></th><th>出世 <small>${b.getYear()}-${pad(b.getMonth())}-${pad(b.getDay())} ${pad(inp.h)}:${pad(inp.mi)}</small></th><th>睇運日 <small>${dd.getYear()}-${pad(dd.getMonth())}-${pad(dd.getDay())} 正午</small></th></tr></thead><tbody>${N.map((x,i)=>row(x,T[i])).join('')}</tbody></table>
+      <p class="hint" style="margin:6px 0 2px">圖：內圈出世、外圈睇運日；回歸黃道、地心。冇計上升星座同宮位（要出生地緯度）。</p></div></div>
+      <h3 class="wksh">睇運日行星對本命行星嘅相位 <span class="hint">（容許 3°，月亮 5°；最緊嘅排先）</span></h3>
+      <div class="plasp">${asp.length?asp.slice(0,24).map(a=>`<span>${a.t.g}${a.t.n} <b>${a.nm}</b> 本命${a.n.g}${a.n.n} <small>${fmtN(Math.round(a.o*10)/10)}°</small></span>`).join(''):'<span class="hint">冇緊密相位</span>'}</div>`;
+  }).catch(e=>{box.textContent=e.message;});}
+document.addEventListener('toggle',e=>{if(!e.target.matches||!e.target.matches('[data-pl]'))return;PL.open=e.target.open;if(PL.open)plDraw();},true);
 
 /* ---------- relations ---------- */
 const GHE={'甲己':'合土','乙庚':'合金','丙辛':'合水','丁壬':'合木','戊癸':'合火'};
@@ -1810,9 +1872,11 @@ function render(){
     </section>
   </div>
   ${VIEW.work?workSec(inp.sex===1):''}
+  <section class="panel" id="plBox"><details data-pl ${PL.open?'open':''}><summary><h2 class="plh">行星位置（占星） <span class="hint">出世同睇運日（流日）嘅行星黃經；撳開先計</span></h2></summary><div id="plOut" class="hint">計緊…</div></details></section>
   <section class="panel fold${SECF.rel?'':' folded'}" id="relBox" data-sec="rel"><h2 class="foldh">招感 · 粘連 · 刑沖合穿</h2><p class="hint" style="margin-bottom:8px">招感計原局四柱同大運、流年、流月、流日，任何兩柱都計；刑沖合穿計原局四柱，加上而家揀選嘅大運同流年。</p><div class="rels">${relHtml}</div></section>`;
   drawChains();
   if(VIEW.work)xjStart();
+  if(PL.open)plDraw();
 }
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 
@@ -2295,7 +2359,7 @@ const evoteBtns=(c,v)=>{const m=(c.evVotes||{})[evKey(v)]||{},k=esc(evKey(v)),di
   return `<span class="votes evv"><button type="button" class="vb${m.myVote===1?' on':''}" data-evote="1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===1}" title="準"${dis}>👍 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-evote="-1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===-1}" title="唔準"${dis}>👎 ${m.unlikes||0}</button></span>`;};
 function evBlock(c,ed){const evs=c.input.events||[];
   return `<div class="ctags"><span class="cap">事件</span>${evs.length?`<span class="tags">${evs.map((v,i)=>`<button type="button" class="tag ev" data-evgo="${i}" data-id="${c.id}" title="用呢日睇運">${esc(v.t)} ${evTxt(v)}</button>${evoteBtns(c,v)}${ed?`<button type="button" class="tagx" data-evedit="${i}" data-id="${c.id}" aria-label="修改事件 ${esc(v.t)}" title="修改">✎</button><button type="button" class="tagx" data-evdel="${i}" data-id="${c.id}" aria-label="刪除事件 ${esc(v.t)}">×</button>`:''}`).join('')}</span>`:'<span class="hint">未有事件日期</span>'}</div>
-  ${ed?`<form class="row evadd" data-addev="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em" data-evcap>加事件</span><input type="hidden" name="idx" value=""><input name="t" list="evList" maxlength="30" required placeholder="例如結婚" aria-label="事件" style="width:7.5em"><select name="cal" aria-label="公曆／農曆"><option value="s">公曆</option><option value="l">農曆</option></select><select name="era" aria-label="公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" name="y" min="1" max="9999" required placeholder="年" aria-label="年" style="width:5em"><select name="m" aria-label="月">${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1} 月</option>`).join('')}</select><label class="evleap" title="農曆閏月先用"><input type="checkbox" name="leap"> 閏</label><select name="d" aria-label="日">${Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1} 日</option>`).join('')}</select><button type="submit" class="lnk" data-evsub>加</button><button type="button" class="lnk" data-evcancel hidden>取消</button><datalist id="evList">${[...new Set([...EV_SUG,...TAG_SUG.filter(x=>!NODATE(x))])].map(x=>`<option value="${x}">`).join('')}</datalist></form>`:''}`;}
+  ${ed?`<form class="row evadd" data-addev="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em" data-evcap>加事件</span><input type="hidden" name="idx" value=""><input name="t" list="evList" maxlength="30" required placeholder="例如結婚" aria-label="事件" style="width:7.5em"><select name="cal" aria-label="公曆／農曆"><option value="s">公曆</option><option value="l">農曆</option></select><select name="era" aria-label="公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" name="y" min="1" max="9999" required placeholder="年" aria-label="年" style="width:5em"><select name="m" aria-label="月">${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1} 月</option>`).join('')}</select><label class="evleap" title="農曆閏月先用"><input type="checkbox" name="leap"> 閏</label><select name="d" aria-label="日">${Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1} 日</option>`).join('')}</select><button type="submit" class="lnk" data-evsub>加</button><button type="button" class="lnk" data-evcancel hidden>取消</button><datalist id="evList">${[...new Set([...EV_SUG,...TAG_SUG.filter(x=>!NODATE(x))])].map(x=>`<option value="${x}">`).join('')}</datalist></form><details class="bzpk" data-bzpk="ev" data-evf="${c.id}"><summary>🔎 用八字搵日子</summary><div class="row"><input type="text" class="bzq" maxlength="40" placeholder="例如：癸未 乙卯 甲辰（年 月 日柱）" aria-label="輸入八字"><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>`:''}`;}
 const sortEv=a=>a.slice().sort((p,q)=>p.y-q.y||p.m-q.m||p.d-q.d);
 // 留言版：所有人睇得到，登入先留得言；自己嘅留言或者管理員先刪得
 const LS_GB='b8-guestbook';
