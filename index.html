@@ -141,7 +141,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .bzpk{margin:4px 0 2px;font-size:13px}.bzpk summary{cursor:pointer;color:var(--accent,#3a4a8a);font-size:13px}.bzpk .bzq{flex:1;min-width:12em;font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}.bzres{display:flex;flex-wrap:wrap;gap:2px 10px;margin-top:4px}.bzopt{font-variant-numeric:tabular-nums}
 .calcnote{margin:4px 0 10px;padding:8px 12px;border:1.5px solid #d9a441;border-left-width:5px;border-radius:8px;background:color-mix(in srgb,#d9a441 10%,transparent);font-size:13.5px;line-height:1.55}.calcnote b{display:block;font-size:15px;margin-bottom:2px}.calcnote .cnx{display:block;color:var(--muted);margin-top:2px}@media(max-width:700px){.calcnote{font-size:12.5px;padding:6px 10px;line-height:1.45}.calcnote b{font-size:14px}}
 .xjt{border-collapse:collapse;font-size:14px;margin-top:2px}.xjt th,.xjt td{padding:4px 10px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}.xjt thead th{font-size:12px;color:var(--muted);font-weight:600}.xjt tbody th{text-align:left;font-weight:600}.xjt td.xi{background:color-mix(in srgb,var(--good) 7%,transparent)}.xjt td.ji{background:color-mix(in srgb,var(--bad) 7%,transparent)}.xjc{display:inline-flex;align-items:baseline;gap:1px;margin:0 3px}.xjc b{font-family:var(--f-display);font-size:1.3em;font-weight:900}.xjc small{font-size:11px;color:var(--muted)}.xjn{color:var(--muted)}.xjd{display:inline-block;width:1px;height:1.1em;background:var(--line);margin:0 6px;vertical-align:middle}.xjt thead small{font-weight:400}.xjh{margin-top:6px}
-.kss{margin:4px 0}.ksl{list-style:none;padding:0;margin:4px 0;max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:8px}.ksl li{padding:5px 10px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.5}.ksl li:last-child{border-bottom:0}.ksl li.on{background:color-mix(in srgb,var(--bad) 9%,transparent)}.ksl li>b{font-family:var(--f-display)}.ksl .hint{font-size:12px}
+.kss{margin:4px 0;font-size:15px}.ksy{display:flex;flex-direction:column;gap:4px;max-height:420px;overflow:auto}.ksy details>summary{cursor:pointer;font-size:14px;padding:3px 6px;border-radius:6px}.ksy details.on>summary{background:color-mix(in srgb,var(--bad) 9%,transparent);font-weight:600}.ksl{list-style:none;padding:0;margin:4px 0;overflow:auto;border:1px solid var(--line);border-radius:8px}.ksl li{padding:5px 10px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.5}.ksl li:last-child{border-bottom:0}.ksl li.on{background:color-mix(in srgb,var(--bad) 9%,transparent)}.ksl li>b{font-family:var(--f-display)}.ksl .hint{font-size:12px}
 @media(max-width:640px){.xjt{font-size:13px}.xjt th,.xjt td{padding:4px 3px;white-space:normal}.xjc{margin:0 1px}.xjd{margin:0 3px}}
 /* 啟動：字後面用返自己五行顏色嘅光暈；做到功右下角細綠剔、做唔到功細紅交叉（可以喺選項收埋）；全部靜止 */
 .gl{position:relative}.on .gl{text-shadow:0 0 .12em color-mix(in srgb,currentColor 70%,transparent),0 0 .35em color-mix(in srgb,currentColor 45%,transparent)}
@@ -586,7 +586,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li id="r-q7"><b>Q7 天干力度</b>　天干喺以下情況會大力啲，每樣預設加一個箭咀（同其他箭咀一隻色；實際數值喺「箭咀力度」度可以調）：① 坐辰或者戌（正下面嗰個地支係辰戌）；② 盤上任何位置見到同五行嘅地支（例如甲乙見寅卯，丙丁見巳午，戊己見辰戌丑未，庚辛見申酉，壬癸見亥子），每見一個加半個（見多過一個嗰陣再乘「多個同五行地支」倍數，預設 ×1）；③ 盤上任何位置見到<b>佢自己</b>嘅陽刃地支（甲見卯、丙見午、戊見午、庚見酉、壬見子；陰干冇陽刃），每見一個加一個，唔理其他天干嘅陽刃。三樣可以疊加，例如丙坐戌，盤上另外有一個巳、一個午：坐戌 1＋火地支巳午 2×0.5＝1＋陽刃午 1＝3。三樣箭咀方向全部跟住個字嘅狀態：已經啟動，加 ↑，激活更大力；有粘連但未啟動，加 ↓，粘得更實；冇粘連又未啟動，就係 ↑。同一個字永遠只會有一個方向，唔會同時有 ↑ 同 ↓。魁罡（庚辰、庚戌、壬辰、戊戌）都係坐辰戌，不過喺「箭咀力度」度獨立一行「魁罡」，預設同樣係一個箭咀；魁罡用呢個數代替 ①，唔會兩樣疊加。力度箭咀唔改變啟動與否，亦唔影響招感、粘連同啟動嘅計算。</li>
     <li id="r-mk"><b>墓庫（顯示選項，預設唔開）</b>　剔咗「墓庫」，盤上嘅辰戌丑未會標庫：辰係水庫、戌係火庫、丑係金庫、未係木庫。<b>入墓</b>：盤上顯示緊嘅其他柱，天干五行或者地支本氣五行同個庫一樣，就算入咗呢個墓，彈框會列出邊個字同佢嘅十神（以日主計）；入墓嘅有偏財正財就標「財入墓」，有七殺正官就標「官入墓」。<b>開庫</b>：有地支沖佢（辰戌、丑未）或者刑佢（丑戌未互刑），就標「開」，實線框；冇就係閉庫，虛線框。開庫嘅字嚟自大運流年流月流日，就提示留意應期。墓庫淨係標籤，唔影響箭咀、粘連同啟動嘅計算。</li>
     <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：同最強五行（有顯示嘅時候）同一五行嘅字，箭咀總數再乘 1.5（喺「箭咀力度」可以調），四捨五入到半個。未啟動嘅字，粘連按 N6 計 ↓（合、伏吟一個，連續、半合、三合局、招感粘連半個，半個用細箭咀），↓ 越多粘連程度越高；啟動咗之後，呢啲 ↓ 全部變做 ↑（係轉方向，唔會另外再加 ↑）。本身冇粘連嘅字啟動咗唔加箭咀，只顯示「啟動」。啟動鏈（Q3）第一層係基本，之後每多一層加一個 ↑。例如 3 條粘連嘅字被七殺直接啟動，就係 ↑3；經兩層鏈先被啟動（七殺本身都係被人啟動），就係 ↑4；冇粘連嘅字經兩層鏈先被啟動，就係 ↑1。天干再加 Q7 嘅力度箭咀，啟動咗加 ↑，未啟動粘住加 ↓。所有箭咀都係同一隻色。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
-    <li id="r-wk"><b>做功計算（測試中；選項，每次剔扣分）</b>　先睇日主，再逐個睇原局四柱另外 7 個字（年干、月干、時干、年支、月支、日支、時支），每行寫埋個字嘅十神（地支用本氣）代表乜：日主＝自己；比劫＝兄弟姊妹、朋友；食傷＝才華、子女；財＝錢財，男命正財係妻子，女命財係父親；官殺＝男命事業、地位，女命丈夫；印＝母親、屋企、學業；另外寫埋宮位（年柱祖上早年、月柱父母兄弟、日支配偶宮、時柱子女晚年）。天干寫成「X &lt; 七殺 &lt; 七殺嘅七殺 &lt; …」：先睇呢個字有冇粘連，冇就唔使七殺；有就睇佢嘅七殺喺唔喺盤、啟動未、有冇粘連；盤上冇就睇有冇招感出嚟嘅同一個字（例如戊戊招合癸、壬甲夾拱癸，已啟動就剋得到），同埋由佢右邊招唔招得到殺星（中途有字五合佢＝合住，有佢嘅七殺＝擋走，呢啲字已啟動就行得過）；七殺本身有粘連就再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。地支就睇沖、害、刑佢嘅字（包括招感字同招殺星）喺唔喺盤、啟動未，只列一層，再寫盤上計出嚟嘅啟動鏈。每行下面寫盤上實際用咗邊條啟動鏈（「盤上計法」），同埋呢個位做唔做到功：睇佢嘅偏財（佢剋、同陰陽嗰個字，例如丁睇辛；地支用本氣，例如午睇酉）有冇伏吟或者粘連（伏吟、合、連續、招感粘連都計，大運流年元運柱都計），會寫埋偏財有乜粘連；做唔到就寫原因同粘連條數。最尾列出原局四柱招感出嚟嘅字（招合、夾拱，唔計大運流年）。最底有「當日運勢」（推測，只供參考）：原局 8 個字每個先計分（唔設上限）：做到功 +5，做唔到功 −5，唔使做功 0；再加淨箭咀，每 5 個 ±1（↑ 加分、↓ 扣分，例如 13 個 ↓ 扣 2.6）。再睇相關字有冇被沖刑剋：天干睇同柱地支同盤上其他同五行嘅地支有冇被沖、刑、害；地支睇同柱天干同盤上其他同五行嘅天干有冇被七殺剋。有嘅話，做到功分數 ×2，做唔到功扣分減半，唔使做功唔變。每方面攞相關嘅字（十神，地支用本氣）平均，再同隨機排嘅 1,000 個盤比較，計出勝過幾多 % 嘅盤（百分位），按百分比分級：頭 1% SSS、頭 5% SS、頭 10% S、頭 15% A、頭 30% B、中間（30%–60%）C、再低係 D、E，最尾 10% F。因為會計埋而家揀緊嘅大運流年流月流日，所以叫當日運勢：自身＝日主；財運＝正財、偏財；事業＝正官、七殺；愛情婚姻＝男命正財、偏財，女命正官、七殺，加日支配偶宮；朋友兄弟＝比肩、劫財；父親＝偏財；母親＝正印、偏印；子女＝食神、傷官加時柱；才華＝食神、傷官；學業屋企＝正印、偏印。原局冇相關字就顯示「—」。呢個只係將盤上嘅計法逐步寫出嚟，唔會改到啟動或者做功嘅結果。<br><b>喜忌字</b>（做功計算最底）：喺盤最右邊（流日之後）加一個「見到」嘅字，逐個天干（10 個）同地支（12 個）試，用上面同一套計法（招感、粘連、啟動、W1 做功）計原局 8 個字有幾多個做到功、幾多個做唔到功，再同冇呢個字比。令最多字做到功嘅係「喜」，令最多字做唔到功嘅係「忌」。分五層：一生（成世隨機揀 36 日）、而家大運（呢十年隨機揀 24 日）、流年（呢年隨機揀 24 日）、流月（呢個月逐日）、流日（只計揀咗嗰日）；上層嘅柱固定，下面嘅柱跟日子變。天干只影響天干、地支只影響地支，所以逐個字出，唔出成條柱；頭兩名相差 0.05 個字以內就兩個都出；冇字有效果就寫「—」。推測，只供參考。<br><b>卡死日子</b>（喜忌字下面）：將而家揀緊嘅流年由立春到下個立春逐日計（大運固定，流月流日跟日子變，其他顯示選項同盤上一樣），原局四柱 8 個字（4 個天干、4 個地支）全部要做功（偏財有伏吟或者粘連）但全部做唔到功，就當係「卡死」，列出日子同數目，撳日子會跳去嗰日。每日寫埋原因：睇日主同陰陽嗰五個天干（日主 → 偏財 → 偏財嘅偏財…，例如壬→丙→庚→甲→戊→壬）組成嘅七殺環齊唔齊（盤上嘅字、招感字、招殺星都計）；齊咗就環入面每個字嘅七殺都係環入面嘅字、又全部有粘連，冇字可以由外面啟動，全部鎖死；再寫邊個字原局冇、只係由流日、流月、流年、大運等補齊（即係嗰日先開始卡死嘅原因）。環未齊就寫缺邊個字。推測，只供參考。</li>
+    <li id="r-wk"><b>做功計算（測試中；選項，每次剔扣分）</b>　先睇日主，再逐個睇原局四柱另外 7 個字（年干、月干、時干、年支、月支、日支、時支），每行寫埋個字嘅十神（地支用本氣）代表乜：日主＝自己；比劫＝兄弟姊妹、朋友；食傷＝才華、子女；財＝錢財，男命正財係妻子，女命財係父親；官殺＝男命事業、地位，女命丈夫；印＝母親、屋企、學業；另外寫埋宮位（年柱祖上早年、月柱父母兄弟、日支配偶宮、時柱子女晚年）。天干寫成「X &lt; 七殺 &lt; 七殺嘅七殺 &lt; …」：先睇呢個字有冇粘連，冇就唔使七殺；有就睇佢嘅七殺喺唔喺盤、啟動未、有冇粘連；盤上冇就睇有冇招感出嚟嘅同一個字（例如戊戊招合癸、壬甲夾拱癸，已啟動就剋得到），同埋由佢右邊招唔招得到殺星（中途有字五合佢＝合住，有佢嘅七殺＝擋走，呢啲字已啟動就行得過）；七殺本身有粘連就再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。地支就睇沖、害、刑佢嘅字（包括招感字同招殺星）喺唔喺盤、啟動未，只列一層，再寫盤上計出嚟嘅啟動鏈。每行下面寫盤上實際用咗邊條啟動鏈（「盤上計法」），同埋呢個位做唔做到功：睇佢嘅偏財（佢剋、同陰陽嗰個字，例如丁睇辛；地支用本氣，例如午睇酉）有冇伏吟或者粘連（伏吟、合、連續、招感粘連都計，大運流年元運柱都計），會寫埋偏財有乜粘連；做唔到就寫原因同粘連條數。最尾列出原局四柱招感出嚟嘅字（招合、夾拱，唔計大運流年）。最底有「當日運勢」（推測，只供參考）：原局 8 個字每個先計分（唔設上限）：做到功 +5，做唔到功 −5，唔使做功 0；再加淨箭咀，每 5 個 ±1（↑ 加分、↓ 扣分，例如 13 個 ↓ 扣 2.6）。再睇相關字有冇被沖刑剋：天干睇同柱地支同盤上其他同五行嘅地支有冇被沖、刑、害；地支睇同柱天干同盤上其他同五行嘅天干有冇被七殺剋。有嘅話，做到功分數 ×2，做唔到功扣分減半，唔使做功唔變。每方面攞相關嘅字（十神，地支用本氣）平均，再同隨機排嘅 1,000 個盤比較，計出勝過幾多 % 嘅盤（百分位），按百分比分級：頭 1% SSS、頭 5% SS、頭 10% S、頭 15% A、頭 30% B、中間（30%–60%）C、再低係 D、E，最尾 10% F。因為會計埋而家揀緊嘅大運流年流月流日，所以叫當日運勢：自身＝日主；財運＝正財、偏財；事業＝正官、七殺；愛情婚姻＝男命正財、偏財，女命正官、七殺，加日支配偶宮；朋友兄弟＝比肩、劫財；父親＝偏財；母親＝正印、偏印；子女＝食神、傷官加時柱；才華＝食神、傷官；學業屋企＝正印、偏印。原局冇相關字就顯示「—」。呢個只係將盤上嘅計法逐步寫出嚟，唔會改到啟動或者做功嘅結果。<br><b>喜忌字</b>（做功計算最底）：喺盤最右邊（流日之後）加一個「見到」嘅字，逐個天干（10 個）同地支（12 個）試，用上面同一套計法（招感、粘連、啟動、W1 做功）計原局 8 個字有幾多個做到功、幾多個做唔到功，再同冇呢個字比。令最多字做到功嘅係「喜」，令最多字做唔到功嘅係「忌」。分五層：一生（成世隨機揀 36 日）、而家大運（呢十年隨機揀 24 日）、流年（呢年隨機揀 24 日）、流月（呢個月逐日）、流日（只計揀咗嗰日）；上層嘅柱固定，下面嘅柱跟日子變。天干只影響天干、地支只影響地支，所以逐個字出，唔出成條柱；頭兩名相差 0.05 個字以內就兩個都出；冇字有效果就寫「—」。推測，只供參考。<br><b>卡死日子</b>（喜忌字下面）：由出世嗰日逐日計到 100 歲（大運、小運、流年、流月、流日、元運都跟日子變；大運排唔到嘅年份就停；其他顯示選項同盤上一樣），按年分組，撳年份睇日子，原局四柱 8 個字（4 個天干、4 個地支）全部要做功（偏財有伏吟或者粘連）但全部做唔到功，就當係「卡死」，列出總日數、每年日數同日子，撳日子會跳去嗰日（計好嘅結果會保留，換日子唔使重計）。每日寫埋原因：睇日主同陰陽嗰五個天干（日主 → 偏財 → 偏財嘅偏財…，例如壬→丙→庚→甲→戊→壬）組成嘅七殺環齊唔齊（盤上嘅字、招感字、招殺星都計）；齊咗就環入面每個字嘅七殺都係環入面嘅字、又全部有粘連，冇字可以由外面啟動，全部鎖死；再寫邊個字原局冇、只係由流日、流月、流年、大運等補齊（即係嗰日先開始卡死嘅原因）。環未齊就寫缺邊個字。推測，只供參考。</li>
     <li id="r-s1"><b>最強五行（推測）</b>　顯示選項可以揀三種推論。<b>推論1：月令人元並用</b>，只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），而且原局四柱（天干同地支，唔計藏干）冇命宮地支嘅五行，最強五行就係命宮地支嘅五行，計完（例如蔣介石命宮壬子沖時支午，但年支亥已經係水，所以唔用命宮）。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局刑或害（唔計六沖，丑未當沖），但未被啟動，天干陰陽倒轉，例如丁變丙；淨係被沖就唔倒轉（例如蔣介石巳被亥沖、蕭若元丑被未沖）。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例加蔣介石推出嚟，五行 26 個全中，有寫天干嘅 15 個全中；①③④ 係睇住呢批命例調出嚟，① 只有傷殘一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。<br><b>推論2：月令印星</b>：直接取月令本氣嘅正印，例如月令巳本氣丙，取乙木。<b>推論3：人元司令印星</b>：直接取人元司令嘅正印，例如司令戊，取丁火。推論2、3 唔理命宮、做功同陰陽倒轉。立春日出世嘅人，月令同司令一定係寅同戊，所以用推論2、3，每年立春日出世都一樣（推論2 係水，推論3 係火）；用推論1 就會因應做功同命宮而唔同。<br>指住或者撳「最強五行」標籤會彈出：盤上顯示緊嘅天干有冇剋最強五行（同陰陽嘅標「七殺」）、屬最強五行嘅地支有冇被沖、刑、害，有冇地支五行剋佢，同埋盤上屬最強五行嘅天干地支有冇粘連、粘緊乜。最上面會俾結論：只有屬最強五行嘅字有粘連而要做功又做唔到功（W1），先算「唔好」，標籤會變紅框加 ⚠。被天干剋、地支沖刑害或者地支剋，可以係做功，做到功係好事，所以只會列出處數，唔算唔好、唔會變紅；有粘連而做到功（或者唔使做功）都唔算唔好。彈框最尾會列出三個推論喺呢個盤嘅結果，登入咗可以逐個撳 👍（準）或者 👎（唔準），仲會顯示全站總票數，等大家一齊驗證邊個推論最準。呢度只係列出嚟參考，唔改最強五行嘅計法。</li>
     <li id="r-w1"><b>W1 做功</b>　只睇佢嘅偏財，即係佢剋、同陰陽嗰個字（例如甲剋戊、丁剋辛；異陰陽嘅正財唔計）。地支用本氣計：例如午本氣丁，偏財係辛，即係本氣辛嘅酉；寅本氣甲，偏財係戊，即係辰、戌。盤上呢個偏財字有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
@@ -1327,7 +1327,7 @@ function workSec(male){const {rows,zg,cat}=workRows(male);
     <span class="wksd">${c.its.length?c.its.map(x=>wkHtml(`${x.pos}${x.c}${x.ss==='日主'?'':' '+x.ss}：${x.why}（${x.score>0?'+':''}${fmtN(Math.round(x.score*10)/10)}）`)).join('；'):'原局冇呢類十神'}</span></div>`;}).join('')}</div>
   <h3 class="wksh">喜忌字 <span class="hint">（見到邊個字，原局 8 個字最多做到功＝喜；最多做唔到功＝忌；推測，只供參考）</span></h3>
   <div id="wkXJ" class="hint">計緊…</div>
-  <h3 class="wksh">卡死日子 <span class="hint">（今個流年入面，原局 8 個字全部要做功、但全部做唔到功嘅日子；推測，只供參考）</span></h3>
+  <h3 class="wksh">卡死日子 <span class="hint">（出世至 100 歲，原局 8 個字全部要做功、但全部做唔到功嘅日子；推測，只供參考）</span></h3>
   <div id="wkKS" class="hint">計緊…</div></section>`;}
 // 喜忌字：喺盤最右邊（流日之後）加一個「見到」嘅字，逐個天干（10 個）同地支（12 個）試，喺唔同日子入面計原局 8 個字平均有幾多個做到功、幾多個做唔到功，同冇呢個字比。
 // 分五層：一生（成世隨機揀日子）、而家大運（呢十年隨機揀日子）、流年（呢年隨機揀日子）、流月（呢個月逐日）、流日（只係揀咗嗰日）；上層柱固定，下面嘅柱跟住日子變。
@@ -1381,7 +1381,7 @@ function xjHtml(res){const one=(k,arr,t,bs)=>arr.length?arr.map(x=>{const v=t===
 // 卡死日子：今個流年逐日計，原局 8 個字全部要做功（偏財有粘連）但全部做唔到功＝卡死。
 // 原因：睇日主同陰陽嗰五個天干（日主 → 偏財 → 偏財嘅偏財…，即係一個七殺環）齊唔齊；齊咗就冇一個字有「外面」嘅七殺可以啟動佢，全部鎖死。
 // 寫出邊個字只係由大運流年流月流日（或者招感）補齊，即係嗰日先開始卡死嘅原因。
-const KS={key:'',res:null,tok:0};
+const KS={key:'',res:null,tok:0,open:new Set()};
 const KS_ORD=['流日','流月','上月流月','流年','小運','大運'];
 function ksWhy(cc,V){const di=cc.findIndex(c=>c.h==='日柱');if(di<0||!cc[di].gz)return null;
   const d0=gi(cc[di].gz[0]),ring=[0,1,2,3,4].map(n=>(d0+n*4)%10),src=g=>{const a=[];
@@ -1391,31 +1391,59 @@ function ksWhy(cc,V){const di=cc.findIndex(c=>c.h==='日柱');if(di<0||!cc[di].g
   const late=S5.filter(x=>x.s.length&&x.s.every(y=>y.dyn)).map(x=>{const ls=[...new Set(x.s.map(y=>y.l))].sort((a,b)=>(KS_ORD.indexOf(a)+99)%99-(KS_ORD.indexOf(b)+99)%99);return {ch:x.ch,by:ls};});
   return {ring:S5.map(x=>x.ch),full:!miss.length,miss:miss.map(x=>x.ch),late};}
 function ksStart(){const box=$('wkKS');if(!box||!S||!S.cc)return;
-  const cc0=S.cc,dy=S.dys[S.di],ln=dy.getLiuNian()[S.li];
-  const key=[chartKey(),S.di,S.li,cc0.map(c=>c.dyn?(c.gz?'d':'-'):c.gz||'-').join(''),JSON.stringify(AW),S.useSha,VIEW.shaAll].join('|');
-  if(KS.key===key&&KS.res){box.innerHTML=ksHtml(KS.res);box.classList.remove('hint');return;}
-  const tok=++KS.tok;KS.key=key;KS.res=null;
+  const cc0=S.cc;
+  // 唔跟揀咗邊日變：同一個盤、同一套選項就用返計好嘅結果
+  const key=[chartKey(),cc0.filter(c=>!c.yuan).map(c=>c.dyn?c.h:c.gz||'-').join(''),cc0.some(c=>c.yuan),JSON.stringify(AW),S.useSha,VIEW.shaAll,VIEW.yuanCalc,VIEW.prevMoCalc,VIEW.xiaoCalc,VIEW.jinqiCalc].join('|');
+  if(KS.key===key&&KS.res){ksPaint();return;}
+  const tok=++KS.tok;KS.key=key;
   const nat=cc0.map((c,i)=>i).filter(i=>/^[年月日時]柱$/.test(cc0[i].h)&&cc0[i].gz);
-  const swap=(g)=>cc0.map(c=>c.gz&&c.dyn&&g[c.h]?{...c,gz:g[c.h]}:c);
-  const DD=months(ln.getYear()).flatMap(mo=>days(mo).map(d=>({so:d.sol,mo:mo.gz}))),n=DD.length,out=[];
-  let j=0;const step=()=>{if(tok!==KS.tok)return;const t0=performance.now();
-    try{while(j<n&&performance.now()-t0<30){const {so,mo}=DD[j++],jz=JIAZI60.indexOf(mo);
-      const cc=swap({...xjDay(so,dy),流年:ln.getGanZhi(),流月:mo,上月流月:jz>=0?JIAZI60[(jz+59)%60]:mo});const [o0,n0,V]=xjEngine(cc,0,nat);if(o0||n0<nat.length)continue;
+  const Y0=gzYear(S.sol),b0=S.sol.toYmd(),yi=cc0.findIndex(c=>c.yuan),yper=Y=>Math.floor((Y-1924)/60),pb=yper(Y0);
+  // 每年重新砌一次會變嘅柱：元運（跨 60 年會多一條）、大運（未起運就冇）
+  const baseFor=(Y,dyY)=>{let cc=cc0.map(c=>c.h==='大運'?{...c,gz:dyY.getGanZhi()||null}:c);
+    if(yi>=0){const pl=yper(Y),ys=[];for(let n=Math.min(pb,pl),i=1;n<=Math.max(pb,pl);n++,i++){const idx=((56+n)%60+60)%60;ys.push({h:pb===pl?'元運':'元運'+i,gz:VIEW.yuanCalc?GAN[idx%10]+ZHI[idx%12]:null,dyn:true,yuan:true});}
+      cc=cc.filter(c=>!c.yuan);cc.splice(yi,0,...ys);}
+    return cc;};
+  KS.res={Y0,Y1:Y0+100,nat:nat.length,yrs:[],tot:0,done:false,cur:Y0,end:null};
+  let Y=Y0,DD=null,base=null,yr=null,j=0;
+  const step=()=>{if(tok!==KS.tok)return;const t0=performance.now(),R=KS.res;
+    try{while(performance.now()-t0<30){
+      if(!DD){if(Y>R.Y1){R.done=true;break;}
+        const dyY=S.dys.find(d=>d.getLiuNian().some(l=>l.getYear()===Y));if(!dyY){R.done=true;R.end=Y-1;break;}
+        const lnY=dyY.getLiuNian().find(l=>l.getYear()===Y);base=baseFor(Y,dyY);yr={Y,gz:lnY.getGanZhi(),age:lnY.getAge(),days:[],dy:dyY};
+        DD=months(Y).flatMap(mo=>days(mo).filter(d=>d.sol.toYmd()>=b0).map(d=>({so:d.sol,mo:mo.gz})));j=0;R.cur=Y;}
+      if(j>=DD.length){if(yr.days.length){R.yrs.push(yr);R.tot+=yr.days.length;}DD=null;Y++;continue;}
+      const {so,mo}=DD[j++],jz=JIAZI60.indexOf(mo),g={...xjDay(so,yr.dy),流年:yr.gz,流月:mo,上月流月:jz>=0?JIAZI60[(jz+59)%60]:mo};
+      const cc=base.map(c=>c.gz&&c.dyn&&g[c.h]?{...c,gz:g[c.h]}:c);
+      const [o0,n0,V]=xjEngine(cc,0,nat);if(o0||n0<nat.length)continue;
       const [o1,n1]=xjEngine(cc,1,nat);if(o1||n1<nat.length)continue;
-      out.push({so,gz:cc.find(c=>c.h==='流日')?.gz||so.getLunar().getDayInGanZhi(),why:ksWhy(cc,V)});}}
+      yr.days.push({so,gz:g.流日,why:ksWhy(cc,V)});}}
     catch(e){const b=$('wkKS');if(b)b.textContent='計唔到：'+e.message;return;}
-    const b=$('wkKS');if(!b)return;
-    if(j<n){b.textContent=`計緊… ${Math.floor(j*100/n)}%`;setTimeout(step,0);return;}
-    KS.res={ln:ln.getGanZhi(),n,nat:nat.length,days:out};b.innerHTML=ksHtml(KS.res);b.classList.remove('hint');};
-  setTimeout(step,0);}
-function ksHtml(r){const cur=S.ds[S.dd]&&S.ds[S.dd].sol.toYmd();
-  if(r.nat<4)return '<p class="hint">原局唔夠四柱，計唔到。</p>';
+    if(!$('wkKS'))return;
+    ksPaint();if(!R.done)setTimeout(step,0);};
+  ksPaint();setTimeout(step,0);}
+// 只會喺年份有變先重畫，已經打開咗嘅年份保持打開
+function ksPaint(){const box=$('wkKS'),r=KS.res;if(!box||!r)return;box.classList.remove('hint');
+  if(r.nat<4){box.innerHTML='<p class="hint">原局唔夠四柱，計唔到。</p>';return;}
+  const ln=S.dys[S.di].getLiuNian()[S.li],curY=ln.getYear();
+  const sum=`出世至 100 歲（${yearS(r.Y0)}–${yearS(r.end??r.Y1)}${r.end!=null&&r.end<r.Y1?'，大運排到呢度為止':''}）：${r.done?'':`計緊… ${yearS(r.cur)} 年（${Math.floor((r.cur-r.Y0)*100/(r.Y1-r.Y0+1))}%），暫時 `}<b>${r.tot}</b> 日卡死，分佈喺 <b>${r.yrs.length}</b> 年。`;
+  let el=box.querySelector('.kss');
+  if(!el){box.innerHTML=`<p class="kss"></p><div class="ksy"></div><p class="hint xjh">卡死＝原局四柱 8 個字嘅偏財全部有粘連（全部要做功），但係冇一個字啟動到（全部做唔到功），好似張國榮、梅艷芳過身嗰日咁。地支跟天干一齊計，兩行都要全部做唔到功先算。撳年份睇日子，撳日子會跳去嗰日睇盤。</p>`;el=box.querySelector('.kss');}
+  el.innerHTML=sum;
+  const wrap=box.querySelector('.ksy');
+  r.yrs.forEach(y=>{if(wrap.querySelector(`[data-ksy="${y.Y}"]`))return;
+    const d=document.createElement('details');d.dataset.ksy=y.Y;if(y.Y===curY)d.className='on';
+    d.innerHTML=`<summary>${yearS(y.Y)} ${esc(y.gz)} · ${y.age}歲 <b>${y.days.length}</b> 日</summary>`;wrap.appendChild(d);
+    if(y.Y===curY||KS.open.has(y.Y)){d.open=true;ksFill(d);}});
+  wrap.querySelectorAll('details[data-ksy]').forEach(d=>d.classList.toggle('on',+d.dataset.ksy===curY));
+  if(r.done&&!r.yrs.length)wrap.innerHTML='<p class="hint">一生都冇卡死日子。</p>';}
+function ksFill(d){if(d.querySelector('.ksl'))return;const y=KS.res&&KS.res.yrs.find(x=>x.Y===+d.dataset.ksy);if(!y)return;
+  const cur=S.ds[S.dd]&&S.ds[S.dd].sol.toYmd(),fmt=so=>`${so.getMonth()}-${so.getDay()}`;
   const why=w=>{if(!w)return '';
     if(!w.full)return `七殺環（${w.ring.join('→')}）未齊，缺 ${w.miss.join('、')}；但係有份嘅七殺全部鎖死，啟動唔到`;
     const late=w.late.map(x=>`${x.ch}（${x.by.join('、')}）`);
-    return `七殺環 ${w.ring.join('→')}→${w.ring[0]} 齊晒，${late.length?'由 '+late.join('、')+' 補齊':'原局本身已經齊'}：環入面每個字嘅七殺都喺環入面、都有粘連，冇字由外面啟動到`;};
-  const fmt=so=>`${so.getYear()}-${so.getMonth()}-${so.getDay()}`;
-  return `<p class="kss">流年 ${esc(r.ln)}（立春至下個立春，${r.n} 日）：<b>${r.days.length}</b> 日卡死${r.days.length?`，約 ${fmtN(Math.round(r.days.length*1000/r.n)/10)}%`:''}。</p>${r.days.length?`<ul class="ksl">${r.days.map(d=>`<li${d.so.toYmd()===cur?' class="on"':''}><button type="button" class="lnk" data-ksgo="${d.so.toYmd()}" title="睇呢日嘅盤">${fmt(d.so)}</button> <b>${esc(d.gz)}</b>日 <span class="hint">${esc(why(d.why))}</span></li>`).join('')}</ul>`:''}<p class="hint xjh">卡死＝原局四柱 8 個字嘅偏財全部有粘連（全部要做功），但係冇一個字啟動到（全部做唔到功），好似張國榮、梅艷芳過身嗰日咁。地支跟天干一齊計，兩行都要全部做唔到功先算。撳日子會跳去嗰日睇盤。</p>`;}
+    return `七殺環 ${w.ring.join('→')}→${w.ring[0]} 齊晒，${late.length?'由 '+late.join('、')+' 補齊':'原局本身已經齊'}`;};
+  d.insertAdjacentHTML('beforeend',`<ul class="ksl">${y.days.map(x=>`<li${x.so.toYmd()===cur?' class="on"':''}><button type="button" class="lnk" data-ksgo="${x.so.toYmd()}" title="睇呢日嘅盤">${yearS(x.so.getYear())}-${fmt(x.so)}</button> <b>${esc(x.gz)}</b>日 <span class="hint">${esc(why(x.why))}</span></li>`).join('')}</ul>`);}
+document.addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('details[data-ksy]'))return;const Y=+d.dataset.ksy;if(d.open){KS.open.add(Y);ksFill(d);}else KS.open.delete(Y);},true);
 // 每個字下面列出佢嘅粘連點樣嚟，例如「己己粘連」
 function nlList(k,ci,cols){
   const me=cols[ci].gz[k],seen={},order=[];
