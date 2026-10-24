@@ -147,7 +147,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 /* 啟動：字後面用返自己五行顏色嘅光暈；做到功右下角細綠剔、做唔到功細紅交叉（可以喺選項收埋）；全部靜止 */
 .gl{position:relative}.on .gl{text-shadow:0 0 .12em color-mix(in srgb,currentColor 70%,transparent),0 0 .35em color-mix(in srgb,currentColor 45%,transparent)}
 .wd .gl::after,.wn .gl::after{content:'✓';position:absolute;right:-.12em;bottom:.02em;font-family:var(--f-body);font-size:max(12px,.36em);font-weight:900;line-height:1;color:var(--good);text-shadow:0 0 2px var(--paper),0 0 2px var(--paper)}.wn .gl::after{content:'✗';color:var(--bad)}.chart.nowk .gl::after{content:none}
-.chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.ssc{position:absolute;right:-.3em;top:-.6em;font-size:max(16px,.4em);font-weight:700;line-height:1;color:var(--muted);font-family:var(--f-body);pointer-events:none}
+.chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.zg .zgss{top:3px;right:4px;font-size:12px}.ssc{position:absolute;right:-.3em;top:-.6em;font-size:max(16px,.4em);font-weight:700;line-height:1;color:var(--muted);font-family:var(--f-body);pointer-events:none}
 .act{position:absolute;left:100%;bottom:2px;margin-left:1px;font-family:var(--f-body);font-size:15px;font-weight:900;line-height:1;color:var(--bad);letter-spacing:-2px;white-space:nowrap}
 .actl{color:var(--bad);font-weight:900}
 .act.dn,.actl.dn,.act b.dn{color:var(--water)}
@@ -1130,8 +1130,10 @@ function zgStrip(list,isGan,ncol){
   if(!list.length)return '<span class="tiny" style="padding:4px 0">—</span>';
   const rows=[];
   const items=list.map((x,oi)=>({oi,...x})).sort((a,b)=>a.pos-b.pos).map(x=>{let r=0;while(rows[r]&&rows[r].some(p=>Math.abs(p-x.pos)<0.75))r++;(rows[r]=rows[r]||[]).push(x.pos);return {...x,row:r};});
+  // 字旁十神（選項開咗先有）：招感字都同原局字一樣寫十神單字，地支用本氣
+  const D=VIEW.ssTag&&S&&S.cols?S.cols.find(c=>c.h==='日柱'&&c.gz):null,ssT=c=>D?`<sup class="ssc zgss">${SS1[shishen(gi(D.gz[0]),isGan?gi(c):gi(HIDE[c][0]))]}</sup>`:'';
   return `<div class="zgstrip" style="height:${rows.length*52}px">${items.map(x=>{const w=isGan?gw(gi(x.c)):ZWX[zi(x.c)];
-    return `<span class="zg w${w}${x.dyn?' zgd':''}" data-zg="${isGan?0:1}-${x.oi}" style="left:${x.pos/ncol*100}%;top:${x.row*52}px" title="${x.from}">${x.c}${x.n>1?`<b class="zgn">×${x.n}</b>`:''}<i>${x.tag}</i>${zgArrows(isGan?0:1,x.oi,Math.max(0,x.boost||0)*AW.zgb)}</span>`;}).join('')}</div>`;
+    return `<span class="zg w${w}${x.dyn?' zgd':''}" data-zg="${isGan?0:1}-${x.oi}" style="left:${x.pos/ncol*100}%;top:${x.row*52}px" title="${x.from}">${x.c}${ssT(x.c)}${x.n>1?`<b class="zgn">×${x.n}</b>`:''}<i>${x.tag}</i>${zgArrows(isGan?0:1,x.oi,Math.max(0,x.boost||0)*AW.zgb)}</span>`;}).join('')}</div>`;
 }
 
 /* ---------- 粘連：伏吟、連續、五合六合 ---------- */
