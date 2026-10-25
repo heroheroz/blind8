@@ -1,0 +1,268 @@
+[
+ {
+  "id": "e7aeac69-ec3c-4212-b9e7-4e11c3a32900",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "大運加到120",
+  "created_at": "2026-10-19T20:14:29.854253+00:00"
+ },
+ {
+  "id": "b0728985-4d7b-4290-8bfd-6349b012dcc3",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "加左人元司令, 唔知岩唔岩",
+  "created_at": "2026-10-19T20:14:56.814958+00:00"
+ },
+ {
+  "id": "2470132a-ecc3-4a08-a1f7-5bc27173935c",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "Data import from 通明師兄",
+  "created_at": "2026-10-19T20:15:20.198397+00:00"
+ },
+ {
+  "id": "1ebe7b60-a0fd-4045-87d1-6f679162294b",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "Update limit 可以公元前 3000 年排到公元 9999 年",
+  "created_at": "2026-10-19T20:15:55.390239+00:00"
+ },
+ {
+  "id": "34a8f820-5d03-4160-aae9-5ad3eb5f24ab",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "加左英國王室",
+  "created_at": "2026-10-20T01:07:17.136957+00:00"
+ },
+ {
+  "id": "45ecd082-62e6-4326-83f7-438cb3512aa5",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "加左其他王室",
+  "created_at": "2026-10-20T01:15:11.382471+00:00"
+ },
+ {
+  "id": "bbec222b-d043-4b87-b283-32f02c215449",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "加左班名人",
+  "created_at": "2026-10-20T01:21:09.372891+00:00"
+ },
+ {
+  "id": "b0a18b74-31d0-47f3-91ef-6f37fbe012cb",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "手機版（闊度 700px 以下先生效）\n\n排盤之後，輸入表會收做一行（例如「未命名 · 公曆 1982-5-6 09:25 · 乾造　修改 ▾」），撳「修改」再打開。第一次入嚟冇分享連結就照舊顯示輸入表，方便新用戶入資料。\n「顯示選項」同「圖例」預設收埋，撳先打開。\n命盤縮窄到一版睇晒四柱同大運流年，唔使左右拉，一張截圖就得。\n柱名下面嗰行小字（子女 · 晚年）收埋咗，流日改做左右捲動，唔再係一大格。",
+  "created_at": "2026-10-20T16:32:13.014665+00:00"
+ },
+ {
+  "id": "7b659ad1-e810-4383-9430-53edb63333be",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "出生喺本月中氣之後，就當下一個月計。例如寅月雨水之後，就當卯月起命宮。",
+  "created_at": "2026-10-20T16:32:20.696913+00:00"
+ },
+ {
+  "id": "519c5af2-94b1-4be1-9e10-76b023e441d6",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "三桓次序跟老師一樣, no change",
+  "created_at": "2026-10-20T16:33:05.178746+00:00"
+ },
+ {
+  "id": "33af3ff5-b59c-4a96-b43d-a1795f43d964",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "Added 顯示小運",
+  "created_at": "2026-10-20T16:35:17.017642+00:00"
+ },
+ {
+  "id": "f6c5ce63-8397-48fa-9366-92081fd317d2",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "Todo:\n\n1. 箭咀計法（好多人問點解個個字都係 ↓）：\n\n合、連續、夾拱嘅粘連力應該唔同，例如合 2:1 或 3:1。\n七殺打開之後 ↓ 變 ↑。最強五行、坐辰戌、通根再加 ↑。\n\n2. 招感招兩個字（Angel、Sylar）：兩乙除咗招庚，仲招辛同丙（丙辛唔粘）。\n\n3. 招感字由外面入嚟，可能被其他天干合住或者擋住。想一開盤就見到邊粒入到去做功、邊粒畀咩擋住。\n\n4. 最強五行（等隱師提示，未有定案）。",
+  "created_at": "2026-10-20T16:35:51.873617+00:00"
+ },
+ {
+  "id": "4eb7260d-bfe2-4a7e-a677-2a6e85e53ac2",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "Todo:\n\nGoogle / Facebook / Discord login integration, 要開account 搞API integration connect Database\n\nHosting user account management email verification 太慢, 暫時用共用account or 手動加user",
+  "created_at": "2026-10-20T16:39:12.524457+00:00"
+ },
+ {
+  "id": "b2dbded0-3165-4ce9-8d8c-7e67e30c4377",
+  "parent": null,
+  "author_name": "heroheroz@hotmail.com",
+  "body": "Todo:\n\n搵多D可Verify 出生時間命例, 隱師話古命書不可信",
+  "created_at": "2026-10-20T16:42:53.133141+00:00"
+ },
+ {
+  "id": "5be52d98-7810-4653-91ea-ba440fa30cb8",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "命宮選項改返好咗：顯示選項入面有「命宮月份：過中氣當下月／忽視中氣」，預設係過中氣",
+  "created_at": "2026-10-20T17:28:18.651239+00:00"
+ },
+ {
+  "id": "0e4568b7-8cf5-4eba-8676-4dd8cb7a7c1b",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "搞掂左GOOGLE LOGIN!!!",
+  "created_at": "2026-10-20T17:34:26.259934+00:00"
+ },
+ {
+  "id": "dac47c80-0e9c-4104-8047-11c9708d57bf",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "手機介面大更改, 有分頁",
+  "created_at": "2026-10-20T18:09:05.316996+00:00"
+ },
+ {
+  "id": "0c407f85-6059-430a-a3f0-6c42e15a95a1",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "加左BACKEND AUDIT",
+  "created_at": "2026-10-20T18:09:15.358751+00:00"
+ },
+ {
+  "id": "e2c3616a-b91e-4930-98b2-062e7e829d92",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "搞掂 Discord login, 放棄FACEBOOK, FACEBOOK好似審犯...",
+  "created_at": "2026-10-20T19:15:31.028499+00:00"
+ },
+ {
+  "id": "93be215a-9ead-49eb-8603-74c2059ca534",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "More backend feature",
+  "created_at": "2026-10-20T19:15:41.909264+00:00"
+ },
+ {
+  "id": "42ea275f-15bd-447d-b4a2-ed877abc13bf",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "用戶可以刪自己嘅命例",
+  "created_at": "2026-10-20T19:19:29.108579+00:00"
+ },
+ {
+  "id": "ca75e0e1-a849-4796-9b03-8d0b3740e542",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "加事件而家可以揀「公曆」或者「農曆」，農曆仲有「閏」可以剔。",
+  "created_at": "2026-10-20T19:49:43.748174+00:00"
+ },
+ {
+  "id": "9c02040c-5fc9-4f0d-916c-df9e20c65e7f",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "Eric report: 修改唔到 過身時間",
+  "created_at": "2026-10-20T20:01:54.675713+00:00"
+ },
+ {
+  "id": "02e0fa1f-3f41-4d4b-98e2-e971b4ffe6c2",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "加左招殺星",
+  "created_at": "2026-10-20T23:09:00.212587+00:00"
+ },
+ {
+  "id": "f4da111f-7cb9-4fa6-a889-64b80aaff4ab",
+  "parent": null,
+  "author_name": "heroheroz#0",
+  "body": "加咗活躍值, 希望各位師兄師姐踴躍使用",
+  "created_at": "2026-10-21T10:24:14.50365+00:00"
+ },
+ {
+  "id": "423c2498-1b60-4845-9c1d-d769e2399002",
+  "parent": null,
+  "author_name": "heroheroz#0",
+  "body": "加咗我靠估嘅最強五行(估計)",
+  "created_at": "2026-10-21T10:25:18.727336+00:00"
+ },
+ {
+  "id": "ce7981de-2fec-43a1-8a90-7efc2b009a4b",
+  "parent": null,
+  "author_name": "heroheroz#0",
+  "body": "加咗dark mode",
+  "created_at": "2026-10-21T10:26:01.796302+00:00"
+ },
+ {
+  "id": "59c586e7-c042-4610-9800-84e79c242250",
+  "parent": null,
+  "author_name": "heroheroz#0",
+  "body": "加咗做唔做到功嘅分析, 唔知啱唔啱, 大家用住先",
+  "created_at": "2026-10-21T10:26:48.624924+00:00"
+ },
+ {
+  "id": "58766148-b058-45d4-8783-9abe2ddfb812",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "DEBUG: 同五行見自己陽刃地支先加箭嘴",
+  "created_at": "2026-10-21T19:23:15.471011+00:00"
+ },
+ {
+  "id": "96615472-cf7f-479f-af06-92864733e79a",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "加時柱進氣",
+  "created_at": "2026-10-21T20:40:51.925531+00:00"
+ },
+ {
+  "id": "d68af964-31a6-4edb-ac45-5a8ed6273429",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "大運流年 SHOW 天剋地沖 天合地合",
+  "created_at": "2026-10-21T20:41:19.24409+00:00"
+ },
+ {
+  "id": "50f870d9-720a-4421-b9f7-467b899f300e",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "顯示力度計算",
+  "created_at": "2026-10-21T20:42:40.410911+00:00"
+ },
+ {
+  "id": "4775df2a-5180-4919-97d4-5b9abf597216",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "最強五行附加資料",
+  "created_at": "2026-10-21T20:43:38.367966+00:00"
+ },
+ {
+  "id": "8145ac64-c4f5-4350-93fb-496afad232f1",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "彈出加五行顏色",
+  "created_at": "2026-10-21T20:44:03.65054+00:00"
+ },
+ {
+  "id": "ca54f074-28ab-42ea-ae58-88186e25f331",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "加左每日登入獎勵",
+  "created_at": "2026-10-21T21:02:52.417912+00:00"
+ },
+ {
+  "id": "ad577664-e1f5-4c0c-a9fb-60b5e5d5779e",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "Add 藏干五行",
+  "created_at": "2026-10-21T22:35:28.23941+00:00"
+ },
+ {
+  "id": "19f50bc0-2802-4899-9645-238c045e0b44",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "calculation 最強五行同五行嘅字 x1.5",
+  "created_at": "2026-10-21T22:35:48.902095+00:00"
+ },
+ {
+  "id": "0b325c78-920b-457f-8ee0-c63aa651e589",
+  "parent": null,
+  "author_name": "Thomas Chau",
+  "body": "加特效",
+  "created_at": "2026-10-21T22:36:41.384164+00:00"
+ }
+]
