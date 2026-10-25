@@ -320,7 +320,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .intoggle{display:none}
 .mfold>summary{display:none}
 /* 手機版：底部分頁（排盤／命盤／命例／更多），每次只顯示一頁；桌面版唔顯示呢啲 */
-.mtop,.mguide,.mbar,.mcasehint,.mbr{display:none}
+.mtop,.mguide,.mbar,.mcasehint,.mbr,.mhsh{display:none}
 .arF{display:contents}.arC{display:none}.zg .arC i{color:inherit;font-weight:700;margin-top:0;overflow:visible;max-width:none}
 /* 電腦版選項「箭咀用數字顯示」：同手機版一樣，一個箭咀加數字 */
 body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:column;align-items:center;line-height:1;font-weight:900;letter-spacing:0;color:var(--bad);margin-right:1px;position:relative;z-index:3}body.arnum .arC.dn{color:var(--water)}body.arnum .arC i{font-style:normal;font-size:11px;font-weight:700;letter-spacing:-.3px;background:var(--paper);border-radius:3px;padding:0 1px}
@@ -333,7 +333,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .mauth{display:flex;align-items:center;gap:8px;font-size:14px;min-height:28px}.mauth .who{font-weight:600;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
   .mauth .adm{font-size:12px}
-  .mnav{display:flex}.mbr{display:inline}
+  .mnav{display:flex}.mbr{display:inline}.mhsh{display:flex;justify-content:center;gap:2px;margin-top:2px;white-space:nowrap}.mhsh button{font:inherit;font-size:13px;line-height:1;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}.mhsh .hshn{font-size:11px;padding:3px 3px;color:var(--accent)}
   #casePager select{font-size:15px}.mnav button[hidden]{display:none}
   table.audit thead{display:none}table.audit,table.audit tbody{display:block}table.audit tr{display:block;border-top:1px solid var(--line);padding:8px 0}
   table.audit td{display:inline;border:0;padding:0 8px 0 0;font-size:14px}table.audit td small{display:inline;margin-left:4px}table.audit td:last-child{display:block;margin-top:4px}
@@ -1920,7 +1920,7 @@ function render(){
   const sex=inp.sex===1?'乾造':'坤造';
   // 招殺星多過兩個：電腦版個欄闊返幾倍（table-layout:fixed 跟表頭闊度）
   const shC=Math.max(1,...[0,1].map(k=>{const n=((S.sha||[])[k]||[]).length;return n>2?Math.ceil(n/2):1;}));
-  const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"${col.sha&&shC>1?` style="--shw:${shC*112}px"`:''}><b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
+  const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"${col.sha&&shC>1?` style="--shw:${shC*112}px"`:''}><b>${col.h}</b>${col.h==='時柱'?hshBtns():''}<span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
   // 啟動同做到功嘅字加 on／wd，CSS 畫光暈同底線
   const fxc=(k,ci)=>(S.act[k][ci][0]?' on':'')+(S.work&&S.work[k]&&S.work[k][ci]?(S.work[k][ci].done?' wd':' wn'):'');
   const table=`<div class="tscroll"><table class="chart${VIEW.wkMark?'':' nowk'}${VIEW.ssTag?' sst':''}${VIEW.noMidL?' nomid':''}" style="--n:${N};--mw:${60+N*54}px">
@@ -2048,13 +2048,21 @@ function fromQuery(){const q=new URLSearchParams(location.search);if(!q.has('y')
   const v={name:(q.get('name')||'').slice(0,60),y:n('y'),m:n('m',1),d:n('d',1),h:n('h',0),mi:n('mi',0),sex:q.get('sex')==='f'?0:1,lunar:q.get('lunar')==='1',leap:q.get('leap')==='1',
     zi:n('zi',1),city:n('city',0),lon:n('lon',114.17),tz:n('tz',8),dst:q.get('dst')==='1',tst:q.get('tst')!=='0',at:null};
   const a=(q.get('at')||'').match(/^(-?\d+)-(\d+)-(\d+)$/);if(a)v.at={y:+a[1],m:+a[2],d:+a[3]};return v;}
+// 手機版時柱加減時辰（對盤用）：前後移兩個鐘＝一個時辰，用公曆重新排盤；唔改命例資料，撳「還原」返原本時間
+const HSH={base:null,n:0,busy:false};
+const hshBtns=()=>`<span class="mhsh"><button type="button" data-hsh="-1" aria-label="上一個時辰">‹</button>${HSH.n?`<button type="button" data-hsh="0" class="hshn" title="撳一下還原原本時間" aria-label="還原原本時間">${HSH.n>0?'+':''}${HSH.n}↺</button>`:''}<button type="button" data-hsh="1" aria-label="下一個時辰">›</button></span>`;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-hsh]');if(!b||!S||!LAST_V)return;const dir=+b.dataset.hsh;
+  let v;if(!dir){if(!HSH.base)return;v=HSH.base;HSH.base=null;HSH.n=0;}
+  else{if(!HSH.base)HSH.base=LAST_V;HSH.n+=dir;const so=Solar.fromYmdHms(S.birthSolar.getYear(),S.birthSolar.getMonth(),S.birthSolar.getDay(),S.birthSolar.getHour(),S.birthSolar.getMinute(),0).nextHour(dir*2);
+    v={...LAST_V,lunar:false,leap:false,y:so.getYear(),m:so.getMonth(),d:so.getDay(),h:so.getHour(),mi:so.getMinute()};}
+  HSH.busy=true;try{writeForm(v);run(v);}finally{HSH.busy=false;}});
 function run(v){
   $('err').textContent='';
   if(!(v.y>=-2999&&v.y<=9999)){$('err').textContent='年份請填公元前 3000 年至公元 9999 年。';return;}
   if(isNaN(v.lon)){$('err').textContent='請填出生地經度，或者揀城市。';return;}
   if(v.at&&!validDate(v.at.y,v.at.m,v.at.d)){$('err').textContent='睇運日期冇呢一日，請再揀過。';return;}
   try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();setInSum(v);if(RUN_N++||fromQuery())mTab('chart');try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
-    LAST_V=v;try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
+    LAST_V=v;if(!HSH.busy){HSH.base=null;HSH.n=0;}try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
   catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
 }
 // 改命例時，「出生資料改做表格上面嘅資料」旁邊即時顯示表格而家嘅資料
