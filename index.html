@@ -136,7 +136,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .big{font-family:var(--f-display);font-weight:900;font-size:40px;line-height:1.1;display:block}
 .ch{position:relative;display:inline-block}
 .wklist{list-style:none;padding:0;margin:8px 0 0}.wklist li{padding:6px 0;border-top:1px solid var(--line)}.wkc{font-weight:600}.wklist b[class^=w]{font-family:var(--f-display);font-size:1.15em;font-weight:900}.wklt{color:var(--muted);font-weight:400;margin:0 2px}.wkon{color:var(--good)}.wkoff{color:var(--muted)}.wkblk{color:var(--bad)}.wkr b[class^=w]{font-size:1.05em}.wkx{text-decoration:line-through;text-decoration-thickness:1.5px;opacity:.75}.wksh{font-size:15px;margin:14px 0 6px}.wkscore{display:grid;gap:6px;max-width:760px}.wks{display:grid;grid-template-columns:5.5em 1fr 2.6em;gap:2px 8px;align-items:center}.wksn{font-weight:700}.wksb{height:10px;background:var(--line);border-radius:5px;overflow:hidden}.wksb i{display:block;height:100%;border-radius:5px}.wksb i.g{background:var(--good)}.wksb i.m{background:#d9a441}.wksb i.b{background:var(--bad)}.wksv{font-weight:800;text-align:right;font-family:var(--f-display)}.wksv.s{color:#c08a12}.wksb i.s{background:linear-gradient(90deg,#d9a441,#c08a12)}.wksv.m{color:#b7862b}.wksv.g{color:var(--good)}.wksv.b{color:var(--bad)}.wksd{grid-column:1/-1;font-size:12px;color:var(--muted)}.wksd b[class^=w]{font-size:1.05em}.wkm{font-size:13px;color:var(--accent,#8a6d3b);margin-top:1px}.wkr{font-size:13px;color:var(--muted);margin-top:2px}.wkr.ok{color:var(--good)}.wkr.no{color:var(--bad)}
-.plh{display:inline;font-size:inherit}#plBox summary{cursor:pointer}#plBox summary h2{font-size:18px}.plg{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;margin-top:8px}.plw{width:300px;max-width:100%;height:auto;flex:none}.plc{fill:none;stroke:var(--line)}.plz{stroke:var(--line)}.pltk{stroke:var(--muted);stroke-width:.8}.plzg{font-size:13px;fill:var(--muted)}.plt{font-size:19px;fill:#c0662b}.pln{font-size:19px;fill:var(--ink)}.plt2{border-collapse:collapse;font-size:13px}.plt2 th,.plt2 td{padding:3px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.plt2 thead th{font-size:12px;color:var(--muted)}.plt2 thead small{display:block;font-weight:400}.plrx{color:var(--bad);font-size:11px}.plasp{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px}.plasp small{color:var(--muted)}
+.plh{display:inline;font-size:inherit}#plBox summary{cursor:pointer}#plBox summary h2{font-size:18px}.plg{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;margin-top:8px}.plw{width:300px;max-width:100%;height:auto;flex:none}.plc{fill:none;stroke:var(--line)}.plz{stroke:var(--line)}.pltk{stroke:var(--muted);stroke-width:.8}.plzg{font-size:13px;fill:var(--muted)}.plt{font-size:19px;fill:#c0662b}.pln{font-size:19px;fill:var(--ink)}.plt2{border-collapse:collapse;font-size:13px}.plt2 th,.plt2 td{padding:3px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.plt2 thead th{font-size:12px;color:var(--muted)}.plt2 thead small{display:block;font-weight:400}.plrx{color:var(--bad);font-size:11px}.plasp{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px}.plasp small{color:var(--muted)}.pl3w{margin:2px 0 6px}.pl3c{position:relative;border-radius:8px;overflow:hidden;background:#02030a}.pl3c canvas{display:block;width:100%}.pl3lb{position:absolute;inset:0;pointer-events:none;overflow:hidden}.pl3lb span{position:absolute;left:0;top:0;font-size:12px;white-space:nowrap;text-shadow:0 0 3px #000}.pl3d{position:absolute;right:10px;top:8px;color:#dfe6ff;font-size:14px;font-variant-numeric:tabular-nums;pointer-events:none}.pl3ui{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.pl3ui button,.pl3ui select{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);cursor:pointer}
 @media(max-width:640px){.plt2 th,.plt2 td{padding:3px 4px;font-size:12px}}
 .bzpk{margin:4px 0 2px;font-size:13px}.bzpk summary{cursor:pointer;color:var(--accent,#3a4a8a);font-size:13px}.bzsel{gap:6px 10px;flex-wrap:wrap;margin:4px 0}.bzp{display:inline-flex;align-items:center;gap:3px}.bzp small{color:var(--muted);font-size:12px;margin-right:2px}.bzp select{font:inherit;font-size:15px;padding:2px 4px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
 .bzpk .bzq{flex:1;min-width:12em;font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}.bzres{display:flex;flex-wrap:wrap;gap:2px 10px;margin-top:4px}.bzopt{font-variant-numeric:tabular-nums}
@@ -1045,12 +1045,99 @@ function plDraw(){const box=$('plOut');if(!box||!S)return;
     const svg=`<svg viewBox="0 0 ${W} ${W}" class="plw" role="img" aria-label="行星位置圖"><circle cx="${c}" cy="${c}" r="148" class="plc"/><circle cx="${c}" cy="${c}" r="132" class="plc"/><circle cx="${c}" cy="${c}" r="108" class="plc"/><circle cx="${c}" cy="${c}" r="60" class="plc"/>${zod}${ring(T,118,'plt')}${ring(N,80,'pln')}</svg>`;
     const row=(x,y)=>`<tr><th>${x.g} ${x.n}</th><td>${plFmt(x.lon)}${x.rx?' <span class="plrx">逆</span>':''}</td><td>${plFmt(y.lon)}${y.rx?' <span class="plrx">逆</span>':''}</td></tr>`;
     box.classList.remove('hint');
-    box.innerHTML=`<div class="plg">${svg}<div><table class="plt2"><thead><tr><th></th><th>出世 <small>${b.getYear()}-${pad(b.getMonth())}-${pad(b.getDay())} ${pad(inp.h)}:${pad(inp.mi)}</small></th><th>睇運日 <small>${dd.getYear()}-${pad(dd.getMonth())}-${pad(dd.getDay())} 正午</small></th></tr></thead><tbody>${N.map((x,i)=>row(x,T[i])).join('')}</tbody></table>
+    box.innerHTML=`<h3 class="wksh">日心螺旋圖 <span class="hint">（太陽做中心，帶住行星沿銀河公轉方向向前飛；距離同速度經過壓縮，淨係睇形狀；拖拉可以轉視角）</span></h3><div id="pl3" class="hint">載入緊 3D…</div><h3 class="wksh">地心黃經圖</h3><div class="plg">${svg}<div><table class="plt2"><thead><tr><th></th><th>出世 <small>${b.getYear()}-${pad(b.getMonth())}-${pad(b.getDay())} ${pad(inp.h)}:${pad(inp.mi)}</small></th><th>睇運日 <small>${dd.getYear()}-${pad(dd.getMonth())}-${pad(dd.getDay())} 正午</small></th></tr></thead><tbody>${N.map((x,i)=>row(x,T[i])).join('')}</tbody></table>
       <p class="hint" style="margin:6px 0 2px">圖：內圈出世、外圈睇運日；回歸黃道、地心。冇計上升星座同宮位（要出生地緯度）。</p></div></div>
       <h3 class="wksh">睇運日行星對本命行星嘅相位 <span class="hint">（容許 3°，月亮 5°；最緊嘅排先）</span></h3>
       <div class="plasp">${asp.length?asp.slice(0,24).map(a=>`<span>${a.t.g}${a.t.n} <b>${a.nm}</b> 本命${a.n.g}${a.n.n} <small>${fmtN(Math.round(a.o*10)/10)}°</small></span>`).join(''):'<span class="hint">冇緊密相位</span>'}</div>`;
+    pl3Mount(bd,td,inp.tz);
   }).catch(e=>{box.textContent=e.message;});}
 document.addEventListener('toggle',e=>{if(!e.target.matches||!e.target.matches('[data-pl]'))return;PL.open=e.target.open;if(PL.open)plDraw();},true);
+// 3D 日心螺旋太陽系：太陽沿銀河公轉方向向前飛，行星繞住太陽轉，拖出螺旋軌跡（撳開先載入 three.js；只係睇，唔入計算）
+// 行星位置用 astronomy-engine 嘅日心座標（J2000 黃道）；距離取平方根壓縮、太陽速度都壓縮咗，淨係為咗睇到形狀
+const PL3={r:null,lib:null,raf:0,t:0,play:true,spd:30,zoom:1,az:0.3,el:0.32,key:''};
+const P3B=[['Mercury','水星',0xb8b8b8,87.97],['Venus','金星',0xf0c878,224.7],['Earth','地球',0x58a6ff,365.26],['Mars','火星',0xff6a3d,686.98],['Jupiter','木星',0xe0a96a,4332.6],['Saturn','土星',0xf0dc9a,10759],['Uranus','天王星',0x8fe8f0,30687],['Neptune','海王星',0x5b7dff,60190],['Pluto','冥王星',0xc9a88f,90560]];
+const P3_TY=10,P3_V=4.6/365.25,P3_SC=5.2,P3_SP=[[1,'1日'],[7,'1星期'],[30,'1個月'],[91,'3個月'],[365,'1年']];
+function pl3Load(){if(window.THREE)return Promise.resolve();if(PL3.lib)return PL3.lib;
+  PL3.lib=new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';sc.onload=ok;sc.onerror=()=>{PL3.lib=null;no(new Error('載入唔到 3D 程式庫'));};document.head.appendChild(sc);});return PL3.lib;}
+const p3Days=d=>(d.getTime()-Date.UTC(2000,0,1,12))/864e5;
+function p3Eq2Ecl(ra,de){const T=window.THREE,e=23.4393*Math.PI/180,a=ra*Math.PI/180,d=de*Math.PI/180,x=Math.cos(d)*Math.cos(a),y=Math.cos(d)*Math.sin(a),z=Math.sin(d);return new T.Vector3(x,y*Math.cos(e)+z*Math.sin(e),-y*Math.sin(e)+z*Math.cos(e));}
+function p3Glow(c){const cv=document.createElement('canvas');cv.width=cv.height=64;const g=cv.getContext('2d'),gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,c);gr.addColorStop(.25,c.replace(/[\d.]+\)$/,'.45)'));gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(cv);}
+function pl3Init(){const T=window.THREE,A=window.Astronomy;
+  const wrap=document.createElement('div');wrap.className='pl3w';
+  wrap.innerHTML=`<div class="pl3c"><div class="pl3lb"></div><div class="pl3d"></div></div><div class="pl3ui"><button type="button" data-p3="b">出世</button><button type="button" data-p3="d">流日</button><button type="button" data-p3="n">今日</button><button type="button" data-p3="p">暫停</button><select data-p3="s" aria-label="速度">${P3_SP.map(([v,n])=>`<option value="${v}"${v===30?' selected':''}>每秒 ${n}</option>`).join('')}</select><button type="button" data-p3="zi" aria-label="拉近">＋</button><button type="button" data-p3="zo" aria-label="拉遠">－</button><button type="button" data-p3="r">重設視角</button></div>`;
+  const box=wrap.querySelector('.pl3c'),ren=new T.WebGLRenderer({antialias:true,alpha:false});ren.setPixelRatio(Math.min(devicePixelRatio||1,2));ren.setClearColor(0x02030a,1);box.prepend(ren.domElement);
+  const sc=new T.Scene(),cam=new T.PerspectiveCamera(50,1.6,0.1,3000);
+  // 座標：太陽向 +X 飛（銀河公轉方向，銀經 90°），黃道北極盡量向上
+  const vel=p3Eq2Ecl(318.0,48.3),q=new T.Quaternion().setFromUnitVectors(vel,new T.Vector3(1,0,0)),np=new T.Vector3(0,0,1).applyQuaternion(q);
+  q.premultiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(1,0,0),Math.PI/2-Math.atan2(np.y,np.z)));
+  // 星空同銀河帶（銀河面包住 X 軸）
+  const gnp=p3Eq2Ecl(192.86,27.13).applyQuaternion(q),u=new T.Vector3(1,0,0),w=new T.Vector3().crossVectors(gnp,u).normalize();
+  const sp=[],scl=[],N1=2200,N2=4200;for(let i=0;i<N1+N2;i++){let v;if(i<N1){v=new T.Vector3(Math.random()*2-1,Math.random()*2-1,Math.random()*2-1).normalize();}else{const a=Math.random()*Math.PI*2,h=(Math.random()+Math.random()+Math.random()-1.5)*0.12;v=u.clone().multiplyScalar(Math.cos(a)).addScaledVector(w,Math.sin(a)).addScaledVector(gnp,h).normalize();}
+    v.multiplyScalar(900);sp.push(v.x,v.y,v.z);const b=.35+Math.random()*.65,warm=i>=N1?Math.random()*.25:0;scl.push(b,b*(1-warm*.3),b*(1-warm));}
+  const sg=new T.BufferGeometry();sg.setAttribute('position',new T.Float32BufferAttribute(sp,3));sg.setAttribute('color',new T.Float32BufferAttribute(scl,3));
+  sc.add(new T.Points(sg,new T.PointsMaterial({size:1.6,sizeAttenuation:false,vertexColors:true,transparent:true,opacity:.85,depthWrite:false})));
+  // 太陽
+  const sun=new T.Mesh(new T.SphereGeometry(1.5,24,16),new T.MeshBasicMaterial({color:0xfff2b0}));sc.add(sun);
+  const sg2=new T.Sprite(new T.SpriteMaterial({map:p3Glow('rgba(255,200,90,1)'),blending:T.AdditiveBlending,depthWrite:false,transparent:true}));sg2.scale.set(14,14,1);sc.add(sg2);
+  const sunT=new T.BufferGeometry(),sl=P3_V*P3_TY*365.25,sv=[],sc2=[];for(let i=0;i<=60;i++){sv.push(-sl*i/60,0,0);const f=1-i/60;sc2.push(1*f,.8*f,.35*f);}
+  sunT.setAttribute('position',new T.Float32BufferAttribute(sv,3));sunT.setAttribute('color',new T.Float32BufferAttribute(sc2,3));
+  sc.add(new T.Line(sunT,new T.LineBasicMaterial({vertexColors:true,transparent:true,blending:T.AdditiveBlending,depthWrite:false})));
+  // 日球層：半透明泡泡，向後拉長
+  const hm=new T.ShaderMaterial({transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.FrontSide,uniforms:{c:{value:new T.Color(0x3d7dff)}},
+    vertexShader:'varying float f;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);vec3 n=normalize(normalMatrix*normal);f=pow(1.-abs(dot(n,normalize(-mv.xyz))),3.);gl_Position=projectionMatrix*mv;}',
+    fragmentShader:'uniform vec3 c;varying float f;void main(){gl_FragColor=vec4(c*f*.28,1.);}'});
+  const hs=new T.Mesh(new T.SphereGeometry(40,48,32),hm);hs.scale.set(1.35,1,1);hs.position.x=-12;sc.add(hs);
+  // 行星：球、光暈、螺旋軌跡
+  const P=P3B.map(([b,n,col,per])=>{const dt=Math.min(per/56,P3_TY*365.25/260),cnt=Math.ceil(P3_TY*365.25/dt),c=new T.Color(col);
+    const g=new T.BufferGeometry(),pos=new Float32Array((cnt+1)*3),cl=new Float32Array((cnt+1)*3);for(let i=0;i<=cnt;i++){const f=Math.pow(1-i/cnt,1.3);cl[i*3]=c.r*f;cl[i*3+1]=c.g*f;cl[i*3+2]=c.b*f;}
+    g.setAttribute('position',new T.BufferAttribute(pos,3));g.setAttribute('color',new T.BufferAttribute(cl,3));
+    const ln=new T.Line(g,new T.LineBasicMaterial({vertexColors:true,transparent:true,blending:T.AdditiveBlending,depthWrite:false}));ln.frustumCulled=false;sc.add(ln);
+    const m=new T.Mesh(new T.SphereGeometry(b==='Jupiter'||b==='Saturn'?.85:.55,16,12),new T.MeshBasicMaterial({color:col}));sc.add(m);
+    const gl=new T.Sprite(new T.SpriteMaterial({map:p3Glow(`rgba(${Math.round(c.r*255)},${Math.round(c.g*255)},${Math.round(c.b*255)},1)`),blending:T.AdditiveBlending,depthWrite:false,transparent:true}));gl.scale.set(3.2,3.2,1);sc.add(gl);
+    const lb=document.createElement('span');lb.textContent=n;lb.style.color='#'+c.getHexString();wrap.querySelector('.pl3lb').appendChild(lb);
+    return {b:A.Body[b],dt,cnt,g,pos,m,gl,lb,cache:new Map()};});
+  const sunLb=document.createElement('span');sunLb.textContent='太陽';sunLb.style.color='#ffd76a';wrap.querySelector('.pl3lb').appendChild(sunLb);
+  const e=23.4393*Math.PI/180,ce=Math.cos(e),se=Math.sin(e),tmp=new T.Vector3();
+  const helio=(p,d)=>{const v=A.HelioVector(p.b,A.MakeTime(d)),r=Math.hypot(v.x,v.y,v.z),k=P3_SC*Math.sqrt(r)/r;return tmp.set(v.x*k,(v.y*ce+v.z*se)*k,(-v.y*se+v.z*ce)*k).applyQuaternion(q);};
+  PL3.r={wrap,box,ren,sc,cam,P,sun:sunLb,helio};
+  // 拖拉轉視角（手機直向撥照樣捲頁）
+  let drag=null;const cv=ren.domElement;cv.style.touchAction='pan-y';
+  cv.addEventListener('pointerdown',ev=>{drag={x:ev.clientX,y:ev.clientY,az:PL3.az,el:PL3.el};cv.setPointerCapture(ev.pointerId);});
+  cv.addEventListener('pointermove',ev=>{if(!drag)return;PL3.az=drag.az-(ev.clientX-drag.x)*.008;PL3.el=Math.max(-1.45,Math.min(1.45,drag.el+(ev.clientY-drag.y)*.006));if(!PL3.play)pl3Frame(0);});
+  const end=()=>{drag=null;};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+  wrap.addEventListener('click',ev=>{const b=ev.target.closest('[data-p3]');if(!b)return;const k=b.dataset.p3;
+    if(k==='b')pl3Jump(PL3.bd);else if(k==='d')pl3Jump(PL3.td);else if(k==='n')pl3Jump(p3Days(new Date()));
+    else if(k==='p'){PL3.play=!PL3.play;b.textContent=PL3.play?'暫停':'播放';if(PL3.play)pl3Run();}
+    else if(k==='zi')PL3.zoom=Math.max(.3,PL3.zoom/1.25);else if(k==='zo')PL3.zoom=Math.min(3,PL3.zoom*1.25);
+    else if(k==='r'){PL3.zoom=1;PL3.az=0.3;PL3.el=0.32;}
+    if(!PL3.play)pl3Frame(0);});
+  wrap.querySelector('[data-p3=s]').addEventListener('change',ev=>{PL3.spd=+ev.target.value;});
+  new ResizeObserver(()=>pl3Size()).observe(box);
+}
+function pl3Size(){const R=PL3.r;if(!R)return;const w=R.box.clientWidth||300,h=Math.round(Math.max(300,Math.min(540,w*.6)));R.ren.setSize(w,h);R.cam.aspect=w/h;R.cam.updateProjectionMatrix();if(!PL3.play)pl3Frame(0);}
+function pl3Jump(d){PL3.t=d;PL3.r.P.forEach(p=>p.cache.clear());pl3Frame(0);}
+function pl3Run(){if(PL3.raf)return;let last=performance.now();
+  const loop=now=>{PL3.raf=0;const R=PL3.r;if(!R||!document.body.contains(R.wrap)||!PL.open)return;
+    const dts=Math.min(.1,(now-last)/1000);last=now;const rc=R.box.getBoundingClientRect();if(!document.hidden&&rc.bottom>0&&rc.top<innerHeight)pl3Frame(PL3.play?dts*PL3.spd:0);if(PL3.play)PL3.raf=requestAnimationFrame(loop);};
+  PL3.raf=requestAnimationFrame(loop);}
+function pl3Frame(dd){const R=PL3.r,T=window.THREE;PL3.t+=dd;const t=PL3.t,W=R.box.clientWidth,H=R.ren.domElement.clientHeight;
+  // 鏡頭圍住太陽後面少少嘅位置轉
+  const tg=new T.Vector3(-14,0,0),dist=72*PL3.zoom;R.cam.position.set(tg.x+dist*Math.cos(PL3.el)*Math.sin(PL3.az),tg.y+dist*Math.sin(PL3.el),tg.z+dist*Math.cos(PL3.el)*Math.cos(PL3.az));R.cam.lookAt(tg);
+  const lab=(el,v)=>{const p=v.clone().project(R.cam);if(p.z>1){el.style.display='none';return;}el.style.display='';el.style.transform=`translate(${(p.x+1)/2*W+7}px,${(1-p.y)/2*H-18}px)`;};
+  R.P.forEach(p=>{const k0=Math.floor(t/p.dt),V=P3_V;let n=0;
+    const cur=R.helio(p,t);p.pos[0]=cur.x;p.pos[1]=cur.y;p.pos[2]=cur.z;p.m.position.copy(cur);p.gl.position.copy(cur);lab(p.lb,cur);
+    for(let j=0;j<p.cnt;j++){const k=k0-j,d=k*p.dt;let v=p.cache.get(k);if(!v){const h=R.helio(p,d);v=[h.x,h.y,h.z];p.cache.set(k,v);}
+      const o=(j+1)*3;p.pos[o]=v[0]+V*(d-t);p.pos[o+1]=v[1];p.pos[o+2]=v[2];n++;}
+    if(p.cache.size>p.cnt*2+20)for(const k of p.cache.keys())if(k<k0-p.cnt-2||k>k0+2)p.cache.delete(k);
+    p.g.attributes.position.needsUpdate=true;p.g.setDrawRange(0,n+1);});
+  lab(R.sun,new T.Vector3(0,0,0));
+  const dt=new Date(Date.UTC(2000,0,1,12)+t*864e5+(PL3.tz||8)*3600e3),dl=R.wrap.querySelector('.pl3d');
+  if(dl)dl.textContent=`${dt.getUTCFullYear()}-${pad(dt.getUTCMonth()+1)}-${pad(dt.getUTCDate())}`;
+  R.ren.render(R.sc,R.cam);}
+function pl3Mount(bd,td,tz){const host=$('pl3');if(!host)return;
+  Promise.all([pl3Load(),plLoad()]).then(()=>{if(!$('pl3'))return;const h=$('pl3');if(!PL3.r)pl3Init();h.textContent='';h.appendChild(PL3.r.wrap);
+    PL3.bd=p3Days(bd);PL3.td=p3Days(td);PL3.tz=tz;const key=PL3.bd+'|'+PL3.td;if(PL3.key!==key){PL3.key=key;pl3Jump(PL3.td);}
+    pl3Size();pl3Run();}).catch(e=>{host.textContent=e.message;});}
 
 /* ---------- relations ---------- */
 const GHE={'甲己':'合土','乙庚':'合金','丙辛':'合水','丁壬':'合木','戊癸':'合火'};
@@ -2012,7 +2099,7 @@ function render(){
   </div>
   ${shenSha(S.cols)}
   ${VIEW.work?workSec(inp.sex===1):''}
-  <section class="panel" id="plBox"><details data-pl ${PL.open?'open':''}><summary><h2 class="plh">行星位置（占星） <span class="hint">出世同睇運日（流日）嘅行星黃經；撳開先計</span></h2></summary><div id="plOut" class="hint">計緊…</div></details></section>
+  <section class="panel" id="plBox"><details data-pl ${PL.open?'open':''}><summary><h2 class="plh">行星位置（占星） <span class="hint">日心 3D 螺旋圖，同出世、睇運日（流日）嘅行星黃經；撳開先計</span></h2></summary><div id="plOut" class="hint">計緊…</div></details></section>
   <section class="panel fold${SECF.rel?'':' folded'}" id="relBox" data-sec="rel"><h2 class="foldh">招感 · 粘連 · 刑沖合穿</h2><p class="hint" style="margin-bottom:8px">招感計原局四柱同大運、流年、流月、流日，任何兩柱都計；刑沖合穿計原局四柱，加上而家揀選嘅大運同流年。</p><div class="rels">${relHtml}</div></section>`;
   drawChains();
   if(VIEW.work){xjStart();ksStart();}
