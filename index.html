@@ -1019,7 +1019,7 @@ document.addEventListener('click',e=>{const go=e.target.closest('[data-bzgo]'),p
 
 // 行星位置（占星）：用 astronomy-engine（撳開先載入），計地心黃經（回歸黃道）同逆行；出世用出生鐘錶時間減時區（夏令再減 1 個鐘），睇運日用流日正午
 // 內圈＝出世（本命），外圈＝睇運日（流日）；下面列流日行星同本命行星嘅相位（合 0°、六合 60°、刑 90°、拱 120°、沖 180°，容許 3°，月亮 5°）
-const PL={open:false,lib:null};
+const PL={open:true,lib:null};
 const PL_B=[['Sun','太陽','☉'],['Moon','月亮','☽'],['Mercury','水星','☿'],['Venus','金星','♀'],['Mars','火星','♂'],['Jupiter','木星','♃'],['Saturn','土星','♄'],['Uranus','天王星','♅'],['Neptune','海王星','♆'],['Pluto','冥王星','♇']];
 const PL_Z=[['白羊','♈'],['金牛','♉'],['雙子','♊'],['巨蟹','♋'],['獅子','♌'],['處女','♍'],['天秤','♎'],['天蠍','♏'],['射手','♐'],['摩羯','♑'],['水瓶','♒'],['雙魚','♓']];
 const PL_A=[[0,'合'],[60,'六合'],[90,'刑'],[120,'拱'],[180,'沖']];
@@ -2104,7 +2104,7 @@ function render(){
   </div>
   ${shenSha(S.cols)}
   ${VIEW.work?workSec(inp.sex===1):''}
-  <section class="panel" id="plBox"><details data-pl ${PL.open?'open':''}><summary><h2 class="plh">行星位置（占星） <span class="hint">日心 3D 螺旋圖，同出世、睇運日（流日）嘅行星黃經；撳開先計</span></h2></summary><div id="plOut" class="hint">計緊…</div></details></section>
+  <section class="panel" id="plBox"><details data-pl ${PL.open?'open':''}><summary><h2 class="plh">行星位置（占星） <span class="hint">日心 3D 螺旋圖，同出世、睇運日（流日）嘅行星黃經</span></h2></summary><div id="plOut" class="hint">計緊…</div></details></section>
   <section class="panel fold${SECF.rel?'':' folded'}" id="relBox" data-sec="rel"><h2 class="foldh">招感 · 粘連 · 刑沖合穿</h2><p class="hint" style="margin-bottom:8px">招感計原局四柱同大運、流年、流月、流日，任何兩柱都計；刑沖合穿計原局四柱，加上而家揀選嘅大運同流年。</p><div class="rels">${relHtml}</div></section>`;
   drawChains();
   if(VIEW.work){xjStart();ksStart();}
