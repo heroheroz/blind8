@@ -849,7 +849,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <b>點樣用分？</b>
   <ul>
     <li>🔮 <b>招感殺星</b>：每個盤每日扣 <b data-pcostv="sha">1</b> 分（進階用戶、高級用戶免費）。</li>
-    <li>⚙️ <b>做功計算</b>：每次開扣 <b data-pcostv="work">10</b> 分；剔住會記住，下次開網自動開返，會再扣。</li>
+    <li>⚙️ <b>做功計算</b>：每次開扣 <b data-pcostv="work">5</b> 分；剔住會記住，下次開網自動開返，會再扣。</li>
   </ul>
   <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。夠👍之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳 👍嘅人唔可以係命例或者筆記嘅主人。標籤唔計分。🔒 私人命例同佢嘅事件、筆記、投票都唔計分，轉返公開先計。管理員唔上榜。</p>
   </div>
@@ -2302,7 +2302,7 @@ const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN|
 // 用分換功能：同一組出生資料當一個盤；伺服器（spend_points）檢查分數同記錄，今日開過就唔再扣
 const BUY={paid:new Set(),busy:new Set(),msg:''};
 // 扣分數：由 point_costs 表讀（管理員喺「扣分設定」改，011_cost_settings.sql）；未設定就用預設
-const COST={sha:1,sw:2,work:10,loaded:false},PS={need:3,start:100,vday:5,gday:2,daily:0};
+const COST={sha:1,sw:2,work:5,loaded:false},PS={need:3,start:100,vday:5,gday:2,daily:0};
 // 最強五行投票（016_sw_votes.sql）：每個盤三個推論各自投👍／👎，每人每個推論一票，再撳一次取消
 const SWV={busy:false};const SWN={s1:'推論1：月令人元並用',yue:'推論2：月令印星',sl:'推論3：人元司令印星'};
 async function loadSwVotes(){const box=$('swVote');if(!box||!S||!S.swAll)return;const ck=chartKey();let cnt=null,mine={};
