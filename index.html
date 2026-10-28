@@ -1045,7 +1045,7 @@ function plDraw(){const box=$('plOut');if(!box||!S)return;
     const svg=`<svg viewBox="0 0 ${W} ${W}" class="plw" role="img" aria-label="行星位置圖"><circle cx="${c}" cy="${c}" r="148" class="plc"/><circle cx="${c}" cy="${c}" r="132" class="plc"/><circle cx="${c}" cy="${c}" r="108" class="plc"/><circle cx="${c}" cy="${c}" r="60" class="plc"/>${zod}${ring(T,118,'plt')}${ring(N,80,'pln')}</svg>`;
     const row=(x,y)=>`<tr><th>${x.g} ${x.n}</th><td>${plFmt(x.lon)}${x.rx?' <span class="plrx">逆</span>':''}</td><td>${plFmt(y.lon)}${y.rx?' <span class="plrx">逆</span>':''}</td></tr>`;
     box.classList.remove('hint');
-    box.innerHTML=`<h3 class="wksh">日心螺旋圖 <span class="hint">（太陽做中心，帶住行星沿銀河公轉方向向前飛；距離同速度經過壓縮，淨係睇形狀；拖拉可以轉視角）</span></h3><div id="pl3" class="hint">載入緊 3D…</div><h3 class="wksh">地心黃經圖</h3><div class="plg">${svg}<div><table class="plt2"><thead><tr><th></th><th>出世 <small>${b.getYear()}-${pad(b.getMonth())}-${pad(b.getDay())} ${pad(inp.h)}:${pad(inp.mi)}</small></th><th>睇運日 <small>${dd.getYear()}-${pad(dd.getMonth())}-${pad(dd.getDay())} 正午</small></th></tr></thead><tbody>${N.map((x,i)=>row(x,T[i])).join('')}</tbody></table>
+    box.innerHTML=`<h3 class="wksh">日心螺旋圖 <span class="hint">（太陽做中心，帶住行星沿銀河公轉方向向前飛；距離同速度經過壓縮，淨係睇形狀；撳播放由出世播到 100 歲再重頭；拖拉可以轉視角）</span></h3><div id="pl3" class="hint">載入緊 3D…</div><h3 class="wksh">地心黃經圖</h3><div class="plg">${svg}<div><table class="plt2"><thead><tr><th></th><th>出世 <small>${b.getYear()}-${pad(b.getMonth())}-${pad(b.getDay())} ${pad(inp.h)}:${pad(inp.mi)}</small></th><th>睇運日 <small>${dd.getYear()}-${pad(dd.getMonth())}-${pad(dd.getDay())} 正午</small></th></tr></thead><tbody>${N.map((x,i)=>row(x,T[i])).join('')}</tbody></table>
       <p class="hint" style="margin:6px 0 2px">圖：內圈出世、外圈睇運日；回歸黃道、地心。冇計上升星座同宮位（要出生地緯度）。</p></div></div>
       <h3 class="wksh">睇運日行星對本命行星嘅相位 <span class="hint">（容許 3°，月亮 5°；最緊嘅排先）</span></h3>
       <div class="plasp">${asp.length?asp.slice(0,24).map(a=>`<span>${a.t.g}${a.t.n} <b>${a.nm}</b> 本命${a.n.g}${a.n.n} <small>${fmtN(Math.round(a.o*10)/10)}°</small></span>`).join(''):'<span class="hint">冇緊密相位</span>'}</div>`;
@@ -1054,7 +1054,7 @@ function plDraw(){const box=$('plOut');if(!box||!S)return;
 document.addEventListener('toggle',e=>{if(!e.target.matches||!e.target.matches('[data-pl]'))return;PL.open=e.target.open;if(PL.open)plDraw();},true);
 // 3D 日心螺旋太陽系：太陽沿銀河公轉方向向前飛，行星繞住太陽轉，拖出螺旋軌跡（撳開先載入 three.js；只係睇，唔入計算）
 // 行星位置用 astronomy-engine 嘅日心座標（J2000 黃道）；距離取平方根壓縮、太陽速度都壓縮咗，淨係為咗睇到形狀
-const PL3={r:null,lib:null,raf:0,t:0,play:true,spd:30,zoom:1,az:0.3,el:0.32,key:''};
+const PL3={r:null,lib:null,raf:0,t:0,play:false,spd:30,zoom:1,az:0.3,el:0.32,key:''};
 const P3B=[['Mercury','水星',0xb8b8b8,87.97],['Venus','金星',0xf0c878,224.7],['Earth','地球',0x58a6ff,365.26],['Mars','火星',0xff6a3d,686.98],['Jupiter','木星',0xe0a96a,4332.6],['Saturn','土星',0xf0dc9a,10759],['Uranus','天王星',0x8fe8f0,30687],['Neptune','海王星',0x5b7dff,60190],['Pluto','冥王星',0xc9a88f,90560]];
 const P3_TY=10,P3_V=4.6/365.25,P3_SC=5.2,P3_SP=[[1,'1日'],[7,'1星期'],[30,'1個月'],[91,'3個月'],[365,'1年']];
 function pl3Load(){if(window.THREE)return Promise.resolve();if(PL3.lib)return PL3.lib;
@@ -1064,7 +1064,7 @@ function p3Eq2Ecl(ra,de){const T=window.THREE,e=23.4393*Math.PI/180,a=ra*Math.PI
 function p3Glow(c){const cv=document.createElement('canvas');cv.width=cv.height=64;const g=cv.getContext('2d'),gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,c);gr.addColorStop(.25,c.replace(/[\d.]+\)$/,'.45)'));gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(cv);}
 function pl3Init(){const T=window.THREE,A=window.Astronomy;
   const wrap=document.createElement('div');wrap.className='pl3w';
-  wrap.innerHTML=`<div class="pl3c"><div class="pl3lb"></div><div class="pl3d"></div></div><div class="pl3ui"><button type="button" data-p3="b">出世</button><button type="button" data-p3="d">流日</button><button type="button" data-p3="n">今日</button><button type="button" data-p3="p">暫停</button><select data-p3="s" aria-label="速度">${P3_SP.map(([v,n])=>`<option value="${v}"${v===30?' selected':''}>每秒 ${n}</option>`).join('')}</select><button type="button" data-p3="zi" aria-label="拉近">＋</button><button type="button" data-p3="zo" aria-label="拉遠">－</button><button type="button" data-p3="r">重設視角</button></div>`;
+  wrap.innerHTML=`<div class="pl3c"><div class="pl3lb"></div><div class="pl3d"></div></div><div class="pl3ui"><button type="button" data-p3="b">出世</button><button type="button" data-p3="d">流日</button><button type="button" data-p3="n">今日</button><button type="button" data-p3="p">播放</button><select data-p3="s" aria-label="速度">${P3_SP.map(([v,n])=>`<option value="${v}"${v===30?' selected':''}>每秒 ${n}</option>`).join('')}</select><button type="button" data-p3="zi" aria-label="拉近">＋</button><button type="button" data-p3="zo" aria-label="拉遠">－</button><button type="button" data-p3="r">重設視角</button></div>`;
   const box=wrap.querySelector('.pl3c'),ren=new T.WebGLRenderer({antialias:true,alpha:false});ren.setPixelRatio(Math.min(devicePixelRatio||1,2));ren.setClearColor(0x02030a,1);box.prepend(ren.domElement);
   const sc=new T.Scene(),cam=new T.PerspectiveCamera(50,1.6,0.1,3000);
   // 座標：太陽向 +X 飛（銀河公轉方向，銀經 90°），黃道北極盡量向上
@@ -1120,7 +1120,8 @@ function pl3Run(){if(PL3.raf)return;let last=performance.now();
   const loop=now=>{PL3.raf=0;const R=PL3.r;if(!R||!document.body.contains(R.wrap)||!PL.open)return;
     const dts=Math.min(.1,(now-last)/1000);last=now;const rc=R.box.getBoundingClientRect();if(!document.hidden&&rc.bottom>0&&rc.top<innerHeight)pl3Frame(PL3.play?dts*PL3.spd:0);if(PL3.play)PL3.raf=requestAnimationFrame(loop);};
   PL3.raf=requestAnimationFrame(loop);}
-function pl3Frame(dd){const R=PL3.r,T=window.THREE;PL3.t+=dd;const t=PL3.t,W=R.box.clientWidth,H=R.ren.domElement.clientHeight;
+function pl3Frame(dd){const R=PL3.r,T=window.THREE;PL3.t+=dd;if(dd>0&&PL3.bd!=null&&(PL3.t>PL3.bd+36525||PL3.t<PL3.bd)){PL3.t=PL3.bd;R.P.forEach(p=>p.cache.clear());}// 出世到 100 歲循環
+  const t=PL3.t,W=R.box.clientWidth,H=R.ren.domElement.clientHeight;
   // 鏡頭圍住太陽後面少少嘅位置轉
   const tg=new T.Vector3(-14,0,0),dist=72*PL3.zoom;R.cam.position.set(tg.x+dist*Math.cos(PL3.el)*Math.sin(PL3.az),tg.y+dist*Math.sin(PL3.el),tg.z+dist*Math.cos(PL3.el)*Math.cos(PL3.az));R.cam.lookAt(tg);
   const lab=(el,v)=>{const p=v.clone().project(R.cam);if(p.z>1){el.style.display='none';return;}el.style.display='';el.style.transform=`translate(${(p.x+1)/2*W+7}px,${(1-p.y)/2*H-18}px)`;};
@@ -1136,7 +1137,7 @@ function pl3Frame(dd){const R=PL3.r,T=window.THREE;PL3.t+=dd;const t=PL3.t,W=R.b
   R.ren.render(R.sc,R.cam);}
 function pl3Mount(bd,td,tz){const host=$('pl3');if(!host)return;
   Promise.all([pl3Load(),plLoad()]).then(()=>{if(!$('pl3'))return;const h=$('pl3');if(!PL3.r)pl3Init();h.textContent='';h.appendChild(PL3.r.wrap);
-    PL3.bd=p3Days(bd);PL3.td=p3Days(td);PL3.tz=tz;const key=PL3.bd+'|'+PL3.td;if(PL3.key!==key){PL3.key=key;pl3Jump(PL3.td);}
+    PL3.bd=p3Days(bd);PL3.td=p3Days(td);PL3.tz=tz;const key=String(PL3.bd);if(PL3.key!==key){PL3.key=key;pl3Jump(PL3.bd);}
     pl3Size();pl3Run();}).catch(e=>{host.textContent=e.message;});}
 
 /* ---------- relations ---------- */
