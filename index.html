@@ -1045,13 +1045,13 @@ function plDraw(){const box=$('plOut');if(!box||!S)return;
     const svg=`<svg viewBox="0 0 ${W} ${W}" class="plw" role="img" aria-label="行星位置圖"><circle cx="${c}" cy="${c}" r="148" class="plc"/><circle cx="${c}" cy="${c}" r="132" class="plc"/><circle cx="${c}" cy="${c}" r="108" class="plc"/><circle cx="${c}" cy="${c}" r="60" class="plc"/>${zod}${ring(T,118,'plt')}${ring(N,80,'pln')}</svg>`;
     const row=(x,y)=>`<tr><th>${x.g} ${x.n}</th><td>${plFmt(x.lon)}${x.rx?' <span class="plrx">逆</span>':''}</td><td>${plFmt(y.lon)}${y.rx?' <span class="plrx">逆</span>':''}</td></tr>`;
     box.classList.remove('hint');
-    box.innerHTML=`<h3 class="wksh">日心螺旋圖 <span class="hint">（太陽做中心，帶住行星沿銀河公轉方向向前飛；距離同速度經過壓縮，淨係睇形狀；撳播放由出世播到 100 歲再重頭；拖拉可以轉視角）</span></h3><div id="pl3" class="hint">載入緊 3D…</div><h3 class="wksh">地心黃經圖</h3><div class="plg">${svg}<div><table class="plt2"><thead><tr><th></th><th>出世 <small>${b.getYear()}-${pad(b.getMonth())}-${pad(b.getDay())} ${pad(inp.h)}:${pad(inp.mi)}</small></th><th>睇運日 <small>${dd.getYear()}-${pad(dd.getMonth())}-${pad(dd.getDay())} 正午</small></th></tr></thead><tbody>${N.map((x,i)=>row(x,T[i])).join('')}</tbody></table>
+    box.innerHTML=`<h3 class="wksh">日心螺旋圖 <span class="hint">（太陽做中心，帶住行星沿銀河公轉方向向前飛；距離同速度經過壓縮，淨係睇形狀；基本命盤停喺出世，有顯示流年流月流日就停喺睇運日；撳播放播到 100 歲再由出世重頭；拖拉可以轉視角）</span></h3><div id="pl3" class="hint">載入緊 3D…</div><h3 class="wksh">地心黃經圖</h3><div class="plg">${svg}<div><table class="plt2"><thead><tr><th></th><th>出世 <small>${b.getYear()}-${pad(b.getMonth())}-${pad(b.getDay())} ${pad(inp.h)}:${pad(inp.mi)}</small></th><th>睇運日 <small>${dd.getYear()}-${pad(dd.getMonth())}-${pad(dd.getDay())} 正午</small></th></tr></thead><tbody>${N.map((x,i)=>row(x,T[i])).join('')}</tbody></table>
       <p class="hint" style="margin:6px 0 2px">圖：內圈出世、外圈睇運日；回歸黃道、地心。冇計上升星座同宮位（要出生地緯度）。</p></div></div>
       <h3 class="wksh">睇運日行星對本命行星嘅相位 <span class="hint">（容許 3°，月亮 5°；最緊嘅排先）</span></h3>
       <div class="plasp">${asp.length?asp.slice(0,24).map(a=>`<span>${a.t.g}${a.t.n} <b>${a.nm}</b> 本命${a.n.g}${a.n.n} <small>${fmtN(Math.round(a.o*10)/10)}°</small></span>`).join(''):'<span class="hint">冇緊密相位</span>'}</div>`;
     pl3Mount(bd,td,inp.tz);
   }).catch(e=>{box.textContent=e.message;});}
-document.addEventListener('toggle',e=>{if(!e.target.matches||!e.target.matches('[data-pl]'))return;PL.open=e.target.open;if(PL.open)plDraw();},true);
+document.addEventListener('toggle',e=>{if(!e.target.matches||!e.target.matches('[data-pl]'))return;PL.open=e.target.open;if(PL.open){PL3.play=false;plDraw();}},true);
 // 3D 日心螺旋太陽系：太陽沿銀河公轉方向向前飛，行星繞住太陽轉，拖出螺旋軌跡（撳開先載入 three.js；只係睇，唔入計算）
 // 行星位置用 astronomy-engine 嘅日心座標（J2000 黃道）；距離取平方根壓縮、太陽速度都壓縮咗，淨係為咗睇到形狀
 const PL3={r:null,lib:null,raf:0,t:0,play:false,spd:30,zoom:1,az:0.3,el:0.32,key:''};
@@ -1136,8 +1136,8 @@ function pl3Frame(dd){const R=PL3.r,T=window.THREE;PL3.t+=dd;if(dd>0&&PL3.bd!=nu
   if(dl)dl.textContent=`${dt.getUTCFullYear()}-${pad(dt.getUTCMonth()+1)}-${pad(dt.getUTCDate())}`;
   R.ren.render(R.sc,R.cam);}
 function pl3Mount(bd,td,tz){const host=$('pl3');if(!host)return;
-  Promise.all([pl3Load(),plLoad()]).then(()=>{if(!$('pl3'))return;const h=$('pl3');if(!PL3.r)pl3Init();h.textContent='';h.appendChild(PL3.r.wrap);
-    PL3.bd=p3Days(bd);PL3.td=p3Days(td);PL3.tz=tz;const key=String(PL3.bd);if(PL3.key!==key){PL3.key=key;pl3Jump(PL3.bd);}
+  Promise.all([pl3Load(),plLoad()]).then(()=>{if(!$('pl3'))return;const h=$('pl3');if(!PL3.r)pl3Init();h.textContent='';h.appendChild(PL3.r.wrap);PL3.r.wrap.querySelector('[data-p3=p]').textContent=PL3.play?'暫停':'播放';
+    PL3.bd=p3Days(bd);PL3.td=p3Days(td);PL3.tz=tz;const st=VIEW.only4||VIEW.noDyn?PL3.bd:PL3.td,key=PL3.bd+'|'+st;if(PL3.key!==key){PL3.key=key;pl3Jump(st);}// 基本命盤由出世開始；有顯示大運流年流月流日就由睇運日開始
     pl3Size();pl3Run();}).catch(e=>{host.textContent=e.message;});}
 
 /* ---------- relations ---------- */
