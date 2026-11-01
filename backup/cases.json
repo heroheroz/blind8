@@ -2294,7 +2294,11 @@
   "tags": [
    "隱師命例"
   ],
-  "votes": [],
+  "votes": [
+   {
+    "vote": 1
+   }
+  ],
   "comments": []
  },
  {
@@ -6229,36 +6233,6 @@
   "comments": []
  },
  {
-  "id": "c5938abe-6f34-4858-bcc6-6017100766be",
-  "created_at": "2026-10-21T16:22:19.544253+00:00",
-  "owner_name": "落大雪",
-  "name": "梁啟超",
-  "input": {
-   "d": 1,
-   "h": 0,
-   "m": 7,
-   "y": 1997,
-   "at": null,
-   "mi": 0,
-   "tz": 8,
-   "zi": 2,
-   "dst": false,
-   "lon": 114.17,
-   "sex": 1,
-   "tst": false,
-   "city": 0,
-   "leap": false,
-   "name": "香港回歸",
-   "lunar": false
-  },
-  "notes": "",
-  "tags": [
-   "名人"
-  ],
-  "votes": [],
-  "comments": []
- },
- {
   "id": "304411bc-d26a-4280-84d9-618112425b78",
   "created_at": "2026-10-21T23:10:04.903256+00:00",
   "owner_name": "Leslie Lo",
@@ -6430,7 +6404,9 @@
    "lunar": false
   },
   "notes": "",
-  "tags": [],
+  "tags": [
+   "畢業"
+  ],
   "votes": [],
   "comments": []
  },
@@ -6460,7 +6436,13 @@
   "notes": "",
   "tags": [],
   "votes": [],
-  "comments": []
+  "comments": [
+   {
+    "body": "這一天我與24年沒見的母親重新聯繫相認回來",
+    "created_at": "2026-10-28T12:01:51.804518+00:00",
+    "author_name": "Sammdog Tsang"
+   }
+  ]
  },
  {
   "id": "c8f24a8d-0831-48e8-b7b4-ddc7b8b141d3",
@@ -6723,34 +6705,6 @@
   "comments": []
  },
  {
-  "id": "ea77f022-d515-4410-9c1f-7b20a6f30738",
-  "created_at": "2026-10-25T08:10:27.00112+00:00",
-  "owner_name": "Frendi Leung",
-  "name": "Tom Chow",
-  "input": {
-   "d": 1,
-   "h": 0,
-   "m": 7,
-   "y": 1997,
-   "at": null,
-   "mi": 0,
-   "tz": 8,
-   "zi": 1,
-   "dst": false,
-   "lon": 114.17,
-   "sex": 1,
-   "tst": false,
-   "city": 0,
-   "leap": false,
-   "name": "tom",
-   "lunar": false
-  },
-  "notes": "",
-  "tags": [],
-  "votes": [],
-  "comments": []
- },
- {
   "id": "b39fc943-c387-4d91-a4d2-dd3be5e8c209",
   "created_at": "2026-10-25T11:13:36.22228+00:00",
   "owner_name": "Kay",
@@ -6802,10 +6756,11 @@
    "lunar": false,
    "events": [
     {
-     "d": 24,
+     "d": 17,
      "m": 10,
      "t": "過身",
-     "y": 2026
+     "y": 2026,
+     "hr": 11
     }
    ]
   },
@@ -6814,7 +6769,13 @@
    "過身"
   ],
   "votes": [],
-  "comments": []
+  "comments": [
+   {
+    "body": "香港晚上9:17走\nhttps://www.youtube.com/live/j4AuUXHtThM?si=cmCvzwNEKyOdtB7P",
+    "created_at": "2026-10-27T18:09:07.514897+00:00",
+    "author_name": "Eric Wong"
+   }
+  ]
  },
  {
   "id": "60973ecf-9c7c-4d02-a597-13eec808ab92",
@@ -6833,19 +6794,430 @@
    "dst": false,
    "lon": 114.17,
    "sex": 1,
+   "sib": 1,
    "tst": false,
    "city": 0,
    "leap": false,
    "name": "周彥楠",
-   "lunar": false
+   "lunar": false,
+   "events": [
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "父母離婚（約3–4歲，跟母親生活）",
+     "y": 1985
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "考入名校（離家遠）",
+     "y": 1994
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "中三最大進步獎，破例入理科班",
+     "y": 1997
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "去悉尼讀大學，離鄉別井",
+     "y": 2003
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "父親破財賣晒樓，第二任離婚",
+     "y": 2004
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "大學畢業返港，同女友分手",
+     "y": 2006
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "第一份工",
+     "y": 2007
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "父親篤手指買四個單位，賺錢",
+     "y": 2007
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "同父親決裂，十幾年冇見",
+     "y": 2007
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "返澳讀碩士，搵到長工，搬去臥龍崗",
+     "y": 2008
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "買樓",
+     "y": 2009
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "朋友探訪自駕遊撞車，全部入院",
+     "y": 2013
+    },
+    {
+     "d": 20,
+     "m": 12,
+     "t": "父親腦中風手術（重新見面）",
+     "y": 2017
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "悉尼起新屋，搬返悉尼",
+     "y": 2019
+    },
+    {
+     "d": 1,
+     "m": 7,
+     "p": "y",
+     "t": "桃花好，差啲結婚（22–23）",
+     "y": 2022
+    },
+    {
+     "d": 15,
+     "m": 12,
+     "p": "gm",
+     "t": "轉新工",
+     "y": 2022
+    },
+    {
+     "d": 15,
+     "m": 5,
+     "p": "gm",
+     "t": "生蛇",
+     "y": 2023
+    },
+    {
+     "d": 15,
+     "m": 8,
+     "p": "gm",
+     "t": "入醫院",
+     "y": 2023
+    },
+    {
+     "d": 15,
+     "m": 1,
+     "p": "gm",
+     "t": "發生大事（唔好嘅事）",
+     "y": 2024
+    },
+    {
+     "d": 15,
+     "m": 11,
+     "p": "gm",
+     "t": "母親肺癌手術",
+     "y": 2025
+    }
+   ]
   },
   "notes": "",
-  "tags": [],
+  "tags": [
+   "意外",
+   "畢業",
+   "搬屋",
+   "轉工",
+   "破財",
+   "買樓",
+   "手術",
+   "父母離婚"
+  ],
   "votes": [
    {
     "vote": 1
    }
   ],
+  "comments": []
+ },
+ {
+  "id": "3d2ac551-f710-4588-aeb0-02bb864a69a3",
+  "created_at": "2026-10-26T14:49:05.679419+00:00",
+  "owner_name": "Leslie Lo",
+  "name": "yii",
+  "input": {
+   "d": 6,
+   "h": 11,
+   "m": 10,
+   "y": 1999,
+   "at": {
+    "d": 26,
+    "m": 10,
+    "y": 2012
+   },
+   "mi": 0,
+   "tz": 8,
+   "zi": 1,
+   "dst": false,
+   "lon": 114.17,
+   "sex": 0,
+   "tst": false,
+   "city": 0,
+   "leap": false,
+   "name": "yii",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "a4ba89a8-16a3-418a-9e7b-5d12f0fbf284",
+  "created_at": "2026-10-27T05:39:21.294471+00:00",
+  "owner_name": "Frendi Leung",
+  "name": "Elvis-Carri",
+  "input": {
+   "d": 9,
+   "h": 20,
+   "m": 2,
+   "y": 1976,
+   "at": null,
+   "mi": 0,
+   "tz": 8,
+   "zi": 1,
+   "dst": true,
+   "lon": 114.17,
+   "sex": 1,
+   "tst": true,
+   "city": 0,
+   "leap": false,
+   "name": "Elvis-Carri",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "8f8163af-4980-4607-a4c3-6f432d57d8c4",
+  "created_at": "2026-10-27T16:43:21.58374+00:00",
+  "owner_name": "Leslie Lo",
+  "name": "中國最高領導人（甲辰時）",
+  "input": {
+   "d": 15,
+   "h": 8,
+   "m": 6,
+   "y": 1953,
+   "at": null,
+   "mi": 0,
+   "tz": 8,
+   "zi": 1,
+   "dst": false,
+   "lon": 114.17,
+   "sex": 1,
+   "tst": true,
+   "city": 0,
+   "leap": false,
+   "name": "最高領導人",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "3013f5e1-638c-45a0-aed0-a0b34f22cc0b",
+  "created_at": "2026-10-31T06:14:12.38788+00:00",
+  "owner_name": "Homepc Parent",
+  "name": "李嘉誠",
+  "input": {
+   "d": 1,
+   "h": 0,
+   "m": 7,
+   "y": 1997,
+   "at": null,
+   "mi": 0,
+   "tz": 8,
+   "zi": 1,
+   "dst": false,
+   "lon": 114.17,
+   "sex": 0,
+   "tst": false,
+   "city": 0,
+   "leap": false,
+   "name": "香港回歸",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "57aae068-a016-4f0e-9ea8-6052730f3fe5",
+  "created_at": "2026-10-31T10:55:49.443955+00:00",
+  "owner_name": "Ball OEI",
+  "name": "W19",
+  "input": {
+   "d": 19,
+   "h": 20,
+   "m": 6,
+   "y": 1978,
+   "at": {
+    "d": 1,
+    "m": 6,
+    "y": 2024
+   },
+   "mi": 31,
+   "tz": 8,
+   "zi": 1,
+   "dst": false,
+   "lon": 114.17,
+   "sex": 0,
+   "tst": true,
+   "city": 0,
+   "leap": false,
+   "name": "W19",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "69341b5c-dbde-4c00-89ae-40bd349d0346",
+  "created_at": "2026-10-31T16:53:34.170892+00:00",
+  "owner_name": "yama buta",
+  "name": "梁",
+  "input": {
+   "d": 12,
+   "h": 6,
+   "m": 2,
+   "y": 1963,
+   "at": null,
+   "mi": 0,
+   "tz": 8,
+   "zi": 1,
+   "dst": false,
+   "lon": 114.17,
+   "sex": 0,
+   "tst": false,
+   "city": 0,
+   "leap": false,
+   "name": "鐘點僱工",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "b9805be2-f7c6-4185-bca2-0e9a7bc24fce",
+  "created_at": "2026-11-01T15:37:43.749775+00:00",
+  "owner_name": "Penny Tse",
+  "name": "Penny",
+  "input": {
+   "d": 21,
+   "h": 2,
+   "m": 8,
+   "y": 1970,
+   "at": null,
+   "mi": 48,
+   "tz": 8,
+   "zi": 1,
+   "dst": true,
+   "lon": 113.54,
+   "sex": 0,
+   "tst": true,
+   "city": 1,
+   "leap": false,
+   "name": "Penny",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "10602199-dbb4-4868-b72a-2692ede211f0",
+  "created_at": "2026-11-01T15:57:34.040463+00:00",
+  "owner_name": "yama buta",
+  "name": "K 湯",
+  "input": {
+   "d": 23,
+   "h": 10,
+   "m": 2,
+   "y": 1873,
+   "at": null,
+   "mi": 0,
+   "tz": 8,
+   "zi": 1,
+   "dst": false,
+   "lon": 114.17,
+   "sex": 1,
+   "tst": false,
+   "city": 0,
+   "leap": false,
+   "name": "梁啟超",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
+  "comments": []
+ },
+ {
+  "id": "ff2f9176-78fb-402c-b356-a3a08d3d2128",
+  "created_at": "2026-11-01T15:57:51.028175+00:00",
+  "owner_name": "yama buta",
+  "name": "湯",
+  "input": {
+   "d": 23,
+   "h": 10,
+   "m": 2,
+   "y": 1873,
+   "at": null,
+   "mi": 0,
+   "tz": 8,
+   "zi": 1,
+   "dst": false,
+   "lon": 114.17,
+   "sex": 1,
+   "tst": false,
+   "city": 0,
+   "leap": false,
+   "name": "梁啟超",
+   "lunar": false
+  },
+  "notes": "",
+  "tags": [],
+  "votes": [],
   "comments": []
  }
 ]
