@@ -2121,6 +2121,10 @@ function render(){
   if(PL.open)plDraw();
 }
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+// 備註同筆記入面嘅網址變成可以撳嘅連結；YouTube 連結顯示「▶ YouTube 45:30」（有 t= 就顯示由幾時開始）
+function linky(s){return esc(s).replace(/https?:\/\/[A-Za-z0-9\-._~:\/?#\[\]@!$&;%+=,*']+/g,u=>{const raw=u.replace(/&amp;/g,'&'),yt=/(^https?:\/\/)?([\w-]+\.)?(youtube\.com|youtu\.be)\//.test(raw);
+  let lbl=u;if(yt){const t=(raw.match(/[?&]t=(\d+)/)||[])[1];lbl='▶ YouTube'+(t?` ${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`:'');}
+  return `<a href="${u}" target="_blank" rel="noopener noreferrer">${lbl}</a>`;});}
 
 $('out').addEventListener('click',e=>{
   const b=e.target.closest('button.cell');if(!b)return;
@@ -2620,8 +2624,8 @@ function showCase(c){
   box.innerHTML=head+`<div class="ctags"><span class="cap">標籤</span>${have.length?tagChips(have,ed?c.id:''):'<span class="hint">未有標籤</span>'}</div>
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk">加</button></form></div>`:''}
     ${evBlock(c,ed)}
-    ${c.notes?`<div class="cbody">${esc(c.notes)}</div>`:''}
-    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span>${cvoteBtns(c,m)}</div><div>${esc(m.body)}</div></div>`).join('')}
+    ${c.notes?`<div class="cbody">${linky(c.notes)}</div>`:''}
+    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span>${cvoteBtns(c,m)}</div><div>${linky(m.body)}</div></div>`).join('')}
     ${can.vote()?`<form class="cadd" data-comment="${c.id}"><textarea rows="2" maxlength="2000" placeholder="加解釋或者補充備註" required></textarea><button type="submit" class="go sm">加備註</button></form>`:'<p class="hint">登入先可以加備註。</p>'}`;
 }
 // 命例事件日期（例如結婚、生仔、過身），撳一下就用嗰日做睇運日期；存喺 input.events
