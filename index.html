@@ -306,6 +306,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cpriv{font-size:13px;color:var(--muted);margin-top:4px}.cname .lock{font-size:12px;margin-right:2px}.qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
 .more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
 .armed{color:var(--paper)!important;background:var(--bad);border-radius:6px;padding:2px 6px}
+.lsong{margin:0 0 10px;padding:8px 10px;border:1px solid var(--line,#8884);border-radius:10px;font-size:14px}.lsong:empty{display:none}.lsong ul{margin:4px 0 0;padding-left:1.1em}.lsong li{margin:3px 0}
 .evwhy{display:flex;gap:6px;margin:-2px 0 8px;font-size:13px;line-height:1.5}.evwhy .cap{font-size:12px;color:var(--muted);min-width:3.5em;flex:none}.evwhy ul{margin:0;padding-left:1.1em}.evwhy li{margin:2px 0}.evws{font-size:12px;padding:0 5px;border-radius:6px;background:var(--line,#8883)}.evws.t{background:#e6b80033}
 .ctags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}.ctags .cap{font-size:12px;color:var(--muted);min-width:3.5em}.ctags .tags{margin:0}
 .tagx{font-size:14px!important;padding:0 2px}
@@ -839,7 +840,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   </ul>
   <p class="hint">出處：<a href="http://m.udxd.com/news/show-102920.html" target="_blank" rel="noopener">udxd.com</a>、<a href="https://zhuanlan.zhihu.com/p/1976362559935366444" target="_blank" rel="noopener">知乎</a>、<a href="https://zhuanlan.zhihu.com/p/2081950982699800162" target="_blank" rel="noopener">知乎</a>、<a href="https://www.163.com/dy/article/KDM937E80521DJ4J.html" target="_blank" rel="noopener">網易</a></p>
   </div>
-  <div class="npane sifu" id="np-lsum"><div class="lsel row"><span class="lpick"></span></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
+  <div class="npane sifu" id="np-lsum"><div class="lsong"></div><div class="lsel row"><span class="lpick"></span></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lqa"><div class="lsel row"><input type="search" class="lq" data-lqa placeholder="搵問題…" aria-label="搵問題"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-an"><div class="lsel row seg anseg"><button type="button" data-ansub="ev">事件</button><button type="button" data-ansub="ss">十神結構</button><button type="button" data-ansub="gz">干支組合</button></div><div class="lbody"><p class="hint">揀「命例數據庫分析」先計。</p></div></div>
   <div class="npane sifu" id="np-ltxt"><div class="lsel row"><span class="lpick"></span><input type="search" class="lq" data-lq placeholder="搵字幕…" aria-label="搵字幕"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
@@ -2180,7 +2181,11 @@ async function lsIndex(){if(!LS.idx){try{const r=await fetch('lessons/index.json
 async function lsLoad(id){if(!LS.data[id]){const r=await fetch(`lessons/${id}.json`,{cache:'no-cache'});if(!r.ok)throw new Error('讀唔到呢一課');LS.data[id]=await r.json();}return LS.data[id];}
 function lsCaseRefs(c){const hit=(LS.idx||[]).flatMap(l=>(l.cases||[]).filter(x=>x[0]===c.id).map(x=>({l,t:x[1]})));if(!hit.length)return '';
   return `<div class="clsn hint">📖 課堂提到：${hit.map(({l,t})=>`<button type="button" class="lnk" data-lgo="${l.id}">${esc(l.short||l.title)}</button>${t!=null?' '+lsA(l.id,t):''}`).join('　')}</div>`;}
-async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
+// 先生唱歌：lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間），放喺課堂總結最頂；淨係放連結，唔轉錄歌詞
+async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.json',{cache:'no-cache'});LS.songs=r.ok?await r.json():[];}catch(e){LS.songs=[];}}
+  const box=document.querySelector('#np-lsum .lsong');if(!box)return;const L=LS.songs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  box.innerHTML=L.length?`<b>🎤 先生唱歌</b><ul>${L.map(x=>`<li>${lsA(x.id,x.t,'▶ '+(x.t?lsT(x.t):'YouTube'))} ${esc(x.date||'')} ${esc(x.title||'')}${Array.isArray(x.songs)?'：'+x.songs.map(g=>g&&g.t!=null?`${esc(g.name||'')} ${lsA(x.id,g.t)}`:esc((g&&g.name)||'')).join('、'):x.songs?'：'+esc(x.songs):''}${x.dur?` <span class="hint">（${esc(x.dur)}）</span>`:''}</li>`).join('')}</ul>`:'';}
+async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');lsSongs();
   if(!idx.length){bodies.forEach(b=>b.innerHTML='<p class="hint">未有課堂資料。</p>');return;}
   const ord=[...idx].sort((a,b)=>(b.n||0)-(a.n||0));
   if(!idx.some(l=>l.id===LS.cur))LS.cur=ord[0].id;
