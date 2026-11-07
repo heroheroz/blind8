@@ -256,7 +256,7 @@ td.chain{position:relative;overflow:visible}
 .ntabs{margin-bottom:10px}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}
-.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=lsong]:checked)) #np-lsong,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
+.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
 .ntabs{flex-wrap:wrap}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lqa{margin:0 0 14px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--soft);border-radius:6px}.lqa .q{font-weight:600}.lqa .meta{font-size:12px;color:var(--muted)}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}.clsn,a.yt{font-size:12px}.rsrc{display:block;font-size:12px;color:var(--muted);margin-top:2px}.rsrc.none{opacity:.7}.anseg button{border:0;background:none;font:inherit;font-size:14px;padding:5px 12px;cursor:pointer;color:inherit}.anseg button[aria-pressed=true]{background:var(--accent);color:#fff}.angrp{margin:0 0 6px;padding:6px 10px;border:1px solid var(--line);border-radius:6px}.angrp summary{cursor:pointer}.ancases{margin-top:6px;font-size:14px;line-height:1.9}.antab{border-collapse:collapse;font-size:13px;margin:6px 0}.antab th,.antab td{padding:2px 8px;border-bottom:1px solid var(--line);text-align:left}.anpick{margin:0 0 8px}.anpick .on{font-weight:700;text-decoration:underline}
 .sifu{font-size:14px;color:var(--ink);line-height:1.7;max-width:900px}
 .sifu h3{margin:0 0 6px;font-size:18px}
@@ -306,7 +306,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cpriv{font-size:13px;color:var(--muted);margin-top:4px}.cname .lock{font-size:12px;margin-right:2px}.qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
 .more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
 .armed{color:var(--paper)!important;background:var(--bad);border-radius:6px;padding:2px 6px}
-.lsong{font-size:15px}.lsong ul{margin:4px 0 0;padding-left:1.1em}.lsong li{margin:3px 0}
+.lsong{font-size:15px;padding-left:1.1em}.lsong li{margin:4px 0}
 .evwhy{display:flex;gap:6px;margin:-2px 0 8px;font-size:13px;line-height:1.5}.evwhy .cap{font-size:12px;color:var(--muted);min-width:3.5em;flex:none}.evwhy ul{margin:0;padding-left:1.1em}.evwhy li{margin:2px 0}.evws{font-size:12px;padding:0 5px;border-radius:6px;background:var(--line,#8883)}.evws.t{background:#e6b80033}
 .ctags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}.ctags .cap{font-size:12px;color:var(--muted);min-width:3.5em}.ctags .tags{margin:0}
 .tagx{font-size:14px!important;padding:0 2px}
@@ -549,7 +549,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <section class="panel notes fold folded" data-sec="calc">
   <h2 class="foldh">隱姓先生課堂 · 盲派八字摘要 · 八字口訣 · 計法說明</h2>
   <p class="hint nlogin">🔒 登入先睇到隱姓先生課堂、盲派八字摘要、八字口訣、計法說明同命例數據庫分析。</p>
-  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="lsong" checked>🎤 隱姓先生歌曲庫</label><label><input type="radio" name="ntab" value="lsum">隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
+  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="lsum" checked>隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
   <div class="npane" id="np-calc">
   <p id="r-p-cal"><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
@@ -840,7 +840,6 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   </ul>
   <p class="hint">出處：<a href="http://m.udxd.com/news/show-102920.html" target="_blank" rel="noopener">udxd.com</a>、<a href="https://zhuanlan.zhihu.com/p/1976362559935366444" target="_blank" rel="noopener">知乎</a>、<a href="https://zhuanlan.zhihu.com/p/2081950982699800162" target="_blank" rel="noopener">知乎</a>、<a href="https://www.163.com/dy/article/KDM937E80521DJ4J.html" target="_blank" rel="noopener">網易</a></p>
   </div>
-  <div class="npane sifu" id="np-lsong"><div class="lsong"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lsum"><div class="lsel row"><span class="lpick"></span></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lqa"><div class="lsel row"><input type="search" class="lq" data-lqa placeholder="搵問題…" aria-label="搵問題"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-an"><div class="lsel row seg anseg"><button type="button" data-ansub="ev">事件</button><button type="button" data-ansub="ss">十神結構</button><button type="button" data-ansub="gz">干支組合</button></div><div class="lbody"><p class="hint">揀「命例數據庫分析」先計。</p></div></div>
@@ -2182,16 +2181,18 @@ async function lsIndex(){if(!LS.idx){try{const r=await fetch('lessons/index.json
 async function lsLoad(id){if(!LS.data[id]){const r=await fetch(`lessons/${id}.json`,{cache:'no-cache'});if(!r.ok)throw new Error('讀唔到呢一課');LS.data[id]=await r.json();}return LS.data[id];}
 function lsCaseRefs(c){const hit=(LS.idx||[]).flatMap(l=>(l.cases||[]).filter(x=>x[0]===c.id).map(x=>({l,t:x[1]})));if(!hit.length)return '';
   return `<div class="clsn hint">📖 課堂提到：${hit.map(({l,t})=>`<button type="button" class="lnk" data-lgo="${l.id}">${esc(l.short||l.title)}</button>${t!=null?' '+lsA(l.id,t):''}`).join('　')}</div>`;}
-// 隱姓先生歌曲庫（課堂第一個分頁）：lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間），放喺課堂總結最頂；淨係放連結，唔轉錄歌詞
+// 隱姓先生歌曲庫：揀堂選單第一個選擇（LS.cur=SONGS）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
+const SONGS='__songs';
 async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.json',{cache:'no-cache'});LS.songs=r.ok?await r.json():[];}catch(e){LS.songs=[];}}
-  const box=document.querySelector('#np-lsong .lsong');if(!box)return;const L=LS.songs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  box.innerHTML=L.length?`<h3>🎤 隱姓先生歌曲庫</h3><ul>${L.map(x=>`<li>${lsA(x.id,x.t,'▶ '+(x.t?lsT(x.t):'YouTube'))} ${esc(x.date||'')} ${esc(x.title||'')}${Array.isArray(x.songs)?'：'+x.songs.map(g=>g&&g.t!=null?`${esc(g.name||'')} ${lsA(x.id,g.t)}`:esc((g&&g.name)||'')).join('、'):x.songs?'：'+esc(x.songs):''}${x.dur?` <span class="hint">（${esc(x.dur)}）</span>`:''}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>';}
-async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');lsSongs();
+  const L=LS.songs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  return `<h3>🎤 隱姓先生歌曲庫</h3>`+(L.length?`<ul class="lsong">${L.map(x=>`<li>${lsA(x.id,x.t,'▶ '+(x.t?lsT(x.t):'YouTube'))} ${esc(x.date||'')} ${esc(x.title||'')}${Array.isArray(x.songs)?'：'+x.songs.map(g=>g&&g.t!=null?`${esc(g.name||'')} ${lsA(x.id,g.t)}`:esc((g&&g.name)||'')).join('、'):x.songs?'：'+esc(x.songs):''}${x.dur?` <span class="hint">（${esc(x.dur)}）</span>`:''}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>');}
+async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
   if(!idx.length){bodies.forEach(b=>b.innerHTML='<p class="hint">未有課堂資料。</p>');return;}
   const ord=[...idx].sort((a,b)=>(b.n||0)-(a.n||0));
-  if(!idx.some(l=>l.id===LS.cur))LS.cur=ord[0].id;
-  const opt=ord.map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${l.short?esc(l.short)+' · ':''}${esc(l.date||'')} ${esc(l.title)}</option>`).join('');
+  if(LS.cur!==SONGS&&!idx.some(l=>l.id===LS.cur))LS.cur=SONGS;
+  const opt=`<option value="${SONGS}"${LS.cur===SONGS?' selected':''}>🎤 隱姓先生歌曲庫</option>`+ord.map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${l.short?esc(l.short)+' · ':''}${esc(l.date||'')} ${esc(l.title)}</option>`).join('');
   document.querySelectorAll('.notes .lpick').forEach(s=>s.innerHTML=`<select data-lsel aria-label="揀課堂">${opt}</select>`);
+  if(LS.cur===SONGS){const h=await lsSongs();if(LS.cur===SONGS)bodies.forEach(b=>b.innerHTML=h);lsQA(ord);return;}
   let L;try{L=await lsLoad(LS.cur);}catch(e){bodies.forEach(b=>b.innerHTML=`<p class="hint">${esc(e.message)}</p>`);return;}
   if(L.id!==LS.cur)return;
   const head=`<h3>${esc(L.title)}</h3><p class="hint">${esc(L.date||'')}${L.dur?' · '+esc(L.dur):''} · ${lsA(L.id,0,'▶ YouTube')}${L.quality==='lite'?' · <span title="用 lite 模型轉錄，可能有錯字，之後會重做">📝 初稿</span>':''}</p>${L.note?`<p class="hint">⚠️ ${esc(L.note)}</p>`:''}`;
