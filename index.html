@@ -2201,7 +2201,9 @@ const AN_XEV=[['父親過身',t=>/卒\[父\]|喪父|父親?.{0,6}(過身|去世|
 function anCats(all){const cnt={};all.forEach(r=>(r.c.tags||[]).forEach(g=>{if(!AN_SRC.has(g))cnt[g]=(cnt[g]||0)+1;}));
   const mk=(n,hasTag,f)=>{const rows=[];all.forEach(r=>{const evs=(r.c.input.events||[]).filter(e=>f(String(e.t||'')));if(hasTag(r)||evs.length)rows.push({r,evs});});return {n,rows};};
   const tags=Object.keys(cnt).filter(g=>cnt[g]>=2).sort((a,b)=>cnt[b]-cnt[a]);
-  const T=tags.map(g=>{const f=anKw(g);return mk(g,r=>(r.c.tags||[]).includes(g),f);});
+  // 名有「（非啞）」呢類嘅係對照命例：有標籤都唔計入嗰組統計（例如啞巴組唔計「非啞」）
+  const neg=(r,g)=>{const m=String(r.c.name||'').match(/[（(]非([^)）]+)[)）]/);return !!m&&g.startsWith(m[1]);};
+  const T=tags.map(g=>{const f=anKw(g),x=mk(g,r=>(r.c.tags||[]).includes(g),f);x.rows=x.rows.filter(y=>!neg(y.r,g));x.out=all.filter(r=>(r.c.tags||[]).includes(g)&&neg(r,g));return x;});
   const roy=mk('皇室（全部）',r=>(r.c.tags||[]).some(g=>/皇室$/.test(g)),t=>/登基|即位|退位/.test(t));
   const X=AN_XEV.map(([n,f])=>mk(n,()=>false,f));
   if(T.filter(x=>/皇室$/.test(x.n)).length>1)T.splice(T.findIndex(x=>/皇室$/.test(x.n)),0,roy);
@@ -2302,7 +2304,8 @@ function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelect
         if(ev.length){const c={};ev.forEach(x=>x.rel.forEach(s=>c[s]=(c[s]||0)+1));
           const bs=s=>ev.reduce((t,x)=>t+AN_BASE[s](x.r.P),0)/ev.length;
           yr=`<p class="hint">有年份嘅事件 ${ev.length} 件，事件嗰年流年同原局嘅關係（「隨機一年」= 求其揀一年會有呢個關係嘅機會）：</p><table class="antab"><thead><tr><th>流年</th><th>事件</th><th>隨機一年</th></tr></thead><tbody>${Object.keys(c).sort((a,b)=>c[b]-c[a]).map(s=>`<tr><td>${esc(s)}</td><td>${c[s]}/${ev.length}（${anPct(c[s]/ev.length)}）</td><td>${anPct(bs(s))}</td></tr>`).join('')}</tbody></table>`;}}
-      return anGroup('ev'+k,k,rows,all,yr);};
+      const out=(x.out||[]).length?`<p class="hint">唔計入統計（名寫明「非…」嘅對照命例）：${x.out.map(anBtn).join('　')}</p>`:'';
+      return anGroup('ev'+k,k,rows,all,out+yr);};
     h=`<p class="hint">每組 = 有呢個標籤嘅命例，加埋事件寫咗呢件事嘅命例（例如事件寫「過身」但未加「過身」標籤）。</p><h4>命例標籤</h4>${AN.cats.T.map(one).join('')}<h4>標籤以外（由事件搵）</h4>${AN.cats.X.map(one).join('')||'<p class="hint">冇。</p>'}`;}
   else if(AN.sub==='ss'){
     const G={mo:['月令十神',r=>'月令'+r.mo],dm:['日主',r=>'日主'+r.P[2][0]+'（'+WX[gw(r.dm)]+'）'],tos:['天干透出十神組合',r=>'透 '+r.tos]};
