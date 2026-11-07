@@ -337,6 +337,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
   .mauth .adm{font-size:12px}
   .mnav{display:flex}.mbr{display:inline}.mhsh{display:flex;justify-content:center;gap:2px;white-space:nowrap}.mhsh button{font:inherit;font-size:13px;line-height:1;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}.mhsh .hshn{font-size:11px;padding:3px 3px;color:var(--accent)}
+  .notes .lpick{display:block;min-width:0;max-width:100%}.notes .lpick select{width:100%}.notes .lsel{flex-wrap:wrap}
   #casePager select{font-size:15px}.mnav button[hidden]{display:none}
   table.audit thead{display:none}table.audit,table.audit tbody{display:block}table.audit tr{display:block;border-top:1px solid var(--line);padding:8px 0}
   table.audit td{display:inline;border:0;padding:0 8px 0 0;font-size:14px}table.audit td small{display:inline;margin-left:4px}table.audit td:last-child{display:block;margin-top:4px}
@@ -348,7 +349,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   body[data-mtab]:not([data-mtab=in]) header,body[data-mtab]:not([data-mtab=in]) #inPanel,body[data-mtab]:not([data-mtab=in]) .mguide{display:none!important}
   body[data-mtab]:not([data-mtab=chart]):not([data-mtab=rel]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
   body[data-mtab=chart] #relBox,body[data-mtab=rel] #out>:not(#relBox){display:none!important}
-  body[data-mtab]:not([data-mtab=calc]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=calc]) #aw,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
+  body[data-mtab]:not([data-mtab=learn]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=calc]) #aw,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
   .layout{display:block}
   .mguide:not([hidden]){display:block;position:relative;font-size:15px;line-height:1.65;background:var(--paper);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;margin:0 0 12px}
   .mguide h2{font-size:18px;margin:0 0 6px}.mguide ol{margin:0;padding-left:22px}.mguide li{margin:4px 0}
@@ -402,6 +403,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <button type="button" data-mtab-go="case"><b>☰</b>命例</button>
   <button type="button" data-mtab-go="rel"><b>⇄</b>招感</button>
   <button type="button" data-mtab-go="calc"><b>§</b>計法</button>
+  <button type="button" data-mtab-go="learn"><b>❡</b>課堂</button>
   <button type="button" data-mtab-go="more"><b>✉</b>留言</button>
   <button type="button" data-mtab-go="audit" id="mAuditTab" hidden><b>⌕</b>審計</button>
 </nav></div>
@@ -2278,7 +2280,7 @@ document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab][val
 const anOn=()=>{const r=document.querySelector('input[name=ntab][value=an]');return r&&r.checked;};
 // 開某一課：揀「課堂總結」分頁（電腦版打開計法嗰格，手機版轉去計法頁）
 function lsOpen(id,tab){LS.cur=id;const r=document.querySelector(`input[name=ntab][value=${tab||'lsum'}]`);if(r)r.checked=true;SECF.calc=true;applySec();
-  if(document.body.dataset.mtab)mTab('calc');lsDraw().then(()=>document.querySelector('.notes').scrollIntoView({block:'start'}));}
+  if(document.body.dataset.mtab)mTab('learn');lsDraw().then(()=>document.querySelector('.notes').scrollIntoView({block:'start'}));}
 document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab]')&&/^l/.test(e.target.value))lsDraw();if(e.target.matches('[data-lsel]')){LS.cur=e.target.value;lsDraw();}});
 document.addEventListener('input',e=>{if(e.target.matches('[data-lq]')){LS.q=e.target.value;clearTimeout(LS.tm);LS.tm=setTimeout(lsDraw,200);}});
 document.addEventListener('click',e=>{const g=e.target.closest('[data-lgo]');if(g){lsOpen(g.dataset.lgo);return;}
