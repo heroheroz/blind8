@@ -2138,7 +2138,7 @@ function render(){
   ${shenSha(S.cols)}
   ${VIEW.work?workSec(inp.sex===1):''}
   <section class="panel" id="plBox"><details data-pl ${PL.open?'open':''}><summary><h2 class="plh">行星位置（占星） <span class="hint">日心 3D 螺旋圖（行星大細跟真實半徑比例），同出世、睇運日（流日）嘅行星黃經</span></h2></summary><div id="plOut" class="hint">計緊…</div></details></section>
-  <section class="panel fold${SECF.rel?'':' folded'}" id="relBox" data-sec="rel"><h2 class="foldh">招感 · 粘連 · 刑沖合穿</h2><p class="hint" style="margin-bottom:8px">招感計原局四柱同大運、流年、流月、流日，任何兩柱都計；刑沖合穿計原局四柱，加上而家揀選嘅大運同流年。</p><div class="rels">${relHtml}</div></section>`;
+  <!-- 招感 · 粘連 · 刑沖合穿 嗰板已拎走（主人 2026-11-07：命盤本身已經有足夠解釋） -->`;
   drawChains();
   if(VIEW.work){xjStart();ksStart();}
   if(PL.open)plDraw();
