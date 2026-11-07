@@ -2149,7 +2149,7 @@ function lsCaseRefs(c){const hit=(LS.idx||[]).flatMap(l=>(l.cases||[]).filter(x=
 async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
   if(!idx.length){bodies.forEach(b=>b.innerHTML='<p class="hint">未有課堂資料。</p>');return;}
   if(!idx.some(l=>l.id===LS.cur))LS.cur=idx[0].id;
-  const opt=idx.map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${esc(l.date||'')} ${esc(l.title)}</option>`).join('');
+  const opt=idx.map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${l.short?esc(l.short)+' · ':''}${esc(l.date||'')} ${esc(l.title)}</option>`).join('');
   document.querySelectorAll('.notes .lpick').forEach(s=>s.innerHTML=`<select data-lsel aria-label="揀課堂">${opt}</select>`);
   let L;try{L=await lsLoad(LS.cur);}catch(e){bodies.forEach(b=>b.innerHTML=`<p class="hint">${esc(e.message)}</p>`);return;}
   if(L.id!==LS.cur)return;
