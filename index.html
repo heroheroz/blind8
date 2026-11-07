@@ -1010,6 +1010,11 @@ function bzFind(txt){const ps=(txt.match(/[甲乙丙丁戊己庚辛壬癸][子�
 // 年份參考：「年」格有填就用佢（例如大概 1990 年出世），冇就用今年；最接近嗰個結果加粗
 const bzRef=t=>{const v=+$(t==='birth'?'y':'aty').value,e=+$(t==='birth'?'era':'atEra').value;return v?v*e:new Date().getFullYear();};
 const bzYr=y=>`公元${y<=0?'前'+(1-y):y}年`;
+// 陽干配陽支、陰干配陰支：揀咗天干，地支淨係顯示同陰陽嘅六個（反之亦然）；本身揀咗唔夾嘅就清返
+document.addEventListener('change',e=>{const s=e.target.closest('.bzp select');if(!s)return;const p=s.closest('.bzp'),g=p.querySelector('[data-g]'),z=p.querySelector('[data-z]');
+  const lim=(sel,v,idx)=>{for(const o of sel.options){const bad=v!==''&&!!o.value&&idx(o.value)%2!==v;o.hidden=o.disabled=bad;}if(sel.selectedOptions[0]&&sel.selectedOptions[0].disabled)sel.value='';};
+  if(s===g)lim(z,g.value?gi(g.value)%2:'',zi);else lim(g,z.value?zi(z.value)%2:'',gi);
+  if(!g.value)lim(z,'',zi);if(!z.value)lim(g,'',gi);});
 // 揀齊頭三柱（冇揀一半）就自動搵，唔使再撳「搵」；加事件嗰個仲係要撳，因為可以淨係揀大運
 document.addEventListener('change',e=>{const s=e.target.closest('.bzpk select');if(!s)return;const box=s.closest('.bzpk');if(box.dataset.bzpk==='ev')return;
   const ps=bzRead(box);if(ps.slice(0,3).every(Boolean)&&!ps.includes(null))box.querySelector('[data-bzgo]').click();});
