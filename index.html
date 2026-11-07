@@ -256,7 +256,7 @@ td.chain{position:relative;overflow:visible}
 .ntabs{margin-bottom:10px}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt{display:none}
-.ntabs{flex-wrap:wrap}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.clsn{margin:6px 0}
+.ntabs{flex-wrap:wrap}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}
 .sifu{font-size:14px;color:var(--ink);line-height:1.7;max-width:900px}
 .sifu h3{margin:0 0 6px;font-size:18px}
 .sifu h4{margin:14px 0 4px;font-size:15px;color:var(--accent)}
@@ -2157,7 +2157,8 @@ async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorA
   const sec=(L.summary||[]).map(s=>`<h4>${lsFmt(L.id,s.h)}</h4><ul>${(s.items||[]).map(x=>`<li>${lsFmt(L.id,x)}</li>`).join('')}</ul>`).join('');
   const cs=(L.cases||[]).length?`<h4>命例</h4><ul>${L.cases.map(c=>`<li>${c.id?`<button type="button" class="lnk" data-open="${c.id}" data-lcase>${esc(c.name)}</button>`:esc(c.name)}${c.t!=null?' '+lsA(L.id,c.t):''}${c.note?'　'+lsFmt(L.id,c.note):''}</li>`).join('')}</ul>`:'';
   const tc=L.teacher&&(L.teacher.items||[]).length?`<h4>老師總結${L.teacher.t!=null?' '+lsA(L.id,L.teacher.t):''}</h4><div class="lteach"><ul>${L.teacher.items.map(x=>`<li>${lsFmt(L.id,x)}</li>`).join('')}</ul></div>`:'';
-  $('np-lsum').querySelector('.lbody').innerHTML=head+(sec||'<p class="hint">未有總結。</p>')+cs+tc;
+  const mt=(L.materials||[]).length?`<div class="lmat"><b>📚 老師提到嘅學習資料</b><ul>${L.materials.map(x=>`<li>${lsFmt(L.id,x)}</li>`).join('')}</ul></div>`:'';
+  $('np-lsum').querySelector('.lbody').innerHTML=head+mt+(sec||'<p class="hint">未有總結。</p>')+cs+tc;
   const q=LS.q.trim(),eq=esc(q),ln=(L.lines||[]).filter(x=>!q||x[1].includes(q));
   $('np-ltxt').querySelector('.lbody').innerHTML=head+(q?`<p class="hint">搵到 ${ln.length} 句</p>`:'')+ln.map(([s,x])=>`<div class="lline${x.startsWith('【')?' lscr':''}">${lsA(L.id,s,lsT(s))}<span>${q?esc(x).split(eq).join(`<mark>${eq}</mark>`):esc(x)}</span></div>`).join('');}
 // 開某一課：揀「課堂總結」分頁（電腦版打開計法嗰格，手機版轉去計法頁）
