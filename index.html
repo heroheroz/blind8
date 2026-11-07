@@ -2185,20 +2185,25 @@ function lsQA(ord){const q=(LS.qq||'').trim(),nm=id=>{const c=(typeof CASES!=='u
 document.addEventListener('input',e=>{if(e.target.matches('[data-lqa]')){LS.qq=e.target.value;lsIndex().then(idx=>lsQA([...idx].sort((a,b)=>(b.n||0)-(a.n||0))));}});
 // 命例數據庫分析：用全部公開命例（唔計私人命例）分組，睇每組有乜共同特徵；全部喺瀏覽器計，唔改任何計法
 const AN={sub:'ev',g:'mo',open:{}};
-const AN_EV=[
-  ['fa','父親過身',(t,g)=>/卒\[父\]|喪父|父親?.{0,6}(過身|去世|離世|病逝|死)/.test(t)],
-  ['kin','其他親人過身',(t,g)=>/卒\[(?!父\])|(母|祖|外婆|外公|兄|弟|姐|妹|妻|老婆|丈夫|老公|仔|個女|女兒).{0,6}(過身|去世|離世|病逝|自殺|死)/.test(t)&&!/父親?.{0,6}(過身|去世|離世|病逝|死)|卒\[父\]/.test(t)],
-  ['die','本人過身',(t,g)=>/^(過身|去世|離世|病逝|被殺|遇刺|自殺|死)/.test(t)||g==='過身'],
-  ['mar','結婚',(t,g)=>/結婚|嫁|娶|大婚/.test(t)&&!/差啲|父|母/.test(t)||g==='結婚'],
-  ['div','離婚',(t,g)=>/離婚/.test(t)&&!/父|母/.test(t)||g==='離婚'],
-  ['acc','意外受傷',(t,g)=>/意外|撞車|車禍|受傷|傷殘|雷電|墮|跌傷/.test(t)||/^(意外|傷殘)$/.test(g)],
-  ['ill','疾病手術（本人）',(t,g)=>/病|手術|入醫院|癌|中風|生蛇/.test(t)&&!/父|母|祖/.test(t)||/^(疾病|手術)$/.test(g)],
-  ['law','官非坐監',(t,g)=>/官非|坐監|入獄|殺人|下放|被捕/.test(t)||/^(坐監|殺人|下放)$/.test(g)],
-  ['rich','財運富貴',(t,g)=>/首富|發達|賺錢|中獎|富豪/.test(t)||/^(財運)$/.test(g)],
-  ['roy','皇室',(t,g)=>/登基|退位|即位/.test(t)||/皇室$/.test(g)],
-  ['king','登基／即位',(t,g)=>/登基|即位/.test(t)],
-  ['monk','出家人',(t,g)=>g==='出家人'],
-  ['mute','啞巴',(t,g)=>g==='啞巴']];
+// 事件分組跟返命例標籤：有呢個標籤，或者事件文字有呢個字（同義詞）而前面冇父母兄弟等親人字，就入呢組
+const AN_SRC=new Set(['隱師命例','夏仲奇老師命例','通明師兄命例','盲摸摸學盲派','驗證時辰','兄弟數目','國家地區']);
+const AN_SYN={過身:'去世|離世|病逝|被殺|遇刺|自殺',結婚:'嫁|娶|大婚',意外:'撞車|車禍|受傷|雷電|墮|跌傷',疾病:'病|癌|中風|生蛇|入醫院',坐監:'入獄|被捕',財運:'首富|發達|賺錢|中獎',轉工:'新工|第一份工',搬屋:'搬去|搬返|遷移',生仔:'生女|生BB'};
+const AN_KIN=/[父母祖兄弟姐妹妻夫仔女婆公]|老婆|老公/;
+function anKw(tag){const re=new RegExp(tag.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+(AN_SYN[tag]?'|'+AN_SYN[tag]:''));
+  return t=>{const m=t.match(re);return !!m&&(tag.includes('父')||tag.includes('母')||!AN_KIN.test(t.slice(0,m.index).split(/[，,；;]/).pop()));};}
+// 標籤以外、淨係由事件搵嘅組
+const AN_XEV=[['父親過身',t=>/卒\[父\]|喪父|父親?.{0,6}(過身|去世|離世|病逝|死)/.test(t)],
+  ['其他親人過身',t=>(/卒\[(?!父\])/.test(t)||/(母|祖|外婆|外公|兄|弟|姐|妹|妻|老婆|丈夫|老公|仔|個女|女兒).{0,6}(過身|去世|離世|病逝|自殺|死)/.test(t))&&!/卒\[父\]|父親?.{0,6}(過身|去世|離世|病逝|死)/.test(t)],
+  ['登基',t=>/登基|即位/.test(t)],['退位',t=>/退位/.test(t)]];
+// 每次畫都由命例標籤砌返分組：[{n,rows:[{r,evs}]}]
+function anCats(all){const cnt={};all.forEach(r=>(r.c.tags||[]).forEach(g=>{if(!AN_SRC.has(g))cnt[g]=(cnt[g]||0)+1;}));
+  const mk=(n,hasTag,f)=>{const rows=[];all.forEach(r=>{const evs=(r.c.input.events||[]).filter(e=>f(String(e.t||'')));if(hasTag(r)||evs.length)rows.push({r,evs});});return {n,rows};};
+  const tags=Object.keys(cnt).filter(g=>cnt[g]>=2).sort((a,b)=>cnt[b]-cnt[a]);
+  const T=tags.map(g=>{const f=anKw(g);return mk(g,r=>(r.c.tags||[]).includes(g),f);});
+  const roy=mk('皇室（全部）',r=>(r.c.tags||[]).some(g=>/皇室$/.test(g)),t=>/登基|即位|退位/.test(t));
+  const X=AN_XEV.map(([n,f])=>mk(n,()=>false,f));
+  if(T.filter(x=>/皇室$/.test(x.n)).length>1)T.splice(T.findIndex(x=>/皇室$/.test(x.n)),0,roy);
+  return {T,X};}
 const AN_C=new Map();
 function anCase(c){const k=c.id+JSON.stringify(c.input);if(AN_C.has(k))return AN_C.get(k);let r=null;
   try{const P=compute(c.input).P,dm=gi(P[2][0]),gs=P.map(p=>p[0]),zs=P.map(p=>p[1]),F=new Set(),pos='年月日時';
@@ -2228,9 +2233,7 @@ function anCase(c){const k=c.id+JSON.stringify(c.input);if(AN_C.has(k))return AN
     SANXING.forEach(([s,n])=>{if(s.split('').every(z=>zs.includes(z)))add(n);});
     if(new Set(gs).size===1)add('天干一氣');if(new Set(zs).size===1)add('地支一氣');
     const tos=[...new Set([0,1,3].map(i=>SS1[ss(gs[i])]))].sort().join('');
-    const evs=[];(c.input.events||[]).forEach(e=>{const t=String(e.t||'');AN_EV.forEach(([k,,f])=>{if(f(t,''))evs.push({k,e});});});
-    const cats=new Set(evs.map(x=>x.k));(c.tags||[]).forEach(g=>AN_EV.forEach(([k,,f])=>{if(f('',g))cats.add(k);}));
-    r={c,P,dm,F,mo,tos,cats,evs};}catch(e){}
+    r={c,P,dm,F,mo,tos};}catch(e){}
   AN_C.set(k,r);return r;}
 // 流年干支：知道月份就用節氣（立春）計，淨係知年份就用該年
 function anYearGz(e){const y=+e.y;if(!y)return null;try{if(e.m&&e.p!=='y'&&e.p!=='dy')return Solar.fromYmd(y,+e.m,+e.d||15).getLunar().getEightChar().getYear();}catch(x){}
@@ -2250,21 +2253,23 @@ function anTraits(rows,all,lim){const n=rows.length,N=all.length,cnt={},base={};
   return out.length?`<table class="antab"><thead><tr><th>特徵</th><th>呢組</th><th>全部命例</th><th>倍數</th></tr></thead><tbody>${out.map(x=>`<tr><td>${esc(x.f)}</td><td>${x.k}/${n}（${anPct(x.p)}）</td><td>${anPct(x.b)}</td><td>×${x.l.toFixed(1)}</td></tr>`).join('')}</tbody></table>`:'<p class="hint">搵唔到明顯共同特徵（最少要 2 個命例、比例高過全部命例 1.4 倍）。</p>';}
 function anGroup(id,title,rows,all,extra){const op=AN.open[id];
   return `<details class="angrp" data-angrp="${esc(id)}" ${op?'open':''}><summary><b>${esc(title)}</b> <span class="hint">${rows.length} 個命例</span></summary>${extra||''}${op?anTraits(rows,all):''}<div class="ancases">${rows.map(anBtn).join('　')}</div></details>`;}
-function anEvBreak(rows){const c={};rows.forEach(r=>r.cats.forEach(k=>c[k]=(c[k]||0)+1));const s=AN_EV.filter(([k])=>c[k]).map(([k,n])=>`${n} ${c[k]}`);return s.length?`<p class="hint">事件：${esc(s.join('、'))}</p>`:'';}
+function anEvBreak(rows){const ids=new Set(rows.map(r=>r.c.id)),C=AN.cats;if(!C)return '';const s=[...C.T,...C.X].map(x=>[x.n,x.rows.filter(y=>ids.has(y.r.c.id)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([n,k])=>n+' '+k);return s.length?`<p class="hint">標籤／事件：${esc(s.join('、'))}</p>`:'';}
 function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelector('.lbody');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先睇到命例分析。</p>';return;}
   const all=CASES.filter(c=>!c.private&&!(c.tags||[]).includes('國家地區')).map(anCase).filter(Boolean);
   box.querySelectorAll('[data-ansub]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ansub===AN.sub));
   if(!all.length){body.innerHTML='<p class="hint">未有命例。</p>';return;}
+  AN.cats=anCats(all);
   const head=`<p class="hint">用 ${all.length} 個公開命例（唔計私人命例同國家地區盤）。「倍數」= 呢組有呢個特徵嘅比例 ÷ 全部命例嘅比例；樣本少，只係俾大家搵線索，唔係定論。撳開每組先計特徵。</p>`;
   let h='';
   if(AN.sub==='ev'){
-    h=AN_EV.map(([k,n])=>{const rows=all.filter(r=>r.cats.has(k));if(!rows.length)return '';
-      let yr='';if(AN.open['ev'+k]){const ev=[];rows.forEach(r=>r.evs.filter(x=>x.k===k).forEach(x=>{const g=anYearGz(x.e);if(g)ev.push({r,g,rel:anYearRel(r.P,g)});}));
+    const one=x=>{const k=x.n,rows=x.rows.map(y=>y.r);if(!rows.length)return '';
+      let yr='';if(AN.open['ev'+k]){const ev=[];x.rows.forEach(({r,evs})=>evs.forEach(e=>{const g=anYearGz(e);if(g)ev.push({r,g,rel:anYearRel(r.P,g)});}));
         if(ev.length){const c={};ev.forEach(x=>x.rel.forEach(s=>c[s]=(c[s]||0)+1));
           const bs=s=>ev.reduce((t,x)=>t+AN_BASE[s](x.r.P),0)/ev.length;
           yr=`<p class="hint">有年份嘅事件 ${ev.length} 件，事件嗰年流年同原局嘅關係（「隨機一年」= 求其揀一年會有呢個關係嘅機會）：</p><table class="antab"><thead><tr><th>流年</th><th>事件</th><th>隨機一年</th></tr></thead><tbody>${Object.keys(c).sort((a,b)=>c[b]-c[a]).map(s=>`<tr><td>${esc(s)}</td><td>${c[s]}/${ev.length}（${anPct(c[s]/ev.length)}）</td><td>${anPct(bs(s))}</td></tr>`).join('')}</tbody></table>`;}}
-      return anGroup('ev'+k,n,rows,all,yr);}).join('');}
+      return anGroup('ev'+k,k,rows,all,yr);};
+    h=`<p class="hint">每組 = 有呢個標籤嘅命例，加埋事件寫咗呢件事嘅命例（例如事件寫「過身」但未加「過身」標籤）。</p><h4>命例標籤</h4>${AN.cats.T.map(one).join('')}<h4>標籤以外（由事件搵）</h4>${AN.cats.X.map(one).join('')||'<p class="hint">冇。</p>'}`;}
   else if(AN.sub==='ss'){
     const G={mo:['月令十神',r=>'月令'+r.mo],dm:['日主',r=>'日主'+r.P[2][0]+'（'+WX[gw(r.dm)]+'）'],tos:['天干透出十神組合',r=>'透 '+r.tos]};
     const [,f]=G[AN.g]||G.mo,m=new Map();all.forEach(r=>{const k=f(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r);});
