@@ -310,6 +310,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .tagmgr input{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
 .tagm{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;padding:0 2px 0 8px;font-size:12px;background:var(--paper)}.tagm small{color:var(--muted)}.tagm .tagx{margin:0 4px}
 .tagx{all:unset;cursor:pointer;color:var(--muted);font-size:12px;margin:0 4px 0 -2px}
+.tagx.armed{color:var(--paper)!important;background:var(--bad);border-radius:6px;padding:1px 6px;font-size:12px!important;white-space:nowrap}
 @media (min-width:1100px){.layout:has(#caseBox:not([open])){grid-template-columns:42px minmax(0,1fr)}}
 @media (min-width:1100px){.cases:has(#caseBox:not([open])){padding:10px 6px}
   #caseBox:not([open])>summary{writing-mode:vertical-rl;letter-spacing:.2em}
@@ -482,7 +483,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
       <select id="d" aria-label="日"></select>
     </div>
     <label class="chk" id="leapWrap" hidden><input type="checkbox" id="leap">閏月</label>
-    <details class="bzpk" data-bzpk="birth"><summary>🔎 揀八字搵日子</summary><div class="bzsel0" data-lbl="年柱,月柱,日柱,時柱"></div><div class="row"><span class="hint">揀年、月、日柱（時柱可以唔揀）</span><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>
+    <details class="bzpk" open data-bzpk="birth"><summary>🔎 揀八字搵日子</summary><div class="bzsel0" data-lbl="年柱,月柱,日柱,時柱"></div><div class="row"><span class="hint">揀齊年、月、日柱就自動搵（時柱可以唔揀）</span><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>
     <label class="cap" for="aty" style="margin-top:6px">睇運日期（公曆，預設今日）</label>
     <div class="row">
       <select id="atEra" aria-label="睇運日期公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" id="aty" min="1" max="9999" aria-label="睇運日期年" style="width:5.2em"> 年
@@ -490,7 +491,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
       <select id="atd" aria-label="睇運日期日"></select>
       <button type="button" class="lnk" id="atClr">用今日</button>
     </div>
-    <details class="bzpk" data-bzpk="at"><summary>🔎 揀干支搵日子</summary><div class="bzsel0" data-lbl="流年,流月,流日"></div><div class="row"><span class="hint">揀流年、流月、流日</span><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>
+    <details class="bzpk" open data-bzpk="at"><summary>🔎 揀干支搵日子</summary><div class="bzsel0" data-lbl="流年,流月,流日"></div><div class="row"><span class="hint">揀齊流年、流月、流日就自動搵</span><button type="button" class="lnk" data-bzgo>搵</button></div><div class="bzres"></div></details>
   </fieldset>
 
   <fieldset>
@@ -1003,6 +1004,12 @@ function bzFind(txt){const ps=(txt.match(/[甲乙丙丁戊己庚辛壬癸][子�
       if(hg){const z=zi(hg[1]);h=z*2;const e=Solar.fromYmdHms(so.getYear(),so.getMonth(),so.getDay(),h,0,0).getLunar().getEightChar();if(e.getTime()!==hg)return;}
       out.push({y:so.getYear(),m:so.getMonth(),d:so.getDay(),h});});}
   return {list:out,ps};}
+// 年份參考：「年」格有填就用佢（例如大概 1990 年出世），冇就用今年；最接近嗰個結果加粗
+const bzRef=t=>{const v=+$(t==='birth'?'y':'aty').value,e=+$(t==='birth'?'era':'atEra').value;return v?v*e:new Date().getFullYear();};
+const bzYr=y=>`公元${y<=0?'前'+(1-y):y}年`;
+// 揀齊頭三柱（冇揀一半）就自動搵，唔使再撳「搵」；加事件嗰個仲係要撳，因為可以淨係揀大運
+document.addEventListener('change',e=>{const s=e.target.closest('.bzpk select');if(!s)return;const box=s.closest('.bzpk');if(box.dataset.bzpk==='ev')return;
+  const ps=bzRead(box);if(ps.slice(0,3).every(Boolean)&&!ps.includes(null))box.querySelector('[data-bzgo]').click();});
 document.addEventListener('click',e=>{const go=e.target.closest('[data-bzgo]'),pick=e.target.closest('[data-bzpick]');
   if(go){const box=go.closest('.bzpk'),res=box.querySelector('.bzres'),ps=bzRead(box);
     if(ps.includes(null)){res.innerHTML='<span class="hint">每柱要天干同地支都揀，或者兩個都唔揀。</span>';return;}
@@ -1010,12 +1017,15 @@ document.addEventListener('click',e=>{const go=e.target.closest('[data-bzgo]'),p
     const r=bzFind(ps.join(' '));
     if(r.err){res.innerHTML=`<span class="hint">${esc(r.err)}</span>`;return;}
     if(!r.list.length){res.innerHTML='<span class="hint">1600–2200 年冇呢個八字（月柱要配年干，時柱要配日干）。</span>';return;}
-    res.innerHTML=`<span class="hint">搵到 ${r.list.length} 個（撳一下填入）：</span>`+r.list.map(x=>`<button type="button" class="lnk bzopt" data-bzpick="${x.y},${x.m},${x.d},${x.h??''}">${x.y}-${pad(x.m)}-${pad(x.d)}${x.h!=null?` ${pad(x.h)}:00`:''}</button>`).join('');return;}
+    const t=box.dataset.bzpk,ref=bzRef(t),best=r.list.reduce((b,x)=>Math.abs(x.y-ref)<Math.abs(b.y-ref)?x:b,r.list[0]);
+    res.innerHTML=`<span class="hint">搵到 ${r.list.length} 個，每 60 年一轉，揀返啱嗰個年份（粗體＝最近「年」格或今年；撳一下填入）：</span>`+r.list.map(x=>`<button type="button" class="lnk bzopt"${x===best?' style="font-weight:700"':''} data-bzpick="${x.y},${x.m},${x.d},${x.h??''}">${x.y}-${pad(x.m)}-${pad(x.d)}${x.h!=null?` ${pad(x.h)}:00`:''}</button>`).join('');return;}
   if(pick){const box=pick.closest('.bzpk'),[y,m,d,h]=pick.dataset.bzpick.split(','),t=box.dataset.bzpk;
     if(t==='birth'){$('calS').checked=true;refreshMD();$('era').value='1';$('y').value=y;$('m').value=m;$('m').dispatchEvent(new Event('change',{bubbles:true}));$('d').value=d;if(h!==''){$('h').value=h;$('mi').value=0;}}
     else if(t==='at'){$('atEra').value='1';$('aty').value=y;$('atm').value=m;$('atd').value=d;}
     else{const f=document.querySelector(`[data-addev="${box.dataset.evf}"]`);if(f){f.cal.value='s';f.era.value='1';f.y.value=y;f.m.value=m;f.d.value=d;f.t.focus();}}
-    box.querySelector('.bzres').innerHTML=`<span class="hint">已填入 ${y}-${pad(+m)}-${pad(+d)}${h!==''?` ${pad(+h)}:00`:''}${t==='ev'?'，填埋事件名再撳「加」':'，撳「排盤」就得'}。</span>`;}});
+    box.querySelector('.bzres').innerHTML=`<span class="hint">已填入 ${y}-${pad(+m)}-${pad(+d)}${h!==''?` ${pad(+h)}:00`:''}（${bzYr(+y)}）${t==='ev'?'，填埋事件名再撳「加」':'，已經排好盤'}。</span>`;
+    // 出生、睇運日期：撳日子就即刻排盤，唔使再撳「排盤」
+    if(t==='birth'||t==='at')run(readForm(),true);}});
 
 // 行星位置（占星）：用 astronomy-engine（撳開先載入），計地心黃經（回歸黃道）同逆行；出世用出生鐘錶時間減時區（夏令再減 1 個鐘），睇運日用流日正午
 // 內圈＝出世（本命），外圈＝睇運日（流日）；下面列流日行星同本命行星嘅相位（合 0°、六合 60°、刑 90°、拱 120°、沖 180°，容許 3°，月亮 5°）
@@ -2172,19 +2182,19 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-hsh]');if(
     const so=u==='t'?so0.nextHour(dir*2):u==='d'?so0.next(dir):u==='m'?so0.nextMonth(dir):so0.nextYear(dir);
     v={...LAST_V,lunar:false,leap:false,y:so.getYear(),m:so.getMonth(),d:so.getDay(),h:so.getHour(),mi:so.getMinute()};}
   HSH.busy=true;try{writeForm(v);run(v);}finally{HSH.busy=false;}});
-function run(v){
+function run(v,force){
   $('err').textContent='';
   if(!(v.y>=-2999&&v.y<=9999)){$('err').textContent='年份請填公元前 3000 年至公元 9999 年。';return;}
   if(isNaN(v.lon)){$('err').textContent='請填出生地經度，或者揀城市。';return;}
   if(v.at&&!validDate(v.at.y,v.at.m,v.at.d)){$('err').textContent='睇運日期冇呢一日，請再揀過。';return;}
   try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();setInSum(v);if(RUN_N++||fromQuery())mTab('chart');try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
-    LAST_V=v;if(!HSH.busy){HSH.base=null;HSH.off={y:0,m:0,d:0,t:0};}try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
+    LAST_V=v;trackChart(v,force);if(!HSH.busy){HSH.base=null;HSH.off={y:0,m:0,d:0,t:0};}try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
   catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
 }
 // 改命例時，「出生資料改做表格上面嘅資料」旁邊即時顯示表格而家嘅資料
 $('f').addEventListener('input',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
 $('f').addEventListener('change',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
-$('f').addEventListener('submit',e=>{e.preventDefault();const v=readForm();run(v);if(!$('err').textContent)track('chart',v);});
+$('f').addEventListener('submit',e=>{e.preventDefault();run(readForm(),true);});
 // 手機版分頁：排盤 in、命盤 chart、命例 case、更多 more（桌面版 CSS 唔理呢個設定）
 function mTab(k){document.body.dataset.mtab=k;document.querySelectorAll('.mnav [data-mtab-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.mtabGo===k?'page':'false'));
   if(k==='case')$('caseBox').open=true;if(isMob())scrollTo(0,0);}
@@ -2210,7 +2220,7 @@ try{const s=localStorage.getItem('bazi-last');if(s)init=Object.assign(init,JSON.
 // 打開網站時日期時間預設為香港回歸（1997-07-01 00:00），其他欄沿用上次
 Object.assign(init,{name:'香港回歸',lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0});
 // 網址有出生資料（分享連結）就用網址嗰個盤
-{const qv=fromQuery();if(qv)init=Object.assign(init,qv);}
+const INIT_Q=!!fromQuery();{const qv=fromQuery();if(qv)init=Object.assign(init,qv);}
 /* ---------- 命例 ---------- */
 // 有填 B8_CLOUD（Supabase）就同所有人共享，要登入先可以新增；冇就只存喺呢個瀏覽器
 const CLOUD=(window.B8_CLOUD&&window.B8_CLOUD.url&&window.B8_CLOUD.key)?{url:window.B8_CLOUD.url.replace(/\/$/,''),key:window.B8_CLOUD.key}:null;
@@ -2285,6 +2295,10 @@ const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random(
 function track(kind,input,caseId){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
   const body={kind,anon:ANON,mobile,...(input?{input}:{})},post=b=>api('usage',{method:'POST',body:JSON.stringify(b)});
   (caseId?post({...body,case_id:caseId}).catch(()=>post(body)):post(body)).catch(()=>{});}
+// 排盤記錄：唔止撳「排盤」，所有成功排出嚟嘅盤都記（分享連結、對盤 ‹ ›、睇運日期、事件、揀干支等）；
+// 同一個盤連續出現只記一次（撳「排盤」就照記）；開命例由 track('case') 記；開網預設盤唔記（嗰個係 visit）
+const TRK={last:'',skip:true};
+function trackChart(v,force){if(TRK.skip)return;const k=JSON.stringify(v);if(!force&&k===TRK.last)return;TRK.last=k;track('chart',v);}
 async function checkAdmin(){ADMIN=false;TIER='';if(CLOUD&&SESSION){try{ADMIN=(await api('admins?select=user_id')).length>0;}catch(e){}
   // 用戶等級（supabase/007_tiers.sql）：進階用戶 advance、高級用戶 premium；未設定就係普通用戶
   try{const r=await api('user_tiers?select=tier&user_id=eq.'+SESSION.user.id);TIER=(r[0]&&r[0].tier)||'';}catch(e){}}}
@@ -2445,7 +2459,7 @@ function renderSug(){
   document.querySelector('.tagsug').innerHTML=byUse(TAG_SUG).map(t=>`<button type="button" class="tag sug" data-sug="${esc(t)}">+${esc(t)}</button>`).join('');
   const used={};CASES.forEach(c=>(c.tags||[]).forEach(t=>used[t]=(used[t]||0)+1));
   const all=byUse([...new Set([...TAG_SUG,...Object.keys(used)])],used);
-  $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${(CLOUD?can.tagdel():!used[t]||can.tagdel())?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
+  $('tagMgrList').innerHTML=all.length?all.map(t=>`<span class="tagm"><span>#${esc(t)}${used[t]?` <small>${used[t]}</small>`:''}</span>${(CLOUD?can.tagdel():!used[t]||can.tagdel())?`<button type="button" class="tagx" data-tagdel="${esc(t)}" aria-label="刪除標籤 ${esc(t)}" title="刪除（撳兩下）">×</button>`:''}</span>`).join(''):'<span class="hint">未有標籤。</span>';
 }
 // 審計紀錄：管理員睇邊個用戶新增、修改、刪除咗乜（資料由 supabase/005_audit.sql 嘅 trigger 寫入）
 // 每頁幾多條：預設 20，記喺呢個瀏覽器；「全部」= 0（伺服器一次最多俾 1000 條，超過就照樣分頁）
@@ -2544,7 +2558,7 @@ $('audit').addEventListener('click',e=>{if(e.target.closest('[data-pcsave]'))sav
 $('lb').addEventListener('click',e=>{if(e.target.closest('[data-lbreload]'))loadPoints();});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],[data-usopen]');if(!b)return;
   if(b.dataset.uspage){US.p=Math.max(0,+b.dataset.uspage-1);loadUsage();return;}
-  const v=US.rows[+b.dataset.usopen].input;writeForm(v);run(v);mTab('chart');$('out').scrollIntoView({block:'start'});});
+  const v=US.rows[+b.dataset.usopen].input;writeForm(v);TRK.skip=true;try{run(v);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);mTab('chart');$('out').scrollIntoView({block:'start'});});
 $('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun2',e.target.value);}catch(x){}}if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,+b.dataset.aupage-1);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
 // 計法說明：淨係進階用戶、高級用戶同管理員先睇到（跟 can.sha）；普通用戶同未登入就收埋，自動轉去「盲派八字摘要」
@@ -2626,7 +2640,7 @@ const evKey=v=>`${v.t}|${v.y}-${v.m}-${v.d}`.slice(0,60);
 const evoteBtns=(c,v)=>{const m=(c.evVotes||{})[evKey(v)]||{},k=esc(evKey(v)),dis=can.vote()?'':' disabled title="登入先可以投票"';
   return `<span class="votes evv"><button type="button" class="vb${m.myVote===1?' on':''}" data-evote="1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===1}" title="準"${dis}>👍 ${m.likes||0}</button><button type="button" class="vb no${m.myVote===-1?' on':''}" data-evote="-1" data-case="${c.id}" data-ev="${k}" aria-pressed="${m.myVote===-1}" title="唔準"${dis}>👎 ${m.unlikes||0}</button></span>`;};
 function evBlock(c,ed){const evs=c.input.events||[];
-  return `<div class="ctags"><span class="cap">事件</span>${evs.length?`<span class="tags">${evs.map((v,i)=>`<button type="button" class="tag ev" data-evgo="${i}" data-id="${c.id}" title="用呢日睇運">${esc(v.t)} ${evTxt(v)}</button>${evoteBtns(c,v)}${ed?`<button type="button" class="tagx" data-evedit="${i}" data-id="${c.id}" aria-label="修改事件 ${esc(v.t)}" title="修改">✎</button><button type="button" class="tagx" data-evdel="${i}" data-id="${c.id}" aria-label="刪除事件 ${esc(v.t)}">×</button>`:''}`).join('')}</span>`:'<span class="hint">未有事件日期</span>'}</div>
+  return `<div class="ctags"><span class="cap">事件</span>${evs.length?`<span class="tags">${evs.map((v,i)=>`<button type="button" class="tag ev" data-evgo="${i}" data-id="${c.id}" title="用呢日睇運">${esc(v.t)} ${evTxt(v)}</button>${evoteBtns(c,v)}${ed?`<button type="button" class="tagx" data-evedit="${i}" data-id="${c.id}" aria-label="修改事件 ${esc(v.t)}" title="修改">✎</button><button type="button" class="tagx" data-evdel="${i}" data-id="${c.id}" aria-label="刪除事件 ${esc(v.t)}" title="刪除（撳兩下）">×</button>`:''}`).join('')}</span>`:'<span class="hint">未有事件日期</span>'}</div>
   ${ed?`<form class="row cnum cnumf" data-cnumf="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em">人數</span><label>兄弟姊妹+命主合共 <input type="number" name="sib" min="0" max="30" inputmode="numeric" placeholder="—" value="${c.input&&c.input.sib!=null?c.input.sib:''}" aria-label="兄弟姊妹連命主自己合共幾多人"></label><label>子女 <input type="number" name="kid" min="0" max="30" inputmode="numeric" placeholder="—" value="${c.input&&c.input.kid!=null?c.input.kid:''}" aria-label="子女數目"></label><button type="submit" class="lnk">存</button><span class="hint">（兄弟姊妹連命主自己計；唔知就留空）</span></form>`:''}
   ${ed?`<form class="row evadd" data-addev="${c.id}"><span class="cap" style="font-size:12px;color:var(--muted);min-width:3.5em" data-evcap>加事件</span><input type="hidden" name="idx" value=""><input name="t" list="evList" maxlength="30" required placeholder="例如結婚" aria-label="事件" style="width:7.5em"><select name="cal" aria-label="公曆／農曆"><option value="s">公曆</option><option value="l">農曆</option></select><select name="era" aria-label="公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" name="y" min="1" max="9999" required placeholder="年" aria-label="年" style="width:5em"><select name="m" aria-label="月"><option value="">— 月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1} 月</option>`).join('')}</select><label class="evleap" title="農曆閏月先用"><input type="checkbox" name="leap"> 閏</label><select name="d" aria-label="日"><option value="">— 日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1} 日</option>`).join('')}</select><select name="hr" aria-label="時辰" title="時辰只係記錄，唔影響計法；要揀埋日子先記">${EV_HR_OPTS}</select><button type="submit" class="lnk" data-evsub>加</button><button type="button" class="lnk" data-evcancel hidden>取消</button><datalist id="evList">${[...new Set([...EV_SUG,...TAG_SUG.filter(x=>!NODATE(x))])].map(x=>`<option value="${x}">`).join('')}</datalist></form><details class="bzpk" data-bzpk="ev" data-evf="${c.id}"><summary>🔎 用干支加事件（大運、流年、流月、流日）</summary>${bzSel(['大運','流年','流月','流日'])}<div class="row"><span class="hint">喺上面填事件名，再揀干支；可以淨係揀大運、或者大運＋流年，唔使揀晒</span><button type="button" class="go sm" data-bzgo>加事件</button></div><div class="bzres"></div></details>`:''}`;}
 const sortEv=a=>a.slice().sort((p,q)=>p.y-q.y||p.m-q.m||p.d-q.d);
@@ -2688,7 +2702,7 @@ document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='gbAdd'&&!f.da
 document.addEventListener('click',e=>{const t=e.target.closest('[data-gbdel],[data-gbreply],[data-gbcancel],[data-gbpage]');if(!t)return;
   if(t.dataset.gbpage){if(t.disabled)return;GBP=+t.dataset.gbpage;GBR=null;renderGB();$('gb').scrollIntoView({block:'start'});return;}
   if(t.dataset.gbreply){GBR=t.dataset.gbreply;renderGB();const ta=document.querySelector('.gbreply textarea');if(ta)ta.focus();return;}
-  if(t.hasAttribute('data-gbcancel')){GBR=null;renderGB();return;}if(!twice(t,'確定刪除？'))return;
+  if(t.hasAttribute('data-gbcancel')){GBR=null;renderGB();return;}if(!twice(t,'再撳一下刪除'))return;
   GB.remove(t.dataset.gbdel).then(reloadGB).catch(err=>{$('gbMsg').textContent='刪除失敗：'+err.message;});});
 async function reloadCases(){
   try{if(CLOUD)TAG_SUG=await TagStore.list().catch(()=>TAG_SUG);CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
@@ -2720,9 +2734,9 @@ function caseFromRow(o){
   const sb=numIn(o['兄弟姊妹+命主合共']??o['兄弟姊妹']),kd=numIn(o['子女']);if(sb!=null)input.sib=sb;if(kd!=null)input.kid=kd;
   if(!o['名稱']||isNaN(input.y))return null;
   return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤']),...(PRIV_OK&&/是|1|true/i.test(o['私人']||'')?{private:true}:{})};}
-// 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變「確定？」，三秒內再撳先執行
+// 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變紅色「再撳一下…」，四秒內再撳先執行
 function twice(btn,label){if(btn.dataset.armed)return true;btn.dataset.armed='1';const old=btn.innerHTML;btn.innerHTML=label;btn.classList.add('armed');
-  setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},3000);return false;}
+  setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.innerHTML=old;btn.classList.remove('armed');}},4000);return false;}
 // 同名又同出生資料（性別、曆法、年月日時分、子時、經度、時區、夏令、真太陽時）當係同一個命例
 // 兄弟姊妹連命主自己合共人數同子女數目：存喺 input 入面（sib／kid），留空即係唔知
 const numIn=v=>{v=String(v??'').trim();if(v==='')return null;const n=Math.round(+v);return isNaN(n)||n<0?null:Math.min(n,30);};
@@ -2744,7 +2758,7 @@ document.addEventListener('click',e=>{
     auth('signup?redirect_to='+encodeURIComponent(location.href.split('#')[0]),{email:em,password:pw,data:{name:$('lgName').value.trim()||em.split('@')[0]}}).then(async j=>{if(j.access_token){saveSess(sessFrom(j));await checkAdmin();reloadCases();}else $('caseMsg').textContent='已寄確認電郵畀你，撳咗電郵入面條 link 之後再登入。';}).catch(err=>$('caseMsg').textContent='註冊失敗：'+err.message);return;}
   if(t.dataset.tagdel){const g=t.dataset.tagdel,hit=CASES.filter(c=>(c.tags||[]).includes(g));
     if((CLOUD||hit.length)&&!can.tagdel())return;
-    if(!twice(t,hit.length?`確定刪除？（${hit.length} 個命例用緊）`:'確定刪除？'))return;
+    if(!twice(t,hit.length?`再撳一下刪除（${hit.length} 個命例用緊）`:'再撳一下刪除'))return;
     TAGF.delete(g);
     busy(async()=>{await TagStore.remove(g);for(const c of hit)await Store.update(c.id,{tags:c.tags.filter(x=>x!==g)});});return;}
   if(t.dataset.addsug){const c=CASES.find(x=>x.id===t.dataset.id);if(c)busy(()=>Store.update(c.id,{tags:[...new Set([...(c.tags||[]),t.dataset.addsug])]}));return;}
@@ -2761,9 +2775,9 @@ document.addEventListener('click',e=>{
       f.querySelector('[data-evcap]').textContent='改事件';f.querySelector('[data-evsub]').textContent='改';f.querySelector('[data-evcancel]').hidden=false;f.querySelector('[name=t]').focus();}
     else{f.reset();set('idx','');f.querySelector('[data-evcap]').textContent='加事件';f.querySelector('[data-evsub]').textContent='加';f.querySelector('[data-evcancel]').hidden=true;}
     return;}
-  if(t.dataset.evdel!==undefined){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!twice(t,'確定？'))return;
+  if(t.dataset.evdel!==undefined){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!twice(t,'再撳一下刪除'))return;
     const evs=(c.input.events||[]).filter((_,i)=>i!==+t.dataset.evdel);busy(()=>Store.update(c.id,{input:{...c.input,events:evs}}));return;}
-  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);run(c.input);track('case',c.input,c.id);renderCases();
+  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);TRK.skip=true;try{run(c.input);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);track('case',c.input,c.id);renderCases();
     if(matchMedia('(max-width:1099px)').matches)$('caseNote').scrollIntoView({behavior:'smooth'});}
   else if(t.dataset.evote){const c=CASES.find(x=>x.id===t.dataset.case),k=t.dataset.ev,v=+t.dataset.evote,m=c&&(c.evVotes||{})[k];if(c)busy(()=>Store.evote(c.id,k,m&&m.myVote===v?0:v));}
   else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
@@ -2771,7 +2785,7 @@ document.addEventListener('click',e=>{
   else if(t.hasAttribute('data-close')){CUR=null;EDIT=false;renderCases();}
   else if(t.dataset.priv){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!can.edit(c))return;const v=t.dataset.priv==='1';
     if(twice(t,v?'確定改做私人？其他人會睇唔到，亦唔再計分':'確定改做公開？所有人都會睇到'))busy(()=>Store.update(c.id,{private:v}));}
-  else if(t.dataset.del){if(!can.del(CASES.find(x=>x.id===t.dataset.del)))return;if(twice(t,'確定刪除？'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
+  else if(t.dataset.del){if(!can.del(CASES.find(x=>x.id===t.dataset.del)))return;if(twice(t,'再撳一下刪除'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
   else if(t.id==='caseExport'){if(!can.io())return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([toCSV(CASES)],{type:'text/csv;charset=utf-8'}));a.download='命例.csv';a.click();}
 });
 document.addEventListener('submit',e=>{
@@ -2880,10 +2894,12 @@ $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$
     else SESSION=loadSess();
     await checkAdmin();
     track('visit');
+    // 經分享連結打開（網址有出生資料）：開網嗰個盤都記低（等登入資料載入咗先記，先知係邊個）
+    if(INIT_Q&&LAST_V)trackChart(LAST_V,true);
   }
   reloadCases();
 })();
-writeForm(init);run(init);
+writeForm(init);run(init);TRK.skip=false;TRK.last=JSON.stringify(LAST_V);
 document.addEventListener('toggle',e=>{const f=e.target.dataset&&e.target.dataset.fold;if(f)FOLD[f]=e.target.open;},true);
 })();
 // 繁簡轉換：右上角個掣將成頁文字轉做簡體（用 OpenCC，第一次撳先載入），再撳就還原繁體原文。
