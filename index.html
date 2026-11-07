@@ -2366,7 +2366,11 @@ function track(kind,input,caseId){if(!CLOUD)return;const mobile=matchMedia('(max
 // 排盤記錄：唔止撳「排盤」，所有成功排出嚟嘅盤都記（分享連結、對盤 ‹ ›、睇運日期、事件、揀干支等）；
 // 同一個盤連續出現只記一次（撳「排盤」就照記）；開命例由 track('case') 記；開網預設盤唔記（嗰個係 visit）
 const TRK={last:'',skip:true};
-function trackChart(v,force){if(TRK.skip)return;const k=JSON.stringify(v);if(!force&&k===TRK.last)return;TRK.last=k;track('chart',v);}
+// 同一個出生資料（唔計睇運日）10 分鐘內重複排盤、重新載入或者撳返分享連結，淨係記一次，費事審計記錄洗版
+function trackChart(v,force){if(TRK.skip)return;const k=JSON.stringify(v);if(!force&&k===TRK.last)return;TRK.last=k;
+  const b=JSON.stringify({...v,at:undefined}),now=Date.now();let m={};try{m=JSON.parse(localStorage.getItem('b8-trk')||'{}');}catch(e){}
+  if(m[b]&&now-m[b]<6e5)return;for(const x in m)if(now-m[x]>6e5)delete m[x];m[b]=now;try{localStorage.setItem('b8-trk',JSON.stringify(m));}catch(e){}
+  track('chart',v);}
 async function checkAdmin(){ADMIN=false;TIER='';if(CLOUD&&SESSION){try{ADMIN=(await api('admins?select=user_id')).length>0;}catch(e){}
   // 用戶等級（supabase/007_tiers.sql）：進階用戶 advance、高級用戶 premium；未設定就係普通用戶
   try{const r=await api('user_tiers?select=tier&user_id=eq.'+SESSION.user.id);TIER=(r[0]&&r[0].tier)||'';}catch(e){}}}
