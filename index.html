@@ -256,8 +256,8 @@ td.chain{position:relative;overflow:visible}
 .ntabs{margin-bottom:10px}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}
-.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa{display:none}
-.ntabs{flex-wrap:wrap}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lqa{margin:0 0 14px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--soft);border-radius:6px}.lqa .q{font-weight:600}.lqa .meta{font-size:12px;color:var(--muted)}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}.clsn,a.yt{font-size:12px}
+.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
+.ntabs{flex-wrap:wrap}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lqa{margin:0 0 14px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--soft);border-radius:6px}.lqa .q{font-weight:600}.lqa .meta{font-size:12px;color:var(--muted)}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}.clsn,a.yt{font-size:12px}.anseg button{border:0;background:none;font:inherit;font-size:14px;padding:5px 12px;cursor:pointer;color:inherit}.anseg button[aria-pressed=true]{background:var(--accent);color:#fff}.angrp{margin:0 0 6px;padding:6px 10px;border:1px solid var(--line);border-radius:6px}.angrp summary{cursor:pointer}.ancases{margin-top:6px;font-size:14px;line-height:1.9}.antab{border-collapse:collapse;font-size:13px;margin:6px 0}.antab th,.antab td{padding:2px 8px;border-bottom:1px solid var(--line);text-align:left}.anpick{margin:0 0 8px}.anpick .on{font-weight:700;text-decoration:underline}
 .sifu{font-size:14px;color:var(--ink);line-height:1.7;max-width:900px}
 .sifu h3{margin:0 0 6px;font-size:18px}
 .sifu h4{margin:14px 0 4px;font-size:15px;color:var(--accent)}
@@ -543,8 +543,8 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 </section>
 <section class="panel notes fold folded" data-sec="calc">
   <h2 class="foldh">隱姓先生課堂 · 盲派八字摘要 · 八字口訣 · 計法說明</h2>
-  <p class="hint nlogin">🔒 登入先睇到隱姓先生課堂、盲派八字摘要、八字口訣同計法說明。</p>
-  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="lsum" checked>隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label></div>
+  <p class="hint nlogin">🔒 登入先睇到隱姓先生課堂、盲派八字摘要、八字口訣、計法說明同命例數據庫分析。</p>
+  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="lsum" checked>隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
   <div class="npane" id="np-calc">
   <p><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
@@ -837,6 +837,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   </div>
   <div class="npane sifu" id="np-lsum"><div class="lsel row"><span class="lpick"></span></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lqa"><div class="lsel row"><input type="search" class="lq" data-lqa placeholder="搵問題…" aria-label="搵問題"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
+  <div class="npane sifu" id="np-an"><div class="lsel row seg anseg"><button type="button" data-ansub="ev">事件</button><button type="button" data-ansub="ss">十神結構</button><button type="button" data-ansub="gz">干支組合</button></div><div class="lbody"><p class="hint">揀「命例數據庫分析」先計。</p></div></div>
   <div class="npane sifu" id="np-ltxt"><div class="lsel row"><span class="lpick"></span><input type="search" class="lq" data-lq placeholder="搵字幕…" aria-label="搵字幕"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
 </section>
 <section class="panel fold folded" id="lb" data-sec="lb" hidden>
@@ -2176,6 +2177,105 @@ function lsQA(ord){const q=(LS.qq||'').trim(),nm=id=>{const c=(typeof CASES!=='u
   const rows=ord.flatMap(l=>(l.qa||[]).map(x=>({l,x}))).filter(({x})=>!q||(x.q+x.a+(x.who||'')).includes(q));
   $('np-lqa').querySelector('.lbody').innerHTML=(rows.length?'':'<p class="hint">搵唔到。</p>')+rows.map(({l,x})=>`<div class="lqa"><div class="q">❓ ${esc(x.q)}</div><div class="meta">${esc(x.who||'')} · <button type="button" class="lnk" data-lgo="${l.id}">${esc(l.short||'')}</button> ${lsA(l.id,x.t)}</div><div>💬 ${lsFmt(l.id,x.a)}</div>${(x.cases||[]).length?`<div class="meta">命例：${x.cases.map((id,i)=>`<button type="button" class="lnk" data-open="${id}" data-lcase>${esc(nm(id)||(x.cn||[])[i]||'打開命例')}</button>`).join('　')}</div>`:''}</div>`).join('');}
 document.addEventListener('input',e=>{if(e.target.matches('[data-lqa]')){LS.qq=e.target.value;lsIndex().then(idx=>lsQA([...idx].sort((a,b)=>(b.n||0)-(a.n||0))));}});
+// 命例數據庫分析：用全部公開命例（唔計私人命例）分組，睇每組有乜共同特徵；全部喺瀏覽器計，唔改任何計法
+const AN={sub:'ev',g:'mo',open:{}};
+const AN_EV=[
+  ['fa','父親過身',(t,g)=>/卒\[父\]|喪父|父親?.{0,6}(過身|去世|離世|病逝|死)/.test(t)],
+  ['kin','其他親人過身',(t,g)=>/卒\[(?!父\])|(母|祖|外婆|外公|兄|弟|姐|妹|妻|老婆|丈夫|老公|仔|個女|女兒).{0,6}(過身|去世|離世|病逝|自殺|死)/.test(t)&&!/父親?.{0,6}(過身|去世|離世|病逝|死)|卒\[父\]/.test(t)],
+  ['die','本人過身',(t,g)=>/^(過身|去世|離世|病逝|被殺|遇刺|自殺|死)/.test(t)||g==='過身'],
+  ['mar','結婚',(t,g)=>/結婚|嫁|娶|大婚/.test(t)&&!/差啲|父|母/.test(t)||g==='結婚'],
+  ['div','離婚',(t,g)=>/離婚/.test(t)&&!/父|母/.test(t)||g==='離婚'],
+  ['acc','意外受傷',(t,g)=>/意外|撞車|車禍|受傷|傷殘|雷電|墮|跌傷/.test(t)||/^(意外|傷殘)$/.test(g)],
+  ['ill','疾病手術（本人）',(t,g)=>/病|手術|入醫院|癌|中風|生蛇/.test(t)&&!/父|母|祖/.test(t)||/^(疾病|手術)$/.test(g)],
+  ['law','官非坐監',(t,g)=>/官非|坐監|入獄|殺人|下放|被捕/.test(t)||/^(坐監|殺人|下放)$/.test(g)],
+  ['rich','財運富貴',(t,g)=>/首富|發達|賺錢|中獎|富豪/.test(t)||/^(財運)$/.test(g)],
+  ['roy','皇室',(t,g)=>/登基|退位|即位/.test(t)||/皇室$/.test(g)],
+  ['king','登基／即位',(t,g)=>/登基|即位/.test(t)],
+  ['monk','出家人',(t,g)=>g==='出家人'],
+  ['mute','啞巴',(t,g)=>g==='啞巴']];
+const AN_C=new Map();
+function anCase(c){const k=c.id+JSON.stringify(c.input);if(AN_C.has(k))return AN_C.get(k);let r=null;
+  try{const P=compute(c.input).P,dm=gi(P[2][0]),gs=P.map(p=>p[0]),zs=P.map(p=>p[1]),F=new Set(),pos='年月日時';
+    const add=s=>F.add(s),ss=g=>shishen(dm,gi(g));
+    add('日主'+gs[2]);add('日主屬'+WX[gw(dm)]);add('日柱'+P[2]);
+    const mo=ss(HIDE[zs[1]][0]);add('月令'+mo);
+    [0,1,3].forEach(i=>add('天干透'+ss(gs[i])));
+    zs.forEach((z,i)=>{if(i!==1)add('地支見'+ss(HIDE[z][0]));});
+    const wx=new Set();gs.forEach(g=>wx.add(gw(gi(g))));zs.forEach(z=>HIDE[z].split('').forEach(h=>wx.add(gw(gi(h)))));
+    [0,1,2,3,4].forEach(w=>{if(!wx.has(w))add('缺'+WX[w]);});
+    if(KUIGANG.includes(P[2]))add('日柱魁罡');if(P.some(p=>KUIGANG.includes(p)))add('有魁罡柱');
+    if(zs[2]==='辰'||zs[2]==='戌')add('日坐辰戌');
+    gs.forEach(g=>{const r=YANGREN[g];if(r&&zs.includes(r)){add('有陽刃');if(zs.includes(RENCHONG[r]))add('陽刃逢沖');}});
+    const pr=(a,b)=>[a+b,b+a];
+    for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){
+      const g2=pr(gs[i],gs[j]),z2=pr(zs[i],zs[j]);
+      const h=g2.find(x=>GHE[x]);if(h)add('天干'+h+GHE[h]);
+      const gc=g2.find(x=>GCHONG.includes(x));if(gc)add('天干'+gc+'沖');
+      const lh=z2.find(x=>LIUHE[x]);if(lh)add('地支'+lh+'合');
+      const ch=z2.find(x=>CHONG.includes(x));if(ch){add('地支'+ch+'沖');if(i===2||j===2)add('日支被沖');}
+      const cu=z2.find(x=>CHUAN.includes(x));if(cu){add('地支'+cu+'穿');if(i===2||j===2)add('日支被穿');}
+      if(lh&&(i===2||j===2))add('日支六合');
+      if(P[i]===P[j])add('柱伏吟（'+pos[i]+pos[j]+'）');
+      if(gs[i]===gs[j]&&P[i]!==P[j])add('天干伏吟');if(zs[i]===zs[j]&&P[i]!==P[j])add('地支伏吟');}
+    SANHE.forEach(([s,w])=>{if(s.split('').every(z=>zs.includes(z)))add('三合'+w+'局');});
+    SANHUI.forEach(([s,w])=>{if(s.split('').every(z=>zs.includes(z)))add('三會'+w+'方');});
+    SANXING.forEach(([s,n])=>{if(s.split('').every(z=>zs.includes(z)))add(n);});
+    if(new Set(gs).size===1)add('天干一氣');if(new Set(zs).size===1)add('地支一氣');
+    const tos=[...new Set([0,1,3].map(i=>SS1[ss(gs[i])]))].sort().join('');
+    const evs=[];(c.input.events||[]).forEach(e=>{const t=String(e.t||'');AN_EV.forEach(([k,,f])=>{if(f(t,''))evs.push({k,e});});});
+    const cats=new Set(evs.map(x=>x.k));(c.tags||[]).forEach(g=>AN_EV.forEach(([k,,f])=>{if(f('',g))cats.add(k);}));
+    r={c,P,dm,F,mo,tos,cats,evs};}catch(e){}
+  AN_C.set(k,r);return r;}
+// 流年干支：知道月份就用節氣（立春）計，淨係知年份就用該年
+function anYearGz(e){const y=+e.y;if(!y)return null;try{if(e.m&&e.p!=='y'&&e.p!=='dy')return Solar.fromYmd(y,+e.m,+e.d||15).getLunar().getEightChar().getYear();}catch(x){}
+  const n=((y-4)%60+60)%60;return GAN[n%10]+ZHI[n%12];}
+function anYearRel(P,yg){const d=P[2],o=[],z2=[yg[1]+d[1],d[1]+yg[1]],g2=[yg[0]+d[0],d[0]+yg[0]];
+  if(z2.some(x=>CHONG.includes(x)))o.push('流年沖日支');if(z2.some(x=>LIUHE[x]))o.push('流年合日支');if(z2.some(x=>CHUAN.includes(x)))o.push('流年穿日支');
+  if(yg[1]===d[1])o.push('流年伏吟日支');if(g2.some(x=>GHE[x]))o.push('流年天干合日主');if(yg[0]===d[0])o.push('流年天干同日主');
+  const s=shishen(gi(d[0]),gi(yg[0]));if(s==='七殺')o.push('流年天干七殺');
+  if(P.some(p=>p===yg))o.push('流年伏吟原局柱');if(P.some(p=>[yg[1]+p[1],p[1]+yg[1]].some(x=>CHONG.includes(x))))o.push('流年沖原局任何地支');return o;}
+// 隨機一年嘅機率（流年地支 12 個、天干 10 個、干支 60 個）；「原局」兩項按每個盤自己計
+const AN_BASE={流年沖日支:()=>1/12,流年合日支:()=>1/12,流年穿日支:()=>1/12,流年伏吟日支:()=>1/12,流年天干合日主:()=>1/10,流年天干同日主:()=>1/10,流年天干七殺:()=>1/10,
+  流年伏吟原局柱:P=>new Set(P).size/60,流年沖原局任何地支:P=>new Set(P.map(p=>p[1])).size/12};
+const anPct=x=>Math.round(x*100)+'%';
+const anBtn=r=>`<button type="button" class="lnk" data-open="${r.c.id}" data-lcase title="${esc(r.P.join(' '))}">${esc(r.c.name)}</button>`;
+function anTraits(rows,all,lim){const n=rows.length,N=all.length,cnt={},base={};rows.forEach(r=>r.F.forEach(f=>cnt[f]=(cnt[f]||0)+1));all.forEach(r=>r.F.forEach(f=>base[f]=(base[f]||0)+1));
+  const out=Object.keys(cnt).filter(f=>cnt[f]>=2).map(f=>{const p=cnt[f]/n,b=base[f]/N;return {f,k:cnt[f],p,b,l:p/b};}).filter(x=>x.l>=1.4&&x.p>=0.2).sort((a,b)=>b.l*Math.sqrt(b.k)-a.l*Math.sqrt(a.k)).slice(0,lim||10);
+  return out.length?`<table class="antab"><thead><tr><th>特徵</th><th>呢組</th><th>全部命例</th><th>倍數</th></tr></thead><tbody>${out.map(x=>`<tr><td>${esc(x.f)}</td><td>${x.k}/${n}（${anPct(x.p)}）</td><td>${anPct(x.b)}</td><td>×${x.l.toFixed(1)}</td></tr>`).join('')}</tbody></table>`:'<p class="hint">搵唔到明顯共同特徵（最少要 2 個命例、比例高過全部命例 1.4 倍）。</p>';}
+function anGroup(id,title,rows,all,extra){const op=AN.open[id];
+  return `<details class="angrp" data-angrp="${esc(id)}" ${op?'open':''}><summary><b>${esc(title)}</b> <span class="hint">${rows.length} 個命例</span></summary>${extra||''}${op?anTraits(rows,all):''}<div class="ancases">${rows.map(anBtn).join('　')}</div></details>`;}
+function anEvBreak(rows){const c={};rows.forEach(r=>r.cats.forEach(k=>c[k]=(c[k]||0)+1));const s=AN_EV.filter(([k])=>c[k]).map(([k,n])=>`${n} ${c[k]}`);return s.length?`<p class="hint">事件：${esc(s.join('、'))}</p>`:'';}
+function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelector('.lbody');
+  if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先睇到命例分析。</p>';return;}
+  const all=CASES.filter(c=>!c.private&&!(c.tags||[]).includes('國家地區')).map(anCase).filter(Boolean);
+  box.querySelectorAll('[data-ansub]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ansub===AN.sub));
+  if(!all.length){body.innerHTML='<p class="hint">未有命例。</p>';return;}
+  const head=`<p class="hint">用 ${all.length} 個公開命例（唔計私人命例同國家地區盤）。「倍數」= 呢組有呢個特徵嘅比例 ÷ 全部命例嘅比例；樣本少，只係俾大家搵線索，唔係定論。撳開每組先計特徵。</p>`;
+  let h='';
+  if(AN.sub==='ev'){
+    h=AN_EV.map(([k,n])=>{const rows=all.filter(r=>r.cats.has(k));if(!rows.length)return '';
+      let yr='';if(AN.open['ev'+k]){const ev=[];rows.forEach(r=>r.evs.filter(x=>x.k===k).forEach(x=>{const g=anYearGz(x.e);if(g)ev.push({r,g,rel:anYearRel(r.P,g)});}));
+        if(ev.length){const c={};ev.forEach(x=>x.rel.forEach(s=>c[s]=(c[s]||0)+1));
+          const bs=s=>ev.reduce((t,x)=>t+AN_BASE[s](x.r.P),0)/ev.length;
+          yr=`<p class="hint">有年份嘅事件 ${ev.length} 件，事件嗰年流年同原局嘅關係（「隨機一年」= 求其揀一年會有呢個關係嘅機會）：</p><table class="antab"><thead><tr><th>流年</th><th>事件</th><th>隨機一年</th></tr></thead><tbody>${Object.keys(c).sort((a,b)=>c[b]-c[a]).map(s=>`<tr><td>${esc(s)}</td><td>${c[s]}/${ev.length}（${anPct(c[s]/ev.length)}）</td><td>${anPct(bs(s))}</td></tr>`).join('')}</tbody></table>`;}}
+      return anGroup('ev'+k,n,rows,all,yr);}).join('');}
+  else if(AN.sub==='ss'){
+    const G={mo:['月令十神',r=>'月令'+r.mo],dm:['日主',r=>'日主'+r.P[2][0]+'（'+WX[gw(r.dm)]+'）'],tos:['天干透出十神組合',r=>'透 '+r.tos]};
+    const [,f]=G[AN.g]||G.mo,m=new Map();all.forEach(r=>{const k=f(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r);});
+    h=`<div class="row anpick">${Object.entries(G).map(([k,[n]])=>`<button type="button" class="lnk${AN.g===k?' on':''}" data-ang="${k}">${n}</button>`).join('　')}</div>`
+      +[...m].filter(([,v])=>v.length>=2).sort((a,b)=>b[1].length-a[1].length).map(([k,v])=>anGroup('ss'+k,k,v,all,anEvBreak(v))).join('');}
+  else if(AN.sub==='gz'){
+    const same=(f,lab)=>{const m=new Map();all.forEach(r=>{const k=f(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r);});return [...m].filter(([,v])=>v.length>=2).sort((a,b)=>b[1].length-a[1].length).map(([k,v])=>anGroup('gz'+lab+k,lab+' '+k,v,all,anEvBreak(v))).join('');};
+    const FE=['日柱魁罡','有魁罡柱','日坐辰戌','有陽刃','陽刃逢沖','日支被沖','日支六合','日支被穿','天干伏吟','地支伏吟','天干一氣','地支一氣'];
+    const fx=[...new Set(all.flatMap(r=>[...r.F]))].filter(f=>/^(三合|三會|無恩|恃勢|柱伏吟|天干..合|天干..沖|地支..沖|地支..合)/.test(f)||FE.includes(f));
+    const feat=fx.map(f=>[f,all.filter(r=>r.F.has(f))]).filter(([,v])=>v.length>=2).sort((a,b)=>b[1].length-a[1].length);
+    h=`<h4>相同八字</h4>${same(r=>r.P.join(' '),'八字')||'<p class="hint">冇。</p>'}<h4>相同日柱</h4>${same(r=>r.P[2],'日柱')}<h4>干支組合</h4>${feat.map(([f,v])=>anGroup('gzf'+f,f,v,all,anEvBreak(v))).join('')}`;}
+  body.innerHTML=head+h;}
+document.addEventListener('click',e=>{const s=e.target.closest('[data-ansub]');if(s){AN.sub=s.dataset.ansub;anDraw();return;}
+  const g=e.target.closest('[data-ang]');if(g){AN.g=g.dataset.ang;anDraw();}});
+document.addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('[data-angrp]'))return;const id=d.dataset.angrp,was=!!AN.open[id];AN.open[id]=d.open;if(d.open&&!was)anDraw();},true);
+document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab][value=an]'))anDraw();});
+const anOn=()=>{const r=document.querySelector('input[name=ntab][value=an]');return r&&r.checked;};
 // 開某一課：揀「課堂總結」分頁（電腦版打開計法嗰格，手機版轉去計法頁）
 function lsOpen(id,tab){LS.cur=id;const r=document.querySelector(`input[name=ntab][value=${tab||'lsum'}]`);if(r)r.checked=true;SECF.calc=true;applySec();
   if(document.body.dataset.mtab)mTab('calc');lsDraw().then(()=>document.querySelector('.notes').scrollIntoView({block:'start'}));}
@@ -2679,7 +2779,7 @@ function renderCases(){
   $('casePager').innerHTML=per+(np>1?`<button type="button" class="lnk" data-cpage="${CP-1}" ${CP===1?'disabled':''}>‹ 上一頁</button>${Array.from({length:np},(_,i)=>i+1).filter(i=>i===1||i===np||Math.abs(i-CP)<=2).map((i,k,a)=>(k&&i-a[k-1]>1?'<span class="hint">…</span>':'')+`<button type="button" class="pg${i===CP?' on':''}" data-cpage="${i}" aria-current="${i===CP}">${i}</button>`).join('')}<button type="button" class="lnk" data-cpage="${CP+1}" ${CP===np?'disabled':''}>下一頁 ›</button>`:'');
   $('caseList').innerHTML=list.length?shown.map(c=>`<li class="case${CUR===c.id?' on':''}"><button type="button" class="cname" data-open="${c.id}"><b>${c.private?'<span class="lock" title="私人命例：淨係自己同管理員睇到">🔒</span>':''}${esc(c.name)}</b><span>${birthTxt(c.input)}</span>${c.notes?`<span class="cnote">${esc(c.notes.split('\n')[0])}</span>`:''}</button>${tagChips(c.tags)}${voteBtns(c)}</li>`).join('')
     :`<li class="hint">${CLOUD&&!SESSION?'🔒 登入先睇到命例。':CASES.length?'搵唔到。':'未有命例。'+(can.add()?'排好盤之後，喺上面打名再撳「儲存」。':'')}</li>`;
-  showCase(CASES.find(c=>c.id===CUR));
+  showCase(CASES.find(c=>c.id===CUR));if(anOn())anDraw();
   renderSug();renderAuth();
 }
 function showCase(c){
