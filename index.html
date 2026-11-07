@@ -1933,6 +1933,8 @@ function shenSha(cols){const nat=h=>cols.find(c=>c.h===h&&c.gz),D=nat('日柱'),
     <h3>神煞代表表（自己查）</h3><div class="ssw">${full(SS_GAN,GAN,'日干')}</div><div class="ssw">${full(SS_ZHI,ZHI,'年支')}</div>
     <p class="hint">日干查紅艷至天乙，年支查紅鸞至驛馬；對盤上顯示緊嘅柱（原局、大運、流年、流月、流日等）。學堂對天干，其他對地支。神煞只係標示，唔影響計法。</p></details></section>`;}
 let SS_OPEN=true;document.addEventListener('toggle',e=>{if(e.target.matches&&e.target.matches('[data-ss]'))SS_OPEN=e.target.open;},true);
+// 人元司令表：月支藏干各自當令幾多日
+const SL_T={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
 function render(){
   const {inp,c,sol,lun,ec,yun,dys,P,dm}=S;
   const today=refDay().toYmd();
@@ -1992,7 +1994,7 @@ function render(){
   S.swOn=(VIEW.sw==null?can.sw():VIEW.sw)&&can.sw();
   S.swOk=can.sw();S.swShow=S.swOn&&S.swOk;{const li=document.getElementById('r-s1');if(li)li.hidden=!S.swOk;const lw=document.getElementById('r-wk');if(lw)lw.hidden=!ADMIN;}
   // 人元司令：按出生時離上一個「節」幾多日，決定月支藏干邊個當令（月令分日用事）
-  const SL={子:[['壬',10],['癸',20]],丑:[['癸',9],['辛',3],['己',18]],寅:[['戊',7],['丙',7],['甲',16]],卯:[['甲',10],['乙',20]],辰:[['乙',9],['癸',3],['戊',18]],巳:[['戊',5],['庚',9],['丙',16]],午:[['丙',10],['己',9],['丁',11]],未:[['丁',9],['乙',3],['己',18]],申:[['己',7],['戊',3],['壬',3],['庚',17]],酉:[['庚',10],['辛',20]],戌:[['辛',9],['丁',3],['戊',18]],亥:[['戊',7],['甲',5],['壬',18]]};
+  const SL=SL_T;
   const jie=lun.getPrevJie(false),slDays=sol.getJulianDay()-jie.getSolar().getJulianDay(),slT=SL[P[1][1]],jn=JIE[(zi(P[1][1])+10)%12];
   let slG=slT[slT.length-1][0];for(let a=0,i=0;i<slT.length;i++){a+=slT[i][1];if(slDays<a){slG=slT[i][0];break;}}
   // 最強五行（有顯示先計）：同五行嘅字箭咀乘 AW.sw
@@ -2233,8 +2235,40 @@ function anCase(c){const k=c.id+JSON.stringify(c.input);if(AN_C.has(k))return AN
     SANXING.forEach(([s,n])=>{if(s.split('').every(z=>zs.includes(z)))add(n);});
     if(new Set(gs).size===1)add('天干一氣');if(new Set(zs).size===1)add('地支一氣');
     const tos=[...new Set([0,1,3].map(i=>SS1[ss(gs[i])]))].sort().join('');
-    r={c,P,dm,F,mo,tos};}catch(e){}
+    const W=anWork(c.input);if(W){W.F.forEach(f=>F.add(f));}
+    r={c,P,dm,F,mo,tos,W};}catch(e){}
   AN_C.set(k,r);return r;}
+// 做功角度（原局四柱）：最強五行三個推論、某五行嘅字有冇粘連、粘連解唔解得開（啟動＝七殺嚟咗解開；冇啟動＝解唔開／做唔到功）
+function anWork(inp){try{const X=compute(inp),{P,lun,ec,sol}=X;
+  const jie=lun.getPrevJie(false),d=sol.getJulianDay()-jie.getSolar().getJulianDay(),T=SL_T[P[1][1]];let slG=T[T.length-1][0];for(let a=0,i=0;i<T.length;i++){a+=T[i][1];if(d<a){slG=T[i][0];break;}}
+  const mg=mingGong(lun,ec),sw={};['s1','yue','sl'].forEach(m=>sw[m]=strongestBy(m,P,mg,slG).el);
+  const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2],dm:true},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}];
+  const ZG=zhaogan(c4.map(c=>({gz:c.gz,dyn:false,lbl:c.h[0]}))),L=[0,1].map(k=>chains(c4,k,k?ZG.br:ZG.st)),A=[0,1].map(k=>activation(c4,k,L[k],k?ZG.br:ZG.st,[]));
+  const info=E=>{let n=0,lk=0,stuck=0,ok=0;[0,1].forEach(k=>c4.forEach((c,i)=>{const e=k?ZWX[zi(c.gz[1])]:gw(gi(c.gz[0]));if(e!==E)return;n++;const m=L[k].filter(l=>l.a===i||l.b===i).length;lk+=m;if(m){if(A[k][i][0]>0)ok++;else stuck++;}}));return {n,lk,stuck,ok};};
+  const F=new Set(),W={sw,info:{}};
+  Object.entries({s1:'推論1',yue:'推論2',sl:'推論3'}).forEach(([m,t])=>F.add('最強五行'+WX[sw[m]]+'（'+t+'）'));
+  const add=(nm,E)=>{const x=info(E);W.info[nm]=x;if(!x.n)return;if(x.lk)F.add(nm+'字有粘連');if(x.lk>=3)F.add(nm+'字粘連≥3條');if(x.stuck)F.add(nm+'字粘連解唔開');if(x.stuck&&!x.ok)F.add(nm+'字全部做唔到功');};
+  add('金',3);add('最強五行（推論1）',sw.s1);
+  if(sw.s1===3&&info(3).stuck)F.add('啞巴條件（推論1）：最強五行金＋金字粘連解唔開');
+  if([sw.yue,sw.sl].includes(3)&&info(3).stuck)F.add('啞巴條件（推論2或3）：最強五行金＋金字粘連解唔開');
+  // 天干同地支分開睇：金干粘連解唔開；金支（申酉）被原局其他地支沖、刑、害（BR_ACT）或者火支（巳午）剋，同埋有冇啟動
+  const gx={n:0,lk:0,stuck:0},zx={n:0,hit:{沖:0,刑:0,害:0,剋:0},act:0,idle:0};
+  c4.forEach((c,i)=>{if(gw(gi(c.gz[0]))===3){gx.n++;const m=L[0].filter(l=>l.a===i||l.b===i).length;gx.lk+=m;if(m&&!(A[0][i][0]>0))gx.stuck++;}
+    const z=c.gz[1];if(ZWX[zi(z)]!==3)return;zx.n++;let any=0;
+    c4.forEach((d,j)=>{if(j===i)return;const t=(BR_ACT[z]||{})[d.gz[1]];if(t){zx.hit[t]++;any=1;}if(ZWX[zi(d.gz[1])]===1){zx.hit['剋']++;any=1;}});
+    if(any){if(A[1][i][0]>0)zx.act++;else zx.idle++;}});
+  W.gx=gx;W.zx=zx;{const n=Math.floor((gzYear(sol)-1924)/60),ix=((56+n)%60+60)%60;W.yuan=GAN[ix%10]+ZHI[ix%12];W.P=P;}
+  if(gx.lk)F.add('金干有粘連');if(gx.stuck)F.add('金干粘連解唔開');
+  ['沖','刑','害','剋'].forEach(t=>{if(zx.hit[t])F.add('金支被'+t);});
+  if(zx.act+zx.idle)F.add('金支被沖刑剋害');if(zx.idle)F.add('金支被沖刑剋害但未啟動');if(zx.act)F.add('金支被沖刑剋害而且啟動');
+  if(gx.stuck&&zx.act+zx.idle)F.add('金干粘連解唔開＋金支被沖刑剋害');
+  const cnt=[0,0,0,0,0];c4.forEach(c=>{cnt[gw(gi(c.gz[0]))]++;cnt[ZWX[zi(c.gz[1])]]++;});const mx=Math.max(...cnt);W.most=cnt.map((v,e)=>v===mx?e:-1).filter(e=>e>=0);
+  W.most.forEach(e=>F.add('原局字數最多係'+WX[e]));if(W.most.includes(3)&&info(3).stuck)F.add('啞巴條件（字數）：金字最多＋金字粘連解唔開');
+  W.F=F;return W;}catch(e){return null;}}
+const AN_WK=['最強五行金（推論1）','最強五行金（推論2）','最強五行金（推論3）','金字有粘連','金字粘連≥3條','金字粘連解唔開','金字全部做唔到功','最強五行（推論1）字有粘連','最強五行（推論1）字粘連解唔開','最強五行（推論1）字全部做唔到功','啞巴條件（推論1）：最強五行金＋金字粘連解唔開','啞巴條件（推論2或3）：最強五行金＋金字粘連解唔開','原局字數最多係金','啞巴條件（字數）：金字最多＋金字粘連解唔開','金干有粘連','金干粘連解唔開','金支被沖','金支被刑','金支被害','金支被剋','金支被沖刑剋害','金支被沖刑剋害但未啟動','金支被沖刑剋害而且啟動','金干粘連解唔開＋金支被沖刑剋害'];
+function anWorkTab(rows,all){const n=rows.length,N=all.length,p=(L,f)=>L.filter(r=>r.F.has(f)).length;
+  return `<p class="hint"><b>做功角度</b>（原局四柱；「解唔開」＝有粘連但冇七殺嚟啟動）</p><table class="antab"><thead><tr><th>特徵</th><th>呢組</th><th>全部命例</th></tr></thead><tbody>${AN_WK.map(f=>{const k=p(rows,f),b=p(all,f);return `<tr><td>${esc(f)}</td><td>${k}/${n}（${anPct(k/n)}）</td><td>${anPct(b/N)}</td></tr>`;}).join('')}</tbody></table>
+  <details><summary class="hint">逐個命例睇</summary><table class="antab"><thead><tr><th>命例</th><th>八字</th><th>元運</th><th>最強五行 1/2/3</th><th>字數最多</th><th>金字粘連</th><th>解唔開</th><th>金干</th><th>金支沖刑剋害</th></tr></thead><tbody>${rows.map(r=>{const w=r.W;if(!w)return '';const g=w.info['金'];return `<tr><td>${anBtn(r)}</td><td>${esc(w.P.join(' '))}</td><td>${w.yuan}</td><td>${['s1','yue','sl'].map(m=>WX[w.sw[m]]).join(' / ')}</td><td>${w.most.map(e=>WX[e]).join('、')}</td><td>${g.n?g.lk+' 條':'冇金'}</td><td>${g.stuck?'✗ '+g.stuck+' 個':g.lk?'✓ 解開':'—'}</td><td>${w.gx.n?(w.gx.stuck?'✗ 解唔開':w.gx.lk?'✓ 解開':'冇粘連'):'冇'}</td><td>${w.zx.n?(Object.entries(w.zx.hit).filter(x=>x[1]).map(([t,v])=>t+v).join(' ')||'冇')+(w.zx.idle?'（未啟動）':w.zx.act?'（啟動）':''):'冇金支'}</td></tr>`;}).join('')}</tbody></table></details>`;}
 // 流年干支：知道月份就用節氣（立春）計，淨係知年份就用該年
 function anYearGz(e){const y=+e.y;if(!y)return null;try{if(e.m&&e.p!=='y'&&e.p!=='dy')return Solar.fromYmd(y,+e.m,+e.d||15).getLunar().getEightChar().getYear();}catch(x){}
   const n=((y-4)%60+60)%60;return GAN[n%10]+ZHI[n%12];}
@@ -2252,7 +2286,7 @@ function anTraits(rows,all,lim){const n=rows.length,N=all.length,cnt={},base={};
   const out=Object.keys(cnt).filter(f=>cnt[f]>=2).map(f=>{const p=cnt[f]/n,b=base[f]/N;return {f,k:cnt[f],p,b,l:p/b};}).filter(x=>x.l>=1.4&&x.p>=0.2).sort((a,b)=>b.l*Math.sqrt(b.k)-a.l*Math.sqrt(a.k)).slice(0,lim||10);
   return out.length?`<table class="antab"><thead><tr><th>特徵</th><th>呢組</th><th>全部命例</th><th>倍數</th></tr></thead><tbody>${out.map(x=>`<tr><td>${esc(x.f)}</td><td>${x.k}/${n}（${anPct(x.p)}）</td><td>${anPct(x.b)}</td><td>×${x.l.toFixed(1)}</td></tr>`).join('')}</tbody></table>`:'<p class="hint">搵唔到明顯共同特徵（最少要 2 個命例、比例高過全部命例 1.4 倍）。</p>';}
 function anGroup(id,title,rows,all,extra){const op=AN.open[id];
-  return `<details class="angrp" data-angrp="${esc(id)}" ${op?'open':''}><summary><b>${esc(title)}</b> <span class="hint">${rows.length} 個命例</span></summary>${extra||''}${op?anTraits(rows,all):''}<div class="ancases">${rows.map(anBtn).join('　')}</div></details>`;}
+  return `<details class="angrp" data-angrp="${esc(id)}" ${op?'open':''}><summary><b>${esc(title)}</b> <span class="hint">${rows.length} 個命例</span></summary>${extra||''}${op?anTraits(rows,all)+anWorkTab(rows,all):''}<div class="ancases">${rows.map(anBtn).join('　')}</div></details>`;}
 function anEvBreak(rows){const ids=new Set(rows.map(r=>r.c.id)),C=AN.cats;if(!C)return '';const s=[...C.T,...C.X].map(x=>[x.n,x.rows.filter(y=>ids.has(y.r.c.id)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([n,k])=>n+' '+k);return s.length?`<p class="hint">標籤／事件：${esc(s.join('、'))}</p>`:'';}
 function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelector('.lbody');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先睇到命例分析。</p>';return;}
