@@ -337,6 +337,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
   .mauth .adm{font-size:12px}
   .mnav{display:flex}.mbr{display:inline}.mhsh{display:flex;justify-content:center;gap:2px;white-space:nowrap}.mhsh button{font:inherit;font-size:13px;line-height:1;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}.mhsh .hshn{font-size:11px;padding:3px 3px;color:var(--accent)}
+  .notes .ntabs label:has(input[value=an]){display:none}
   .notes .lpick{display:block;min-width:0;max-width:100%}.notes .lpick select{width:100%}.notes .lsel{flex-wrap:wrap}
   #casePager select{font-size:15px}.mnav button[hidden]{display:none}
   table.audit thead{display:none}table.audit,table.audit tbody{display:block}table.audit tr{display:block;border-top:1px solid var(--line);padding:8px 0}
@@ -349,7 +350,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   body[data-mtab]:not([data-mtab=in]) header,body[data-mtab]:not([data-mtab=in]) #inPanel,body[data-mtab]:not([data-mtab=in]) .mguide{display:none!important}
   body[data-mtab]:not([data-mtab=chart]):not([data-mtab=rel]) #out,body[data-mtab]:not([data-mtab=chart]) #caseNote,body[data-mtab]:not([data-mtab=chart]) .mbar{display:none!important}
   body[data-mtab=chart] #relBox,body[data-mtab=rel] #out>:not(#relBox){display:none!important}
-  body[data-mtab]:not([data-mtab=learn]) .notes,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=calc]) #aw,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
+  body[data-mtab]:not([data-mtab=learn]) .notes,body[data-mtab]:not([data-mtab=an]) #anBox,body[data-mtab]:not([data-mtab=more]) #gb,body[data-mtab]:not([data-mtab=more]) #lb,body[data-mtab]:not([data-mtab=calc]) #aw,body[data-mtab]:not([data-mtab=audit]) #audit,body[data-mtab]:not([data-mtab=more]) footer{display:none!important}
   .layout{display:block}
   .mguide:not([hidden]){display:block;position:relative;font-size:15px;line-height:1.65;background:var(--paper);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;margin:0 0 12px}
   .mguide h2{font-size:18px;margin:0 0 6px}.mguide ol{margin:0;padding-left:22px}.mguide li{margin:4px 0}
@@ -404,6 +405,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <button type="button" data-mtab-go="rel"><b>⇄</b>招感</button>
   <button type="button" data-mtab-go="calc"><b>§</b>計法</button>
   <button type="button" data-mtab-go="learn"><b>❡</b>課堂</button>
+  <button type="button" data-mtab-go="an" id="mAnTab"><b>▦</b>分析</button>
   <button type="button" data-mtab-go="more"><b>✉</b>留言</button>
   <button type="button" data-mtab-go="audit" id="mAuditTab" hidden><b>⌕</b>審計</button>
 </nav></div>
@@ -866,6 +868,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <p class="hint" id="lbMsg"></p>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
 </section>
+<section class="panel" id="anBox" hidden><h2>命例數據庫分析</h2></section>
 <section class="panel" id="gb">
   <h2>留言版 <label class="hint gbn">每頁 <select id="gbN" aria-label="每頁幾多條留言"><option value="6" selected>6</option><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select> 條</label></h2>
   <div id="gbForm"></div>
@@ -2137,7 +2140,8 @@ function render(){
   placeNotes();
 }
 // 電腦版：計法說明・課堂嗰格擺喺行星位置上面；手機版留返原位（計法分頁）
-function placeNotes(){const n=document.querySelector('section.notes'),p=$('plBox');if(!n)return;if(!isMob()&&p){if(n.nextElementSibling!==p)p.before(n);}else if(n.parentNode===$('out'))$('aw').after(n);}
+function placeAn(){const a=$('np-an'),b=$('anBox'),n=document.querySelector('section.notes');let lg=true;try{lg=!(CLOUD&&!SESSION);}catch(e){}b.hidden=!(isMob()&&lg);$('mAnTab').hidden=!lg;if(!lg&&document.body.dataset.mtab==='an')mTab('in');if(!a||!n)return;if(isMob()){if(a.parentNode!==b)b.append(a);}else if(a.parentNode!==n)n.append(a);}
+function placeNotes(){placeAn();const n=document.querySelector('section.notes'),p=$('plBox');if(!n)return;if(!isMob()&&p){if(n.nextElementSibling!==p)p.before(n);}else if(n.parentNode===$('out'))$('aw').after(n);}
 addEventListener('resize',()=>placeNotes());
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 // 備註同筆記入面嘅網址變成可以撳嘅連結；YouTube 連結顯示「▶ YouTube 45:30」（有 t= 就顯示由幾時開始）
@@ -2277,7 +2281,7 @@ document.addEventListener('click',e=>{const s=e.target.closest('[data-ansub]');i
   const g=e.target.closest('[data-ang]');if(g){AN.g=g.dataset.ang;anDraw();}});
 document.addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('[data-angrp]'))return;const id=d.dataset.angrp,was=!!AN.open[id];AN.open[id]=d.open;if(d.open&&!was)anDraw();},true);
 document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab][value=an]'))anDraw();});
-const anOn=()=>{const r=document.querySelector('input[name=ntab][value=an]');return r&&r.checked;};
+const anOn=()=>{if(isMob())return document.body.dataset.mtab==='an';const r=document.querySelector('input[name=ntab][value=an]');return r&&r.checked;};
 // 開某一課：揀「課堂總結」分頁（電腦版打開計法嗰格，手機版轉去計法頁）
 function lsOpen(id,tab){LS.cur=id;const r=document.querySelector(`input[name=ntab][value=${tab||'lsum'}]`);if(r)r.checked=true;SECF.calc=true;applySec();
   if(document.body.dataset.mtab)mTab('learn');lsDraw().then(()=>document.querySelector('.notes').scrollIntoView({block:'start'}));}
@@ -2366,7 +2370,7 @@ $('f').addEventListener('input',()=>document.querySelectorAll('[data-birthnow]')
 $('f').addEventListener('change',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
 $('f').addEventListener('submit',e=>{e.preventDefault();run(readForm(),true);});
 // 手機版分頁：排盤 in、命盤 chart、命例 case、更多 more（桌面版 CSS 唔理呢個設定）
-function mTab(k){document.body.dataset.mtab=k;document.querySelectorAll('.mnav [data-mtab-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.mtabGo===k?'page':'false'));
+function mTab(k){document.body.dataset.mtab=k;if(k==='an'){placeAn();anDraw();}document.querySelectorAll('.mnav [data-mtab-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.mtabGo===k?'page':'false'));
   if(k==='case')$('caseBox').open=true;if(isMob())scrollTo(0,0);}
 mTab('in');
 try{if(!localStorage.getItem('b8-guide-off'))$('mGuide').hidden=false;}catch(e){$('mGuide').hidden=false;}
@@ -2736,7 +2740,7 @@ $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],
 $('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun2',e.target.value);}catch(x){}}if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,+b.dataset.aupage-1);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
 // 計法說明：淨係進階用戶、高級用戶同管理員先睇到（跟 can.sha）；普通用戶同未登入就收埋，自動轉去「盲派八字摘要」
-function calcVis(){const ok=can.sha();document.body.classList.toggle('nocalc',!ok);document.body.classList.toggle('nologin',!!CLOUD&&!SESSION);
+function calcVis(){placeAn();const ok=can.sha();document.body.classList.toggle('nocalc',!ok);document.body.classList.toggle('nologin',!!CLOUD&&!SESSION);
   const c=document.querySelector('input[name=ntab][value=calc]');if(!ok&&c&&c.checked){const s=document.querySelector('input[name=ntab][value=sifu]');if(s)s.checked=true;}}
 function renderAuth(){calcVis();
   const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION||(!VIEW.work&&WORK_KEEP()&&!WORK_TRY)))render();
