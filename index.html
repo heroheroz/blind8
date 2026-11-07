@@ -2188,7 +2188,7 @@ async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorA
   document.querySelectorAll('.notes .lpick').forEach(s=>s.innerHTML=`<select data-lsel aria-label="揀課堂">${opt}</select>`);
   let L;try{L=await lsLoad(LS.cur);}catch(e){bodies.forEach(b=>b.innerHTML=`<p class="hint">${esc(e.message)}</p>`);return;}
   if(L.id!==LS.cur)return;
-  const head=`<h3>${esc(L.title)}</h3><p class="hint">${esc(L.date||'')}${L.dur?' · '+esc(L.dur):''} · ${lsA(L.id,0,'▶ YouTube')}</p>`;
+  const head=`<h3>${esc(L.title)}</h3><p class="hint">${esc(L.date||'')}${L.dur?' · '+esc(L.dur):''} · ${lsA(L.id,0,'▶ YouTube')}${L.quality==='lite'?' · <span title="用 lite 模型轉錄，可能有錯字，之後會重做">📝 初稿</span>':''}</p>${L.note?`<p class="hint">⚠️ ${esc(L.note)}</p>`:''}`;
   const sec=(L.summary||[]).map(s=>`<h4>${lsFmt(L.id,s.h)}</h4><ul>${(s.items||[]).map(x=>`<li>${lsFmt(L.id,x)}</li>`).join('')}</ul>`).join('');
   const cs=(L.cases||[]).length?`<h4>命例</h4><ul>${L.cases.map(c=>`<li>${c.id?`<button type="button" class="lnk" data-open="${c.id}" data-lcase>${esc(c.name)}</button>`:esc(c.name)}${c.t!=null?' '+lsA(L.id,c.t):''}${c.note?'　'+lsFmt(L.id,c.note):''}</li>`).join('')}</ul>`:'';
   const tc=L.teacher&&(L.teacher.items||[]).length?`<h4>老師總結${L.teacher.t!=null?' '+lsA(L.id,L.teacher.t):''}</h4><div class="lteach"><ul>${L.teacher.items.map(x=>`<li>${lsFmt(L.id,x)}</li>`).join('')}</ul></div>`:'';
