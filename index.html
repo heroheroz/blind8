@@ -257,7 +257,7 @@ td.chain{position:relative;overflow:visible}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}
 .notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
-.ntabs{flex-wrap:wrap}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lqa{margin:0 0 14px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--soft);border-radius:6px}.lqa .q{font-weight:600}.lqa .meta{font-size:12px;color:var(--muted)}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}.clsn,a.yt{font-size:12px}.rsrc{display:block;font-size:12px;color:var(--muted);margin-top:2px}.rsrc.none{opacity:.7}.anseg button{border:0;background:none;font:inherit;font-size:14px;padding:5px 12px;cursor:pointer;color:inherit}.anseg button[aria-pressed=true]{background:var(--accent);color:#fff}.angrp{margin:0 0 6px;padding:6px 10px;border:1px solid var(--line);border-radius:6px}.angrp summary{cursor:pointer}.ancases{margin-top:6px;font-size:14px;line-height:1.9}.antab{border-collapse:collapse;font-size:13px;margin:6px 0}.antab th,.antab td{padding:2px 8px;border-bottom:1px solid var(--line);text-align:left}.anpick{margin:0 0 8px}.anpick .on{font-weight:700;text-decoration:underline}
+.ntabs{flex-wrap:wrap}.lpick{display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center}.lnavs{display:inline-flex;gap:6px;align-items:center}.lnav{min-width:2.4em}.ljump{width:6em}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lqa{margin:0 0 14px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--soft);border-radius:6px}.lqa .q{font-weight:600}.lqa .meta{font-size:12px;color:var(--muted)}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}.clsn,a.yt{font-size:12px}.rsrc{display:block;font-size:12px;color:var(--muted);margin-top:2px}.rsrc.none{opacity:.7}.anseg button{border:0;background:none;font:inherit;font-size:14px;padding:5px 12px;cursor:pointer;color:inherit}.anseg button[aria-pressed=true]{background:var(--accent);color:#fff}.angrp{margin:0 0 6px;padding:6px 10px;border:1px solid var(--line);border-radius:6px}.angrp summary{cursor:pointer}.ancases{margin-top:6px;font-size:14px;line-height:1.9}.antab{border-collapse:collapse;font-size:13px;margin:6px 0}.antab th,.antab td{padding:2px 8px;border-bottom:1px solid var(--line);text-align:left}.anpick{margin:0 0 8px}.anpick .on{font-weight:700;text-decoration:underline}
 .sifu{font-size:14px;color:var(--ink);line-height:1.7;max-width:900px}
 .sifu h3{margin:0 0 6px;font-size:18px}
 .sifu h4{margin:14px 0 4px;font-size:15px;color:var(--accent)}
@@ -306,7 +306,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cpriv{font-size:13px;color:var(--muted);margin-top:4px}.cname .lock{font-size:12px;margin-right:2px}.qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
 .more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
 .armed{color:var(--paper)!important;background:var(--bad);border-radius:6px;padding:2px 6px}
-.lsong{font-size:15px;padding-left:1.1em}.lsong li{margin:4px 0}
+.lsong{font-size:15px;padding-left:1.1em}.lsong li{margin:8px 0;line-height:1.9}.lsong a{white-space:nowrap}.lsong-tip{font-weight:600;margin:4px 0 8px}
 .evwhy{display:flex;gap:6px;margin:-2px 0 8px;font-size:13px;line-height:1.5}.evwhy .cap{font-size:12px;color:var(--muted);min-width:3.5em;flex:none}.evwhy ul{margin:0;padding-left:1.1em}.evwhy li{margin:2px 0}.evws{font-size:12px;padding:0 5px;border-radius:6px;background:var(--line,#8883)}.evws.t{background:#e6b80033}
 .ctags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}.ctags .cap{font-size:12px;color:var(--muted);min-width:3.5em}.ctags .tags{margin:0}
 .tagx{font-size:14px!important;padding:0 2px}
@@ -340,7 +340,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .mauth .adm{font-size:12px}
   .mnav{display:flex}.mbr{display:inline}.mhsh{display:flex;justify-content:center;gap:2px;white-space:nowrap}.mhsh button{font:inherit;font-size:13px;line-height:1;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}.mhsh .hshn{font-size:11px;padding:3px 3px;color:var(--accent)}
   .notes .ntabs label:has(input[value=an]){display:none}
-  .notes .lpick{display:block;min-width:0;max-width:100%}.notes .lpick select{width:100%}.notes .lsel{flex-wrap:wrap}
+  .notes .lpick{display:block;min-width:0;max-width:100%}.notes .lpick select{width:100%}.notes .lnavs{display:flex;gap:8px;margin-top:6px}.notes .lnav{flex:1;font-size:18px;padding:6px}.notes .ljump{flex:1;min-width:0;font:inherit;font-size:15px;padding:4px 8px}.notes .lsel{flex-wrap:wrap}
   #casePager select{font-size:15px}.mnav button[hidden]{display:none}
   table.audit thead{display:none}table.audit,table.audit tbody{display:block}table.audit tr{display:block;border-top:1px solid var(--line);padding:8px 0}
   table.audit td{display:inline;border:0;padding:0 8px 0 0;font-size:14px}table.audit td small{display:inline;margin-left:4px}table.audit td:last-child{display:block;margin-top:4px}
@@ -2181,17 +2181,22 @@ async function lsIndex(){if(!LS.idx){try{const r=await fetch('lessons/index.json
 async function lsLoad(id){if(!LS.data[id]){const r=await fetch(`lessons/${id}.json`,{cache:'no-cache'});if(!r.ok)throw new Error('讀唔到呢一課');LS.data[id]=await r.json();}return LS.data[id];}
 function lsCaseRefs(c){const hit=(LS.idx||[]).flatMap(l=>(l.cases||[]).filter(x=>x[0]===c.id).map(x=>({l,t:x[1]})));if(!hit.length)return '';
   return `<div class="clsn hint">📖 課堂提到：${hit.map(({l,t})=>`<button type="button" class="lnk" data-lgo="${l.id}">${esc(l.short||l.title)}</button>${t!=null?' '+lsA(l.id,t):''}`).join('　')}</div>`;}
-// 隱姓先生歌曲庫：揀堂選單第一個選擇（LS.cur=SONGS）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
+// 隱姓先生歌曲庫（新曲+精選）：揀堂選單第一個選擇（LS.cur=SONGS）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
 const SONGS='__songs';
 async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.json',{cache:'no-cache'});LS.songs=r.ok?await r.json():[];}catch(e){LS.songs=[];}}
   const L=LS.songs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  return `<h3>🎤 隱姓先生歌曲庫</h3>`+(L.length?`<ul class="lsong">${L.map(x=>`<li>${lsA(x.id,x.t,'▶ '+(x.t?lsT(x.t):'YouTube'))} ${esc(x.date||'')} ${esc(x.title||'')}${Array.isArray(x.songs)?'：'+x.songs.map(g=>g&&g.t!=null?`${esc(g.name||'')} ${lsA(x.id,g.t)}`:esc((g&&g.name)||'')).join('、'):x.songs?'：'+esc(x.songs):''}${x.dur?` <span class="hint">（${esc(x.dur)}）</span>`:''}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>');}
+  // 每首歌：連結文字係歌名（跳去嗰首歌開始，未知時間就由片頭播），有時間先喺後面加時間
+  const song=(x,g)=>{const t=g&&g.t!=null?+g.t:null;return `<a href="${lsYT(x.id,t||0)}" target="_blank" rel="noopener noreferrer">🎵 ${esc((g&&g.name)||x.title||'')}</a>${t?` <span class="hint">${lsT(t)}</span>`:''}`;};
+  return `<h3>🎤 隱姓先生歌曲庫（新曲+精選）</h3><p class="lsong-tip">🔓 聽完全部歌曲會解鎖隱藏功能 😆</p>`+(L.length?`<ul class="lsong">${L.map(x=>`<li><span class="hint">${esc(x.date||'')} ${esc(x.title||'')}${x.dur?`（${esc(x.dur)}）`:''}</span><br>${(Array.isArray(x.songs)?x.songs:String(x.songs||'').split('、').filter(Boolean).map(n=>({name:n}))).map(g=>song(x,g)).join('　')}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>');}
 async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
   if(!idx.length){bodies.forEach(b=>b.innerHTML='<p class="hint">未有課堂資料。</p>');return;}
   const ord=[...idx].sort((a,b)=>(b.n||0)-(a.n||0));
   if(LS.cur!==SONGS&&!idx.some(l=>l.id===LS.cur))LS.cur=SONGS;
-  const opt=`<option value="${SONGS}"${LS.cur===SONGS?' selected':''}>🎤 隱姓先生歌曲庫</option>`+ord.map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${l.short?esc(l.short)+' · ':''}${esc(l.date||'')} ${esc(l.title)}</option>`).join('');
-  document.querySelectorAll('.notes .lpick').forEach(s=>s.innerHTML=`<select data-lsel aria-label="揀課堂">${opt}</select>`);
+  // 揀堂：按月份分組；◀ ▶ 上一堂／下一堂（跟選單次序）；輸入堂數直接跳
+  const seq=[SONGS,...ord.map(l=>l.id)],k=seq.indexOf(LS.cur),grp={};ord.forEach(l=>{const g=String(l.date||'').slice(0,7)||'其他';(grp[g]=grp[g]||[]).push(l);});
+  const opt=`<optgroup label="🎤 歌曲"><option value="${SONGS}"${LS.cur===SONGS?' selected':''}>🎤 隱姓先生歌曲庫（新曲+精選）</option></optgroup>`+Object.keys(grp).map(g=>`<optgroup label="${esc(g.replace(/^(\d{4})-(\d\d)$/,(_,y,m)=>`${y}年${+m}月`))}">${grp[g].map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${l.short?esc(l.short)+' · ':''}${esc(l.date||'')} ${esc(l.title)}</option>`).join('')}</optgroup>`).join('');
+  const nb=(d,lbl,t)=>{const x=seq[k+d];return `<button type="button" class="lnav" data-lnav="${x||''}"${x?'':' disabled'} title="${t}" aria-label="${t}">${lbl}</button>`;};
+  document.querySelectorAll('.notes .lpick').forEach(s=>s.innerHTML=`<select data-lsel aria-label="揀課堂">${opt}</select><span class="lnavs">${nb(-1,'◀','上一個（較新）')}${nb(1,'▶','下一個（較舊）')}<input type="number" class="ljump" data-ljump min="1" inputmode="numeric" placeholder="第幾堂" aria-label="跳去第幾堂"></span>`);
   if(LS.cur===SONGS){const h=await lsSongs();if(LS.cur===SONGS)bodies.forEach(b=>b.innerHTML=h);lsQA(ord);return;}
   let L;try{L=await lsLoad(LS.cur);}catch(e){bodies.forEach(b=>b.innerHTML=`<p class="hint">${esc(e.message)}</p>`);return;}
   if(L.id!==LS.cur)return;
@@ -2351,6 +2356,9 @@ const anOn=()=>{if(isMob())return document.body.dataset.mtab==='an';const r=docu
 // 開某一課：揀「課堂總結」分頁（電腦版打開計法嗰格，手機版轉去計法頁）
 function lsOpen(id,tab){LS.cur=id;const r=document.querySelector(`input[name=ntab][value=${tab||'lsum'}]`);if(r)r.checked=true;SECF.calc=true;applySec();
   if(document.body.dataset.mtab)mTab('learn');lsDraw().then(()=>document.querySelector('.notes').scrollIntoView({block:'start'}));}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lnav]');if(b&&b.dataset.lnav){LS.cur=b.dataset.lnav;lsDraw();}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-ljump]')){e.preventDefault();const n=+e.target.value,l=(LS.idx||[]).find(x=>x.n===n);if(l){LS.cur=l.id;lsDraw();}else e.target.value='';}});
+document.addEventListener('change',e=>{if(e.target.matches('[data-ljump]')){const n=+e.target.value,l=(LS.idx||[]).find(x=>x.n===n);if(l&&l.id!==LS.cur){LS.cur=l.id;lsDraw();}}});
 document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab]')&&/^l/.test(e.target.value))lsDraw();if(e.target.matches('[data-lsel]')){LS.cur=e.target.value;lsDraw();}});
 document.addEventListener('input',e=>{if(e.target.matches('[data-lq]')){LS.q=e.target.value;clearTimeout(LS.tm);LS.tm=setTimeout(lsDraw,200);}});
 document.addEventListener('click',e=>{const g=e.target.closest('[data-lgo]');if(g){lsOpen(g.dataset.lgo);return;}
@@ -2870,6 +2878,8 @@ function showCase(c){
 }
 // 命例事件日期（例如結婚、生仔、過身），撳一下就用嗰日做睇運日期；存喺 input.events
 const EV_SUG=['結婚','離婚','生仔','生女','過身','父親過身','母親過身','升職','轉工','破財','發財','手術','意外','搬屋','移民','畢業'];
+// 事件名淨係喺佢係常用事件（EV_SUG）或者已經係標籤時先順手加做命例標籤；自由文字（例如「1955年：任玉溪地區行署人事科長」）唔會變標籤
+const evTags=(c,tg)=>EV_SUG.includes(tg)||TAG_SUG.includes(tg)?[...new Set([...(c.tags||[]),tg])]:(c.tags||[]);
 // 唔係某一日發生嘅標籤（身份、類別、命例來源、數目），唔放入事件建議，亦唔可以當事件加日期
 const NODATE=t=>/命例$|皇室$/.test(t)||['名人','歌星','影星','國家地區','兄弟數目','雙胞胎','驗證時辰','啞巴','出家人','生死','父母','事業','財運'].includes(t);
 const evTxt=v=>{const g=v.gz||{},gs=[g.dy&&g.dy+'運',g.ln&&g.ln+'年',g.mo&&g.mo+'月',g.dd&&g.dd+'日'].filter(Boolean).join(' ');
@@ -2918,8 +2928,7 @@ function evGz(box,ps){const res=box.querySelector('.bzres'),c=CASES.find(x=>x.id
   EVP[c.id]=r.list.map(x=>({t,...x}));
   res.innerHTML=`<span class="hint">有 ${r.list.length} 個符合，撳一個加入：</span>`+EVP[c.id].map((x,i)=>`<button type="button" class="lnk bzopt" data-evpick="${i}" data-id="${c.id}">${evTxt(x)}</button>`).join('');}
 function evAdd(c,v,idx){const tg=v.t.slice(0,30);v.t=tg;
-  busy(async()=>{await Store.update(c.id,{input:{...c.input,events:sortEv([...(c.input.events||[]).filter((_,i)=>String(i)!==String(idx??'')),v])},tags:[...new Set([...(c.tags||[]),tg])]});
-    if(!TAG_SUG.includes(tg))await TagStore.add([tg]).catch(()=>{});});}
+  busy(async()=>{await Store.update(c.id,{input:{...c.input,events:sortEv([...(c.input.events||[]).filter((_,i)=>String(i)!==String(idx??'')),v])},tags:evTags(c,tg)});});}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-evpick]');if(!b)return;const c=CASES.find(x=>x.id===b.dataset.id),v=(EVP[b.dataset.id]||[])[+b.dataset.evpick];if(c&&v)evAdd(c,{...v});});
 // 留言版：所有人睇得到，登入先留得言；自己嘅留言或者管理員先刪得
 const LS_GB='b8-guestbook';
@@ -3073,9 +3082,8 @@ document.addEventListener('submit',e=>{
       catch(err){$('caseMsg').textContent=`農曆${n}年${leap?'閏':''}${lm}月冇${ld}日${leap?'（或者嗰年冇呢個閏月）':''}，請再揀過。`;return;}}
     else if(leap){$('caseMsg').textContent='「閏」只用喺農曆，請揀農曆或者剔走閏。';return;}
     if(!validDate(y,m,d)){$('caseMsg').textContent='事件日期冇呢一日，請再揀過。';return;}
-    // 事件名順手加做命例標籤（例如結婚），新標籤亦加入標籤表
-    const tg=t.slice(0,30);busy(async()=>{await Store.update(c.id,{input:{...c.input,events:sortEv([...(c.input.events||[]).filter((_,i)=>String(i)!==String(fd.get('idx'))),{...((c.input.events||[])[fd.get('idx')]?.why?{why:(c.input.events||[])[fd.get('idx')].why}:{}),t:tg,y,m,d,...(lun?{lun}:{}),...(fd.get('hr')!==''&&fd.get('hr')!=null?{hr:+fd.get('hr')}:{})}])},tags:[...new Set([...(c.tags||[]),tg])]});
-      if(!TAG_SUG.includes(tg))await TagStore.add([tg]).catch(()=>{});});}
+    // 事件名係常用事件或者現有標籤先順手加做命例標籤（例如結婚）；自由文字唔會變標籤
+    const tg=t.slice(0,30);busy(async()=>{await Store.update(c.id,{input:{...c.input,events:sortEv([...(c.input.events||[]).filter((_,i)=>String(i)!==String(fd.get('idx'))),{...((c.input.events||[])[fd.get('idx')]?.why?{why:(c.input.events||[])[fd.get('idx')].why}:{}),t:tg,y,m,d,...(lun?{lun}:{}),...(fd.get('hr')!==''&&fd.get('hr')!=null?{hr:+fd.get('hr')}:{})}])},tags:evTags(c,tg)});});}
   else if(f.dataset.addtag){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.addtag),add=parseTags(f.querySelector('input').value);if(c&&add.length)busy(()=>Store.update(c.id,{tags:[...new Set([...(c.tags||[]),...add])]}));}
   else if(f.dataset.comment){e.preventDefault();const body=f.querySelector('textarea').value.trim();if(body)busy(()=>Store.comment(f.dataset.comment,body));}
   else if(f.id==='f'){CUR=null;EDIT=false;showCase(null);document.querySelectorAll('.case.on').forEach(x=>x.classList.remove('on'));setTimeout(renderAuth);}

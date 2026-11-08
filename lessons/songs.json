@@ -1,6 +1,6 @@
 [
- {"id":"v6yGjJnkGl0","date":"2026-09-10","title":"張國榮70歲冥壽紀念特輯","songs":"痴心的我、無心睡眠、紅、左右手","dur":"26:57","t":0},
- {"id":"NyfrmaC0UOY","date":"2026-08-20","title":"第91堂 丙午赤馬年果然凶險!（課堂尾段唱歌）","songs":"浪子心聲","dur":"21:17","t":1101},
- {"id":"Ku506VvFd4E","date":"2026-08-06","title":"網友點唱","songs":"千千闋歌、默默向上游","dur":"25:24","t":0},
- {"id":"HGi_L_dNvCs","date":"2026-02-19","title":"Monica","songs":"Monica","dur":"2:36","t":0}
+ {"id":"v6yGjJnkGl0","date":"2026-09-10","title":"張國榮70歲冥壽紀念特輯","dur":"26:57","songs":[{"name":"痴心的我"},{"name":"無心睡眠"},{"name":"紅"},{"name":"左右手"}]},
+ {"id":"NyfrmaC0UOY","date":"2026-08-20","title":"第91堂 丙午赤馬年果然凶險!（課堂尾段）","dur":"21:17","songs":[{"name":"浪子心聲","t":1101}]},
+ {"id":"Ku506VvFd4E","date":"2026-08-06","title":"網友點唱","dur":"25:24","songs":[{"name":"千千闋歌"},{"name":"默默向上游"}]},
+ {"id":"HGi_L_dNvCs","date":"2026-02-19","title":"Monica","dur":"2:36","songs":[{"name":"Monica","t":0}]}
 ]
