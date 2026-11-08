@@ -2218,8 +2218,8 @@ function lsCaseRefs(c){const hit=(LS.idx||[]).flatMap(l=>(l.cases||[]).filter(x=
 const SONGS='__songs';
 async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.json',{cache:'no-cache'});LS.songs=r.ok?await r.json():[];}catch(e){LS.songs=[];}}
   const L=LS.songs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  // 每首歌：連結文字係歌名（跳去嗰首歌開始，未知時間就由片頭播），有時間先喺後面加時間
-  const song=(x,g)=>{const t=g&&g.t!=null?+g.t:null;return `<a href="${lsYT(x.id,t||0)}" target="_blank" rel="noopener noreferrer">🎵 ${esc((g&&g.name)||x.title||'')}</a>${t?` <span class="hint">${lsT(t)}</span>`:''}`;};
+  // 每首歌：連結文字係歌名（跳去嗰首歌開始，未知時間就由片頭播）；唔顯示時間（主人 2026-11-08）
+  const song=(x,g)=>{const t=g&&g.t!=null?+g.t:null;return `<a href="${lsYT(x.id,t||0)}" target="_blank" rel="noopener noreferrer">🎵 ${esc((g&&g.name)||x.title||'')}</a>`;};
   return `<h3>🎤 隱姓先生歌曲庫（新曲+精選）</h3><p class="lsong-tip">🔓 聽完全部歌曲會解鎖隱藏功能 😆</p>`+(L.length?`<ul class="lsong">${L.map(x=>`<li><span class="hint">${esc(x.date||'')} ${esc(x.title||'')}${x.dur?`（${esc(x.dur)}）`:''}</span><br>${(Array.isArray(x.songs)?x.songs:String(x.songs||'').split('、').filter(Boolean).map(n=>({name:n}))).map(g=>song(x,g)).join('　')}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>');}
 async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
   if(!idx.length){bodies.forEach(b=>b.innerHTML='<p class="hint">未有課堂資料。</p>');return;}
