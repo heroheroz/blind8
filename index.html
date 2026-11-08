@@ -218,7 +218,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .days{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:6px}
 .lvl{display:flex;flex-direction:column;gap:6px}
 .lvl+.lvl{margin-top:14px}
-.swtag{cursor:pointer}.swtag.swbad{outline:2px solid var(--bad);outline-offset:1px;color:var(--bad)!important}
+.swtag,.zdtag{cursor:pointer}.zdtag{align-self:center;white-space:nowrap}.swtag.swbad{outline:2px solid var(--bad);outline-offset:1px;color:var(--bad)!important}
 #tipPop .wxc{font-weight:600}
 #swVote li{margin:4px 0}#swVote .awv{margin:2px 0}#swVote small{display:block}
 .tkopt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:10px;font-size:13px}.tkopt .cap{color:var(--muted)}
@@ -614,6 +614,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li id="r-q8"><b>Q8 激活力度</b>　本身冇粘連，被沖、刑、害（天干就係七殺）都算啟動；本身有粘連，粘連被沖刑害破除，激活更大力。用箭咀表達：同最強五行（有顯示嘅時候）同一五行嘅字，箭咀總數再乘 1.5（喺「箭咀力度」可以調），四捨五入到半個。未啟動嘅字，粘連按 N6 計 ↓（合、伏吟一個，連續、半合、三合局、招感粘連半個，半個用細箭咀），↓ 越多粘連程度越高；啟動咗之後，呢啲 ↓ 全部變做 ↑（係轉方向，唔會另外再加 ↑）。本身冇粘連嘅字啟動咗唔加箭咀，只顯示「啟動」。啟動鏈（Q3）第一層係基本，之後每多一層加一個 ↑。例如 3 條粘連嘅字被七殺直接啟動，就係 ↑3；經兩層鏈先被啟動（七殺本身都係被人啟動），就係 ↑4；冇粘連嘅字經兩層鏈先被啟動，就係 ↑1。天干再加 Q7 嘅力度箭咀，啟動咗加 ↑，未啟動粘住加 ↓。所有箭咀都係同一隻色。啟動鏈點樣行（Q3）喺箭咀嘅提示入面睇。</li>
     <li id="r-wk"><b>做功計算</b>　流日每格下面有兩行十神細字（日、財、偏、官、殺／劫、印、梟、食、傷）：將嗰日流日換入盤，原局四柱屬呢個十神嘅字（地支用本氣，日干同比肩都算「日」）都唔使做功就灰色；要做功又全部做到就綠色；有一個做唔到就紅色。先睇日主，再逐個睇原局四柱另外 7 個字（年干、月干、時干、年支、月支、日支、時支），每行寫埋個字嘅十神（地支用本氣）代表乜：日主＝自己；比劫＝兄弟姊妹、朋友；食傷＝才華、子女；財＝錢財，男命正財係妻子，女命財係父親；官殺＝男命事業、地位，女命丈夫；印＝母親、屋企、學業；另外寫埋宮位（年柱祖上早年、月柱父母兄弟、日支配偶宮、時柱子女晚年）。天干寫成「X &lt; 七殺 &lt; 七殺嘅七殺 &lt; …」：先睇呢個字有冇粘連，冇就唔使七殺；有就睇佢嘅七殺喺唔喺盤、啟動未、有冇粘連；盤上冇就睇有冇招感出嚟嘅同一個字（例如戊戊招合癸、壬甲夾拱癸，已啟動就剋得到），同埋由佢右邊招唔招得到殺星（中途有字五合佢＝合住，有佢嘅七殺＝擋走，呢啲字已啟動就行得過）；七殺本身有粘連就再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。地支就睇沖、害、刑佢嘅字（包括招感字同招殺星）喺唔喺盤、啟動未，只列一層，再寫盤上計出嚟嘅啟動鏈。每行下面寫盤上實際用咗邊條啟動鏈（「盤上計法」），同埋呢個位做唔做到功：睇佢嘅偏財（佢剋、同陰陽嗰個字，例如丁睇辛；地支用本氣，例如午睇酉）有冇伏吟或者粘連（伏吟、合、連續、招感粘連都計，大運流年元運柱都計），會寫埋偏財有乜粘連；做唔到就寫原因同粘連條數。最尾列出原局四柱招感出嚟嘅字（招合、夾拱，唔計大運流年）。最底有「當日運勢」（推測，只供參考）：原局 8 個字每個先計分（唔設上限）：做到功 +5，做唔到功 −5，唔使做功 0；再加淨箭咀，每 5 個 ±1（↑ 加分、↓ 扣分，例如 13 個 ↓ 扣 2.6）。再睇相關字有冇被沖刑剋：天干睇同柱地支同盤上其他同五行嘅地支有冇被沖、刑、害；地支睇同柱天干同盤上其他同五行嘅天干有冇被七殺剋。有嘅話，做到功分數 ×2，做唔到功扣分減半，唔使做功唔變。每方面攞相關嘅字（十神，地支用本氣）平均，再同隨機排嘅 1,000 個盤比較，計出勝過幾多 % 嘅盤（百分位），按百分比分級：頭 1% SSS、頭 5% SS、頭 10% S、頭 15% A、頭 30% B、中間（30%–60%）C、再低係 D、E，最尾 10% F。因為會計埋而家揀緊嘅大運流年流月流日，所以叫當日運勢：自身＝日主；財運＝正財、偏財；事業＝正官、七殺；愛情婚姻＝男命正財、偏財，女命正官、七殺，加日支配偶宮；朋友兄弟＝比肩、劫財；父親＝偏財；母親＝正印、偏印；子女＝食神、傷官加時柱；才華＝食神、傷官；學業屋企＝正印、偏印。原局冇相關字就顯示「—」。呢個只係將盤上嘅計法逐步寫出嚟，唔會改到啟動或者做功嘅結果。<br><b>喜忌字</b>（做功計算最底）：喺盤最右邊（流日之後）加一個「見到」嘅字，逐個天干（10 個）同地支（12 個）試，用上面同一套計法（招感、粘連、啟動、W1 做功）計原局 8 個字有幾多個做到功、幾多個做唔到功，再同冇呢個字比。令最多字做到功嘅係「喜」，令最多字做唔到功嘅係「忌」。分五層：一生（成世隨機揀 36 日）、而家大運（呢十年隨機揀 24 日）、流年（呢年隨機揀 24 日）、流月（呢個月逐日）、流日（只計揀咗嗰日）；上層嘅柱固定，下面嘅柱跟日子變。天干只影響天干、地支只影響地支，所以逐個字出，唔出成條柱；頭兩名相差 0.05 個字以內就兩個都出；冇字有效果就寫「—」。推測，只供參考。<br><b>卡死日子</b>（喜忌字下面）：由出世嗰日逐日計到 100 歲（大運、小運、流年、流月、流日、元運都跟日子變；大運排唔到嘅年份就停；其他顯示選項同盤上一樣），按年分組，撳年份睇日子，原局四柱 8 個字（4 個天干、4 個地支）全部要做功（偏財有伏吟或者粘連）但全部做唔到功，就當係「卡死」，列出總日數、每年日數同日子，撳日子會跳去嗰日（計好嘅結果會保留，換日子唔使重計）。每日寫埋原因：睇日主同陰陽嗰五個天干（日主 → 偏財 → 偏財嘅偏財…，例如壬→丙→庚→甲→戊→壬）組成嘅七殺環齊唔齊（盤上嘅字、招感字、招殺星都計）；齊咗就環入面每個字嘅七殺都係環入面嘅字、又全部有粘連，冇字可以由外面啟動，全部鎖死；再寫邊個字原局冇、只係由流日、流月、流年、大運等補齊（即係嗰日先開始卡死嘅原因）。環未齊就寫缺邊個字。推測，只供參考。</li>
     <li id="r-s1"><b>最強五行（推測）</b>　顯示選項可以揀三種推論。<b>推論1：月令人元並用</b>，只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），而且原局四柱（天干同地支，唔計藏干）冇命宮地支嘅五行，最強五行就係命宮地支嘅五行，計完（例如蔣介石命宮壬子沖時支午，但年支亥已經係水，所以唔用命宮）。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局刑或害（唔計六沖，丑未當沖），但未被啟動，天干陰陽倒轉，例如丁變丙；淨係被沖就唔倒轉（例如蔣介石巳被亥沖、蕭若元丑被未沖）。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例加蔣介石推出嚟，五行 26 個全中，有寫天干嘅 15 個全中；①③④ 係睇住呢批命例調出嚟，① 只有傷殘一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。<br><b>推論2：月令印星</b>：直接取月令本氣嘅正印，例如月令巳本氣丙，取乙木。<b>推論3：人元司令印星</b>：直接取人元司令嘅正印，例如司令戊，取丁火。推論2、3 唔理命宮、做功同陰陽倒轉。立春日出世嘅人，月令同司令一定係寅同戊，所以用推論2、3，每年立春日出世都一樣（推論2 係水，推論3 係火）；用推論1 就會因應做功同命宮而唔同。<br>指住或者撳「最強五行」標籤會彈出：盤上顯示緊嘅天干有冇剋最強五行（同陰陽嘅標「七殺」）、屬最強五行嘅地支有冇被沖、刑、害，有冇地支五行剋佢，同埋盤上屬最強五行嘅天干地支有冇粘連、粘緊乜。最上面會俾結論：只有屬最強五行嘅字有粘連而要做功又做唔到功（W1），先算「唔好」，標籤會變紅框加 ⚠。被天干剋、地支沖刑害或者地支剋，可以係做功，做到功係好事，所以只會列出處數，唔算唔好、唔會變紅；有粘連而做到功（或者唔使做功）都唔算唔好。彈框最尾會列出三個推論喺呢個盤嘅結果，登入咗可以逐個撳 👍（準）或者 👎（唔準），仲會顯示全站總票數，等大家一齊驗證邊個推論最準。呢度只係列出嚟參考，唔改最強五行嘅計法。</li>
+    <li id="r-zd"><b>第一／第二主導力（推測）</b>　只用原局四柱天干計，所有人睇到，唔扣分；喺五行統計嗰行撳「主導力」睇點樣推。① 先解決天干受困：日主被合住或粘住就由日主開始，否則由粘連最多嘅天干開始（把握低啲，標 80%+）。② 佢嘅七殺入得嚟（盤上冇粘連、夾拱出嚟，或者招殺星招得到）→ 第一主導力＝七殺；第二主導力＝打開下一個鎖住佢嘅天干（同一組粘連、唔同字，五合優先）嘅七殺。③ 七殺被粘住，或者係重字招合出嚟（例如兩壬招丁，一出就被合住）→ 有殺用唔到，無殺方論用：第一主導力＝剋開阻住七殺嗰個字嘅七殺，第二主導力＝七殺本身。④ 原局天干冇粘連就未計（要睇地支）。老師親口講過嘅命例（查理斯、宋子文、老師爸爸、蔣介石）直接用老師講法，標 🎓；其餘標 🤖。</li>
     <li id="r-w1"><b>W1 做功</b>　只睇佢嘅偏財，即係佢剋、同陰陽嗰個字（例如甲剋戊、丁剋辛；異陰陽嘅正財唔計）。地支用本氣計：例如午本氣丁，偏財係辛，即係本氣辛嘅酉；寅本氣甲，偏財係戊，即係辰、戌。盤上呢個偏財字有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。</li>
   </ol>
   </div>
@@ -1739,7 +1740,7 @@ function tipPop(cell,x,y){let el=$('tipPop');if(!el){el=document.createElement('
   el.innerHTML=`${close}<b class="tt">${esc(h)}${row} ${esc(ch)}</b>${body||'<span class="hint">未啟動，冇粘連，唔使做功。</span>'}`;
   place();}
 // 撳「剋沖」標籤：彈出同原局邊柱天剋地沖，唔會揀咗嗰格
-document.addEventListener('click',e=>{const t=e.target.closest('.cell .tk,.kc .tk,.swtag');if(!t)return;e.preventDefault();e.stopPropagation();
+document.addEventListener('click',e=>{const t=e.target.closest('.cell .tk,.kc .tk,.swtag,.zdtag');if(!t)return;e.preventDefault();e.stopPropagation();
   let el=$('tipPop');if(el&&!el.hidden&&el._cell===t){el.hidden=true;el._cell=null;return;}
   if(!el){el=document.createElement('div');el.id='tipPop';el.setAttribute('role','dialog');document.body.appendChild(el);}
   const c=t.closest('.cell,.kc')||t,gz=(c.querySelector('.gz,.kg')||{}).textContent||'',top=(c.querySelector('.top,.kd')||{}).textContent||'';
@@ -1752,7 +1753,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.vb,[data-swv],[
   const sel=[...b.attributes].filter(a=>a.name.startsWith('data-')).map(a=>`[${a.name}="${CSS.escape(a.value)}"]`).join('');
   const bump=x=>{x.classList.remove('vbump');void x.offsetWidth;x.classList.add('vbump');};bump(b);if(!sel)return;let n=0;
   const t=setInterval(()=>{const x=document.querySelector(sel);if(x&&x!==b){bump(x);clearInterval(t);}else if(++n>40)clearInterval(t);},50);},true);
-document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;if(e.target.closest('.cell .tk,.swtag'))return;
+document.addEventListener('click',e=>{const pop=$('tipPop');if(pop)pop._was=!pop.hidden;if(e.target.closest('.cell .tk,.swtag,.zdtag'))return;
   if(pop&&!pop.hidden&&(e.target.closest('#tipPop .x')||!e.target.closest('#tipPop'))){pop.hidden=true;if(e.target.closest('#tipPop .x'))return;}
   const b=e.target.closest('.chart tr.ganrow .big,.chart tr.zhirow .big,.chart .zg');if(!b)return;const td=b.classList.contains('zg')?b:(b.closest('.shabox')||b.closest('td'));
   // 再撳同一個字就收返
@@ -1942,6 +1943,52 @@ function strongestBy(m,P,mg,slG){const zyin=g=>GAN[((gw(gi(g))+4)%5)*2+(1-gi(g)%
   if(m==='yue'){const bq=BENQI[zi(P[1][1])],g=zyin(bq);return {el:gw(gi(g)),g,why:`月令${P[1][1]}本氣${bq}，生${bq}而陰陽相反嘅係${g}（推論2）`};}
   if(m==='sl'){const g=zyin(slG);return {el:gw(gi(g)),g,why:`人元司令${slG}，生${slG}而陰陽相反嘅係${g}（推論3）`};}
   const r=strongest(P,mg,slG);return {...r,why:r.why+'（推論1）'};}
+// 第一／第二主導力（第31堂 [45:51]–[47:56]、第20堂 [41:19]）：只用原局四柱嘅天干計，唔計大運流年
+// 第一主導力：先解決天干受困（被合住或粘住）。日主受困就由日主開始，否則由粘連最多嘅天干開始（把握低啲）。
+//   ① 佢嘅七殺（盤上冇粘連、招感出嚟，或者招殺星招得到）入得嚟 → 第一＝七殺；第二＝七殺打開佢之後，下一個鎖住佢嘅天干（同佢粘連、唔同字，五合優先）嘅七殺
+//   ② 七殺被合住、擋走或者粘住（有殺先論殺唔得）→ 無殺方論用：第一＝剋開阻住七殺嗰個字嘅七殺；第二＝七殺本身
+// 老師親口講過嘅命例（ZD_T）直接用老師講法，標 🎓
+const ZD_T={'戊子癸亥癸卯癸亥':['己','甲','第20堂 [41:19]：有殺先論殺，己土第一主導力，甲木打開戊土第二'],
+  '甲午乙亥庚辰己卯':['丙','','第30堂 [43:34]：己庚、庚乙、乙甲黐埋，第一主導力必定係丙火殺星'],
+  '己卯壬申辛丑壬辰':['戊','丁','第46堂 [17:44]：戊土正印剋開兩壬水係第一個最重要嘅主導力；丁火殺星之後先入到（第17堂 [05:03]）'],
+  '丁亥庚戌己巳庚午':['丙','甲','第18堂 [10:07]–[14:00]：乙木殺星被兩庚夾住，用丙火正印打開兩庚；更加需要嘅係甲木正官打開丁己夾出嘅戊土（老師講做功次序，冇用「主導力」三個字）']};
+function zhudao(P){
+  const key=P.join('');if(ZD_T[key]){const [a,b,w]=ZD_T[key];return {p1:a,p2:b,why:w,src:'t'};}
+  const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2]},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}];
+  const ZG4=zhaogan(c4.map(c=>({gz:c.gz,lbl:c.h[0]}))),L=chains(c4,0,ZG4.st);
+  const g=i=>c4[i].gz[0],ks=c=>GAN[(gi(c)+6)%10],lk=i=>L.filter(l=>l.a===i||(l.b===i&&l.vx==null));
+  const nm=i=>c4[i].h[0]+'干'+g(i);
+  // 同一組粘連（連埋伏吟、合、連續，同招感字）
+  const comp=i0=>{const s=new Set([i0]);let ch=true;while(ch){ch=false;L.forEach(l=>{if(l.vx!=null)return;if(s.has(l.a)&&!s.has(l.b)){s.add(l.b);ch=true;}else if(s.has(l.b)&&!s.has(l.a)){s.add(l.a);ch=true;}});}return [...s];};
+  let T=1,conf='95%+';
+  if(!lk(1).length){const c=[2,0,3].filter(i=>lk(i).length).sort((a,b)=>lk(b).length-lk(a).length);
+    if(!c.length)return {p1:'',p2:'',why:'原局天干冇粘連，冇受困要先解決；主導力要睇地支，暫時未計',src:''};T=c[0];conf='80%+';}
+  const t=g(T),K=ks(t),pos=[0,1,2,3].filter(i=>g(i)===K),steps=[`${T===1?'日主':''}${nm(T)}受困（粘連 ${lk(T).length} 條）`];
+  // 下一個鎖：同 T 同一組粘連、唔同字嘅天干，五合優先，再揀最近
+  const nextLock=()=>{const cm=comp(T).filter(i=>g(i)!==t&&g(i)!==K);if(!cm.length)return null;
+    const he=cm.filter(i=>(gi(g(i))+5)%10===gi(t)||cm.some(j=>j!==i&&(gi(g(i))+5)%10===gi(g(j)))||comp(T).some(j=>g(j)===t&&(gi(g(i))+5)%10===gi(g(j))));
+    return (he.length?he:cm).sort((a,b)=>Math.abs(a-T)-Math.abs(b-T))[0];};
+  const fin=(p1,p2,extra)=>({p1,p2,why:steps.concat(extra).join('；'),src:'a',conf});
+  if(pos.length){const free=pos.filter(i=>!lk(i).length);
+    if(free.length){steps.push(`七殺${K}喺${nm(free[0])}冇粘連，直接剋開＝第一主導力`);const n=nextLock();
+      return fin(K,n!=null?ks(g(n)):'',n!=null?[`跟住要打開${nm(n)}，用佢嘅七殺${ks(g(n))}＝第二主導力`]:['冇第二個天干要打開']);}
+    // 七殺本身粘住：睇粘住佢嘅字（唔計 T 本身）
+    const bl=pos.flatMap(i=>lk(i).map(l=>l.a===i?l.b:l.a)).filter(j=>j!=null&&g(j)!==t&&g(j)!==K);
+    if(!bl.length){steps.push(`七殺${K}只係黐住${t}，貼身剋＝第一主導力`);const n=nextLock();return fin(K,n!=null?ks(g(n)):'',n!=null?[`跟住要打開${nm(n)}，用${ks(g(n))}＝第二主導力`]:[]);}
+    const b=bl[0];steps.push(`七殺${K}被${nm(b)}粘住，有殺用唔到，無殺方論用：用${g(b)}嘅七殺${ks(g(b))}打開＝第一主導力`,`再到七殺${K}＝第二主導力`);
+    return fin(ks(g(b)),K,[]);}
+  const zk=ZG4.st.find(z=>z.c===K);
+  // 重字招合出嚟嘅七殺（例如兩壬招丁）一出世就被招佢嗰啲字合住：有殺用唔到，要先剋開來源字
+  if(zk&&zk.kind==='he'){const sg=g(zk.src[0]);steps.push(`七殺${K}係${zk.tag}出嚟，一出就被${sg}合住，有殺用唔到；無殺方論用：用${sg}嘅七殺${ks(sg)}剋開＝第一主導力`,`再到七殺${K}＝第二主導力`);
+    return fin(ks(sg),K,[]);}
+  if(zk){steps.push(`七殺${K}係招感出嚟（${zk.tag}），打開${t}＝第一主導力`);conf='80%+';const n=nextLock();
+    return fin(K,n!=null?ks(g(n)):'',n!=null?[`跟住要打開${nm(n)}，用${ks(g(n))}＝第二主導力`]:[]);}
+  const sh=shaCalc(c4,L,0,true).find(x=>x.c===K),cl=sh&&sh.callers.find(c=>c.i===T);
+  if(cl&&cl.path.length){const b=cl.path[0].j;
+    steps.push(`招殺星${K}行到${nm(b)}被${cl.path[0].t}，有殺用唔到，無殺方論用：用${g(b)}嘅七殺${ks(g(b))}打開＝第一主導力`,`再到七殺${K}＝第二主導力`);
+    return fin(ks(g(b)),K,[]);}
+  steps.push(`盤上冇七殺${K}，招殺星招得到＝第一主導力`);const n=nextLock();
+  return fin(K,n!=null?ks(g(n)):'',n!=null?[`跟住要打開${nm(n)}，用佢嘅七殺${ks(g(n))}＝第二主導力`]:['冇第二個天干要打開']);}
 // 最強五行觸犯同粘連：盤上顯示緊嘅干支邊個剋佢（天干）、邊個沖刑害或剋佢（地支），同埋屬最強五行嘅字有冇粘連
 function swFan(sw,cols){const el=sw.el,g=sw.g?gi(sw.g):-1,cs=cols.map((c,i)=>({c,i})).filter(x=>x.c.gz&&!x.c.sha),nm=c=>c.h.replace(/柱$/,'');
   const gk=[],zk=[],zs=[],nl=[],nw=[];
@@ -2115,7 +2162,10 @@ function render(){
   const cnt=[0,0,0,0,0];P.forEach(p=>{cnt[gw(gi(p[0]))]++;cnt[ZWX[zi(p[1])]]++;});
   const cnt2=[0,0,0,0,0];P.forEach(p=>{cnt2[gw(gi(p[0]))]++;[...HIDE[p[1]]].forEach(h=>cnt2[gw(gi(h))]++);});
   const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-swsec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） ${sw.g||''}${WX[sw.el]}</span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
-  const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`+`<div class="wxbar wxh">${cnt2.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（計埋藏干：四個天干加四個地支嘅全部藏干，每個藏干算一個）</span></div>`;
+  // 第一／第二主導力（原局天干，所有人睇到，唔扣分）：撳開睇點樣推
+  const zdTag=(z=>{const C=c=>c?`<b class="w${gw(gi(c))}">${c}</b>`:'—',why=z.why.split('；');
+    return `<span class="gong zdtag" role="button" tabindex="0" data-swsec="${esc(JSON.stringify([['點樣推',why],['來源',[z.src==='t'?'🎓 老師親口講':z.src?`🤖 按第31堂 [45:51] 規則推算，把握 ${z.conf}`:'未計']],['規則',['日主被合住或粘住，第一主導力用殺星剋開；殺星被合住、粘住，就無殺方論用，先剋開阻住殺星嘅字','第二主導力係打開下一個關口嘅字；其餘大致一齊平衡進行（第31堂 [47:29]）']]]))}">主導力 ①${C(z.p1)} ②${C(z.p2)} ${z.src==='t'?'🎓':z.src?'🤖':''}</span>`;})(zhudao(P));
+  const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}${zdTag}</div>`+`<div class="wxbar wxh">${cnt2.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（計埋藏干：四個天干加四個地支嘅全部藏干，每個藏干算一個）</span></div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
   const startSol=yun.getStartSolar();
@@ -2199,8 +2249,9 @@ const lsT=s=>{s=Math.max(0,Math.floor(s));const h=Math.floor(s/3600),m=Math.floo
 const lsYT=(id,s)=>`https://www.youtube.com/watch?v=${id}${s?'&t='+Math.floor(s)+'s':''}`;
 const lsA=(id,s,lbl)=>`<a href="${lsYT(id,s)}" target="_blank" rel="noopener noreferrer">${lbl||'▶ '+lsT(s)}</a>`;
 // 計法說明每條規則嘅出處：課堂（第N堂 + 時間）；未搵到就寫「未搵到出處」，等課堂文字稿做完再補
-const R94='B1fi0O8stBs',R95='cBdqp1Hl1RA',R98='XjsaDxHjYVI',RN={[R94]:94,[R95]:95,[R98]:98};
+const R94='B1fi0O8stBs',R95='cBdqp1Hl1RA',R98='XjsaDxHjYVI',R20='5-mOvRsEO4Q',R30='hQansSzimWo',R31='ipAu7N7kvSk',R46='JpJKgxMO1OA',RN={[R94]:94,[R95]:95,[R98]:98,[R20]:20,[R30]:30,[R31]:31,[R46]:46};
 const RSRC={
+  'r-zd':[[R31,2751,'日主被合住或粘住，第一主導力用殺星'],[R31,2786,'己土剋開癸水之後，第二主導力用甲木剋開戊土'],[R31,2849,'其餘主導力大致一齊平衡進行'],[R31,2876,'日主冇受困，第一主導力就處理天干其他問題'],[R20,2479,'查理斯：己土第一、甲木第二'],[R30,2614,'宋子文：第一主導力必定係丙火殺星'],[R46,1064,'老師爸爸：戊土剋開兩壬係第一主導力']],
   'r-p-cal':[[R95,3072,'冬至唔使換年柱，進氣時兩條柱搭住睇'],[R95,3190,'年尾兩三個月考慮下一年年柱，年頭兩三個月考慮上一年']],
   'r-p-jq':[[R94,81,'生喺時頭、時中定時尾'],[R94,370,'交界時兩個時辰一齊影響']],
   'r-p-yy':[[R95,4865,'元運好似咒印，出世時沾染過就有力']],
