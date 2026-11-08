@@ -338,6 +338,9 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 /* 電腦版選項「箭咀用數字顯示」：同手機版一樣，一個箭咀加數字 */
 body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:column;align-items:center;line-height:1;font-weight:900;letter-spacing:0;color:var(--bad);margin-right:1px;position:relative;z-index:3}body.arnum .arC.dn{color:var(--water)}body.arnum .arC i{font-style:normal;font-size:11px;font-weight:700;letter-spacing:-.3px;background:var(--paper);border-radius:3px;padding:0 1px}
 @media (max-width:700px),(pointer:coarse) and (max-width:1000px){
+  /* 招殺星欄：手機版將殺星並排，欄闊返，唔好一格疊到好高令成行天干留大片空白（主人 2026-11-08） */
+  .chart thead th.sha{width:calc(var(--shn,1)*84px)}table.chart.hasha{min-width:calc(30px + (var(--n) - 1)*44px + var(--shn,1)*84px)}td.sha>.shawrap{display:flex;flex-wrap:nowrap;justify-content:center;gap:0 4px}tr.ganrow.gtop td.sha>.shawrap{align-items:flex-end}tr.zhirow td.sha>.shawrap{align-items:flex-start}td.sha>.shawrap>.shabox{flex:1 1 0;min-width:0}
+
   .arnumL{display:none!important}
   .zg .act{left:1px;bottom:auto;top:2px;margin-left:0}
   .ssc{font-size:.42em;top:-.6em;right:-.3em}.wd .gl::after,.wn .gl::after{font-size:.36em;right:-.2em}.chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.arF{display:none}.arC{display:inline-flex;flex-direction:column;align-items:center;line-height:1;font-weight:900;letter-spacing:0;color:var(--bad);margin-right:1px;position:relative;z-index:3}.arC.dn{color:var(--water)}.arC i{font-style:normal;font-size:10px;font-weight:700;letter-spacing:-.3px;background:var(--paper);border-radius:3px;padding:0 1px}
@@ -2081,10 +2084,11 @@ function render(){
   const sex=inp.sex===1?'乾造':'坤造';
   // 招殺星多過兩個：電腦版個欄闊返幾倍（table-layout:fixed 跟表頭闊度）
   const shC=Math.max(1,...[0,1].map(k=>{const n=((S.sha||[])[k]||[]).length;return n>2?Math.ceil(n/2):1;}));
-  const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"${col.sha&&shC>1?` style="--shw:${shC*112}px"`:''}>${HSH_U[col.h]?hshBtns(col.h):NAV_COL[col.h]?navBtns(col.h):''}<b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
+  const shN=Math.max(1,...[0,1].map(k=>((S.sha||[])[k]||[]).length));
+  const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"${col.sha?` style="--shn:${shN}${shC>1?`;--shw:${shC*112}px`:''}"`:''}>${HSH_U[col.h]?hshBtns(col.h):NAV_COL[col.h]?navBtns(col.h):''}<b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
   // 啟動同做到功嘅字加 on／wd，CSS 畫光暈同底線
   const fxc=(k,ci)=>(S.act[k][ci][0]?' on':'')+(S.work&&S.work[k]&&S.work[k][ci]?(S.work[k][ci].done?' wd':' wn'):'');
-  const table=`<div class="tscroll"><table class="chart${VIEW.wkMark?'':' nowk'}${VIEW.ssTag?' sst':''}${VIEW.noMidL?' nomid':''}" style="--n:${N};--mw:${60+N*54}px">
+  const table=`<div class="tscroll"><table class="chart${VIEW.wkMark?'':' nowk'}${VIEW.ssTag?' sst':''}${VIEW.noMidL?' nomid':''}${DO.some(ci=>cols[ci].sha)?' hasha':''}" style="--n:${N};--mw:${60+N*54}px;--shn:${shN}">
     <thead><tr><th class="rl"></th>${head}</tr></thead><tbody>
     <tr><th class="rl">十神</th>${td((col,g)=>col.dm?`<span class="ss dm">日主</span><span class="tiny">${inp.sex===1?'元男':'元女'}</span>`:`<span class="ss">${shishen(dm,g)}</span>`)}</tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[0],true,N)}</td></tr>
