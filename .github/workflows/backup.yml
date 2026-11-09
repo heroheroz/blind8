@@ -9,8 +9,8 @@ jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       - run: node scripts/backup.mjs
@@ -19,4 +19,8 @@ jobs:
           git add backup
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git -c user.name="backup bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Weekly 命例 backup $(date -u +%F)"
-          git push
+          for i in 1 2 3 4; do
+            git pull --rebase -q origin main && git push && exit 0
+            sleep $((i*5))
+          done
+          exit 1
