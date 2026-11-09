@@ -2838,7 +2838,7 @@ const tierTag=()=>ADMIN?'<b class="adm">管理員</b>':TIER_N[TIER]?`<b class="a
 const me=()=>CLOUD?(SESSION&&SESSION.user.id):localVoter;
 const myName=()=>CLOUD?(SESSION&&(SESSION.user.name||SESSION.user.email))||'':'我';
 // 權限：本機模式乜都做得；雲端模式要登入先加得，自己加嘅自己改同刪，管理員改同刪任何命例
-const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN,
+const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN,cdel:()=>!CLOUD||ADMIN,
   // 招感殺星：只限進階用戶、高級用戶同管理員（本機模式照開）
   sha:()=>!CLOUD||ADMIN||TIER==='advance'||TIER==='premium',
   sw:()=>true,  // 最強五行計法未確定：暫時所有人都睇到，唔分等級、唔扣分
@@ -2944,6 +2944,10 @@ const Store={
   async comment(id,body){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({id:'C'+Date.now()+'_'+x.comments.length,t:new Date().toISOString(),body,by:'我',likes:0,unlikes:0,myVote:0});lsSet(a);return;}
     await api('comments',{method:'POST',body:JSON.stringify({case_id:id,body,author_name:myName()})});},
+  // 管理員可以刪除備註
+  async uncomment(caseId,cid){
+    if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===caseId);if(!x)return;x.comments=x.comments.filter((m,i)=>(m.id||'i'+i)!==cid);lsSet(a);return;}
+    await api('comments?id=eq.'+encodeURIComponent(cid),{method:'DELETE'});},
   // 每條備註都可以投 👍／👎
   async cvote(caseId,cid,v){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===caseId);if(!x)return;const m=x.comments.find((m,i)=>(m.id||'i'+i)===cid);if(!m)return;
@@ -3152,7 +3156,7 @@ function showCase(c){
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk" title="加" aria-label="加">＋</button></form></div>`:''}
     ${evBlock(c,ed)}
     ${c.notes?`<div class="cbody">${linky(c.notes)}</div>`:''}${lsCaseRefs(c)}
-    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span>${cvoteBtns(c,m)}</div><div>${linky(m.body)}</div></div>`).join('')}
+    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span><span class="row">${cvoteBtns(c,m)}${can.cdel()?`<button type="button" class="lnk del" data-cdel="${esc(m.id)}" data-case="${c.id}" title="刪除備註" aria-label="刪除備註">🗑</button>`:''}</span></div><div>${linky(m.body)}</div></div>`).join('')}
     ${can.vote()?`<form class="cadd" data-comment="${c.id}"><textarea rows="2" maxlength="2000" placeholder="加解釋或者補充備註" required></textarea><button type="submit" class="go sm" title="加備註" aria-label="加備註">📝</button></form>`:'<p class="hint">登入先可以加備註。</p>'}`;
 }
 // 命例事件日期（例如結婚、生仔、過身），撳一下就用嗰日做睇運日期；存喺 input.events
@@ -3283,7 +3287,7 @@ const caseKey=c=>{const i=c.input||{};return [String(c.name||'').trim(),i.sex,!!
 let SAVING=false;
 const busy=async(fn)=>{try{await fn();}catch(e){const m=(e.dup?'':'出錯：')+e.message;$('caseMsg').textContent=m;await reloadCases();$('caseMsg').textContent=m;return;}await reloadCases();};
 document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-ksgo],[data-evgo],[data-evdel],[data-evedit],[data-evcancel],[data-resend],[data-open],[data-vote],[data-cvote],[data-evote],[data-close],[data-priv],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
+  const t=e.target.closest('[data-ksgo],[data-evgo],[data-evdel],[data-evedit],[data-evcancel],[data-resend],[data-open],[data-vote],[data-cvote],[data-cdel],[data-evote],[data-close],[data-priv],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
   if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
   if(t.hasAttribute('data-tagclear')){TAGF.clear();renderCases();return;}
   if(t.hasAttribute('data-edit')){EDIT=true;renderCases();return;}
@@ -3322,6 +3326,7 @@ document.addEventListener('click',e=>{
   else if(t.hasAttribute('data-close')){CUR=null;EDIT=false;renderCases();}
   else if(t.dataset.priv){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!can.edit(c))return;const v=t.dataset.priv==='1';
     if(twice(t,v?'確定改做私人？其他人會睇唔到，亦唔再計分':'確定改做公開？所有人都會睇到'))busy(()=>Store.update(c.id,{private:v}));}
+  else if(t.dataset.cdel){if(!can.cdel())return;if(twice(t,'再撳一下刪除'))busy(()=>Store.uncomment(t.dataset.case,t.dataset.cdel));}
   else if(t.dataset.del){if(!can.del(CASES.find(x=>x.id===t.dataset.del)))return;if(twice(t,'再撳一下刪除'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
   else if(t.id==='caseExport'){if(!can.io())return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([toCSV(CASES)],{type:'text/csv;charset=utf-8'}));a.download='命例.csv';a.click();}
 });
