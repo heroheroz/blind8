@@ -204,7 +204,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .card .gz{font-family:var(--f-display);font-size:28px;font-weight:900;line-height:1.2}
 .card .n{font-size:12px;color:var(--muted)}
 .wxbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.wxbar.wxh{margin-top:6px}
-.wxbar span{padding:3px 10px;border-radius:12px;font-size:13px;font-weight:700}
+.wxbar span{padding:3px 10px;border-radius:12px;font-size:13px;font-weight:700}.wxbar.wxtop{gap:12px}.wxbar.wxtop>span{font-size:18px;padding:7px 18px;border-radius:20px;border-width:2px;box-shadow:0 2px 8px #0003}.wxbar.wxtop>span b{font-size:21px}
 .yun{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 .yun .gua{font-family:var(--f-display);font-size:34px;font-weight:900}
 .yun p{margin:0;font-size:14px}
@@ -2358,7 +2358,7 @@ function render(){
   // 第一／第二主導力（原局天干，所有人睇到，唔扣分）：撳開睇點樣推
   const zdTag=(z=>{const C=c=>c?`<b class="w${gw(gi(c))}">${c}</b>`:'—',why=z.why.split('；');
     return `<span class="gong zdtag" role="button" tabindex="0" data-swsec="${esc(JSON.stringify([['點樣推',why],['來源',[z.src==='t'?'🎓 老師親口講':z.src?`🤖 按第31堂 [45:51] 規則推算，把握 ${z.conf}`:'未計']],['規則',['日主被合住或粘住，第一主導力用殺星剋開；殺星被合住、粘住，就無殺方論用，先剋開阻住殺星嘅字','第二主導力係打開下一個關口嘅字；其餘大致一齊平衡進行（第31堂 [47:29]）']]]))}">主導力 ①${C(z.p1)} ②${C(z.p2)} ${z.src==='t'?'🎓':z.src?'🤖':''}</span>`;})(zhudao(P));
-  const wx=`<div class="wxbar">${zdTag}${swTag}</div><div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`+`<div class="wxbar wxh">${cnt2.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（計埋藏干：四個天干加四個地支嘅全部藏干，每個藏干算一個）</span></div>`;
+  const wx=`<div class="wxbar wxtop">${zdTag}${swTag}</div><div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`+`<div class="wxbar wxh">${cnt2.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（計埋藏干：四個天干加四個地支嘅全部藏干，每個藏干算一個）</span></div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
   const startSol=yun.getStartSolar();
