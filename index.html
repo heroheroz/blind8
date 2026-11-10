@@ -3037,6 +3037,7 @@ const Store={
       evVotes:(r.event_votes||[]).reduce((o,v)=>{const x=o[v.ev]||(o[v.ev]={likes:0,unlikes:0,myVote:0});if(v.vote===1)x.likes++;if(v.vote===-1)x.unlikes++;if(v.voter===uid)x.myVote=v.vote;return o;},{}),
       comments:(r.comments||[]).sort((a,b)=>a.created_at<b.created_at?-1:1).map(c=>{const cv=c.comment_votes||[];return {id:c.id,t:c.created_at,body:c.body,by:c.author_name||'',author:c.author,likes:cv.filter(v=>v.vote===1).length,unlikes:cv.filter(v=>v.vote===-1).length,myVote:(cv.find(v=>v.voter===uid)||{}).vote||0};})}));},
   async add(c){
+    {const i=c.input||{};if(+i.y===1997&&+i.m===7&&+i.d===1&&!+i.h&&!+i.mi&&!ADMIN){const m='出生日期時間仲係預設值（1997-07-01 00:00），請輸入正確資料先儲存。';alert(m);throw new Error(m);}}// 防止忘記改預設日期（029 喺資料庫都擋）
     if(!CLOUD){const a=lsGet(),x={id:'L'+Date.now(),created:new Date().toISOString(),by:'我',likes:0,unlikes:0,myVote:0,comments:[],tags:[],...c};a.unshift(x);if(!lsSet(a))throw new Error('瀏覽器唔畀儲存');return x.id;}
     const r=await api('cases',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({name:c.name,input:c.input,notes:c.notes,tags:c.tags||[],owner_name:myName(),...(c.private?{private:true}:{})})});return r[0].id;},
   async update(id,patch){
