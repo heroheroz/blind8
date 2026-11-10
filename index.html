@@ -89,7 +89,7 @@ h2{font-family:var(--f-display);font-size:18px;margin:0 0 10px;font-weight:700;l
 @media (min-width:701px) and (pointer:fine),(min-width:701px) and (pointer:none),(min-width:1001px){
   .fold>.foldh{display:block;cursor:pointer;user-select:none}.fold>.foldh::before{content:'▾ ';color:var(--muted,#888)}
   .fold.folded>.foldh::before{content:'▸ '}.fold.folded>:not(.foldh){display:none!important}.fold.folded>.foldh{margin:0}
-  h2.foldh{display:block}.fold>h2.foldh~.ntabs{margin-top:8px}}
+  h2.foldh{display:block}.fold>h2.foldh~.ntabs{margin-top:8px}.anmh{display:none}}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
 form{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px}
 fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -271,10 +271,10 @@ td.chain{position:relative;overflow:visible}
 .rules ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 .rules li b{color:var(--ink);margin-right:4px}
 .notes p{margin:0 0 4px}
-.ntabs{margin-bottom:10px}
+.ntabs{margin-bottom:10px}.notes .ntabs label:has(input[value=an]){display:none}#anBox>.npane{display:block!important}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}
-.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
+.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=song]:checked)) #np-song,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
 .ntabs{flex-wrap:wrap}.lpick{display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center}.lnavs{display:inline-flex;gap:6px;align-items:center}.lnav{min-width:2.4em}.ljump{width:6em}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lqa{margin:0 0 14px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--soft);border-radius:6px}.lqa .q{font-weight:600}.lqa .meta{font-size:12px;color:var(--muted)}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}.clsn,a.yt{font-size:12px}.rsrc{display:block;font-size:12px;color:var(--muted);margin-top:2px}.rsrc.none{opacity:.7}.anseg button{border:0;background:none;font:inherit;font-size:14px;padding:5px 12px;cursor:pointer;color:inherit}.anseg button[aria-pressed=true]{background:var(--accent);color:#fff}.angrp{margin:0 0 6px;padding:6px 10px;border:1px solid var(--line);border-radius:6px}.angrp summary{cursor:pointer}.ancases{margin-top:6px;font-size:14px;line-height:1.9}.antab{border-collapse:collapse;font-size:13px;margin:6px 0}.antab th,.antab td{padding:2px 8px;border-bottom:1px solid var(--line);text-align:left}.anpick{margin:0 0 8px}.anpick .on{font-weight:700;text-decoration:underline}
 .sifu{font-size:14px;color:var(--ink);line-height:1.7;max-width:900px}
 .sifu h3{margin:0 0 6px;font-size:18px}
@@ -360,7 +360,6 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
   .mauth .adm{font-size:12px}
   .mnav{display:flex}.mbr{display:inline}.mhsh{display:flex;justify-content:center;gap:2px;white-space:nowrap}.mhsh button{font:inherit;font-size:13px;line-height:1;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}.mhsh .hshn{font-size:11px;padding:3px 3px;color:var(--accent)}
-  .notes .ntabs label:has(input[value=an]){display:none}
   .notes .lpick{display:block;min-width:0;max-width:100%}.notes .lpick select{width:100%}.notes .lnavs{display:flex;gap:8px;margin-top:6px}.notes .lnav{flex:1;font-size:18px;padding:6px}.notes .ljump{flex:1;min-width:0;font:inherit;font-size:15px;padding:4px 8px}.notes .lsel{flex-wrap:wrap}
   #casePager select{font-size:15px}.mnav button[hidden]{display:none}
   table.audit thead{display:none}table.audit,table.audit tbody{display:block}table.audit tr{display:block;border-top:1px solid var(--line);padding:8px 0}
@@ -573,7 +572,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <section class="panel notes fold folded" data-sec="calc">
   <h2 class="foldh">隱姓先生課堂 · 盲派八字摘要 · 八字口訣 · 計法說明</h2>
   <p class="hint nlogin">🔒 登入先睇到隱姓先生課堂、盲派八字摘要、八字口訣、計法說明同命例數據庫分析。</p>
-  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="lsum" checked>隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
+  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="song">🎤 隱姓先生歌曲庫</label><label><input type="radio" name="ntab" value="lsum" checked>隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
   <div class="npane" id="np-calc">
   <p id="r-p-cal"><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
@@ -874,6 +873,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   </ul>
   <p class="hint">出處：<a href="http://m.udxd.com/news/show-102920.html" target="_blank" rel="noopener">udxd.com</a>、<a href="https://zhuanlan.zhihu.com/p/1976362559935366444" target="_blank" rel="noopener">知乎</a>、<a href="https://zhuanlan.zhihu.com/p/2081950982699800162" target="_blank" rel="noopener">知乎</a>、<a href="https://www.163.com/dy/article/KDM937E80521DJ4J.html" target="_blank" rel="noopener">網易</a></p>
   </div>
+  <div class="npane sifu" id="np-song"><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lsum"><div class="lsel row"><span class="lpick"></span></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lqa"><div class="lsel row"><input type="search" class="lq" data-lqa placeholder="搵問題…" aria-label="搵問題"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-an"><div class="lsel row seg anseg"><button type="button" data-ansub="zg">做功結構</button><button type="button" data-ansub="ev">事件</button><button type="button" data-ansub="ss">十神結構</button><button type="button" data-ansub="gz">干支組合</button></div><div class="lbody"><p class="hint">揀「命例數據庫分析」先計。</p></div></div>
@@ -905,7 +905,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
   <div class="gbpager" id="lbPager"></div>
 </section>
-<section class="panel" id="anBox" hidden><h2>命例數據庫分析</h2></section>
+<section class="panel fold folded" id="anBox" data-sec="an" hidden><h2 class="foldh">命例數據庫分析</h2><h2 class="anmh">命例數據庫分析</h2></section>
 <section class="panel" id="gb">
   <h2>留言版 <label class="hint gbn">每頁 <select id="gbN" aria-label="每頁幾多條留言"><option value="6" selected>6</option><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select> 條</label></h2>
   <div id="gbForm"></div>
@@ -2405,7 +2405,7 @@ function render(){
   const bs=S.birthSolar;
   const inLabel=inp.lunar?`農曆 ${yearTxt(inp.y)}年${inp.leap?'閏':''}${LMON[inp.m-1]}月${lunarDay(inp.d)}（公曆 ${yearTxt(bs.getYear())}-${pad(bs.getMonth())}-${pad(bs.getDay())}）`:`公曆 ${yearTxt(bs.getYear())}-${pad(bs.getMonth())}-${pad(bs.getDay())}`;
 
-  {const n=document.querySelector('section.notes');if(n&&n.parentNode===$('out'))$('aw').after(n);const lb=$('lb');if(lb&&lb.parentNode===$('out'))$('anBox').before(lb);}
+  {const n=document.querySelector('section.notes');if(n&&n.parentNode===$('out'))$('aw').after(n);const b=$('anBox');if(b.parentNode===$('out'))$('gb').before(b);const lb=$('lb');if(lb&&lb.parentNode===$('out'))b.before(lb);}
   $('out').innerHTML=`
   <section class="panel">
     <div class="summary">
@@ -2444,9 +2444,11 @@ function render(){
   placeNotes();
 }
 // 電腦版：計法說明・課堂嗰格擺喺行星位置上面；手機版留返原位（計法分頁）
-function placeAn(){const a=$('np-an'),b=$('anBox'),n=document.querySelector('section.notes');let lg=true;try{lg=!(CLOUD&&!SESSION);}catch(e){}b.hidden=!(isMob()&&lg);$('mAnTab').hidden=!lg;if(!lg&&document.body.dataset.mtab==='an')mTab('in');if(!a||!n)return;if(isMob()){if(a.parentNode!==b)b.append(a);}else if(a.parentNode!==n)n.append(a);}
+function placeAn(){const a=$('np-an'),b=$('anBox'),n=document.querySelector('section.notes');let lg=true;try{lg=!(CLOUD&&!SESSION);}catch(e){}b.hidden=!lg;$('mAnTab').hidden=!lg;if(!lg&&document.body.dataset.mtab==='an')mTab('in');if(!a||!n)return;
+  // 命例數據庫分析：電腦版自己一個可以收埋嘅部分，擺喺課堂嗰格下面；手機版係獨立分頁
+  if(a.parentNode!==b)b.append(a);}
 // 貢獻排行榜（電腦版）擺喺行星位置正上面；手機版留返原位（獨立分頁）
-function placeNotes(){placeAn();const n=document.querySelector('section.notes'),p=$('plBox'),lb=$('lb');if(!n)return;if(!isMob()&&p){if(n.nextElementSibling!==lb&&n.nextElementSibling!==p)p.before(n);if(lb&&lb.nextElementSibling!==p)p.before(lb);}else{if(n.parentNode===$('out'))$('aw').after(n);if(lb&&lb.parentNode===$('out'))$('anBox').before(lb);}}
+function placeNotes(){const n=document.querySelector('section.notes'),p=$('plBox'),lb=$('lb'),b=$('anBox');if(!n){placeAn();return;}if(!isMob()&&p){if(p.previousElementSibling!==lb||lb.previousElementSibling!==b||b.previousElementSibling!==n){p.before(n);p.before(b);if(lb)p.before(lb);}}else{if(n.parentNode===$('out'))$('aw').after(n);if(b.parentNode===$('out'))$('gb').before(b);if(lb&&lb.parentNode===$('out'))b.before(lb);}placeAn();}
 addEventListener('resize',()=>placeNotes());
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 // 備註同筆記入面嘅網址變成可以撳嘅連結；YouTube 連結顯示「▶ YouTube 45:30」（有 t= 就顯示由幾時開始）
@@ -2492,23 +2494,24 @@ async function lsIndex(){if(!LS.idx){try{const r=await fetch('lessons/index.json
 async function lsLoad(id){if(!LS.data[id]){const r=await fetch(`lessons/${id}.json`,{cache:'no-cache'});if(!r.ok)throw new Error('讀唔到呢一課');LS.data[id]=await r.json();}return LS.data[id];}
 function lsCaseRefs(c){const hit=(LS.idx||[]).flatMap(l=>(l.cases||[]).filter(x=>x[0]===c.id).map(x=>({l,t:x[1]})));if(!hit.length)return '';
   return `<div class="clsn hint">📖 課堂提到：${hit.map(({l,t})=>`<button type="button" class="lnk" data-lgo="${l.id}">${esc(l.short||l.title)}</button>${t!=null?' '+lsA(l.id,t):''}`).join('　')}</div>`;}
-// 隱姓先生歌曲庫（新曲+精選）：揀堂選單第一個選擇（LS.cur=SONGS）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
+// 隱姓先生歌曲庫：說明區第一個分頁（np-song）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
 const SONGS='__songs';
 async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.json',{cache:'no-cache'});LS.songs=r.ok?await r.json():[];}catch(e){LS.songs=[];}}
   const L=LS.songs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   // 每首歌：連結文字係歌名（跳去嗰首歌開始，未知時間就由片頭播）；唔顯示時間（主人 2026-11-08）
   const song=(x,g)=>{const t=g&&g.t!=null?+g.t:null;return `<a href="${lsYT(x.id,t||0)}" target="_blank" rel="noopener noreferrer">🎵 ${esc((g&&g.name)||x.title||'')}</a>`;};
-  return `<h3>🎤 隱姓先生歌曲庫（新曲+精選）</h3><p class="lsong-tip">🔓 聽完全部歌曲會解鎖隱藏功能 😆</p>`+(L.length?`<ul class="lsong">${L.map(x=>`<li><span class="hint">${esc(x.date||'')} ${esc(x.title||'')}${x.dur?`（${esc(x.dur)}）`:''}</span><br>${(Array.isArray(x.songs)?x.songs:String(x.songs||'').split('、').filter(Boolean).map(n=>({name:n}))).map(g=>song(x,g)).join('　')}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>');}
+  return `<h3>🎤 隱姓先生歌曲庫</h3><p class="lsong-tip">🔓 聽完全部歌曲會解鎖隱藏功能 😆</p>`+(L.length?`<ul class="lsong">${L.map(x=>`<li><span class="hint">${esc(x.date||'')} ${esc(x.title||'')}${x.dur?`（${esc(x.dur)}）`:''}</span><br>${(Array.isArray(x.songs)?x.songs:String(x.songs||'').split('、').filter(Boolean).map(n=>({name:n}))).map(g=>song(x,g)).join('　')}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>');}
 async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
   if(!idx.length){bodies.forEach(b=>b.innerHTML='<p class="hint">未有課堂資料。</p>');return;}
   const ord=[...idx].sort((a,b)=>(b.n||0)-(a.n||0));
-  if(LS.cur!==SONGS&&!idx.some(l=>l.id===LS.cur))LS.cur=SONGS;
+  // 歌曲庫有自己嘅分頁；揀堂預設最新一堂
+  if(!idx.some(l=>l.id===LS.cur))LS.cur=ord[0].id;
+  if(!LS.songDone){LS.songDone=true;lsSongs().then(h=>{const b=document.querySelector('#np-song .lbody');if(b)b.innerHTML=h;});}
   // 揀堂：按月份分組；◀ ▶ 上一堂／下一堂（跟選單次序）；輸入堂數直接跳
-  const seq=[SONGS,...ord.map(l=>l.id)],k=seq.indexOf(LS.cur),grp={};ord.forEach(l=>{const g=String(l.date||'').slice(0,7)||'其他';(grp[g]=grp[g]||[]).push(l);});
-  const opt=`<optgroup label="🎤 歌曲"><option value="${SONGS}"${LS.cur===SONGS?' selected':''}>🎤 隱姓先生歌曲庫（新曲+精選）</option></optgroup>`+Object.keys(grp).map(g=>`<optgroup label="${esc(g.replace(/^(\d{4})-(\d\d)$/,(_,y,m)=>`${y}年${+m}月`))}">${grp[g].map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${l.short?esc(l.short)+' · ':''}${esc(l.date||'')} ${esc(l.title)}</option>`).join('')}</optgroup>`).join('');
+  const seq=ord.map(l=>l.id),k=seq.indexOf(LS.cur),grp={};ord.forEach(l=>{const g=String(l.date||'').slice(0,7)||'其他';(grp[g]=grp[g]||[]).push(l);});
+  const opt=Object.keys(grp).map(g=>`<optgroup label="${esc(g.replace(/^(\d{4})-(\d\d)$/,(_,y,m)=>`${y}年${+m}月`))}">${grp[g].map(l=>`<option value="${l.id}"${l.id===LS.cur?' selected':''}>${l.short?esc(l.short)+' · ':''}${esc(l.date||'')} ${esc(l.title)}</option>`).join('')}</optgroup>`).join('');
   const nb=(d,lbl,t)=>{const x=seq[k+d];return `<button type="button" class="lnav" data-lnav="${x||''}"${x?'':' disabled'} title="${t}" aria-label="${t}">${lbl}</button>`;};
   document.querySelectorAll('.notes .lpick').forEach(s=>s.innerHTML=`<select data-lsel aria-label="揀課堂">${opt}</select><span class="lnavs">${nb(-1,'◀','上一個（較新）')}${nb(1,'▶','下一個（較舊）')}<input type="number" class="ljump" data-ljump min="1" inputmode="numeric" placeholder="第幾堂" aria-label="跳去第幾堂"></span>`);
-  if(LS.cur===SONGS){const h=await lsSongs();if(LS.cur===SONGS)bodies.forEach(b=>b.innerHTML=h);lsQA(ord);return;}
   let L;try{L=await lsLoad(LS.cur);}catch(e){bodies.forEach(b=>b.innerHTML=`<p class="hint">${esc(e.message)}</p>`);return;}
   if(L.id!==LS.cur)return;
   const head=`<h3>${esc(L.title)}</h3><p class="hint">${esc(L.date||'')}${L.dur?' · '+esc(L.dur):''} · ${lsA(L.id,0,'▶ YouTube')}${L.quality==='lite'?' · <span title="用 lite 模型轉錄，可能有錯字，之後會重做">📝 初稿</span>':''}</p>${L.note?`<p class="hint">⚠️ ${esc(L.note)}</p>`:''}`;
@@ -2706,7 +2709,7 @@ document.addEventListener('click',e=>{const s=e.target.closest('[data-ansub]');i
   const g=e.target.closest('[data-ang]');if(g){AN.g=g.dataset.ang;anDraw();}});
 document.addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('[data-angrp]'))return;const id=d.dataset.angrp,was=!!AN.open[id];AN.open[id]=d.open;if(d.open&&!was)anDraw();},true);
 document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab][value=an]'))anDraw();else if(e.target.matches('[data-anwke]')){AN_E=+e.target.value;anDraw();}});
-const anOn=()=>{if(isMob())return document.body.dataset.mtab==='an';const r=document.querySelector('input[name=ntab][value=an]');return r&&r.checked;};
+const anOn=()=>{if(isMob())return document.body.dataset.mtab==='an';const b=$('anBox');return !!b&&!b.hidden&&!b.classList.contains('folded');};
 // 開某一課：揀「課堂總結」分頁（電腦版打開計法嗰格，手機版轉去計法頁）
 function lsOpen(id,tab){LS.cur=id;const r=document.querySelector(`input[name=ntab][value=${tab||'lsum'}]`);if(r)r.checked=true;SECF.calc=true;applySec();
   if(document.body.dataset.mtab)mTab('learn');lsDraw().then(()=>document.querySelector('.notes').scrollIntoView({block:'start'}));}
@@ -2882,7 +2885,7 @@ function myPts(){if(!SESSION||!PT.rows)return null;const r=PT.rows.find(x=>x.use
 const SECF={aw:true,lb:true};
 function applySec(){document.querySelectorAll('[data-sec]').forEach(el=>el.classList.toggle('folded',!SECF[el.dataset.sec]));}
 document.addEventListener('click',e=>{const h=e.target.closest('.foldh');if(!h||e.target.closest('button,a,input,select'))return;const el=h.closest('[data-sec]');if(!el)return;
-  SECF[el.dataset.sec]=!SECF[el.dataset.sec];applySec();});
+  SECF[el.dataset.sec]=!SECF[el.dataset.sec];applySec();if(el.id==='anBox'&&anOn())anDraw();});
 // 每日登入獎勵（014_daily_login.sql）：每日（香港時間）第一次登入開網就簽到；伺服器一日只計一次，呢度只係避免重複問
 const CK={busy:false};
 async function checkin(){const uid=SESSION&&SESSION.user&&SESSION.user.id,day=new Date(Date.now()+8*3600e3).toISOString().slice(0,10),key='b8-ck-'+uid;
