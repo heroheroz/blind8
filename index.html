@@ -110,6 +110,13 @@ input#name{width:100%}
 button.go{background:var(--accent);color:var(--paper);border:0;border-radius:6px;padding:9px 26px;font-weight:700;letter-spacing:.2em;cursor:pointer}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .err{color:var(--bad);font-size:14px}
+@media (max-width:899px){#fsAt{margin-top:6px}}
+@media (min-width:900px){
+  #f{grid-template-columns:minmax(200px,1fr) minmax(340px,1.5fr) minmax(220px,1fr);grid-template-areas:"nm bi tm" "pl at ac";gap:14px 22px;align-items:start}
+  #fsName{grid-area:nm}#fsBirth{grid-area:bi}#fsTime{grid-area:tm}#fsPlace{grid-area:pl}#fsAt{grid-area:at}#f>.actions{grid-area:ac;align-self:end;flex-wrap:wrap}
+  #f fieldset{gap:5px}#f select,#f input[type=number]{padding:6px 5px}#f input[type=number]{width:4.4em}#fsAt .row,#fsBirth .row{flex-wrap:nowrap}#f .bzpk{margin:0}#fsPlace .hint{font-size:11px}
+  #f>.actions .go{width:100%;padding:10px 26px}#f>.actions .err:empty{display:none}
+}
 /* element colours */
 .w0{color:var(--wood)}.w1{color:var(--fire)}.w2{color:var(--earth)}.w3{color:var(--metal)}.w4{color:var(--water)}
 .bg0{background:color-mix(in srgb,var(--wood) 16%,transparent)}.bg1{background:color-mix(in srgb,var(--fire) 16%,transparent)}
@@ -477,7 +484,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <section class="panel inpanel" id="inPanel" aria-label="輸入資料">
 <button type="button" class="intoggle" id="inToggle" aria-expanded="true"><span id="inSum">出生資料</span><b>修改 ▾</b></button>
 <form id="f" autocomplete="off">
-  <fieldset>
+  <fieldset id="fsName">
     <label class="cap" for="name">姓名</label>
     <input type="text" id="name" placeholder="例：香港回歸">
     <div class="row" style="margin-top:6px">
@@ -489,7 +496,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <p class="hint">性別決定大運順排定逆排。</p>
   </fieldset>
 
-  <fieldset>
+  <fieldset id="fsBirth">
     <legend>出生日期</legend>
     <div class="seg" role="radiogroup" aria-label="曆法">
       <label><input type="radio" name="cal" id="calS" value="solar" checked>公曆（西曆）</label>
@@ -502,7 +509,10 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     </div>
     <label class="chk" id="leapWrap" hidden><input type="checkbox" id="leap">閏月</label>
     <details class="bzpk" open data-bzpk="birth"><summary>🔎 揀八字搵日子</summary><div class="bzsel0" data-lbl="年柱,月柱,日柱,時柱"></div><div class="row"><span class="hint">揀齊年、月、日柱就自動搵（時柱可以唔揀）</span><button type="button" class="lnk" data-bzgo title="搵" aria-label="搵">🔍</button></div><div class="bzres"></div></details>
-    <label class="cap" for="aty" style="margin-top:6px">睇運日期（公曆，預設今日）</label>
+  </fieldset>
+
+  <fieldset id="fsAt">
+    <legend>睇運日期（公曆，預設今日）</legend>
     <div class="row">
       <select id="atEra" aria-label="睇運日期公元／公元前"><option value="1">公元</option><option value="-1">公元前</option></select><input type="number" id="aty" min="1" max="9999" aria-label="睇運日期年" style="width:5.2em"> 年
       <select id="atm" aria-label="睇運日期月"></select>
@@ -512,7 +522,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <details class="bzpk" open data-bzpk="at"><summary>🔎 揀干支搵日子</summary><div class="bzsel0" data-lbl="流年,流月,流日"></div><div class="row"><span class="hint">揀齊流年、流月、流日就自動搵</span><button type="button" class="lnk" data-bzgo title="搵" aria-label="搵">🔍</button></div><div class="bzres"></div></details>
   </fieldset>
 
-  <fieldset>
+  <fieldset id="fsTime">
     <legend>出生時間（當地鐘錶時間）</legend>
     <div class="row">
       <select id="h" aria-label="時"></select> :
@@ -525,7 +535,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     </select>
   </fieldset>
 
-  <fieldset>
+  <fieldset id="fsPlace">
     <legend>出生地、時區</legend>
     <div class="row">
       <select id="city" aria-label="城市"></select>
@@ -964,6 +974,7 @@ const TZS=[];for(let i=-12;i<=14;i++)TZS.push(i);[-9.5,-3.5,3.5,4.5,5.5,5.75,6.5
 fillSel($('tz'),TZS.map(v=>{const s=v<0?'−':'+',a=Math.abs(v);return [v,`UTC${s}${Math.floor(a)}:${pad(Math.round((a%1)*60))}`];}));
 function isLunar(){return $('calL').checked;}
 fillSel($('atm'),Array.from({length:12},(_,i)=>[i+1,(i+1)+' 月']));fillSel($('atd'),Array.from({length:31},(_,i)=>[i+1,(i+1)+' 日']));
+try{if(matchMedia('(min-width:701px)').matches)document.querySelectorAll('#f details.bzpk').forEach(d=>d.open=false);}catch(e){}
 const atToday=()=>{const t=new Date();$('atEra').value='1';$('aty').value=t.getFullYear();$('atm').value=t.getMonth()+1;$('atd').value=t.getDate();};atToday();
 $('atClr').addEventListener('click',()=>{atToday();if(S)run(readForm());});
 // 睇運日期：有填就用嗰日揀大運流年流月流日，冇填就用今日
