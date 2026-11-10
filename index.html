@@ -2449,8 +2449,11 @@ function placeAn(){const a=$('np-an'),b=$('anBox'),n=document.querySelector('sec
   // 命例數據庫分析：電腦版自己一個可以收埋嘅部分，擺喺課堂嗰格下面；手機版係獨立分頁
   if(a.parentNode!==b)b.append(a);}
 // 貢獻排行榜（電腦版）擺喺行星位置正上面；手機版留返原位（獨立分頁）
-function placeNotes(){const n=document.querySelector('section.notes'),p=$('plBox'),lb=$('lb'),b=$('anBox');if(!n){placeAn();return;}if(!isMob()&&p){if(p.previousElementSibling!==lb||lb.previousElementSibling!==b||b.previousElementSibling!==n){p.before(n);p.before(b);if(lb)p.before(lb);}}else{if(n.parentNode===$('out'))$('aw').after(n);if(b.parentNode===$('out'))$('gb').before(b);if(lb&&lb.parentNode===$('out'))b.before(lb);}placeAn();}
-addEventListener('resize',()=>placeNotes());
+function placeNotes(){const n=document.querySelector('section.notes'),p=$('plBox'),lb=$('lb'),b=$('anBox');if(!n){placeAn();return;}
+  // 電腦版：課堂・摘要・口訣・計法說明擺喺網頁最頂（預設收埋）；分析、排行榜擺喺行星位置上面。手機版留返原位（獨立分頁）
+  if(!isMob()){const g=$('mGuide'),ip=$('inPanel'),t=g&&g.nextElementSibling===ip?g:ip;if(t&&n.nextElementSibling!==t)t.before(n);if(p&&(p.previousElementSibling!==lb||lb.previousElementSibling!==b)){p.before(b);if(lb)p.before(lb);}}
+  else{if(n.previousElementSibling!==$('aw'))$('aw').after(n);if(b.parentNode===$('out'))$('gb').before(b);if(lb&&lb.parentNode===$('out'))b.before(lb);}placeAn();}
+addEventListener('resize',()=>placeNotes());placeNotes();
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 // 備註同筆記入面嘅網址變成可以撳嘅連結；YouTube 連結顯示「▶ YouTube 45:30」（有 t= 就顯示由幾時開始）
 function linky(s){return esc(s).replace(/https?:\/\/[A-Za-z0-9\-._~:\/?#\[\]@!$&;%+=,*']+/g,u=>{const raw=u.replace(/&amp;/g,'&'),yt=/(^https?:\/\/)?([\w-]+\.)?(youtube\.com|youtu\.be)\//.test(raw);
