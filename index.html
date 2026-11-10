@@ -1803,7 +1803,7 @@ function workSec(male){const {rows,zg,cat,cnt,ys}=workRows(male);
   </details></section><section class="panel" id="wkKsBox"><details data-wkks ${KD_OPEN?'open':''}><summary><h2 class="plh">卡死日子同元神斷滅推論 <span class="hint">（推測，只供參考）</span></h2></summary>
   <h3 class="wksh">卡死日子 <span class="hint">（出世至 100 歲，原局 8 個字全部要做功、但全部做唔到功嘅日子）</span></h3>
   <div id="wkKS" class="hint">計算中…</div>
-  <h3 class="wksh">元神斷滅推論 <span class="hint">（第63、66、98堂）</span></h3>
+  <h3 class="wksh">元神斷滅推論 <span class="hint">（第63、66、86、98堂）</span></h3>
   <ul class="wklist">${ysHtml}</ul><div id="wkYS"></div></details></section>`;}
 let WK_OPEN=true,WD_OPEN=true,KD_OPEN=false;document.addEventListener('toggle',e=>{if(!e.target.matches)return;if(e.target.matches('[data-wkbox]'))WK_OPEN=e.target.open;else if(e.target.matches('[data-wkday]'))WD_OPEN=e.target.open;else if(e.target.matches('[data-wkks]')){KD_OPEN=e.target.open;if(KD_OPEN)ksStart();}},true);
 // 喜忌字：喺盤最右邊（流日之後）加一個「見到」嘅字，逐個天干（10 個）同地支（12 個）試，喺唔同日子入面計原局 8 個字平均有幾多個做到功、幾多個做唔到功，同冇呢個字比。
