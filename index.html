@@ -1147,7 +1147,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>加入命例</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
   <div class="gbpager" id="tuPager"></div>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
-  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="SIGNUP">註冊</option><option value="LOGIN">登入</option><option value="VIEW">打開命例</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload title="重新載入" aria-label="重新載入">↻</button></div>
+  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="SIGNUP">註冊</option><option value="LOGIN">登入</option><option value="VIEW">打開命例</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><label class="hint"><input type="checkbox" id="auMe" checked> 唔顯示我自己</label><button type="button" class="lnk" data-aureload title="重新載入" aria-label="重新載入">↻</button></div>
   <p class="hint" id="auMsg"></p>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
@@ -3315,6 +3315,8 @@ function renderSug(){
 // 每頁幾多條：預設 20，記喺呢個瀏覽器；「全部」= 0（伺服器一次最多俾 1000 條，超過就照樣分頁）
 const AU={p:0,n:(()=>{try{const v=localStorage.getItem('b8-aun2');return v!=null&&['0','6','10','20','30','50','100'].includes(v)?+v:10;}catch(e){return 10;}})(),loaded:false};
 $('auN').value=String(AU.n);
+// 「唔顯示我自己」：主人嘅三個帳戶（預設剔咗）
+const AU_ME=['75920ec6-44a9-4d3d-bf11-f138d7e65cdf','ccf63e57-d5b2-4309-be76-4ecfd4bb11e6','c8f873d6-c382-42ae-92d4-71860509317c'];
 const AU_T={cases:'命例',comments:'命例筆記',guestbook:'留言版',tags:'標籤',votes:'命例投票',comment_votes:'筆記投票',event_votes:'事件投票',admins:'管理員',user_tiers:'用戶等級',point_bonus:'手動加分',point_costs:'扣分設定',point_settings:'計分設定',users:'用戶註冊',logins:'用戶登入'};
 const AU_OP={INSERT:'新增',UPDATE:'修改',DELETE:'刪除',LOGIN:'登入',VIEW:'打開'},AU_PV={google:'Google',discord:'Discord',facebook:'Facebook',email:'電郵'},AU_V={'1':'👍 準','-1':'👎 唔準','0':'撤回'};
 const AU_K={name:'名稱',input:'出生資料',notes:'筆記',tags:'標籤',vote:'投票',body:'內容',owner_name:'加入者',author_name:'作者',private:'私人'};
@@ -3337,7 +3339,7 @@ function auDiff(r){if(r.op!=='UPDATE'||!r.row_old||!r.row_new)return [];const a=
 async function loadAudit(){
   if(!(CLOUD&&ADMIN))return;
   const f=[],t=$('auTbl').value,op=$('auOp').value,q=$('auQ').value.trim().replace(/[,()*%]/g,'');
-  if(op==='SIGNUP'){f.push('tbl=eq.users','op=eq.INSERT');}else{if(t)f.push('tbl=eq.'+t);if(op)f.push('op=eq.'+op);}if(q)f.push('or='+encodeURIComponent(`(actor_name.ilike.*${q}*,actor_email.ilike.*${q}*)`));
+  if(op==='SIGNUP'){f.push('tbl=eq.users','op=eq.INSERT');}else{if(t)f.push('tbl=eq.'+t);if(op)f.push('op=eq.'+op);}const ac=[];if(q)ac.push(`or(actor_name.ilike.*${q}*,actor_email.ilike.*${q}*)`);if($('auMe').checked)ac.push(`or(actor.is.null,actor.not.in.(${AU_ME.join(',')}))`);if(ac.length)f.push('and='+encodeURIComponent(`(${ac.join(',')})`));
   $('auMsg').textContent='載入緊…';
   const n=AU.n||1000;
   try{const {rows,total}=await api(`audit_log?select=*&order=at.desc&limit=${n+1}&offset=${AU.p*n}${f.length?'&'+f.join('&'):''}`,{count:true,headers:{Prefer:'count=exact'}});
@@ -3419,7 +3421,7 @@ $('lb').addEventListener('click',e=>{if(e.target.closest('[data-lbreload]'))load
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],[data-usopen]');if(!b)return;
   if(b.dataset.uspage){US.p=Math.max(0,+b.dataset.uspage-1);loadUsage();return;}
   const v=US.rows[+b.dataset.usopen].input;writeForm(v);TRK.skip=true;try{run(v);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);mTab('chart');$('out').scrollIntoView({block:'start'});});
-$('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun2',e.target.value);}catch(x){}}if(e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
+$('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun2',e.target.value);}catch(x){}}if(e.target.id==='auMe'||e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,+b.dataset.aupage-1);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
 // 計法說明：淨係進階用戶、高級用戶同管理員先睇到（跟 can.sha）；普通用戶同未登入就收埋，自動轉去「盲派八字摘要」
 function calcVis(){placeAn();const ok=can.sha();document.body.classList.toggle('nocalc',!ok);document.body.classList.toggle('nologin',!!CLOUD&&!SESSION);
