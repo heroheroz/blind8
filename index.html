@@ -1552,7 +1552,7 @@ function workRows(male){
   [0,1].forEach(k=>{const grp={};cc.forEach((c,i)=>{if(c.gz&&!c.sha)(grp[val(i,k)]=grp[val(i,k)]||[]).push(i);});const seen=new Set();
     Object.keys(grp).forEach(v=>Object.keys(grp).forEach(w=>{v=+v;w=+w;const hit=k?has(CHONG,ZHI[v],ZHI[w]):w===(v+6)%10;if(!hit)return;const key=k?[v,w].sort().join():w+'>'+v;if(seen.has(key))return;seen.add(key);
       let [x,y]=[w,v];if(k&&grp[w].length>grp[v].length)[x,y]=[v,w];const a=grp[x].length,b=grp[y].length,X=ch(k,x),Y=ch(k,y),vb=k?'沖':'剋';
-      if(a===1&&b>=2)cnt.push(`一${X}${vb}${CN[b]||b}${Y}：一打二，做功（吉）`);else if(a>=2&&b>=2)cnt.push(`⚠ ${CN[a]||a}${X}${vb}${CN[b]||b}${Y}：二打二，易招凶災`);
+      if(a===1&&b>=2)cnt.push(`一${X}${vb}${CN[b]||b}${Y}：一打${CN[b]||b}，做功（吉）`);else if(a>=2&&b>=2)cnt.push(`⚠ ${CN[a]||a}${X}${vb}${CN[b]||b}${Y}：${CN[a]||a}打${CN[b]||b}（多打多），易招凶災`);
 }));});
   {const zc={};cc.forEach(c=>{if(c.gz&&!c.sha&&SELF.includes(c.gz[1]))(zc[c.gz[1]]=zc[c.gz[1]]||[]).push(c.h);});
     Object.entries(zc).forEach(([z,h])=>{if(h.length>1)cnt.push(`自刑：${h.join('、')}都係${'\x01'+z}${h.some(x=>x==='大運')?'（大運有自刑，要小心）':''}`);});}
