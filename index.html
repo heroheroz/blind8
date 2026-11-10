@@ -1935,7 +1935,7 @@ function ksPaint(){const box=$('wkKS'),r=KS.res;if(!box||!r)return;box.classList
   const ln=S.dys[S.di].getLiuNian()[S.li],curY=ln.getYear();
   const sum=`出世至 100 歲（${yearS(r.Y0)}–${yearS(r.end??r.Y1)}${r.end!=null&&r.end<r.Y1?'，大運排到呢度為止':''}）：${r.done?'':`計緊… ${yearS(r.cur)} 年（${Math.floor((r.cur-r.Y0)*100/(r.Y1-r.Y0+1))}%），暫時 `}<b>${r.tot}</b> 日卡死，分佈喺 <b>${r.yrs.length}</b> 年。`;
   let el=box.querySelector('.kss');
-  if(!el){box.innerHTML=`<p class="kss"></p><div class="ksy"></div><p class="hint xjh">卡死＝原局四柱 8 個字嘅偏財全部有粘連（全部要做功），但係冇一個字啟動到（全部做唔到功），好似張國榮、梅艷芳過身嗰日咁。地支跟天干一齊計，兩行都要全部做唔到功先算。撳年份睇日子，撳日子會跳去嗰日睇盤。</p>`;el=box.querySelector('.kss');const yb=$('wkYS');if(yb)yb.innerHTML=`<p class="kss2"></p><div class="ysy"></div><p class="hint xjh">元神斷滅推論（第63、66、98堂）：① 日主夾得實（日主粘連 ≥ ${fmtN(YS_TH())} 個箭咀）② 日主要做功（偏財有粘連）③ 殺星入唔到（做唔到功）。撳年份睇日子先計係邊層柱令三步齊：靠流年、大運、隱藏柱齊就差唔多死硬，只靠流日力度細（第64堂）。推測，只供參考。</p>`;}
+  if(!el){box.innerHTML=`<p class="kss"></p><div class="ksy"></div><p class="hint xjh">卡死＝原局四柱 8 個字嘅偏財全部有粘連（全部要做功），但係冇一個字啟動到（全部做唔到功），好似張國榮、梅艷芳過身嗰日咁。地支跟天干一齊計，兩行都要全部做唔到功先算。撳年份睇日子，撳日子會跳去嗰日睇盤。</p>`;el=box.querySelector('.kss');const yb=$('wkYS');if(yb)yb.innerHTML=`<p class="kss2"></p><div class="ysy"></div><p class="hint xjh">元神斷滅推論（第63、66、86、98堂）：① 日主夾得實（日主粘連 ≥ ${fmtN(YS_TH())} 個箭咀）② 日主要做功（偏財有粘連）③ 殺星入唔到（做唔到功）。撳年份睇日子先計係邊層柱令三步齊：靠流年、大運、隱藏柱齊就差唔多死硬，只靠流日力度細（第64堂）。推測，只供參考。</p>`;}
   el.innerHTML=sum;
   const wrap=box.querySelector('.ksy');
   r.yrs.forEach(y=>{if(wrap.querySelector(`[data-ksy="${y.Y}"]`))return;
