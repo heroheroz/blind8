@@ -358,7 +358,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .ssc{font-size:.42em;top:-.6em;right:-.3em}.wd .gl::after,.wn .gl::after{font-size:.36em;right:-.2em}.chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.arF{display:none}.arC{display:inline-flex;flex-direction:column;align-items:center;line-height:1;font-weight:900;letter-spacing:0;color:var(--bad);margin-right:1px;position:relative;z-index:3}.arC.dn{color:var(--water)}.arC i{font-style:normal;font-size:10px;font-weight:700;letter-spacing:-.3px;background:var(--paper);border-radius:3px;padding:0 1px}
   body{padding-block:0 32px;font-size:16px}
   .mtop{display:block;position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 4px;margin:0 -16px 12px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-  .mauth{display:flex;align-items:center;gap:8px;font-size:14px;min-height:28px}.mauth .who{font-weight:600;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mauth{display:flex;align-items:center;gap:8px;font-size:14px;min-height:28px;padding-right:76px}.mkofi{position:absolute;right:10px;top:calc(7px + env(safe-area-inset-top));line-height:24px;margin:0}.mauth .who{font-weight:600;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
   .mauth .adm{font-size:12px}
   .mnav{display:flex}.mbr{display:inline}.mhsh{display:flex;justify-content:center;gap:2px;white-space:nowrap}.mhsh button{font:inherit;font-size:13px;line-height:1;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}.mhsh .hshn{font-size:11px;padding:3px 3px;color:var(--accent)}
@@ -389,7 +389,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .intoggle{display:none!important}.inpanel.incol #f{display:block!important}
   #f .go{font-size:18px;padding:12px 20px;width:100%}
   .cases input,.cases textarea,.cases select,#f input,#f select{font-size:16px}
-  header{gap:4px 10px}header h1{font-size:22px}header p:not(.credit){font-size:0;margin:0}header p:not(.credit) a.kofi{font-size:13px;margin:0}header .credit{margin-left:0;font-size:13px}
+  header{gap:4px 10px}header h1{font-size:22px}header p:not(.credit){display:none}header .credit{margin-left:0;font-size:13px}
   .panel{padding:12px}
   .intoggle{all:unset;box-sizing:border-box;display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;cursor:pointer;font-size:14px}
   .intoggle b{color:var(--accent);font-weight:500;white-space:nowrap}
@@ -421,7 +421,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 </head><body>
 
 <div class="layout">
-<div class="mtop"><div class="mauth" id="mAuth"></div>
+<div class="mtop"><div class="mauth" id="mAuth"></div><a class="kofi mkofi" href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener" aria-label="請飲咖啡" title="請飲咖啡">☕ 請飲</a>
 <nav class="mnav" aria-label="分頁">
   <button type="button" data-mtab-go="in"><b>✎</b>排盤</button>
   <button type="button" data-mtab-go="chart"><b>☯</b>命盤</button>
