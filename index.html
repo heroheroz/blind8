@@ -3168,11 +3168,11 @@ async function setTier(id,tier){const msg=$('tuMsg');
   catch(e){msg.textContent='改唔到：'+e.message;drawTiers();}}
 async function loadUsage(){
   if(!(CLOUD&&ADMIN))return;
-  const cols=[['visitors','人數（部機）'],['users','登入用戶'],['visits','開網'],['charts','排盤'],['cases','開命例']];
+  const cols=[['visitors','👥 用過嘅部機','幾多部唔同嘅機（瀏覽器）開過網站，登入同唔登入都計'],['users','👤 登入咗嘅人','幾多個唔同嘅戶口登入咗用'],['visits','🌐 開網次數','網站總共被打開咗幾多次'],['charts','🔮 排盤次數','總共排咗幾多個盤（自己輸入出世時間）'],['cases','📖 開命例次數','總共打開咗幾多次命例']];
   try{const st=await api('rpc/usage_stats',{method:'POST',body:'{}'});
-    $('usMsg').textContent='人數按瀏覽器計：同一個人用兩部機會當兩個人；清咗瀏覽器資料都會當新人。';
-    $('usSum').innerHTML=`<thead><tr><th></th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${(st.periods||[]).map(r=>`<tr><td>${esc(r.label)}</td>${cols.map(c=>`<td>${r[c[0]]}</td>`).join('')}</tr>`).join('')}</tbody>`;
-    $('usDaily').innerHTML=`<thead><tr><th>日期</th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${(st.daily||[]).map(r=>`<tr><td>${esc(r.day)}</td>${cols.map(c=>`<td>${r[c[0]]}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="6">冇紀錄</td></tr>'}</tbody>`;
+    $('usMsg').textContent='前兩欄係「幾多人」：用過嘅部機（按瀏覽器計，同一個人用兩部機會當兩部，清咗瀏覽器資料會當新機）、登入咗嘅人（按戶口計）。後三欄係「做咗幾多次」：開網、排盤、開命例嘅總次數。';
+    $('usSum').innerHTML=`<thead><tr><th></th>${cols.map(c=>`<th title="${c[2]}">${c[1]}</th>`).join('')}</tr></thead><tbody>${(st.periods||[]).map(r=>`<tr><td>${esc(r.label)}</td>${cols.map(c=>`<td>${r[c[0]]}</td>`).join('')}</tr>`).join('')}</tbody>`;
+    $('usDaily').innerHTML=`<thead><tr><th>日期</th>${cols.map(c=>`<th title="${c[2]}">${c[1]}</th>`).join('')}</tr></thead><tbody>${(st.daily||[]).map(r=>`<tr><td>${esc(r.day)}</td>${cols.map(c=>`<td>${r[c[0]]}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="6">冇紀錄</td></tr>'}</tbody>`;
   }catch(e){$('usSum').innerHTML=$('usDaily').innerHTML='';$('usList').innerHTML='';$('usPager').innerHTML='';
     $('usMsg').textContent=/usage|42P01|42883|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/006_stats.sql。':'載入唔到：'+e.message;return;}
   const k=$('usKind').value,q=$('usQ').value.trim().replace(/[,()*%]/g,'');
