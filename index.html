@@ -111,6 +111,7 @@ button.go{background:var(--accent);color:var(--paper);border:0;border-radius:6px
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .err{color:var(--bad);font-size:14px}
 a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:13px;white-space:nowrap}a.kofi:hover{background:var(--accent);color:var(--paper)}
+#kofiDlg{border:0;border-radius:12px;padding:0;width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:var(--paper);color:var(--ink);box-shadow:0 10px 40px #0006}#kofiDlg::backdrop{background:#0008}#kofiDlg .kfh{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px}#kofiDlg .kfh button{font:inherit;font-size:18px;background:none;border:0;color:var(--ink);cursor:pointer}#kofiDlg iframe{display:block;border:0;width:100%;height:min(690px,calc(100vh - 110px));background:#f9f9f9}#kofiDlg .kff{padding:6px 12px 10px;font-size:12px;color:var(--muted)}
 @media (max-width:899px){#fsAt{margin-top:6px}}
 @media (min-width:900px){
   #f{grid-template-columns:minmax(200px,1fr) minmax(340px,1.5fr) minmax(220px,1fr);grid-template-areas:"nm bi tm" "pl at ac";gap:14px 22px;align-items:start}
@@ -939,12 +940,14 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
 </section>
+<dialog id="kofiDlg" aria-label="請飲咖啡"><div class="kfh"><b>☕ 多謝支持！</b><button type="button" data-kfx aria-label="關閉">✕</button></div><iframe title="Ko-fi" loading="lazy" data-src="https://ko-fi.com/heroheroz/?hidefeed=true&amp;widget=true&amp;embed=true&amp;preview=true"></iframe><div class="kff">經 Ko-fi 安全付款。睇唔到？<a href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener">喺新分頁開</a></div></dialog>
 <footer class="madeby">Created by 隱姓師父天字第一號小粉絲 - 叉油雞飯多汁 <a class="kofi" href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener">☕ 請飲咖啡</a></footer>
 </div>
 </div>
 
 <script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"></script>
+<script src="lunar-1.7.7.js"></script>
+<script>if(typeof Solar==='undefined')document.write('<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.js"><\/script>');</script>
 <script>
 (function(){
 const GAN='甲乙丙丁戊己庚辛壬癸', ZHI='子丑寅卯辰巳午未申酉戌亥';
@@ -3506,6 +3509,9 @@ $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$
 writeForm(init);run(init);TRK.skip=false;TRK.last=JSON.stringify(LAST_V);
 document.addEventListener('toggle',e=>{const f=e.target.dataset&&e.target.dataset.fold;if(f)FOLD[f]=e.target.open;},true);
 })();
+// Ko-fi：撳「請飲咖啡」喺網頁入面彈個付款框（Ko-fi 官方嵌入），唔使離開網站；瀏覽器唔支援 dialog 就照開新分頁
+document.addEventListener('click',e=>{const k=e.target.closest('a.kofi'),d=document.getElementById('kofiDlg');if(k&&d&&d.showModal&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){e.preventDefault();const f=d.querySelector('iframe');if(!f.src)f.src=f.dataset.src;d.showModal();return;}
+  if(e.target.closest('[data-kfx]')||e.target===d)d&&d.close();});
 // 繁簡轉換：右上角個掣將成頁文字轉做簡體（用 OpenCC，第一次撳先載入），再撳就還原繁體原文。
 // 輸入框入面打緊嘅字唔會改；選擇記喺呢個瀏覽器
 const ZH={on:false,cv:null,orig:new Map(),obs:null};
