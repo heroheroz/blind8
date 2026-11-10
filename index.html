@@ -69,7 +69,7 @@ header p{margin:0;color:var(--muted);font-size:13px}
 .gbn{font-size:13px;font-weight:normal;margin-left:8px}.gbn select{font:inherit}
 #casePager .cpn{flex-basis:100%;text-align:center;margin-bottom:4px}#casePager select{font:inherit;font-size:13px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
 .auf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}.auf select,.auf input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
-.auwrap{overflow-x:auto}table.audit{width:100%;border-collapse:collapse;font-size:13px}table.audit th,table.audit td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}table.audit th{color:var(--muted);font-weight:600;white-space:nowrap}
+.tustats{margin:6px 0}.tustats .spark{font-family:ui-monospace,monospace;letter-spacing:1px;color:var(--good)}.auwrap{overflow-x:auto}table.audit{width:100%;border-collapse:collapse;font-size:13px}table.audit th,table.audit td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}table.audit th{color:var(--muted);font-weight:600;white-space:nowrap}
 table.audit td.t{white-space:nowrap;color:var(--muted)}table.audit small{color:var(--muted);display:block}table.audit .op-INSERT{color:var(--good,#2e7d32)}table.audit .op-DELETE{color:var(--bad)}table.audit .op-LOGIN{color:var(--muted)}table.audit.usage td,table.audit.usage th{text-align:right}table.audit.usage td:first-child,table.audit.usage th:first-child{text-align:left}#audit h3{font-size:16px;margin:14px 0 6px}#audit .usd{margin:6px 0 10px}table.audit .op-UPDATE{color:var(--accent)}
 table.audit .chg{display:block;margin-top:2px}table.audit details pre{white-space:pre-wrap;word-break:break-all;font-size:11px;max-height:240px;overflow:auto;margin:4px 0 0}
 .gblist .when{color:var(--muted);font-size:12px;margin-left:8px}
@@ -932,6 +932,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>分數</th><th>原因</th><th></th></tr></thead><tbody id="bnList"></tbody></table></div>
   <h2>用戶等級 <span class="hint">（只有管理員睇到；進階用戶同高級用戶免費開招感殺星；最強五行暫時所有人都睇到）</span></h2>
   <div class="auf"><input id="tuQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><select id="tuN" aria-label="每頁幾多個"><option value="6" selected>每頁 6 個</option><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="0">全部</option></select></div>
+  <p class="tustats" id="tuStats"></p>
   <p class="hint" id="tuMsg"></p>
   <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>加入命例</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
   <div class="gbpager" id="tuPager"></div>
@@ -3128,7 +3129,17 @@ async function loadTiers(){
     // 每個用戶加入咗幾多個命例（逐頁攞 cases.owner 自己數）
     TU.nc={};try{for(let o=0;;o+=1000){const r=await api(`cases?select=owner&order=id&limit=1000&offset=${o}`);r.forEach(c=>{if(c.owner)TU.nc[c.owner]=(TU.nc[c.owner]||0)+1;});if(r.length<1000)break;}}catch(e){TU.nc=null;}}
   catch(e){TU.rows=[];$('tuList').innerHTML='';$('tuMsg').textContent=/admin_users|42883|PGRST20|42P01/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/007_tiers.sql。':'載入唔到：'+e.message;return;}
-  drawTiers();drawBonusUsers();loadBonus();}
+  drawTiers();drawBonusUsers();loadBonus();loadActive();}
+// 總用戶同活躍用戶（管理員）：活躍＝過去 1／7／30 日有登入（每日登入簽到）或者審計紀錄有動作（開命例、加命例、投票、筆記、留言等）；唔計管理員
+async function loadActive(){const el=$('tuStats');if(!el)return;const adm=new Set(TU.rows.filter(u=>u.admin).map(u=>u.id)),tot=TU.rows.filter(u=>!u.admin).length,now=Date.now(),D=864e5,since=new Date(now-30*D).toISOString();
+  el.innerHTML=`總用戶 <b>${tot}</b> 人（唔計管理員）　活躍用戶計緊…`;const ev=[];
+  const page=async(q,f)=>{for(let o=0;o<50000;o+=1000){const r=await api(`${q}&limit=1000&offset=${o}`);r.forEach(f);if(r.length<1000)break;}};
+  try{await page(`audit_log?select=actor,at&at=gte.${since}&actor=not.is.null&order=at`,r=>ev.push([r.actor,Date.parse(r.at)]));}catch(e){}
+  try{await page(`point_checkins?select=user_id,created_at&created_at=gte.${since}&order=created_at`,r=>ev.push([r.user_id,Date.parse(r.created_at)]));}catch(e){}
+  TU.rows.forEach(u=>{if(u.last_sign_in_at){const t=Date.parse(u.last_sign_in_at);if(t>=now-30*D)ev.push([u.id,t]);}});
+  const act=ev.filter(([u])=>!adm.has(u)),n=d=>new Set(act.filter(([,t])=>t>=now-d*D).map(([u])=>u)).size;
+  const daily=Array.from({length:30},(_,i)=>{const a=now-(30-i)*D,b=a+D;return new Set(act.filter(([,t])=>t>=a&&t<b).map(([u])=>u)).size;}),mx=Math.max(1,...daily),bars='▁▂▃▄▅▆▇█';
+  el.innerHTML=`總用戶 <b>${tot}</b> 人（唔計管理員）　活躍用戶：今日（過去 24 小時）<b>${n(1)}</b>、過去 7 日 <b>${n(7)}</b>、過去 30 日 <b>${n(30)}</b><br><span class="hint" title="過去 30 日每日活躍人數，最右係最近 24 小時">30 日走勢 <span class="spark">${daily.map(x=>bars[Math.round(x/mx*7)]).join('')}</span> 最多 ${mx} 人／日。活躍＝有登入或者有任何動作（開命例、加命例、投票、筆記、留言等）。</span>`;}
 // 手動加分（管理員）：point_bonus 表（012_bonus.sql）；排行榜會計埋
 function drawBonusUsers(){const sel=$('bnUser'),v=sel.value;
   sel.innerHTML='<option value="">揀用戶</option>'+TU.rows.filter(u=>!u.admin).slice().sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','zh-HK')).map(u=>`<option value="${u.id}">${esc(u.name||'')}${u.email?' · '+esc(u.email):''}</option>`).join('');sel.value=v;}
