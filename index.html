@@ -204,6 +204,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .card .gz{font-family:var(--f-display);font-size:28px;font-weight:900;line-height:1.2}
 .card .n{font-size:12px;color:var(--muted)}
 .wxbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.wxbar.wxh{margin-top:6px}
+.xjst{font:inherit;font-size:16px;line-height:1;padding:2px 7px;margin:0 3px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--accent);cursor:pointer;vertical-align:middle}.xjt th{white-space:nowrap}
 .wxbar span{padding:3px 10px;border-radius:12px;font-size:13px;font-weight:700}.wxbar.wxtop{gap:12px}.wxbar.wxtop{gap:14px;align-items:center}.wxbar.wxtop>span{font-size:24px;padding:8px 22px;border-radius:28px;border-width:2px;box-shadow:0 2px 8px #0003;line-height:1.2}.wxbar.wxtop>span b{font-family:var(--f-display);font-size:40px;font-weight:900;vertical-align:-4px}@media (max-width:520px){.wxbar.wxtop>span{font-size:19px;padding:6px 14px}.wxbar.wxtop>span b{font-size:32px}}
 .yun{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 .yun .gua{font-family:var(--f-display);font-size:34px;font-weight:900}
@@ -227,7 +228,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .days{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:6px}
 .lvl{display:flex;flex-direction:column;gap:6px}
 .lvl+.lvl{margin-top:14px}
-.swtag,.zdtag{cursor:pointer}.zdtag{align-self:center;white-space:nowrap}.swtag.swbad{outline:2px solid var(--bad);outline-offset:1px;color:var(--bad)!important}
+.swtag,.zdtag{cursor:pointer}.zdtag{align-self:center;white-space:nowrap}.swtag.swbad{outline:2px dashed currentColor;outline-offset:1px}
 #tipPop .wxc{font-weight:600}
 #swVote li{margin:4px 0}#swVote .awv{margin:2px 0}#swVote small{display:block}
 .tkopt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-bottom:10px;font-size:13px}.tkopt .cap{color:var(--muted)}
@@ -1660,8 +1661,8 @@ function xjStart(){const box=$('wkXJ');if(!box||!S||!S.cc)return;
     b.innerHTML=xjHtml(XJ.res);b.classList.remove('hint');};
   setTimeout(step,0);}
 function xjHtml(res){const one=(k,arr,t,bs)=>arr.length?arr.map(x=>{const v=t==='xi'?x.ok:x.no;return `<span class="xjc" title="見到${x.ch}：原局平均多 ${fmtN(Math.round(v*100)/100)} 個字${t==='xi'?'做到功':'做唔到功'}（平時 ${fmtN(Math.round(bs[t==='xi'?0:1]*100)/100)} 個）"><b class="w${k?ZWX[zi(x.ch)]:gw(gi(x.ch))}">${x.ch}</b><small>+${fmtN(Math.round(v*10)/10)}</small></span>`;}).join(''):'<span class="xjn">—</span>';
-  return `<table class="xjt"><thead><tr><th></th><th>喜<small>（天干｜地支）</small></th><th>忌<small>（天干｜地支）</small></th></tr></thead><tbody>${res.map(r=>`<tr><th>${esc(r.n)}</th><td class="xi">${one(0,r.k[0].xi,'xi',r.k[0].bs)}<i class="xjd"></i>${one(1,r.k[1].xi,'xi',r.k[1].bs)}</td><td class="ji">${one(0,r.k[0].ji,'ji',r.k[0].bs)}<i class="xjd"></i>${one(1,r.k[1].ji,'ji',r.k[1].bs)}</td></tr>`).join('')}</tbody></table>
-  <p class="hint xjh">細字＝見到呢個字，原局 8 個字平均多幾多個做到功（喜）或者做唔到功（忌）；「—」＝冇字有呢個效果。一生、大運、流年隨機揀日子計，流月逐日計，流日只計揀咗嗰日。指住個字睇詳情。</p>`;}
+  return `<table class="xjt"><thead><tr><th></th><th>喜<small>（天干｜地支）</small></th><th>忌<small>（天干｜地支）</small></th></tr></thead><tbody>${res.map(r=>{const st={流年:'ln',流月:'mo',流日:'dd'}[r.n.slice(0,2)],B=d=>`<button type="button" class="xjst" data-xjstep="${st}" data-d="${d}" aria-label="${d<0?'上':'下'}一${r.n[1]}">${d<0?'‹':'›'}</button>`;return `<tr><th>${st?B(-1):''}${esc(r.n)}${st?B(1):''}</th><td class="xi">${one(0,r.k[0].xi,'xi',r.k[0].bs)}<i class="xjd"></i>${one(1,r.k[1].xi,'xi',r.k[1].bs)}</td><td class="ji">${one(0,r.k[0].ji,'ji',r.k[0].bs)}<i class="xjd"></i>${one(1,r.k[1].ji,'ji',r.k[1].bs)}</td></tr>`;}).join('')}</tbody></table>
+  <p class="hint xjh">‹ › 跳去上／下一年、月、日。細字＝見到呢個字，原局 8 個字平均多幾多個做到功（喜）或者做唔到功（忌）；「—」＝冇字有呢個效果。一生、大運、流年隨機揀日子計，流月逐日計，流日只計揀咗嗰日。指住個字睇詳情。</p>`;}
 // 卡死日子：今個流年逐日計，原局 8 個字全部要做功（偏財有粘連）但全部做唔到功＝卡死。
 // 原因：睇日主同陰陽嗰五個天干（日主 → 偏財 → 偏財嘅偏財…，即係一個七殺環）齊唔齊；齊咗就冇一個字有「外面」嘅七殺可以啟動佢，全部鎖死。
 // 寫出邊個字只係由大運流年流月流日（或者招感）補齊，即係嗰日先開始卡死嘅原因。
@@ -2354,7 +2355,7 @@ function render(){
   // 五行 tally of 8 chars
   const cnt=[0,0,0,0,0];P.forEach(p=>{cnt[gw(gi(p[0]))]++;cnt[ZWX[zi(p[1])]]++;});
   const cnt2=[0,0,0,0,0];P.forEach(p=>{cnt2[gw(gi(p[0]))]++;[...HIDE[p[1]]].forEach(h=>cnt2[gw(gi(h))]++);});
-  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`,swTag=(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-swsec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） <b>${sw.g||''}${WX[sw.el]}</b></span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
+  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`,swTag=(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-swsec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） <b class="w${sw.el}">${sw.g||''}${WX[sw.el]}</b></span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
   // 第一／第二主導力（原局天干，所有人睇到，唔扣分）：撳開睇點樣推
   const zdTag=(z=>{const C=c=>c?`<b class="w${gw(gi(c))}">${c}</b>`:'—',why=z.why.split('；');
     return `<span class="gong zdtag" role="button" tabindex="0" data-swsec="${esc(JSON.stringify([['點樣推',why],['來源',[z.src==='t'?'🎓 老師親口講':z.src?`🤖 按第31堂 [45:51] 規則推算，把握 ${z.conf}`:'未計']],['規則',['日主被合住或粘住，第一主導力用殺星剋開；殺星被合住、粘住，就無殺方論用，先剋開阻住殺星嘅字','第二主導力係打開下一個關口嘅字；其餘大致一齊平衡進行（第31堂 [47:29]）']]]))}">主導力 ①${C(z.p1)} ②${C(z.p2)} ${z.src==='t'?'🎓':z.src?'🤖':''}</span>`;})(zhudao(P));
@@ -2705,6 +2706,12 @@ const KEEP={};
 $('out').addEventListener('click',e=>{const b=e.target.closest('button.cell');if(!b){KEEP.k=null;return;}
   const k=['dy','ln','mo','dd'].find(x=>b.dataset[x]!==undefined);KEEP.k=k?`button.cell[data-${k}="${b.dataset[k]}"]`:null;KEEP.top=b.getBoundingClientRect().top;},true);
 document.addEventListener('click',()=>{if(!KEEP.k)return;const k=KEEP.k;KEEP.k=null;const n=$('out').querySelector(k);if(!n)return;const d=n.getBoundingClientRect().top-KEEP.top;if(Math.abs(d)>1)scrollBy(0,d);});
+// 喜忌字表：‹ › 跳去上／下一個流年、流月、流日（跨大運、跨月都跟住轉）
+$('out').addEventListener('click',e=>{const b=e.target.closest('[data-xjstep]');if(!b)return;const t=b.dataset.xjstep,d=+b.dataset.d,dd=S.ds[S.dd],mo=S.mos[S.mi];let so=null;
+  if(t==='dd')so=dd.sol.next(d);
+  else if(t==='mo')so=d<0?mo.start.next(-1):(S.mos[S.mi+1]?S.mos[S.mi+1].start:mo.end);
+  else{const s=dd.sol,Y=s.getYear()+d;so=Solar.fromYmd(Y,s.getMonth(),Math.min(s.getDay(),28));}
+  if(so&&goDay(so))render();});
 $('out').addEventListener('click',e=>{
   const b=e.target.closest('button.cell');if(!b)return;
   if(b.dataset.dy!==undefined){S.di=+b.dataset.dy;const lns=S.dys[S.di].getLiuNian();const Y=gzYear(refDay());selectYear(lns.some(l=>l.getYear()===Y)?Y:lns[0].getYear());}
