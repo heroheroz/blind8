@@ -585,7 +585,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <h4>甲・計算範圍</h4>
   <ol>
     <li id="r-a1"><b>A1</b> 只計有顯示嘅柱。用「只顯示…」、「唔顯示大運流年流月流日」、「唔顯示流月流日」或「唔顯示流日」選項收埋嘅柱，同閂咗「三桓命宮柱」時嘅四條柱，完全唔計；剔「只顯示命宮柱」就只加命宮一條柱。</li>
-    <li id="r-a2"><b>A2</b> 元運柱剔咗「元運參與招感粘連」先計（預設剔咗）；再加「元運要填實先計」（11月10日起預設開）：原局、大運或者流年有元運嘅天干或者地支（實字），或者由原局、大運、流年招感出嚟（招），就算填實，元運柱先參與計算；冇填實就當唔存在，柱頂寫「未引動，唔計」（第98堂：元運唔會憑空畀你用，要有呢個字入嚟先用起）。流月、流日、小運唔計做填實。三桓命宮柱（或者只顯示嘅命宮柱）要剔「三桓命宮參與招感粘連」先計，預設唔計，柱照顯示。</li>
+    <li id="r-a2"><b>A2</b> 元運柱剔咗「元運參與招感粘連」先計（預設剔咗）；再加「元運要填實先計」（11月10日起預設開）：原局、大運或者流年有元運嘅天干或者地支（實字），或者由原局、大運、流年招感出嚟（招），就算填實，元運柱先參與計算；冇填實就當唔存在，柱頂寫「未填實，唔計」；有填實就寫邊柱填實，例如「大運辛酉填實，計」。出世嗰個元運過咗時段都照保留，好似年柱咁（第38堂 82:09）（第98堂：元運唔會憑空畀你用，要有呢個字入嚟先用起）。流月、流日、小運唔計做填實。三桓命宮柱（或者只顯示嘅命宮柱）要剔「三桓命宮參與招感粘連」先計，預設唔計，柱照顯示。</li>
     <li id="r-a3"><b>A3</b> 「顯示粘連線」嗰行三格（招感字、大運流年流月流日招感線、大運流年流月流日粘連線）都只係收埋條線，招感字同粘連照計照顯示。</li>
     <li id="r-a4"><b>A4</b> 天干同天干計，地支同地支計，唔會跨行。柱同柱之間唔使相鄰。</li>
   </ol>
@@ -2419,7 +2419,7 @@ function lnJinQi(Y,moGz){const z=moGz&&moGz[1],d=z==='寅'||z==='卯'?-1:z==='�
 // 元運要填實先計（第98堂；Tom 11月10日定）：原局、大運或者流年有元運嘅天干或者地支（實字），或者由原局、大運、流年招感出嚟（招），元運柱先參與計算；冇填實就當唔存在
 function yuanGate(cc){if(!VIEW.yuanTrig)return cc;const src=cc.filter(c=>c.gz&&!c.yuan&&(/^[年月日時]柱$/.test(c.h)||c.h==='大運'||c.h==='流年')),
     ZG=zhaogan(src.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.dyn?c.h.replace('大運','運'):c.h[0]})));
-  return cc.map(c=>{if(!c.yuan||!c.gz)return c;const [g,z]=c.gz,on=src.some(d=>d.gz[0]===g||d.gz[1]===z)||ZG.st.some(x=>x&&x.c===g)||ZG.br.some(x=>x&&x.c===z);return on?c:{...c,gz:null,yOff:true};});}
+  return cc.map(c=>{if(!c.yuan||!c.gz)return c;const [g,z]=c.gz,hit=src.filter(d=>d.gz[0]===g||d.gz[1]===z).map(d=>d.h+d.gz),zg=ZG.st.some(x=>x&&x.c===g)||ZG.br.some(x=>x&&x.c===z);if(zg)hit.push('招感');return hit.length?{...c,yWhy:hit.join('、')}:{...c,gz:null,yOff:true};});}
 function render(){
   const {inp,c,sol,lun,ec,yun,dys,P,dm}=S;
   const today=refDay().toYmd();
@@ -2495,7 +2495,7 @@ function render(){
   // 收埋咗嘅柱本身唔喺 cols 入面，所以唔計；大運流年流月流日條線閂咗照計，只係收埋條線
   // 上月流月、時柱進氣、小運：各自有開關揀入唔入計算（預設入），閂咗就只係顯示
   const cc=yuanGate(cols.map(c=>(c.yuan&&!VIEW.yuanCalc)||(c.aux&&!VIEW.auxCalc)||(c.show&&!VIEW[c.show])?{...c,gz:null}:c));
-  cc.forEach((c,i)=>{if(c.yOff)cols[i]={...cols[i],sub:cols[i].sub+'（未引動，唔計）'};});
+  cc.forEach((c,i)=>{if(c.yOff)cols[i]={...cols[i],sub:cols[i].sub+'（未填實，唔計）'};else if(c.yWhy)cols[i]={...cols[i],sub:cols[i].sub+`（${c.yWhy}填實，計）`};});
   const zcols=cc.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0]}));
   const ZG=zhaogan(zcols);
   S.cols=cols;S.cc=cc;S.useSha=useSha;
