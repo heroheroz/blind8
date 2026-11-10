@@ -1111,7 +1111,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="gbpager" id="gbPager"></div>
 </section>
 <section class="panel" id="cl">
-  <h2>📋 更新日誌 <span class="hint">（網站改咗乜，最新排最頂）</span></h2>
+  <h2>📋 更新日誌 <span class="hint">（網站改咗乜，最新排最頂）</span> <label class="hint gbn">每頁 <select id="clN" aria-label="每頁幾多條更新日誌"><option value="3" selected>3</option><option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label></h2>
   <div id="clForm"></div>
   <ul class="gblist" id="clList"></ul>
   <div class="gbpager" id="clPager"></div>
@@ -3546,12 +3546,13 @@ let GBS=[],GBR=null,GBP=1,GB_N=6;
 $('gbN').addEventListener('change',e=>{GB_N=+e.target.value||1e9;GBP=1;GBR=null;renderGB();});
 const gbWhen=t=>{const d=new Date(t);return isNaN(d)?'':`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;};
 // 更新日誌：guestbook kind='log'（030），只有管理員出得；登入咗嘅人睇得到
-let CLP=1;const CL_N=10;
+let CLP=1,CL_N=3;
 function renderCL(){const L=GBS.filter(m=>m.kind==='log'&&!m.parent),np=Math.max(1,Math.ceil(L.length/CL_N));CLP=Math.min(Math.max(1,CLP),np);
   $('clForm').innerHTML=CLOUD&&ADMIN?`<form id="clAdd"><textarea id="clBody" rows="3" maxlength="4000" placeholder="寫低今次更新咗乜" required></textarea><div class="row" style="margin-top:6px"><button type="submit">出更新日誌</button></div></form>`:'';
   const one=m=>`<span class="when">${gbWhen(m.t)}</span>${CLOUD&&ADMIN?` <button type="button" class="lnk del" data-gbdel="${esc(m.id)}" title="刪除" aria-label="刪除">🗑</button>`:''}<div class="body">${esc(m.body)}</div>`;
   $('clList').innerHTML=L.length?L.slice((CLP-1)*CL_N,CLP*CL_N).map(m=>`<li>${one(m)}</li>`).join(''):`<li class="hint">${CLOUD&&!SESSION?'🔒 登入先睇到更新日誌。':'未有更新日誌。'}</li>`;
   $('clPager').innerHTML=np>1?pagerHtml(CLP,np,'clpage'):'';}
+$('clN').addEventListener('change',e=>{CL_N=+e.target.value||1e9;CLP=1;renderCL();});
 document.addEventListener('click',e=>{const t=e.target.closest('[data-clpage]');if(!t||t.disabled)return;CLP=+t.dataset.clpage;renderCL();$('cl').scrollIntoView({block:'start'});});
 document.addEventListener('submit',e=>{if(e.target.id!=='clAdd')return;e.preventDefault();const b=$('clBody').value.trim();if(!b)return;
   GB.add(b.slice(0,4000),null,'log').then(()=>{CLP=1;return reloadGB();}).catch(err=>{$('gbMsg').textContent='出唔到更新日誌：'+err.message;});});
