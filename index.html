@@ -1089,7 +1089,7 @@ document.addEventListener('click',e=>{const go=e.target.closest('[data-bzgo]'),p
 
 // 行星位置（占星）：用 astronomy-engine（撳開先載入），計地心黃經（回歸黃道）同逆行；出世用出生鐘錶時間減時區（夏令再減 1 個鐘），睇運日用流日正午
 // 內圈＝出世（本命），外圈＝睇運日（流日）；下面列流日行星同本命行星嘅相位（合 0°、六合 60°、刑 90°、拱 120°、沖 180°，容許 3°，月亮 5°）
-const PL={open:true,lib:null};
+const PL={open:false,lib:null};
 const PL_B=[['Sun','太陽','☉'],['Moon','月亮','☽'],['Mercury','水星','☿'],['Venus','金星','♀'],['Mars','火星','♂'],['Jupiter','木星','♃'],['Saturn','土星','♄'],['Uranus','天王星','♅'],['Neptune','海王星','♆'],['Pluto','冥王星','♇']];
 const PL_Z=[['白羊','♈'],['金牛','♉'],['雙子','♊'],['巨蟹','♋'],['獅子','♌'],['處女','♍'],['天秤','♎'],['天蠍','♏'],['射手','♐'],['摩羯','♑'],['水瓶','♒'],['雙魚','♓']];
 const PL_A=[[0,'合'],[60,'六合'],[90,'刑'],[120,'拱'],[180,'沖']];
@@ -2445,7 +2445,8 @@ function render(){
 }
 // 電腦版：計法說明・課堂嗰格擺喺行星位置上面；手機版留返原位（計法分頁）
 function placeAn(){const a=$('np-an'),b=$('anBox'),n=document.querySelector('section.notes');let lg=true;try{lg=!(CLOUD&&!SESSION);}catch(e){}b.hidden=!(isMob()&&lg);$('mAnTab').hidden=!lg;if(!lg&&document.body.dataset.mtab==='an')mTab('in');if(!a||!n)return;if(isMob()){if(a.parentNode!==b)b.append(a);}else if(a.parentNode!==n)n.append(a);}
-function placeNotes(){placeAn();const n=document.querySelector('section.notes'),p=$('plBox');if(!n)return;if(!isMob()&&p){if(n.nextElementSibling!==p)p.before(n);}else if(n.parentNode===$('out'))$('aw').after(n);}
+// 貢獻排行榜（電腦版）擺喺行星位置正上面；手機版留返原位（獨立分頁）
+function placeNotes(){placeAn();const n=document.querySelector('section.notes'),p=$('plBox'),lb=$('lb');if(!n)return;if(!isMob()&&p){if(n.nextElementSibling!==lb&&n.nextElementSibling!==p)p.before(n);if(lb&&lb.nextElementSibling!==p)p.before(lb);}else{if(n.parentNode===$('out'))$('aw').after(n);if(lb&&lb.parentNode===$('out'))$('anBox').before(lb);}}
 addEventListener('resize',()=>placeNotes());
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 // 備註同筆記入面嘅網址變成可以撳嘅連結；YouTube 連結顯示「▶ YouTube 45:30」（有 t= 就顯示由幾時開始）
