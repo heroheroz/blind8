@@ -146,7 +146,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 @media(max-width:640px){.xjt{font-size:13px}.xjt th,.xjt td{padding:4px 3px;white-space:normal}.xjc{margin:0 1px}.xjd{margin:0 3px}}
 /* 啟動：字後面用返自己五行顏色嘅光暈；做到功右下角細綠剔、做唔到功細紅交叉（可以喺選項收埋）；全部靜止 */
 .gl{position:relative}.on .gl{text-shadow:0 0 .12em color-mix(in srgb,currentColor 70%,transparent),0 0 .35em color-mix(in srgb,currentColor 45%,transparent)}
-.wd .gl::after,.wn .gl::after{content:'✓';position:absolute;right:-.12em;bottom:.02em;font-family:var(--f-body);font-size:max(12px,.36em);font-weight:900;line-height:1;color:var(--good);text-shadow:0 0 2px var(--paper),0 0 2px var(--paper)}.wn .gl::after{content:'✗';color:var(--bad)}.chart.nowk .gl::after{content:none}
+.wd .gl::after,.wn .gl::after{content:'✓';position:absolute;right:-.12em;bottom:.02em;font-family:var(--f-body);font-size:max(12px,.36em);font-weight:900;line-height:1;color:var(--good);text-shadow:0 0 2px var(--paper),0 0 2px var(--paper)}.wn .gl::after{content:'✗';color:var(--bad)}.wb .gl::after{content:'★';color:#c8961e}.chart.nowk .gl::after{content:none}
 .chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.zg .zgss{top:3px;right:4px;font-size:12px}.ssc{position:absolute;right:-.3em;top:-.6em;font-size:max(16px,.4em);font-weight:700;line-height:1;color:var(--muted);font-family:var(--f-body);pointer-events:none}
 .act{position:absolute;left:100%;bottom:2px;margin-left:1px;font-family:var(--f-body);font-size:15px;font-weight:900;line-height:1;color:var(--bad);letter-spacing:-2px;white-space:nowrap}
 .actl{color:var(--bad);font-weight:900}
@@ -176,7 +176,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .mk{display:inline-block;margin-top:3px;font-size:11px;padding:0 6px;border-radius:9px;border:1.5px dashed var(--muted,#888);color:var(--muted,#888);line-height:1.5}.mk.open{border-style:solid;border-color:var(--accent);color:var(--accent);font-weight:700}
 .cx{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--accent);color:var(--accent);line-height:1.5}
 .cx.kg{background:var(--accent);color:var(--paper)}
-.wk{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px dashed var(--muted);color:var(--muted);line-height:1.5}.wk.done{border:1.5px solid var(--good);background:var(--good);color:var(--paper)}.wk.zc{border:1.5px solid var(--bad);color:var(--bad)}
+.wk{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px dashed var(--muted);color:var(--muted);line-height:1.5}.wk.done{border:1.5px solid var(--good);background:var(--good);color:var(--paper)}.wk.zc{border:1.5px solid var(--bad);color:var(--bad)}.wk.big{border-color:#c8961e;background:linear-gradient(135deg,#e0b040,#c8961e);color:#1a1205}
 .yr{display:inline-block;margin-top:3px;margin-left:2px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--bad);color:var(--bad);line-height:1.5}
 .yr.own{background:var(--bad);color:var(--paper)}
 .yr.hit{box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--bad)}
@@ -620,6 +620,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li id="r-s1"><b>最強五行（推測）</b>　顯示選項可以揀三種推論。<b>推論1：月令人元並用</b>，只用原局四柱計，唔計大運流年同三桓粘連。① 命宮地支沖原局任何一個地支，而命宮天干同原局天干冇七殺相剋（即係唔係天剋地沖），而且原局四柱（天干同地支，唔計藏干）冇命宮地支嘅五行，最強五行就係命宮地支嘅五行，計完（例如蔣介石命宮壬子沖時支午，但年支亥已經係水，所以唔用命宮）。② 唔係嘅話，睇日主要唔要做功：日主所剋嘅五行喺四柱天干出現而且有粘連或伏吟，就要做功，取「生人元司令嘅五行」（人元司令嘅正印）；唔使做功就取「生月令本氣嘅五行」（月令嘅正印）。正印即係生佢、陰陽相反嘅天干，例如戊嘅正印係丁。③ 日支被原局刑或害（唔計六沖，丑未當沖），但未被啟動，天干陰陽倒轉，例如丁變丙；淨係被沖就唔倒轉（例如蔣介石巳被亥沖、蕭若元丑被未沖）。④ 揀出嚟嘅正印同日主同五行，就直接取日主天干。例如狀元朋友（癸丑 壬戌 丙戌 甲午）：唔使做功，月令戌本氣戊，正印丁；日支戌被丑刑但已啟動，唔倒轉；丁同日主丙都係火，取丙火。用 25 個命例加蔣介石推出嚟，五行 26 個全中，有寫天干嘅 15 個全中；①③④ 係睇住呢批命例調出嚟，① 只有傷殘一個命例支持，所以標「推測」，要再用新命例驗證。命宮月份跟顯示選項「命宮月份」。<br><b>推論2：月令印星</b>：直接取月令本氣嘅正印，例如月令巳本氣丙，取乙木。<b>推論3：人元司令印星</b>：直接取人元司令嘅正印，例如司令戊，取丁火。推論2、3 唔理命宮、做功同陰陽倒轉。立春日出世嘅人，月令同司令一定係寅同戊，所以用推論2、3，每年立春日出世都一樣（推論2 係水，推論3 係火）；用推論1 就會因應做功同命宮而唔同。<br>指住或者撳「最強五行」標籤會彈出：盤上顯示緊嘅天干有冇剋最強五行（同陰陽嘅標「七殺」）、屬最強五行嘅地支有冇被沖、刑、害，有冇地支五行剋佢，同埋盤上屬最強五行嘅天干地支有冇粘連、粘緊乜。最上面會俾結論：只有屬最強五行嘅字有粘連而要做功又做唔到功（W1），先算「唔好」，標籤會變紅框加 ⚠。被天干剋、地支沖刑害或者地支剋，可以係做功，做到功係好事，所以只會列出處數，唔算唔好、唔會變紅；有粘連而做到功（或者唔使做功）都唔算唔好。彈框最尾會列出三個推論喺呢個盤嘅結果，登入咗可以逐個撳 👍（準）或者 👎（唔準），仲會顯示全站總票數，等大家一齊驗證邊個推論最準。呢度只係列出嚟參考，唔改最強五行嘅計法。老師講受合或者受沖有時會陽變陰、陰變陽（秘訣14，第11堂）；推論1 ③ 暫時照舊只計刑害（淨係被沖唔倒轉），因為佢係用命例調出嚟，等多啲命例再驗證。老師親口講過最強五行嘅 16 個命例（林志穎、六合先生、網友Eric、戴安娜、傷殘、反叛男孩、許仕仁、鐘點僱工、啞巴2、遲開聲女孩、A先生、蕭若元、凍餓而死的僧人、張大千、過繼女、宋子文），推論1 中 16 個、推論2 中 13 個、推論3 中 14 個。</li>
     <li id="r-zd"><b>第一／第二主導力（推測）</b>　只用原局四柱天干計，所有人睇到，唔扣分；喺五行統計嗰行撳「主導力」睇點樣推。① 先解決天干受困：日主被合住或粘住就由日主開始；但如果日主得一條粘連，而另一個天干有兩條或以上（比日主多），就由嗰個天干開始（張國榮、梁啟超、無私的人都係咁，標 80%+）；日主冇粘連就由粘連最多嘅天干開始（標 80%+）。② 佢嘅七殺入得嚟（盤上冇粘連、夾拱出嚟，或者招殺星招得到）→ 第一主導力＝七殺；第二主導力＝打開下一個鎖住佢嘅天干（同一組粘連、唔同字，五合優先）嘅七殺。③ 七殺被粘住，或者係重字招合出嚟（例如兩壬招丁，一出就被合住）→ 有殺用唔到，無殺方論用：第一主導力＝剋開阻住七殺嗰個字嘅七殺，第二主導力＝七殺本身。④ 原局天干冇粘連就未計（要睇地支）。老師親口講過嘅命例（查理斯、宋子文、老師爸爸、蔣介石，同第14堂重溫嘅無私的人、馬斯克、梁啟超、謝霆鋒、朱鏡宙、豆腐佬、蕭若元、特朗普、做賊之人、李嘉誠、張謇，第16堂倪匡）直接用老師講法，標 🎓；其餘標 🤖。</li>
     <li id="r-w1"><b>W1 做功</b>　只睇佢嘅偏財，即係佢剋、同陰陽嗰個字（例如甲剋戊、丁剋辛；異陰陽嘅正財唔計）。地支用本氣計：例如午本氣丁，偏財係辛，即係本氣辛嘅酉；寅本氣甲，偏財係戊，即係辰、戌。盤上呢個偏財字有伏吟或者粘連，呢個字就「要做功」。要做功嘅字如果本身被啟動（有已啟動或者冇粘連嘅七殺剋佢，地支就係沖、害、刑，條件同 Q1、Q2），就係「做到功」，即係發揮到，係好事，字下面顯示實心「做到功」；要做功但未被啟動，就顯示虛線「做唔到功」。唔使做功嘅字唔顯示。例如甲日主，盤上戊土有粘連，甲就要做功；盤上再有冇粘連嘅庚，甲被啟動，就做到功。<b>直沖</b>：只有本身有粘連嘅字被啟動先算做到功；本身冇粘連，被七殺剋（地支被沖刑害），係直接受傷，唔係做功，主凶（第27堂筆記三、第59堂），字下面顯示紅色「直沖」，當日運勢用「直沖扣分」，卡死日子當做唔到功。</li>
+    <li id="r-w1b"><b>W1b 做大功</b>　做到功（W1）之外，再有以下其中一樣，就標金色「做大功」（盤上 ★）：① <b>一打二</b>：一個字剋（地支沖）兩個或以上嘅同一個字，例如一個午打兩個子（第39堂 8:34「一打二…係做功，仲要做大功」；第81堂巴菲特）；如果打人嗰個字都有兩個，就係二打二，唔算。② <b>夾得實</b>：被打嗰個字粘連力 ≥ 2（例如被兩個字夾住），越實越要做功，做到就係大功（第57堂 9:51 許仕仁「夾得咁實，就必須要甲做大功」；第48堂 蕭若元「己庚辛黐埋，丙有得做大功」）。③ <b>天干地支同時做到功</b>：同一柱天干同地支都做到功（第81堂 25:57「天干做功力度最大嘅時候，就係地支同時做功」）。如果啟動佢嘅字本身都被啟動（層層遞進，第88堂謝霆鋒「庚推甲，甲推戊，戊做大功」），會加註，但唔單獨當做大功。直撞（兩個同字打一個字）唔係做功，唔會標做大功。做大功只係標示，唔改分數同做功計算嘅等級。</li>
   </ol>
   </div>
   </div>
@@ -1499,7 +1500,7 @@ function workRows(male){
     // 偏財（佢剋、同陰陽；地支用本氣）有伏吟或者粘連先要做功
     if(!w)res.push({txt:`唔使做功（偏財${k?'（本氣'+GAN[(gi(HIDE[cc[i].gz[1]][0])+4)%10]+'）':GAN[(v+4)%10]}冇伏吟、冇粘連）${on?'，已啟動':''}`,cls:''});
     else if(w.zc)res.push({txt:`直沖（偏財 ${w.ti.map(j=>`${lb(j,k)}（${lkBrk(lk(j,k))}）`).join('、')}）：本身冇粘連，被${k?'沖刑害':'七殺剋'}係直接受傷，唔係做功，主凶（第27、59堂）`,cls:'no'});
-    else res.push({txt:`${w.done?'做到功':'做唔到功'}（偏財 ${w.ti.map(j=>`${lb(j,k)}（${lkBrk(lk(j,k))}）`).join('、')}）${w.done?'':'：'+why}`,cls:w.done?'ok':'no'});
+    else res.push({txt:`${w.big?'做大功':w.done?'做到功':'做唔到功'}（偏財 ${w.ti.map(j=>`${lb(j,k)}（${lkBrk(lk(j,k))}）`).join('、')}）${w.big?'：'+w.big.join('；'):w.done?'':'：'+why}`,cls:w.done?'ok':'no'});
     // 評分（每個字，唔設上限）：做到功 +5、做唔到功 −5、唔使做功 0，再加淨箭咀，每 5 個 ±1（↑ 加、↓ 扣）
     // 相關字被沖刑剋：天干睇同柱地支同其他同五行地支有冇被沖、刑、害；地支睇同柱天干同其他同五行天干有冇被七殺剋（天干沖）
     // 做到功 → 分數 ×2；做唔到功 → 扣分減半；唔使做功唔變
@@ -1509,7 +1510,7 @@ function workRows(male){
     if(k&&w&&!w.done){const g=S.work[0][i],d=S.work[0][day];if(!(g&&!g.done)&&!(d&&!d.done)){base/=2;half=true;}}
     let sc=base+a/5;if(w&&hits.length)sc=w.done?sc*2:sc/2;
     const aj=on?S.act[k][i][2]:-1,by=aj>=0&&aj<cc.length&&cc[aj].gz?(k?shishen(dm,gi(HIDE[cc[aj].gz[1]][0])):shishen(dm,gi(cc[aj].gz[0]))):aj>=cc.length?'招感字':'';
-    const st=(w?(w.done?'做到功':w.zc?'直沖':'做唔到功'):'唔使做功')+(half?'（天干未封閉，扣一半）':'')+(w&&hits.length?`（${hits.join('、')}，${w.done?'×2':'扣分減半'}）`:'')+(by&&w?`，由${by}啟動`:'');
+    const st=(w?(w.big?'做大功':w.done?'做到功':w.zc?'直沖':'做唔到功'):'唔使做功')+(half?'（天干未封閉，扣一半）':'')+(w&&hits.length?`（${hits.join('、')}，${w.done?'×2':'扣分減半'}）`:'')+(by&&w?`，由${by}啟動`:'');
     return {mean:WK_MEAN(name?'日主':ss,male)+(name?'':'　｜　'+(WK_GONG[p]||'')),chain:parts.join(' < '),res,
       sc:{i,k,on,by,dynBy:aj>=0&&aj<cc.length&&!!cc[aj].dyn,ss:name?'日主':ss,pos:name?'日主':p,c:ch(k,v),score:sc,why:`${st}${a?`，${a>0?'↑':'↓'}${fmtN(Math.abs(a))}`:''}`}};};
   const at=h=>cc.findIndex(c=>c.h===h);
@@ -1771,6 +1772,7 @@ function yangren(z,cols,dmG,ci){const gs=[...new Set(cols.filter(c=>c.gz).map(c=
 const KUIGANG=['庚辰','庚戌','壬辰','戊戌'];
 function workTag(k,ci){const w=S.work&&S.work[k]&&S.work[k][ci];if(!w)return '';
   if(w.zc)return `<span class="wk zc" title="偏財${w.tg.join('、')}有伏吟或者粘連，所以要做功；但本身冇粘連，被${k?'沖刑害':'七殺剋'}係直沖，直接受傷，唔算做到功（第27、59堂）">直沖</span>`;
+  if(w.big)return `<span class="wk done big" title="偏財${w.tg.join('、')}有伏吟或者粘連，所以要做功；本身已經被啟動，做到功；再加上：${w.big.join('；')}＝做大功（規則 W1b）">做大功</span>`;
   return `<span class="wk${w.done?' done':''}" title="偏財${w.tg.join('、')}有伏吟或者粘連，所以要做功；${w.done?'本身已經被啟動，做到功':'本身未被啟動，做唔到功'}（規則 W1）">${w.done?'做到功':'做唔到功'}</span>`;}
 function chenxu(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';const kg=KUIGANG.includes(gz);
   return `<span class="cx${kg?' kg':''}" title="${kg?'魁罡：庚辰、庚戌、壬辰、戊戌。':''}辰戌強旺：上面嘅天干坐辰戌，做功特別有力；用得唔好係天羅地網。">${kg?'魁罡':'辰戌強旺'}</span>`;}
@@ -2060,7 +2062,7 @@ const ZD_T={'戊子癸亥癸卯癸亥':['己','甲','第20堂 [41:19]：有殺�
   '己卯壬申辛丑壬辰':['戊','丁','第46堂 [17:44]：戊土正印剋開兩壬水係第一個最重要嘅主導力；丁火殺星之後先入到（第17堂 [05:03]）'],
   '丁亥庚戌己巳庚午':['丙','甲','第18堂 [10:07]–[14:00]：乙木殺星被兩庚夾住，用丙火正印打開兩庚；更加需要嘅係甲木正官打開丁己夾出嘅戊土（老師講做功次序，冇用「主導力」三個字）'],
   '戊辰壬戌乙卯癸未':['甲','己','第14堂 [28:49]、[51:43]：乙木冇粘連，唔使殺星；戊癸合得太緊，第一靠甲木（劫財）打開戊土，第二用己土打開癸水'],
-  '辛亥甲午甲申戊辰':['庚','乙','第14堂 [30:55]–[31:31]、[55:52]：兩個甲黐埋，第一必定要庚金殺星；乙木（劫財）打開兩甲之間夾住（招感）嘅己土係第二主導力'],
+  '辛亥甲午甲申戊辰':['庚','乙','第14堂 [30:55]–[31:31]、[55:52]：兩個甲黐埋，第一必定要庚金殺星；乙木（劫財）打開兩甲夾拱嘅己土（財星）係第二主導力；[36:21] 同謝霆鋒一樣，招感乙木劫財剋己土財星，兩人都離婚'],
   '癸酉甲寅丙午癸巳':['己','庚','第14堂 [32:05]–[33:49]：兩個癸水黐住，必定招己土（傷官）＝第一需要力量；甲己連埋，自動招庚金打開＝第二（財）'],
   '庚申甲申甲戌壬申':['庚','','第14堂 [35:05]：庚甲甲，第一需要力量係庚金殺星（擺出嚟，唔係招出嚟）'],
   '己丑丁丑甲午乙亥':['庚','乙','第14堂 [36:51]–[37:28]：日元受困，第一招庚金打開甲木；乙木（劫財）打開己土＝第二'],
@@ -2244,6 +2246,12 @@ function render(){
     // 第1條（第27、59堂）：本身有粘連再被七殺剋（地支沖刑害）先係做功；本身冇粘連被剋＝直沖，主凶，唔當做到功
     const on=S.act[k][i][0]>0,ch=S.lock[k][i]>0;
     return {done:on&&ch,zc:on&&!ch,ti:tg,tg:tg.map(j=>(cc[j].dyn?cc[j].h.replace('大運','運'):cc[j].aux?cc[j].h:cc[j].h[0])+cc[j].gz[k])};}));
+  // 做大功（第14、40、43、51、72、75堂等）：做到功之外再有以下其中一樣：① 一打二：一個字剋（沖）兩個或以上嘅同一個字；② 被打嗰個字夾得實（粘連 ≥ 2）；③ 同一柱天干地支一齊做到功。層層遞進（啟動佢嘅字本身都係被啟動）只係加註，唔單獨計
+  S.work.forEach((ws,k)=>ws.forEach((w,i)=>{if(!w||!w.done)return;const why=[];
+    if(w.ti.length>=2&&cc.filter(x=>x.gz&&x.gz[k]===cc[i].gz[k]).length===1)why.push(`一打二：一個${cc[i].gz[k]}打${w.ti.length}個${cc[w.ti[0]].gz[k]}`);
+    const jl=w.ti.filter(j=>S.lock[k][j]>=2);if(jl.length)why.push(`被打嘅${jl.map(j=>cc[j].gz[k]).join('、')}夾得實（粘連 ≥ 2）`);
+    const o=S.work[1-k][i];if(o&&o.done&&!cc[i].sha)why.push('同柱天干地支一齊做到功');
+    if(why.length){if(S.act[k][i][0]>=2)why.push('層層遞進：啟動佢嘅字本身都被啟動');w.big=why;}}));
   // 天干力度（Q7）：坐辰戌 +1（魁罡用 AW.kg 代替）；盤上每見一個同五行嘅地支 +1（方向跟個字狀態）；盤上每見一個佢自己嘅陽刃地支 +1 ↑（yr，永遠向上）。只係顯示多啲箭咀，唔影響啟動計算
   const bz=cc.filter(c=>c.gz).map(c=>c.gz[1]);
   S.pw=cc.map(c=>{if(!c.gz)return null;const g=c.gz[0],gx=gi(g),why=[];
@@ -2272,7 +2280,7 @@ function render(){
   const shN=Math.max(1,...[0,1].map(k=>((S.sha||[])[k]||[]).length));
   const head=DO.map(ci=>cols[ci]).map(col=>`<th class="${cls(col)}"${col.sha?` style="--shn:${shN}${shC>1?`;--shw:${shC*112}px`:''}"`:''}>${HSH_U[col.h]?hshBtns(col.h):NAV_COL[col.h]?navBtns(col.h):''}<b>${col.h}</b><span class="hsub">${col.sub}</span>${col.bz?`<br><span class="tag">${col.bz}</span>`:''}</th>`).join('');
   // 啟動同做到功嘅字加 on／wd，CSS 畫光暈同底線
-  const fxc=(k,ci)=>(S.act[k][ci][0]?' on':'')+(S.work&&S.work[k]&&S.work[k][ci]?(S.work[k][ci].done?' wd':' wn'):'');
+  const fxc=(k,ci)=>(S.act[k][ci][0]?' on':'')+(S.work&&S.work[k]&&S.work[k][ci]?(S.work[k][ci].big?' wd wb':S.work[k][ci].done?' wd':' wn'):'');
   const table=`<div class="tscroll"><table class="chart${VIEW.wkMark?'':' nowk'}${VIEW.ssTag?' sst':''}${VIEW.noMidL?' nomid':''}${DO.some(ci=>cols[ci].sha)?' hasha':''}" style="--n:${N};--mw:${60+N*54}px;--shn:${shN}">
     <thead><tr><th class="rl"></th>${head}</tr></thead><tbody>
     <tr><th class="rl">十神</th>${td((col,g)=>col.dm?`<span class="ss dm">日主</span><span class="tiny">${inp.sex===1?'元男':'元女'}</span>`:`<span class="ss">${shishen(dm,g)}</span>`)}</tr>
@@ -2839,7 +2847,7 @@ const tierTag=()=>ADMIN?'<b class="adm">管理員</b>':TIER_N[TIER]?`<b class="a
 const me=()=>CLOUD?(SESSION&&SESSION.user.id):localVoter;
 const myName=()=>CLOUD?(SESSION&&(SESSION.user.name||SESSION.user.email))||'':'我';
 // 權限：本機模式乜都做得；雲端模式要登入先加得，自己加嘅自己改同刪，管理員改同刪任何命例
-const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN,cdel:()=>!CLOUD||ADMIN,
+const can={io:()=>!CLOUD||ADMIN,add:()=>!CLOUD||!!SESSION,edit:c=>!CLOUD||ADMIN||(!!SESSION&&c.owner===SESSION.user.id),del:c=>!CLOUD||ADMIN||(!!SESSION&&!!c&&c.owner===SESSION.user.id),vote:()=>!CLOUD||!!SESSION,tagdel:()=>!CLOUD||ADMIN,cdel:m=>!CLOUD||ADMIN||(!!SESSION&&!!m&&m.author===SESSION.user.id),
   // 招感殺星：只限進階用戶、高級用戶同管理員（本機模式照開）
   sha:()=>!CLOUD||ADMIN||TIER==='advance'||TIER==='premium',
   sw:()=>true,  // 最強五行計法未確定：暫時所有人都睇到，唔分等級、唔扣分
@@ -2925,14 +2933,14 @@ async function buyFeat(kind){const key=chartKey(),k=kind+'|'+key;if(!key||BUY.bu
 const Store={
   async list(){
     if(!CLOUD)return lsGet().map(c=>({evVotes:{},...c,comments:(c.comments||[]).map((m,i)=>({likes:0,unlikes:0,myVote:0,by:'我',...m,id:m.id||'i'+i}))}));
-    const sel='cases?select=id,created_at,owner,owner_name,name,input,notes,tags,votes(voter,vote),comments(id,created_at,body,author_name,comment_votes(voter,vote))';
+    const sel='cases?select=id,created_at,owner,owner_name,name,input,notes,tags,votes(voter,vote),comments(id,created_at,body,author,author_name,comment_votes(voter,vote))';
     // event_votes 要行咗 004_event_votes.sql、private 要行咗 019_private_cases.sql 先有；未有就照舊載入
     let rows=null;for(const x of [',private,event_votes(ev,voter,vote)',',event_votes(ev,voter,vote)','']){try{rows=await api(sel+x+'&order=created_at.desc');PRIV_OK=x.includes('private');break;}catch(e){if(!x)throw e;}}
     const uid=me();
     return rows.map(r=>({id:r.id,created:r.created_at,owner:r.owner,by:r.owner_name||'',name:r.name,private:!!r.private,input:r.input,notes:r.notes||'',tags:r.tags||[],
       likes:r.votes.filter(v=>v.vote===1).length,unlikes:r.votes.filter(v=>v.vote===-1).length,myVote:(r.votes.find(v=>v.voter===uid)||{}).vote||0,
       evVotes:(r.event_votes||[]).reduce((o,v)=>{const x=o[v.ev]||(o[v.ev]={likes:0,unlikes:0,myVote:0});if(v.vote===1)x.likes++;if(v.vote===-1)x.unlikes++;if(v.voter===uid)x.myVote=v.vote;return o;},{}),
-      comments:(r.comments||[]).sort((a,b)=>a.created_at<b.created_at?-1:1).map(c=>{const cv=c.comment_votes||[];return {id:c.id,t:c.created_at,body:c.body,by:c.author_name||'',likes:cv.filter(v=>v.vote===1).length,unlikes:cv.filter(v=>v.vote===-1).length,myVote:(cv.find(v=>v.voter===uid)||{}).vote||0};})}));},
+      comments:(r.comments||[]).sort((a,b)=>a.created_at<b.created_at?-1:1).map(c=>{const cv=c.comment_votes||[];return {id:c.id,t:c.created_at,body:c.body,by:c.author_name||'',author:c.author,likes:cv.filter(v=>v.vote===1).length,unlikes:cv.filter(v=>v.vote===-1).length,myVote:(cv.find(v=>v.voter===uid)||{}).vote||0};})}));},
   async add(c){
     if(!CLOUD){const a=lsGet(),x={id:'L'+Date.now(),created:new Date().toISOString(),by:'我',likes:0,unlikes:0,myVote:0,comments:[],tags:[],...c};a.unshift(x);if(!lsSet(a))throw new Error('瀏覽器唔畀儲存');return x.id;}
     const r=await api('cases',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify({name:c.name,input:c.input,notes:c.notes,tags:c.tags||[],owner_name:myName(),...(c.private?{private:true}:{})})});return r[0].id;},
@@ -2945,10 +2953,10 @@ const Store={
   async comment(id,body){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===id);if(!x)return;x.comments.push({id:'C'+Date.now()+'_'+x.comments.length,t:new Date().toISOString(),body,by:'我',likes:0,unlikes:0,myVote:0});lsSet(a);return;}
     await api('comments',{method:'POST',body:JSON.stringify({case_id:id,body,author_name:myName()})});},
-  // 管理員可以刪除備註
+  // 管理員同寫備註嘅用戶可以刪除備註（024）
   async uncomment(caseId,cid){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===caseId);if(!x)return;x.comments=x.comments.filter((m,i)=>(m.id||'i'+i)!==cid);lsSet(a);return;}
-    await api('comments?id=eq.'+encodeURIComponent(cid),{method:'DELETE'});},
+    const r=await api('comments?id=eq.'+encodeURIComponent(cid),{method:'DELETE',headers:{Prefer:'return=representation'}});if(!r||!r.length)throw new Error('冇權限刪除呢條備註');},
   // 每條備註都可以投 👍／👎
   async cvote(caseId,cid,v){
     if(!CLOUD){const a=lsGet(),x=a.find(c=>c.id===caseId);if(!x)return;const m=x.comments.find((m,i)=>(m.id||'i'+i)===cid);if(!m)return;
@@ -3157,7 +3165,7 @@ function showCase(c){
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk" title="加" aria-label="加">＋</button></form></div>`:''}
     ${evBlock(c,ed)}
     ${c.notes?`<div class="cbody">${linky(c.notes)}</div>`:''}${lsCaseRefs(c)}
-    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span><span class="row">${cvoteBtns(c,m)}${can.cdel()?`<button type="button" class="lnk del" data-cdel="${esc(m.id)}" data-case="${c.id}" title="刪除備註" aria-label="刪除備註">🗑</button>`:''}</span></div><div>${linky(m.body)}</div></div>`).join('')}
+    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span><span class="row">${cvoteBtns(c,m)}${can.cdel(m)?`<button type="button" class="lnk del" data-cdel="${esc(m.id)}" data-case="${c.id}" title="刪除備註" aria-label="刪除備註">🗑</button>`:''}</span></div><div>${linky(m.body)}</div></div>`).join('')}
     ${can.vote()?`<form class="cadd" data-comment="${c.id}"><textarea rows="2" maxlength="2000" placeholder="加解釋或者補充備註" required></textarea><button type="submit" class="go sm" title="加備註" aria-label="加備註">📝</button></form>`:'<p class="hint">登入先可以加備註。</p>'}`;
 }
 // 命例事件日期（例如結婚、生仔、過身），撳一下就用嗰日做睇運日期；存喺 input.events
@@ -3327,7 +3335,7 @@ document.addEventListener('click',e=>{
   else if(t.hasAttribute('data-close')){CUR=null;EDIT=false;renderCases();}
   else if(t.dataset.priv){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!can.edit(c))return;const v=t.dataset.priv==='1';
     if(twice(t,v?'確定改做私人？其他人會睇唔到，亦唔再計分':'確定改做公開？所有人都會睇到'))busy(()=>Store.update(c.id,{private:v}));}
-  else if(t.dataset.cdel){if(!can.cdel())return;if(twice(t,'再撳一下刪除'))busy(()=>Store.uncomment(t.dataset.case,t.dataset.cdel));}
+  else if(t.dataset.cdel){{const c0=CASES.find(x=>x.id===t.dataset.case),m0=c0&&c0.comments.find(x=>x.id===t.dataset.cdel);if(!can.cdel(m0))return;}if(twice(t,'再撳一下刪除'))busy(()=>Store.uncomment(t.dataset.case,t.dataset.cdel));}
   else if(t.dataset.del){if(!can.del(CASES.find(x=>x.id===t.dataset.del)))return;if(twice(t,'再撳一下刪除'))busy(async()=>{await Store.remove(t.dataset.del);CUR=null;});}
   else if(t.id==='caseExport'){if(!can.io())return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([toCSV(CASES)],{type:'text/csv;charset=utf-8'}));a.download='命例.csv';a.click();}
 });
