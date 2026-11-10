@@ -1646,7 +1646,7 @@ function activation(cols,k,links,virt=[],sha=[],opt={}){
       if(k&&CALC_T.zixing&&j!==i&&j<N&&vals[j]>=0&&vals[j]===vals[i]&&ZIXING.includes(vals[i])){if(best[0]<1)best=[1,`刑${lbl(j)}支${chars[vals[j]]}（自刑）`,j];continue;}
       if(j===i||vals[j]<0||!killers(k,vals[i]).includes(vals[j]))continue;if(CALC_T.yuanNoAct&&j<N&&cols[j].yuan)continue;if(vals[j]===vals[i]||seen.has(vals[j])){loopC.push(j);continue;}
       if(route&&i<N&&j<N&&j>i&&outer(cols[j])&&inner(cols[i])&&routeBlk(i,j))continue;
-      const [n,why]=lvl(j,new Set([...seen,vals[i]]));if(chained.has(j)&&n===0)continue;const t=actName(k,vals[i],vals[j]);
+      let [n,why]=lvl(j,new Set([...seen,vals[i]]));if(CALC_T.zixing&&!CALC_T.zixingProp&&n===1&&/^刑.*（自刑）$/.test(why||''))n=0;if(chained.has(j)&&n===0)continue;const t=actName(k,vals[i],vals[j]);
       if(n+1>best[0]||(k&&n+1===best[0]&&t==='沖'&&!/^沖/.test(best[1])))best=[n+1,`${t}${lbl(j)}${k?'支':'干'}${chars[vals[j]]}${why?'（'+why+'）':''}`,j];}
     memo.set(key,best);return best;};
   let all;
