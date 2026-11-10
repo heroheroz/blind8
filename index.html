@@ -2405,7 +2405,7 @@ function render(){
   const bs=S.birthSolar;
   const inLabel=inp.lunar?`農曆 ${yearTxt(inp.y)}年${inp.leap?'閏':''}${LMON[inp.m-1]}月${lunarDay(inp.d)}（公曆 ${yearTxt(bs.getYear())}-${pad(bs.getMonth())}-${pad(bs.getDay())}）`:`公曆 ${yearTxt(bs.getYear())}-${pad(bs.getMonth())}-${pad(bs.getDay())}`;
 
-  {const n=document.querySelector('section.notes');if(n&&n.parentNode===$('out'))$('aw').after(n);}
+  {const n=document.querySelector('section.notes');if(n&&n.parentNode===$('out'))$('aw').after(n);const lb=$('lb');if(lb&&lb.parentNode===$('out'))$('anBox').before(lb);}
   $('out').innerHTML=`
   <section class="panel">
     <div class="summary">
