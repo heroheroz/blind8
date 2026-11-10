@@ -562,7 +562,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <section id="caseNote" class="panel casenote" hidden></section>
 <div id="out" class="wrap" style="gap:18px"></div>
 
-<section class="panel fold" id="aw" data-sec="aw">
+<section class="panel fold folded" id="aw" data-sec="aw">
   <h2 class="foldh">箭咀力度 <span class="hint">（大家一齊完善）</span></h2>
   <p class="lbwhy">💡 <b>理念</b>：做功同粘連嘅力度點計，冇一個絕對嘅答案。我希望師兄師姐一齊參與，用大家手上嘅命例去印證，一齊完善做功力度嘅計法。下面每個數值都係而家盤上用緊嘅箭咀數（1 = 一個大箭咀，0.5 = 一個細箭咀）。覺得某個數應該大啲就撳 👍 應該加，細啲就撳 👎 應該減；登入咗先投到，每人每項一票，再撳一次就取消。管理員會參考大家嘅投票調整。</p>
   <p class="hint" id="awMsg"></p>
@@ -2886,7 +2886,7 @@ function ptFx(n,label,big){if(!(n>0))return;let el=$('ptFx');if(el)el.remove();e
   document.querySelectorAll('.pts').forEach(p=>{p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump');});}
 function myPts(){if(!SESSION||!PT.rows)return null;const r=PT.rows.find(x=>x.user_id===SESSION.user.id);return r?r.points:0;}
 // 招感、計法說明、貢獻排行榜：電腦版撳標題打開／收埋；箭咀力度同貢獻排行榜預設打開，其他預設收埋（手機版係獨立分頁，唔受影響）
-const SECF={aw:true,lb:true};
+const SECF={aw:false,lb:true};
 function applySec(){document.querySelectorAll('[data-sec]').forEach(el=>el.classList.toggle('folded',!SECF[el.dataset.sec]));}
 document.addEventListener('click',e=>{const h=e.target.closest('.foldh');if(!h||e.target.closest('button,a,input,select'))return;const el=h.closest('[data-sec]');if(!el)return;
   SECF[el.dataset.sec]=!SECF[el.dataset.sec];applySec();if(el.id==='anBox'&&anOn())anDraw();});
