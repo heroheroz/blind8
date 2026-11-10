@@ -1313,7 +1313,7 @@ function zgArrows(k,vi,bo=0){const VX=(S.vex&&S.vex[k]&&S.vex[k][vi])||EX0;bo+=V
   // 重字（Z2）加嘅箭咀同樣跟狀態：啟動咗 ↑，粘住未啟動 ↓；同一個字唔會有 ↑ 又有 ↓；招感字粘連同重字嘅權重睇「箭咀力度」
   // 同 Q8 一樣：粘連嘅 ↓ 變 ↑，啟動鏈每多一層加；最強五行同五行嘅招感字都乘 AW.sw
   const ch=((S.zg||[])[k]||[])[vi]?.c||'',m=ch?swMul(k,ch):1,R=n=>Math.round(n*m*2)/2;
-  if(a&&a[0]>0){const c=(a[0]-1)*AW.chain,n=R(dn+c+bo);return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+ch)}　↑${fmtN(n)}（${nl} 條粘連（${lkBrk(ls,ci)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${fmtN(c)}`:''}${bo?`；加 ↑${fmtN(bo)}`:''}${swNote(m)}）${vxT}">${ARW(n,0)}</span>`;}
+  if(a&&a[0]>0){const c=(a[0]-1)*AW.chain,n=R(dn+c+bo);return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+ch)}　↑${fmtN(n)}（${nl} 條粘連（${lkBrk(ls)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${fmtN(c)}`:''}${bo?`；加 ↑${fmtN(bo)}`:''}${swNote(m)}）${vxT}">${ARW(n,0)}</span>`;}
   if(dn)return `<span class="act" title="${nl} 條粘連（${lkBrk(ls)}），計 ${fmtN(dn)} 個箭咀（未被啟動，唔會招感或者啟動其他字）${bo?`；加 ↓${fmtN(bo)}`:''}${swNote(m)}${vxT}">${ARW(R(dn+bo),1)}</span>`;
   return bo?`<span class="act" title="加 ↑${fmtN(bo)}${swNote(m)}${vxT}">${ARW(R(bo),0)}</span>`:'';}
 function zgStrip(list,isGan,ncol){
