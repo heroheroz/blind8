@@ -912,7 +912,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>加入命例</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
   <div class="gbpager" id="tuPager"></div>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
-  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="LOGIN">登入</option><option value="VIEW">打開命例</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload title="重新載入" aria-label="重新載入">↻</button></div>
+  <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="SIGNUP">註冊</option><option value="LOGIN">登入</option><option value="VIEW">打開命例</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><button type="button" class="lnk" data-aureload title="重新載入" aria-label="重新載入">↻</button></div>
   <p class="hint" id="auMsg"></p>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
@@ -1470,7 +1470,7 @@ function workRows(male){
 // 天干同地支用返五行顏色，箭咀「<」淡色，已啟動綠、未啟動灰
 const wkHtml=t=>esc(t).replace(/[甲乙丙丁戊己庚辛壬癸]/g,c=>`<b class="w${gw(gi(c))}">${c}</b>`).replace(/\x01(.)/g,(_,c)=>`<b class="w${ZWX[zi(c)]}">${c}</b>`).replace(/\x02/g,'<s class="wkx">').replace(/\x03/g,'</s>').replace(/ &lt; /g,' <span class="wklt">&lt;</span> ').replace(/已啟動|招得到/g,m=>`<span class="wkon">${m}</span>`).replace(/未啟動|盤上冇/g,m=>`<span class="wkoff">${m}</span>`).replace(/被[^：；（）]*?(合住|擋走|沖走)/g,m=>`<span class="wkblk">${m}</span>`);
 function workSec(male){const {rows,zg,cat}=workRows(male);
-  return `<section class="panel" id="workBox"><h2>做功計算 <span class="hint">（測試中）</span></h2>
+  return `<section class="panel" id="workBox"><details data-wkbox ${WK_OPEN?'open':''}><summary><h2 class="plh">做功計算 <span class="hint">（測試中）</span></h2></summary>
   <p class="hint">先睇日主，再逐個睇原局另外 7 個字。天干：有冇粘連 → 佢嘅七殺喺唔喺盤、啟動未；盤上冇就睇招唔招得到（右邊有冇字合住或者擋走）→ 再睇七殺嘅七殺，去到字重複、七殺冇粘連或者 6 層為止。地支：有冇粘連 → 沖、害、刑佢嘅字喺唔喺盤、啟動未。下面嗰行係盤上計出嚟嘅結果。</p>
   <ul class="wklist">${rows.map(r=>`<li><div class="wkc">${wkHtml(r.chain)}</div><div class="wkm">${esc(r.mean)}</div>${r.res.map(x=>`<div class="wkr ${x.cls}">${x.cls==='ok'?'✓ ':x.cls==='no'?'✗ ':''}${wkHtml(x.txt)}</div>`).join('')}</li>`).join('')}
   <li><div class="wkc">原局四柱招感嘅字</div>${zg.length?zg.map(t=>`<div class="wkr">${wkHtml(t)}</div>`).join(''):'<div class="wkr">冇</div>'}</li></ul>
@@ -1481,7 +1481,8 @@ function workSec(male){const {rows,zg,cat}=workRows(male);
   <h3 class="wksh">喜忌字 <span class="hint">（見到邊個字，原局 8 個字最多做到功＝喜；最多做唔到功＝忌；推測，只供參考）</span></h3>
   <div id="wkXJ" class="hint">計緊…</div>
   <h3 class="wksh">卡死日子 <span class="hint">（出世至 100 歲，原局 8 個字全部要做功、但全部做唔到功嘅日子；推測，只供參考）</span></h3>
-  <div id="wkKS" class="hint">計緊…</div></section>`;}
+  <div id="wkKS" class="hint">計緊…</div></details></section>`;}
+let WK_OPEN=true;document.addEventListener('toggle',e=>{if(e.target.matches&&e.target.matches('[data-wkbox]'))WK_OPEN=e.target.open;},true);
 // 喜忌字：喺盤最右邊（流日之後）加一個「見到」嘅字，逐個天干（10 個）同地支（12 個）試，喺唔同日子入面計原局 8 個字平均有幾多個做到功、幾多個做唔到功，同冇呢個字比。
 // 分五層：一生（成世隨機揀日子）、而家大運（呢十年隨機揀日子）、流年（呢年隨機揀日子）、流月（呢個月逐日）、流日（只係揀咗嗰日）；上層柱固定，下面嘅柱跟住日子變。
 // 天干同地支分開計（天干只影響天干嗰行），所以逐個字出，唔出成條柱；頭兩名差唔多（0.05 個字以內）就兩個都出。計得慢，所以分段喺背景計，計完先填。
@@ -1953,7 +1954,7 @@ const ZD_T={'戊子癸亥癸卯癸亥':['己','甲','第20堂 [41:19]：有殺�
   '己卯壬申辛丑壬辰':['戊','丁','第46堂 [17:44]：戊土正印剋開兩壬水係第一個最重要嘅主導力；丁火殺星之後先入到（第17堂 [05:03]）'],
   '丁亥庚戌己巳庚午':['丙','甲','第18堂 [10:07]–[14:00]：乙木殺星被兩庚夾住，用丙火正印打開兩庚；更加需要嘅係甲木正官打開丁己夾出嘅戊土（老師講做功次序，冇用「主導力」三個字）'],
   '戊辰壬戌乙卯癸未':['甲','己','第14堂 [28:49]、[51:43]：乙木冇粘連，唔使殺星；戊癸合得太緊，第一靠甲木（劫財）打開戊土，第二用己土打開癸水'],
-  '辛亥甲午甲申戊辰':['庚','乙','第14堂 [30:55]–[31:31]、[55:52]：兩個甲黐埋，第一必定要庚金殺星；乙木（劫財）打開戊土係第二主導力'],
+  '辛亥甲午甲申戊辰':['庚','乙','第14堂 [30:55]–[31:31]、[55:52]：兩個甲黐埋，第一必定要庚金殺星；乙木（劫財）打開兩甲之間夾住（招感）嘅己土係第二主導力'],
   '癸酉甲寅丙午癸巳':['己','庚','第14堂 [32:05]–[33:49]：兩個癸水黐住，必定招己土（傷官）＝第一需要力量；甲己連埋，自動招庚金打開＝第二（財）'],
   '庚申甲申甲戌壬申':['庚','','第14堂 [35:05]：庚甲甲，第一需要力量係庚金殺星（擺出嚟，唔係招出嚟）'],
   '己丑丁丑甲午乙亥':['庚','乙','第14堂 [36:51]–[37:28]：日元受困，第一招庚金打開甲木；乙木（劫財）打開己土＝第二'],
@@ -2176,11 +2177,11 @@ function render(){
   // 五行 tally of 8 chars
   const cnt=[0,0,0,0,0];P.forEach(p=>{cnt[gw(gi(p[0]))]++;cnt[ZWX[zi(p[1])]]++;});
   const cnt2=[0,0,0,0,0];P.forEach(p=>{cnt2[gw(gi(p[0]))]++;[...HIDE[p[1]]].forEach(h=>cnt2[gw(gi(h))]++);});
-  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`+(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-swsec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） ${sw.g||''}${WX[sw.el]}</span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
+  const siling=`<span class="bg${gw(gi(slG))} w${gw(gi(slG))}" title="${jn}後第 ${Math.floor(slDays)+1} 日；${P[1][1]}月：${slT.map(x=>x[0]+x[1]).join(' ')}">人元司令 ${slG}${WX[gw(gi(slG))]}</span><span class="gong" style="align-self:center">（${jn}後第 ${Math.floor(slDays)+1} 日）</span>`,swTag=(!S.swShow?'':(sw=>(F=>`<span class="bg${sw.el} w${sw.el} swtag${F.bad?' swbad':''}" title="${esc(sw.why+'，推測\n'+F.map(([t,a])=>t+'：'+a.join('；')).join('\n'))}" data-swsec="${esc(JSON.stringify([F[0],['點樣揀（推測）',[sw.why]],...F.slice(1)]))}">${F.bad?'⚠ ':''}最強五行（推論${{s1:1,yue:2,sl:3}[VIEW.swm]}） ${sw.g||''}${WX[sw.el]}</span>`)(swFan(sw,S.cols)))(strongestBy(VIEW.swm,P,mingGong(lun,ec),slG)));
   // 第一／第二主導力（原局天干，所有人睇到，唔扣分）：撳開睇點樣推
   const zdTag=(z=>{const C=c=>c?`<b class="w${gw(gi(c))}">${c}</b>`:'—',why=z.why.split('；');
     return `<span class="gong zdtag" role="button" tabindex="0" data-swsec="${esc(JSON.stringify([['點樣推',why],['來源',[z.src==='t'?'🎓 老師親口講':z.src?`🤖 按第31堂 [45:51] 規則推算，把握 ${z.conf}`:'未計']],['規則',['日主被合住或粘住，第一主導力用殺星剋開；殺星被合住、粘住，就無殺方論用，先剋開阻住殺星嘅字','第二主導力係打開下一個關口嘅字；其餘大致一齊平衡進行（第31堂 [47:29]）']]]))}">主導力 ①${C(z.p1)} ②${C(z.p2)} ${z.src==='t'?'🎓':z.src?'🤖':''}</span>`;})(zhudao(P));
-  const wx=`<div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}${zdTag}</div>`+`<div class="wxbar wxh">${cnt2.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（計埋藏干：四個天干加四個地支嘅全部藏干，每個藏干算一個）</span></div>`;
+  const wx=`<div class="wxbar">${zdTag}${swTag}</div><div class="wxbar">${cnt.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（八字天干地支計，未計藏干）</span>${siling}</div>`+`<div class="wxbar wxh">${cnt2.map((n,i)=>`<span class="bg${i} w${i}">${WX[i]} ${n}</span>`).join('')}<span class="gong" style="align-self:center">（計埋藏干：四個天干加四個地支嘅全部藏干，每個藏干算一個）</span></div>`;
 
   const by=gzYear(sol), yb=yuanyun(by), yn=yuanyun(gzYear(refDay()));
   const startSol=yun.getStartSolar();
@@ -2889,7 +2890,7 @@ function auDiff(r){if(r.op!=='UPDATE'||!r.row_old||!r.row_new)return [];const a=
 async function loadAudit(){
   if(!(CLOUD&&ADMIN))return;
   const f=[],t=$('auTbl').value,op=$('auOp').value,q=$('auQ').value.trim().replace(/[,()*%]/g,'');
-  if(t)f.push('tbl=eq.'+t);if(op)f.push('op=eq.'+op);if(q)f.push('or='+encodeURIComponent(`(actor_name.ilike.*${q}*,actor_email.ilike.*${q}*)`));
+  if(op==='SIGNUP'){f.push('tbl=eq.users','op=eq.INSERT');}else{if(t)f.push('tbl=eq.'+t);if(op)f.push('op=eq.'+op);}if(q)f.push('or='+encodeURIComponent(`(actor_name.ilike.*${q}*,actor_email.ilike.*${q}*)`));
   $('auMsg').textContent='載入緊…';
   const n=AU.n||1000;
   try{const {rows,total}=await api(`audit_log?select=*&order=at.desc&limit=${n+1}&offset=${AU.p*n}${f.length?'&'+f.join('&'):''}`,{count:true,headers:{Prefer:'count=exact'}});
