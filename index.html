@@ -1963,9 +1963,11 @@ function nlList(k,ci,cols){
   const me=cols[ci].gz[k],seen={},order=[];
   S.links[k].forEach(l=>{if(l.a!==ci&&l.b!==ci)return;
     const virt=l.vx!=null,other=virt?l.vc:cols[l.a===ci?l.b:l.a].gz[k];
-    const txt=l.t==='fu'?me+other+'伏吟粘連':l.t==='he'?me+other+'合':l.t==='banhe'?me+other+(l.vx!=null?'拱':'半合'):l.t==='sanhe'?me+other+'三合局':l.t==='anhe'||l.t==='anhe2'?me+other+'暗合':l.t==='sanhui'?me+other+'三會方':l.t==='banhui'?me+other+'半會':me+other+'連';
+    const txt=l.t==='fu'?me+other+'伏吟粘連':l.t==='he'?me+other+'合':l.t==='banhe'?me+other+(l.vx!=null?'拱':'半合'):l.t==='sanhe'?((SANHE.find(([g])=>g.includes(me)&&g.includes(other))||[me+other])[0]+'三合局'):l.t==='anhe'||l.t==='anhe2'?me+other+'暗合':l.t==='sanhui'?((SANHUI.find(([g])=>g.includes(me)&&g.includes(other))||[me+other])[0]+'三會方'):l.t==='banhui'?me+other+'半會':me+other+'連';
     const key=l.t+txt+(virt?'v':'')+(l.broken?'x':'');
-    if(!seen[key]){seen[key]={t:l.t,txt,virt,broken:l.broken,n:0,other};order.push(key);}seen[key].n++;});
+    if(!seen[key]){seen[key]={t:l.t,txt,virt,broken:l.broken,n:0,other,po:{}};order.push(key);}seen[key].n++;seen[key].po[other]=(seen[key].po[other]||0)+1;});
+  // 三合局／三會方：一組三個字併做一行（例如巳酉丑三合局），條數用同一個字對手最多嗰個計，唔係逐對加
+  order.forEach(o=>{const x=seen[o];if(x.t==='sanhe'||x.t==='sanhui')x.n=Math.max(...Object.values(x.po));});
   if(!order.length)return '';
   // 連續全部併做一行：戊丁連、戊己連 → 丁戊己連；招感字同真字重疊都併埋，只係招感字先有嘅一邊標「招」
   const cs=k?ZHI:GAN,N=cs.length,mi=cs.indexOf(me);
