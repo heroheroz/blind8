@@ -11,4 +11,4 @@ insert into public.arrow_weights (key, value) values
   ('kw',0.35),('tian',1),('jgz',1),('gw',1.5),('zc',2.5)
 on conflict (key) do nothing;
 
-select '024 completed' as status;
+select '025 completed' as status;
