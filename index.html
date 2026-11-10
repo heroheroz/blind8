@@ -3384,7 +3384,7 @@ document.addEventListener('click',e=>{
     return;}
   if(t.dataset.evdel!==undefined){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!twice(t,'再撳一下刪除'))return;
     const evs=(c.input.events||[]).filter((_,i)=>i!==+t.dataset.evdel);busy(()=>Store.update(c.id,{input:{...c.input,events:evs}}));return;}
-  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);TRK.skip=true;try{run(c.input);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);track('case',c.input,c.id);renderCases();
+  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);TRK.skip=true;try{run(c.input);}catch(err){console.error(err);$('err').textContent='排盤出錯：'+err.message;showErr(err);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);track('case',c.input,c.id);renderCases();
     if(matchMedia('(max-width:1099px)').matches)$('caseNote').scrollIntoView({behavior:'smooth'});}
   else if(t.dataset.evote){const c=CASES.find(x=>x.id===t.dataset.case),k=t.dataset.ev,v=+t.dataset.evote,m=c&&(c.evVotes||{})[k];if(c)busy(()=>Store.evote(c.id,k,m&&m.myVote===v?0:v));}
   else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
@@ -3509,6 +3509,10 @@ $('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$
 writeForm(init);run(init);TRK.skip=false;TRK.last=JSON.stringify(LAST_V);
 document.addEventListener('toggle',e=>{const f=e.target.dataset&&e.target.dataset.fold;if(f)FOLD[f]=e.target.open;},true);
 })();
+// 程式出錯：喺畫面底彈個細框寫低錯誤（方便截圖報告），十秒後自動收
+function showErr(e){try{let d=document.getElementById('jsErr');if(!d){d=document.createElement('div');d.id='jsErr';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;background:#7a1f1f;color:#fff;font-size:12px;padding:8px 10px;border-radius:8px;white-space:pre-wrap;max-height:30vh;overflow:auto';d.onclick=()=>d.remove();document.body.appendChild(d);}
+  d.textContent='⚠ 程式出錯（請截圖畀管理員；撳一下收埋）：'+(e&&e.message||e)+'\n'+String(e&&e.stack||'').split('\n').slice(0,4).join('\n');clearTimeout(d._t);d._t=setTimeout(()=>d.remove(),15000);}catch(x){}}
+addEventListener('error',ev=>{if(ev.error)showErr(ev.error);});addEventListener('unhandledrejection',ev=>{const r=ev.reason;if(r&&r.stack&&!/fetch|權限|network/i.test(r.message||''))showErr(r);});
 // Ko-fi：撳「請飲咖啡」喺網頁入面彈個付款框（Ko-fi 官方嵌入），唔使離開網站；瀏覽器唔支援 dialog 就照開新分頁
 document.addEventListener('click',e=>{const k=e.target.closest('a.kofi'),d=document.getElementById('kofiDlg');if(k&&d&&d.showModal&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){e.preventDefault();const f=d.querySelector('iframe');if(!f.src)f.src=f.dataset.src;d.showModal();return;}
   if(e.target.closest('[data-kfx]')||e.target===d)d&&d.close();});
