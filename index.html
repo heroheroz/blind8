@@ -879,7 +879,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="npane sifu" id="np-an"><div class="lsel row seg anseg"><button type="button" data-ansub="zg">做功結構</button><button type="button" data-ansub="ev">事件</button><button type="button" data-ansub="ss">十神結構</button><button type="button" data-ansub="gz">干支組合</button></div><div class="lbody"><p class="hint">揀「命例數據庫分析」先計。</p></div></div>
   <div class="npane sifu" id="np-ltxt"><div class="lsel row"><span class="lpick"></span><input type="search" class="lq" data-lq placeholder="搵字幕…" aria-label="搵字幕"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
 </section>
-<section class="panel fold folded" id="lb" data-sec="lb" hidden>
+<section class="panel fold" id="lb" data-sec="lb" hidden>
   <h2 class="foldh">貢獻排行榜 <button type="button" class="lnk" data-lbreload>↻ 更新</button></h2>
   <p class="lbwhy">點解要有貢獻分？我哋希望大家一齊將命例資料庫做得越嚟越齊全：多啲收集真實命例，再喺每個命例補充事件同筆記，令每個盤都有更多可以印證嘅資料。資料越充足，大家研究同驗證計法就越有根據。貢獻分係對每位出力嘅師兄師姐嘅一點回饋，亦可以用嚟換取進階功能。</p>
   <div class="lbhow"><b>點樣賺分？好簡單：</b>
@@ -901,7 +901,9 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。筆記夠👍之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳 👍嘅人唔可以係筆記嘅主人。標籤唔計分。🔒 私人命例同佢嘅事件、筆記、投票都唔計分，轉返公開先計。管理員唔上榜。</p>
   </div>
   <p class="hint" id="lbMsg"></p>
+  <div class="auf"><select id="lbN" aria-label="每頁幾多個"><option value="10" selected>每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="0">全部</option></select></div>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th>分數</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
+  <div class="gbpager" id="lbPager"></div>
 </section>
 <section class="panel" id="anBox" hidden><h2>命例數據庫分析</h2></section>
 <section class="panel" id="gb">
@@ -2875,8 +2877,8 @@ function ptFx(n,label,big){if(!(n>0))return;let el=$('ptFx');if(el)el.remove();e
   document.body.appendChild(el);el.addEventListener('click',()=>el.remove());setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),400);},big?3200:2400);
   document.querySelectorAll('.pts').forEach(p=>{p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump');});}
 function myPts(){if(!SESSION||!PT.rows)return null;const r=PT.rows.find(x=>x.user_id===SESSION.user.id);return r?r.points:0;}
-// 招感、計法說明、貢獻排行榜：電腦版撳標題打開／收埋，每次開網預設收埋（手機版係獨立分頁，唔受影響）
-const SECF={aw:true};
+// 招感、計法說明、貢獻排行榜：電腦版撳標題打開／收埋；箭咀力度同貢獻排行榜預設打開，其他預設收埋（手機版係獨立分頁，唔受影響）
+const SECF={aw:true,lb:true};
 function applySec(){document.querySelectorAll('[data-sec]').forEach(el=>el.classList.toggle('folded',!SECF[el.dataset.sec]));}
 document.addEventListener('click',e=>{const h=e.target.closest('.foldh');if(!h||e.target.closest('button,a,input,select'))return;const el=h.closest('[data-sec]');if(!el)return;
   SECF[el.dataset.sec]=!SECF[el.dataset.sec];applySec();});
@@ -2889,11 +2891,17 @@ async function checkin(){const uid=SESSION&&SESSION.user&&SESSION.user.id,day=ne
   catch(e){}finally{CK.busy=false;}}
 function ptTag(){if(ADMIN)return '';const n=myPts();return n==null?'':`<span class="pts" title="貢獻分（睇「貢獻排行榜」）">⭐ ${n} 分</span>`;}
 function renderAuthPts(){document.querySelectorAll('[data-pts]').forEach(e=>e.innerHTML=ptTag());}
+const LB={p:0,n:(()=>{try{const v=localStorage.getItem('b8-lbn');return v==null?10:+v;}catch(e){return 10;}})()};
+document.addEventListener('change',e=>{if(e.target.id==='lbN'){LB.n=+e.target.value;LB.p=0;try{localStorage.setItem('b8-lbn',LB.n);}catch(_){}drawPoints();}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lbpage]');if(!b||b.disabled)return;LB.p=+b.dataset.lbpage-1;drawPoints();});
 function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSION);if(box.hidden)return;
-  $('lbMsg').textContent=PT.err;// 最活躍排最頂：活躍度＝加命例、事件、投票、筆記、留言、登入日數、用分次數（用過分當 1）、獎勵；乜都未做過嘅唔顯示
+  $('lbMsg').textContent=PT.err;{const sel=$('lbN');if(sel)sel.value=String(LB.n);}// 最活躍排最頂：活躍度＝加命例、事件、投票、筆記、留言、登入日數、用分次數（用過分當 1）、獎勵；乜都未做過嘅唔顯示
   const act=r=>(r.cases||0)+(r.events||0)+(r.votes||0)+(r.notes||0)+(r.posts||0)+(r.logins||0)+(r.spent?1:0)+(r.bonus?1:0);
-  const rows=(PT.rows||[]).filter(r=>act(r)>0).sort((x,y)=>act(y)-act(x)||y.points-x.points).slice(0,30);
-  $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.bonus?`獎勵 ${r.bonus>0?'+':''}${r.bonus}`:'',r.logins?`登入 ${r.logins} 日`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人參與</td></tr>');}
+  const all=(PT.rows||[]).filter(r=>act(r)>0).sort((x,y)=>act(y)-act(x)||y.points-x.points);
+  // 分頁：預設每頁 10 個，名次跨頁連續
+  const pn=LB.n||1e9,np=Math.max(1,Math.ceil(all.length/pn));LB.p=Math.min(Math.max(0,LB.p),np-1);const off=LB.n?LB.p*pn:0,rows=all.slice(off,off+pn);
+  $('lbPager').innerHTML=pagerHtml(LB.p+1,np,'lbpage');
+  $('lbList').innerHTML=rows.length?rows.map((r,i)=>`<tr${SESSION&&r.user_id===SESSION.user.id?' class="me"':''}><td>${off+i+1}</td><td>${esc(r.name||'用戶')}</td><td><b>${r.points}</b></td><td class="hint">${[r.cases?`命例 ${r.cases}`:'',r.events?`事件 ${r.events}`:'',r.votes?`投票 ${r.votes}`:'',r.notes?`筆記 ${r.notes}`:'',r.posts?`留言 ${r.posts}`:'',r.bonus?`獎勵 ${r.bonus>0?'+':''}${r.bonus}`:'',r.logins?`登入 ${r.logins} 日`:'',r.spent?`已用 ${r.spent} 分`:''].filter(Boolean).join('、')}</td></tr>`).join(''):(PT.err?'':'<tr><td colspan="4" class="hint">未有人參與</td></tr>');}
 // 使用統計：開網、排盤、開命例各寫一行去 public.usage（supabase/006_stats.sql），每部機一個隨機編號；寫唔到就算
 const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('b8-anon',a);}return a;}catch(e){return Math.random().toString(36).slice(2,12)+'x';}})();
 // 開命例會記埋 case_id（要行咗 020_case_views.sql，審計紀錄就會記低邊個打開咗邊個命例）；未行就唔帶 case_id 再寫一次
