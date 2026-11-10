@@ -2787,6 +2787,29 @@ const AN_YSRES=`<p class="hint"><b>結論：</b>試過嘅加步條件幾乎全�
 const AN_XEV=[['父親過身',t=>/卒\[父\]|喪父|父親?.{0,6}(過身|去世|離世|病逝|死)/.test(t)],
   ['其他親人過身',t=>(/卒\[(?!父\])/.test(t)||/(母|祖|外婆|外公|兄|弟|姐|妹|妻|老婆|丈夫|老公|仔|個女|女兒).{0,6}(過身|去世|離世|病逝|自殺|死)/.test(t))&&!/卒\[父\]|父親?.{0,6}(過身|去世|離世|病逝|死)/.test(t)],
   ['登基',t=>/登基|即位/.test(t)],['退位',t=>/退位/.test(t)]];
+// 分析分類（Tom 11月10日定）：一、人生大事 10 類；二、親密家人（六親）6 類。每類＝有相關標籤嘅命例，加埋事件寫咗相關事嘅命例
+const AN_REL=/(父|母|爸|媽|妻|太太|老婆|丈夫|老公|前夫|兒子|個仔|個女|女兒|兄|弟|姐|姊|妹|祖|外婆|外公|朋友)/;
+const AN_DIE=/過身|去世|離世|病逝|圓寂|被殺|遇刺|自殺/;
+const anOwn=t=>!new RegExp(AN_REL.source+'.{0,8}('+AN_DIE.source+'|病|癌|中風|手術|破財|結婚|離婚|攞|買|賣|篤)').test(t);
+const AN_LIFE=[
+  ['斷學歷',['畢業'],t=>/畢業|高考|狀元|大學|名校|秀才|舉人|進士|留學|碩士|停學|考入|考上|進步獎|理科班/.test(t)],
+  ['斷官貴',[],t=>/登基|即位|稱帝|退位|繼位|當選|落選|總統|主席|廳長|縣長|局長|司令|參謀|宰相|參知政事|廠長|科長|最高權力|官運|官途|巡撫|權威/.test(t)&&!/前夫|資助/.test(t)],
+  ['斷財富',['財運','破財','買樓'],t=>/財|首富|身家|賺|破產|買樓|黃金|大輸|收入|工業大廈|生意結束|家道中落|出售/.test(t)&&anOwn(t)],
+  ['斷婚姻',['結婚','離婚'],t=>/結婚|離婚|嫁|娶|大婚|分居|出軌|分手|桃花/.test(t)&&!/父母|父親|第.個仔|泳漢|泳豪/.test(t)],
+  ['斷職業',['事業','轉工','歌星','影星','術數家','出家人'],t=>/轉工|新工|第一份工|創業|創立|開鋪|做生意|老闆|學徒|走紅|爆紅|越嚟越紅|冠軍|出鏡|主持|YouTuber|新事業|返工|出嚟做|畫展|從軍|入部隊|出家|削髮|長工/.test(t)&&anOwn(t)],
+  ['斷健康',['疾病','健康','手術'],t=>/病|癌|中風|生蛇|入醫院|手術|暈倒|頭痛|失眠/.test(t)&&!AN_DIE.test(t)&&anOwn(t)],
+  ['斷牢獄',['坐監'],t=>/坐監|入獄|被捕|拘留|放監|通緝|官非|官司|下放|被囚/.test(t)],
+  ['斷殘疾',['傷殘','啞巴'],t=>/傷殘|致殘|殘疾|斷腳|啞/.test(t)],
+  ['斷凶災',['意外'],t=>/意外|撞車|車禍|大火|火災|跌落|跌斷|海難|雷電|險關|生死關|受傷|腳傷|肋骨|大劫/.test(t)],
+  ['斷壽命',['生死','過身'],t=>(AN_DIE.test(t)||/生死/.test(t))&&anOwn(t)]];
+const AN_KINS=[
+  ['斷兄弟姐妹',['兄弟數目','雙胞胎'],t=>/兄|弟|姐|姊|妹|雙胞/.test(t)&&!/兄弟首次出鏡/.test(t),r=>r.c.input.sib!=null&&r.c.input.sib!==''],
+  ['斷父親',['卒[父]','父母','父母離婚'],t=>/(?<!祖)父|爸|老竇/.test(t)&&!/爸爸去哪兒/.test(t)],
+  ['斷母親',['卒[母]','父母','父母離婚'],t=>/(?<!祖)母|媽/.test(t)],
+  ['斷丈夫',[],(t,r)=>r.c.input.sex!==1&&/丈夫|老公|前夫|結婚|離婚|嫁|分居|出軌/.test(t)&&!/父母/.test(t),r=>r.c.input.sex!==1&&(r.c.tags||[]).some(g=>g==='結婚'||g==='離婚')],
+  ['斷妻子',[],(t,r)=>r.c.input.sex===1&&/妻|太太|老婆|結婚|離婚|娶|分居|出軌/.test(t)&&!/父母|父親|第.個仔|泳漢|泳豪/.test(t),r=>r.c.input.sex===1&&(r.c.tags||[]).some(g=>g==='結婚'||g==='離婚')],
+  ['斷子女',['生仔','子女','過繼'],t=>/生仔|生女|生BB|出世|仔女|兒子|個女|女兒|第.胎|過繼|個仔/.test(t),r=>+r.c.input.kid>0]];
+const AN_USED=new Set([...AN_LIFE,...AN_KINS].flatMap(x=>x[1]));
 // 每次畫都由命例標籤砌返分組：[{n,rows:[{r,evs}]}]
 function anCats(all){const cnt={};all.forEach(r=>(r.c.tags||[]).forEach(g=>{if(!AN_SRC.has(g))cnt[g]=(cnt[g]||0)+1;}));
   const mk=(n,hasTag,f)=>{const rows=[];all.forEach(r=>{const evs=(r.c.input.events||[]).filter(e=>f(String(e.t||'')));if(hasTag(r)||evs.length)rows.push({r,evs});});return {n,rows};};
@@ -2796,8 +2819,10 @@ function anCats(all){const cnt={};all.forEach(r=>(r.c.tags||[]).forEach(g=>{if(!
   const T=tags.map(g=>{const f=anKw(g),x=mk(g,r=>(r.c.tags||[]).includes(g),f);x.rows=x.rows.filter(y=>!neg(y.r,g));x.out=all.filter(r=>(r.c.tags||[]).includes(g)&&neg(r,g));return x;});
   const roy=mk('皇室（全部）',r=>(r.c.tags||[]).some(g=>/皇室$/.test(g)),t=>/登基|即位|退位/.test(t));
   const X=AN_XEV.map(([n,f])=>mk(n,()=>false,f));
+  const mk2=([n,tg,f,extra])=>{const rows=[];all.forEach(r=>{const evs=(r.c.input.events||[]).filter(e=>f(String(e.t||''),r));const has=(r.c.tags||[]).some(g=>tg.includes(g))&&!tg.some(g=>neg(r,g));if(has||evs.length||(extra&&extra(r)))rows.push({r,evs});});return {n,rows,out:all.filter(r=>tg.some(g=>(r.c.tags||[]).includes(g)&&neg(r,g)))};};
+  const A=AN_LIFE.map(mk2),B=AN_KINS.map(mk2);
   if(T.filter(x=>/皇室$/.test(x.n)).length>1)T.splice(T.findIndex(x=>/皇室$/.test(x.n)),0,roy);
-  return {T,X};}
+  return {T,X,A,B};}
 const AN_C=new Map();
 function anCase(c){const k=c.id+JSON.stringify(c.input);if(AN_C.has(k))return AN_C.get(k);let r=null;
   try{const P=compute(c.input).P,dm=gi(P[2][0]),gs=P.map(p=>p[0]),zs=P.map(p=>p[1]),F=new Set(),pos='年月日時';
@@ -2906,7 +2931,7 @@ function anTraitList(rows,all){const n=rows.length,N=all.length,cnt={},base={};r
   return Object.keys(cnt).filter(f=>cnt[f]>=2).map(f=>{const p=cnt[f]/n,b=base[f]/N;return {f,k:cnt[f],p,b,l:p/b};}).filter(x=>x.l>=1.4&&x.p>=0.2).sort((a,b)=>b.l*Math.sqrt(b.k)-a.l*Math.sqrt(a.k));}
 function anGroup(id,title,rows,all,extra){const op=AN.open[id];
   return `<details class="angrp" data-angrp="${esc(id)}" ${op?'open':''}><summary><b>${esc(title)}</b> <span class="hint">${rows.length} 個命例</span></summary>${extra||''}${op?anTraits(rows,all)+anWorkTab(rows,all):''}<div class="ancases">${rows.map(anBtn).join('　')}</div></details>`;}
-function anEvBreak(rows){const ids=new Set(rows.map(r=>r.c.id)),C=AN.cats;if(!C)return '';const s=[...C.T,...C.X].map(x=>[x.n,x.rows.filter(y=>ids.has(y.r.c.id)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([n,k])=>n+' '+k);return s.length?`<p class="hint">標籤／事件：${esc(s.join('、'))}</p>`:'';}
+function anEvBreak(rows){const ids=new Set(rows.map(r=>r.c.id)),C=AN.cats;if(!C)return '';const s=[...C.A,...C.B].map(x=>[x.n,x.rows.filter(y=>ids.has(y.r.c.id)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([n,k])=>n+' '+k);return s.length?`<p class="hint">標籤／事件：${esc(s.join('、'))}</p>`:'';}
 function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelector('.lbody');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先睇到命例分析。</p>';return;}
   const all0=CASES.filter(c=>!c.private&&!(c.tags||[]).includes('國家地區')).map(anCase).filter(Boolean),nT=all0.filter(r=>(r.c.tags||[]).includes('隱師命例')).length;
@@ -2939,8 +2964,10 @@ function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelect
       const out=(x.out||[]).length?`<p class="hint">唔計入統計（名寫明「非…」嘅對照命例）：${x.out.map(anBtn).join('　')}</p>`:'';
       const ys=k===YSK?`<details class="angrp" data-angrp="ysres" ${AN.open.ysres?'open':''}><summary><b>🔬 元神斷滅三步曲同死期研究</b> <span class="hint">11月10日，12 個老師命例</span></summary>${AN_YSRES}</details>`:'';
       return ys+anGroup('ev'+k,k,rows,all,out+yr);};
-    const YSK=(['生死','過身'].map(n=>[...AN.cats.T,...AN.cats.X].find(x=>x.n===n&&x.rows.length)).find(Boolean)||{}).n;
-    h=`<p class="hint">每組 = 有呢個標籤嘅命例，加埋事件寫咗呢件事嘅命例（例如事件寫「過身」但未加「過身」標籤）。</p><h4>命例標籤</h4>${AN.cats.T.map(one).join('')}<h4>標籤以外（由事件搵）</h4>${AN.cats.X.map(one).join('')||'<p class="hint">冇。</p>'}`;}
+    const YSK='斷壽命';
+    const sec=L=>L.map(x=>one(x)||`<details class="angrp"><summary><b>${esc(x.n)}</b> <span class="hint">未有命例</span></summary></details>`).join('');
+    const oth=AN.cats.T.filter(x=>!AN_USED.has(x.n));
+    h=`<p class="hint">每類 = 有相關標籤嘅命例，加埋事件寫咗相關事嘅命例（例如事件寫「撞車」就入「斷凶災」）。一個命例可以入多過一類。</p><h4>一、人生大事</h4>${sec(AN.cats.A)}<h4>二、親密家人（六親）</h4>${sec(AN.cats.B)}<h4>三、其他標籤</h4>${oth.map(one).join('')||'<p class="hint">冇。</p>'}<h4>細分事件</h4>${AN.cats.X.map(one).join('')||'<p class="hint">冇。</p>'}`;}
   else if(AN.sub==='ss'){
     const G={mo:['月令十神',r=>'月令'+r.mo],dm:['日主',r=>'日主'+r.P[2][0]+'（'+WX[gw(r.dm)]+'）'],tos:['天干透出十神組合',r=>'透 '+r.tos]};
     const [,f]=G[AN.g]||G.mo,m=new Map();all.forEach(r=>{const k=f(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r);});
