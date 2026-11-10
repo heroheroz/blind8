@@ -2450,8 +2450,8 @@ function placeAn(){const a=$('np-an'),b=$('anBox'),n=document.querySelector('sec
   if(a.parentNode!==b)b.append(a);}
 // 貢獻排行榜（電腦版）擺喺行星位置正上面；手機版留返原位（獨立分頁）
 function placeNotes(){const n=document.querySelector('section.notes'),p=$('plBox'),lb=$('lb'),b=$('anBox');if(!n){placeAn();return;}
-  // 電腦版：課堂・摘要・口訣・計法說明擺喺網頁最頂（預設收埋）；分析、排行榜擺喺行星位置上面。手機版留返原位（獨立分頁）
-  if(!isMob()){const g=$('mGuide'),ip=$('inPanel'),t=g&&g.nextElementSibling===ip?g:ip;if(t&&n.nextElementSibling!==t)t.before(n);if(p&&(p.previousElementSibling!==lb||lb.previousElementSibling!==b)){p.before(b);if(lb)p.before(lb);}}
+  // 電腦版：課堂・摘要・口訣・計法說明擺喺網頁最頂（預設收埋），命例數據庫分析緊接喺下面；排行榜擺喺行星位置上面。手機版留返原位（獨立分頁）
+  if(!isMob()){const g=$('mGuide'),ip=$('inPanel'),t=g&&g.nextElementSibling===ip?g:ip;if(t&&n.nextElementSibling!==t&&n.nextElementSibling!==b)t.before(n);if(n.nextElementSibling!==b)n.after(b);if(p&&lb&&p.previousElementSibling!==lb)p.before(lb);}
   else{if(n.previousElementSibling!==$('aw'))$('aw').after(n);if(b.parentNode===$('out'))$('gb').before(b);if(lb&&lb.parentNode===$('out'))b.before(lb);}placeAn();}
 addEventListener('resize',()=>placeNotes());placeNotes();
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
