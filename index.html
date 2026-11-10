@@ -1589,10 +1589,10 @@ function workSec(male){const {rows,zg,cat,cnt,ys}=workRows(male);
   <div id="wkXJ" class="hint">計緊…</div>
   </details></section><section class="panel" id="wkKsBox"><details data-wkks ${KD_OPEN?'open':''}><summary><h2 class="plh">卡死日子同元神斷滅推論 <span class="hint">（推測，只供參考）</span></h2></summary>
   <h3 class="wksh">卡死日子 <span class="hint">（出世至 100 歲，原局 8 個字全部要做功、但全部做唔到功嘅日子）</span></h3>
-  <div id="wkKS" class="hint">計緊…</div>
+  <div id="wkKS" class="hint">計算中…</div>
   <h3 class="wksh">元神斷滅推論 <span class="hint">（第63、66、98堂）</span></h3>
   <ul class="wklist">${ysHtml}</ul><div id="wkYS"></div></details></section>`;}
-let WK_OPEN=true,WD_OPEN=true,KD_OPEN=true;document.addEventListener('toggle',e=>{if(!e.target.matches)return;if(e.target.matches('[data-wkbox]'))WK_OPEN=e.target.open;else if(e.target.matches('[data-wkday]'))WD_OPEN=e.target.open;else if(e.target.matches('[data-wkks]'))KD_OPEN=e.target.open;},true);
+let WK_OPEN=true,WD_OPEN=true,KD_OPEN=false;document.addEventListener('toggle',e=>{if(!e.target.matches)return;if(e.target.matches('[data-wkbox]'))WK_OPEN=e.target.open;else if(e.target.matches('[data-wkday]'))WD_OPEN=e.target.open;else if(e.target.matches('[data-wkks]')){KD_OPEN=e.target.open;if(KD_OPEN)ksStart();}},true);
 // 喜忌字：喺盤最右邊（流日之後）加一個「見到」嘅字，逐個天干（10 個）同地支（12 個）試，喺唔同日子入面計原局 8 個字平均有幾多個做到功、幾多個做唔到功，同冇呢個字比。
 // 分五層：一生（成世隨機揀日子）、而家大運（呢十年隨機揀日子）、流年（呢年隨機揀日子）、流月（呢個月逐日）、流日（只係揀咗嗰日）；上層柱固定，下面嘅柱跟住日子變。
 // 天干同地支分開計（天干只影響天干嗰行），所以逐個字出，唔出成條柱；頭兩名差唔多（0.05 個字以內）就兩個都出。計得慢，所以分段喺背景計，計完先填。
@@ -2440,7 +2440,7 @@ function render(){
   <section class="panel" id="plBox"><details data-pl ${PL.open?'open':''}><summary><h2 class="plh">行星位置（占星） <span class="hint">日心 3D 螺旋圖（行星大細跟真實半徑比例），同出世、睇運日（流日）嘅行星黃經</span></h2></summary><div id="plOut" class="hint">計緊…</div></details></section>
   <!-- 招感 · 粘連 · 刑沖合穿 嗰板已拎走（主人 2026-11-07：命盤本身已經有足夠解釋） -->`;
   drawChains();
-  if(VIEW.work){xjStart();ksStart();}
+  if(VIEW.work){xjStart();if(KD_OPEN)ksStart();}// 卡死日子同元神斷滅推論：預設收埋，撳開先計
   if(PL.open)plDraw();
   placeNotes();
 }
