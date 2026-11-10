@@ -170,7 +170,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 #tipPop .sec{margin-top:4px}#tipPop .sec i{font-style:normal;font-size:12px;color:var(--muted,#888)}
 #tipPop .x{position:absolute;top:4px;right:6px;border:0;background:none;font-size:18px;cursor:pointer;color:inherit;line-height:1}
 .nl{display:flex;flex-direction:column;gap:0;margin-top:2px;font-size:11px;line-height:1.35;font-weight:500}
-.nl-fu{color:var(--chuan)}.nl-he,.nl-banhe,.nl-sanhe,.nl-anhe,.nl-anhe2,.nl-sanhui{color:var(--good)}.nl-lian{color:var(--warn)}
+.nl-fu{color:var(--chuan)}.nl-he,.nl-banhe,.nl-sanhe,.nl-anhe,.nl-anhe2,.nl-sanhui,.nl-banhui{color:var(--good)}.nl-lian{color:var(--warn)}
 .nlx{text-decoration:line-through;opacity:.7}
 .nl sup{font-size:8px;margin-left:1px}
 .act.even,.actl.even{color:var(--muted);font-size:12px}
@@ -237,7 +237,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .p-he{background:var(--good)}.p-chong{background:var(--bad)}.p-xing{background:var(--warn)}.p-chuan{background:var(--chuan)}.p-po{background:var(--muted)}
 .rel .dyn{color:var(--accent);font-size:12px}
 .p-zg{background:var(--accent)}
-.p-nl-fu{background:var(--chuan)}.p-nl-lian{background:var(--warn)}.p-nl-he,.p-nl-banhe,.p-nl-sanhe,.p-nl-anhe,.p-nl-anhe2,.p-nl-sanhui{background:var(--good)}
+.p-nl-fu{background:var(--chuan)}.p-nl-lian{background:var(--warn)}.p-nl-he,.p-nl-banhe,.p-nl-sanhe,.p-nl-anhe,.p-nl-anhe2,.p-nl-sanhui,.p-nl-banhui{background:var(--good)}
 table.chart{table-layout:fixed}
 .chart tr.zgrow td{padding:4px 0}
 .chart tr.chainrow th,.chart tr.chainrow td{padding:0;border-bottom:0}
@@ -584,7 +584,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <h4>甲・計算範圍</h4>
   <ol>
     <li id="r-a1"><b>A1</b> 只計有顯示嘅柱。用「只顯示…」、「唔顯示大運流年流月流日」、「唔顯示流月流日」或「唔顯示流日」選項收埋嘅柱，同閂咗「三桓命宮柱」時嘅四條柱，完全唔計；剔「只顯示命宮柱」就只加命宮一條柱。</li>
-    <li id="r-a2"><b>A2</b> 元運柱剔咗「元運參與招感粘連」先計（預設剔咗）；再剔「元運要引動先計」（預設閂），就要大運、流年、流月、小運、交脫運或者流年進氣見到元運同一個天干，或者原局夾拱出呢個天干，元運柱先參與計算，冇引動就當唔存在，柱頂寫「未引動，唔計」（第98堂：元運唔會憑空畀你用，要有呢個字入嚟先用起）。三桓命宮柱（或者只顯示嘅命宮柱）要剔「三桓命宮參與招感粘連」先計，預設唔計，柱照顯示。</li>
+    <li id="r-a2"><b>A2</b> 元運柱剔咗「元運參與招感粘連」先計（預設剔咗）；再加「元運要填實先計」（11月10日起預設開）：原局、大運或者流年有元運嘅天干或者地支（實字），或者由原局、大運、流年招感出嚟（招），就算填實，元運柱先參與計算；冇填實就當唔存在，柱頂寫「未引動，唔計」（第98堂：元運唔會憑空畀你用，要有呢個字入嚟先用起）。流月、流日、小運唔計做填實。三桓命宮柱（或者只顯示嘅命宮柱）要剔「三桓命宮參與招感粘連」先計，預設唔計，柱照顯示。</li>
     <li id="r-a3"><b>A3</b> 「顯示粘連線」嗰行三格（招感字、大運流年流月流日招感線、大運流年流月流日粘連線）都只係收埋條線，招感字同粘連照計照顯示。</li>
     <li id="r-a4"><b>A4</b> 天干同天干計，地支同地支計，唔會跨行。柱同柱之間唔使相鄰。</li>
   </ol>
@@ -605,8 +605,10 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li id="r-n2"><b>N2 連續</b>　次序相差一位嘅兩個字，例如甲乙、乙丙、子丑；循環計，所以癸甲、亥子都算。兩個字已經成立。每條連續只計半個箭咀。</li>
     <li id="r-n3"><b>N3 合</b>　天干五合、地支六合（同 Z1 嘅合字表）。每條合計一個箭咀；伏吟都係一個。</li>
     <li id="r-n4"><b>N4 地支半合</b>　三合局（申子辰、亥卯未、寅午戌、巳酉丑）其中兩個字，而且要包括中神（子、卯、午、酉），例如申子、子辰、午戌。只計地支。每條半合計半個箭咀。三合局三個字齊（申子辰合水、寅午戌合火、巳酉丑合金、亥卯未合木），就唔再計半合，改計「三合局」：三個字兩兩相連（例如申子、子辰、申辰），每條半個箭咀，所以三個字每個合共一個箭咀；只得兩頭冇中神（例如淨係申辰）就唔計。</li>
+    <li id="r-n4b"><b>N4b 地支半會</b>（11月10日加）　三會方（亥子丑水、寅卯辰木、巳午未火、申酉戌金）其中兩個相連嘅字，例如亥子、子丑、卯辰、午未，叫「半會」，同連續一樣係粘連，每條半個箭咀（管理員可以喺「箭咀力度」調）。唔同方嘅相連（丑寅、辰巳、未申、戌亥）照叫連續。三會方三個字齊就唔再計半會，改計三會方。</li>
+    <li id="r-n4c"><b>N4c 三個字粘連，中間最大力</b>（🤖 推論，11月10日加）　三合局或者三會方三個字齊，中間嗰個字（子、午、卯、酉）受力最大，兩邊嘅字粘連力減半：例如申子辰三個齊，子照計一個箭咀，申同辰各計半個。根據：第12堂 21:47 三合局中神受力最大；第28堂 06:40、23:16，第17堂 96:53，第27堂 93:39，第50堂 37:16 講三合三會嘅力度。</li>
     <li id="r-n5"><b>N5 招感字粘連</b>　招感字只同招佢出嚟嗰幾個來源字粘連：夾拱出嚟嘅算連續，招合出嚟嘅算合，唔同其他字粘連。招感字嘅粘連（無論連續定合）每條都只計半個箭咀。</li>
-    <li id="r-n6"><b>N6 粘連力</b>　粘連喺字旁邊加 ↓，用加法，唔係乘數：伏吟、合每條一個 ↓；連續、半合、三合局每對、招感字粘連每條半個 ↓。電腦版畫箭咀嗰陣捨入（半個當一個），每 5 個合埋畫成一個雙線大箭咀 ⇑／⇓（例如 7.5 個就畫一個大箭咀加三個箭咀），計數照用準確數值；手機版同揀咗「箭咀用數字顯示」就一個箭咀加準確數字。理念：三合局三個字齊、合同伏吟都係大力嘅粘連，所以計一個；普通連續（甲乙）同兩個字嘅半合力度細啲，計半個。呢度寫嘅係預設數值，實際用緊嘅數值（連坐辰戌、見同五行地支、陽刃、啟動鏈每層、最強五行倍數）喺「箭咀力度」度所有人都睇到，管理員可以調，大家可以投「應該加／應該減」。</li>
+    <li id="r-n6"><b>N6 粘連力</b>　粘連喺字旁邊加 ↓，用加法，唔係乘數：伏吟、合每條一個 ↓；連續、半合、半會、三合局每對、招感字粘連每條半個 ↓（三合局、三會方兩邊嘅字再減半，見 N4c）。電腦版畫箭咀嗰陣捨入（半個當一個），每 5 個合埋畫成一個雙線大箭咀 ⇑／⇓（例如 7.5 個就畫一個大箭咀加三個箭咀），計數照用準確數值；手機版同揀咗「箭咀用數字顯示」就一個箭咀加準確數字。理念：三合局三個字齊、合同伏吟都係大力嘅粘連，所以計一個；普通連續（甲乙）同兩個字嘅半合力度細啲，計半個。呢度寫嘅係預設數值，實際用緊嘅數值（連坐辰戌、見同五行地支、陽刃、啟動鏈每層、最強五行倍數）喺「箭咀力度」度所有人都睇到，管理員可以調，大家可以投「應該加／應該減」。</li>
     <li id="r-n8"><b>N8 暗合</b>　地支午亥、寅丑藏干完全相合，合得最實，當一條合（預設一個箭咀）；卯申合中有害，係輕微粘連（預設半個）（第87、48堂）。寅丑本身係連續，計咗暗合就唔再計連續。</li>
     <li id="r-n9"><b>N9 三會方</b>　亥子丑、寅卯辰、巳午未、申酉戌三個字齊，三個字兩兩相連，每對預設一個箭咀（三會強過三合，第5堂；方結得實，一打開力量好大，第17堂）；佢哋之間嘅連續同暗合唔再另計。</li>
     <li id="r-n7"><b>N7 線</b>　柱與柱之間嘅粘連線畫喺天干同地支中間；招感字嘅線畫喺外面。線色跟兩端字嘅五行，兩端唔同五行就兩色交替。</li>
@@ -1304,7 +1306,7 @@ function zgArrows(k,vi,bo=0){const VX=(S.vex&&S.vex[k]&&S.vex[k][vi])||EX0;bo+=V
   // 重字（Z2）加嘅箭咀同樣跟狀態：啟動咗 ↑，粘住未啟動 ↓；同一個字唔會有 ↑ 又有 ↓；招感字粘連同重字嘅權重睇「箭咀力度」
   // 同 Q8 一樣：粘連嘅 ↓ 變 ↑，啟動鏈每多一層加；最強五行同五行嘅招感字都乘 AW.sw
   const ch=((S.zg||[])[k]||[])[vi]?.c||'',m=ch?swMul(k,ch):1,R=n=>Math.round(n*m*2)/2;
-  if(a&&a[0]>0){const c=(a[0]-1)*AW.chain,n=R(dn+c+bo);return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+ch)}　↑${fmtN(n)}（${nl} 條粘連（${lkBrk(ls)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${fmtN(c)}`:''}${bo?`；加 ↑${fmtN(bo)}`:''}${swNote(m)}）${vxT}">${ARW(n,0)}</span>`;}
+  if(a&&a[0]>0){const c=(a[0]-1)*AW.chain,n=R(dn+c+bo);return `<span class="act zgon" title="啟動：${chainTxt(a[1],'招感'+(k?'支':'干')+ch)}　↑${fmtN(n)}（${nl} 條粘連（${lkBrk(ls,ci)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}${a[0]>1?`；啟動鏈 ${a[0]} 層，多 ${a[0]-1} 層加 ↑${fmtN(c)}`:''}${bo?`；加 ↑${fmtN(bo)}`:''}${swNote(m)}）${vxT}">${ARW(n,0)}</span>`;}
   if(dn)return `<span class="act" title="${nl} 條粘連（${lkBrk(ls)}），計 ${fmtN(dn)} 個箭咀（未被啟動，唔會招感或者啟動其他字）${bo?`；加 ↓${fmtN(bo)}`:''}${swNote(m)}${vxT}">${ARW(R(dn+bo),1)}</span>`;
   return bo?`<span class="act" title="加 ↑${fmtN(bo)}${swNote(m)}${vxT}">${ARW(R(bo),0)}</span>`:'';}
 function zgStrip(list,isGan,ncol){
@@ -1330,14 +1332,16 @@ function chainPaths(d,c1,c2){
 const elOf=(k,ch)=>k?ZWX[zi(ch)]:gw(gi(ch));
 const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動</span><span><b class="actl">↑</b>啟動：每條被破除嘅粘連一個（冇粘連就一個），啟動鏈每多一層再加一個（↑ 越多激活越大力）　<b class="actl dn">↓</b>未啟動：每條粘連一個（↓ 越多粘得越實）</span></div>`;
 // 箭咀力度（015_arrow_weights.sql）：管理員喺「箭咀力度」改，所有人睇到；讀唔到就用呢度嘅預設
-const AW={fu:1,he:1,lian:0.5,banhe:0.5,sanhe:1,zg:0.5,gong:1,zgb:0.5,chain:1,cx:1,kg:1,se:0.5,yr:1,sw:1.5,sem:1,anhe:1,anhe2:0.5,sanhui:1,hai:0.5,xing:0.5,he2:1,cg:1,cgy:0.5,kw:0.35,tian:1,jgz:1,gw:1.5,zc:2.5};
-const AW_META=[['fu','伏吟（每條）','同一個字，例如丙丙'],['he','合（每條）','天干五合、地支六合'],['lian','連續（每條）','次序相差一位，例如甲乙、子丑'],['banhe','半合（每條）','三合局其中兩個字，要有中神'],['gong','三合拱（每條）','三合局缺一個字（例如申辰拱子），招感出嚟嘅字同兩個來源字各一條'],
+const AW={fu:1,he:1,lian:0.5,banhe:0.5,sanhe:1,zg:0.5,gong:1,zgb:0.5,chain:1,cx:1,kg:1,se:0.5,yr:1,sw:1.5,sem:1,anhe:1,anhe2:0.5,sanhui:1,banhui:0.5,hai:0.5,xing:0.5,he2:1,cg:1,cgy:0.5,kw:0.35,tian:1,jgz:1,gw:1.5,zc:2.5};
+const AW_META=[['banhui','半會（每條）','三會方（亥子丑、寅卯辰、巳午未、申酉戌）其中兩個相連嘅字，例如亥子、卯辰；本來算連續'],['fu','伏吟（每條）','同一個字，例如丙丙'],['he','合（每條）','天干五合、地支六合'],['lian','連續（每條）','次序相差一位，例如甲乙、子丑'],['banhe','半合（每條）','三合局其中兩個字，要有中神'],['gong','三合拱（每條）','三合局缺一個字（例如申辰拱子），招感出嚟嘅字同兩個來源字各一條'],
   ['sanhe','三合局（每個字）','三個字齊，例如申子辰，每個字合共計幾多'],['zg','招感字粘連（每條）','招感字同來源字嘅連續或合'],['zgb','招感重字（第三個起每多一個）','例如三個丙招合'],
   ['chain','啟動鏈（每多一層）','第一層係基本，之後每層加'],['cx','坐辰戌','天干坐辰或戌（魁罡另計）'],['kg','魁罡','庚辰、庚戌、壬辰、戊戌；用呢個數代替坐辰戌，唔會兩樣疊加'],['se','見同五行地支（每個）','天干見同五行嘅地支'],['yr','見自己陽刃（每個）','甲卯、丙午、戊午、庚酉、壬子'],['sem','多個同五行地支（倍數）','見同五行地支多過一個嗰陣，見同五行嗰部分再乘呢個數'],['sw','最強五行同五行嘅字（倍數）','同最強五行同一五行嘅字，箭咀總數乘呢個數'],
   ['anhe','暗合（午亥、寅丑，每條）','藏干完全相合，當一條合（第87堂）'],['anhe2','暗合（卯申，每條）','合中有害，輕微粘連（第48堂）'],['sanhui','三會方（每對）','亥子丑、寅卯辰、巳午未、申酉戌三個字齊，每對計幾多（第5、17堂：三會強過三合）'],
   ['hai','地支被害啟動（倍數）','地支由害啟動，箭咀乘呢個數（老師講地支啟動用沖，第16堂）'],['xing','地支被刑啟動（倍數）','地支由刑啟動，箭咀乘呢個數'],['he2','以一合二（啟動時加）','一個字同時被兩個或以上字合住，啟動嗰陣加（秘訣7，第5堂）'],
   ['cg','地支沖、上面天干相同','例如壬寅沖壬申（秘訣8，第5堂）'],['cgy','地支沖、上面天干相同係陽干（再加）','甲丙戊庚壬'],['kw','空亡（倍數）','空亡嘅地支只得三四成力（第11堂）'],
   ['tian','夾拱填實','大運流年流月流日見到同夾拱字一樣嘅實字（第28堂）'],['jgz','天干地支同時夾拱同一五行','第28堂：同時夾拱，力強'],['gw','當日運勢天干權重','天干重過地支（第29、77堂）；地支權重係 1'],['zc','直沖扣分（當日運勢）','冇粘連被七殺剋（地支被沖刑害）扣幾多分；做到功 +5、做唔到功 −5']];
+// 每條粘連喺某個字嗰邊嘅力度（三合三會兩邊字減半）
+const lwOf=(l,i)=>i===l.a?(l.wa??l.w):i===l.b?(l.wb??l.w):l.w;
 function chains(cols,k,virt){
   const n=k?12:10,chars=k?ZHI:GAN,out=[];
   const cs=cols.map((c,i)=>({i,gz:c.gz})).filter(c=>c.gz).map(c=>({i:c.i,v:chars.indexOf(c.gz[k])}));
@@ -1352,7 +1356,7 @@ function chains(cols,k,virt){
     else if(k&&!CALC_T.noAnhe&&inMap(ANHE,chars[A.v],chars[B.v]))out.push({a:A.i,b:B.i,t:has(['卯申'],chars[A.v],chars[B.v])?'anhe2':'anhe',tip:chars[A.v]+chars[B.v]+'暗合'});}
   for(let x=0;x<cs.length;x++)for(let y=x+1;y<cs.length;y++){const A=cs[x],B=cs[y];
     // 寅丑已經計暗合，唔再計連續
-    if(((B.v-A.v+n)%n===1||(A.v-B.v+n)%n===1)&&!(k&&!CALC_T.noAnhe&&inMap(ANHE,chars[A.v],chars[B.v])))out.push({a:A.i,b:B.i,t:'lian',tip:'連續 '+chars[A.v]+chars[B.v]});}
+    if(((B.v-A.v+n)%n===1||(A.v-B.v+n)%n===1)&&!(k&&!CALC_T.noAnhe&&inMap(ANHE,chars[A.v],chars[B.v]))){const hui=k&&!CALC_T.noBanhui&&SANHUI.find(([g])=>g.includes(chars[A.v])&&g.includes(chars[B.v]));out.push(hui?{a:A.i,b:B.i,t:'banhui',tip:chars[A.v]+chars[B.v]+'半會'+hui[1]+'方'}:{a:A.i,b:B.i,t:'lian',tip:'連續 '+chars[A.v]+chars[B.v]});}}
   // 招感出嚟嘅字只同招佢出嚟嗰兩個字粘連：夾 → 連續，招合 → 合
   (virt||[]).forEach((z,vi)=>z.src.filter(ci=>Number.isInteger(ci)&&cols[ci]).forEach(ci=>{const t=z.kind==='jia'?'lian':z.kind==='gong'?'banhe':'he';
     out.push({a:ci,vx:z.pos,vi,vc:z.c,vname:`招感${z.c}（${z.tag}）`,t,gong:z.kind==='gong',tip:`${t==='he'?'合':'連續'} 招感${z.c}（${z.tag}）· ${cols[ci].h}${k?'支':'干'}${cols[ci].gz[k]}`});}));
@@ -1362,10 +1366,13 @@ function chains(cols,k,virt){
     [[0,1],[1,2],[0,2]].forEach(([p,q])=>{for(const A of at(g[p]))for(const B of at(g[q]))out.push({a:Math.min(A.i,B.i),b:Math.max(A.i,B.i),t:'sanhe',tip:`${g}三合${e}局（${g[p]}${g[q]}）`});});}
   // 三會方（亥子丑、寅卯辰、巳午未、申酉戌）三個字齊：三會強過三合（第5堂），唔再計佢哋之間嘅連續、暗合，三個字兩兩相連，每對 AW.sanhui
   if(k&&!CALC_T.noHui)for(const [g,e] of SANHUI){const at=c=>cs.filter(x=>chars[x.v]===c);if(![...g].every(c=>at(c).length))continue;
-    for(let j=out.length-1;j>=0;j--){const l=out[j];if((l.t==='lian'||l.t==='anhe'||l.t==='anhe2')&&l.vx==null&&g.includes(chars[cs.find(x=>x.i===l.a).v])&&g.includes(chars[cs.find(x=>x.i===l.b).v]))out.splice(j,1);}
+    for(let j=out.length-1;j>=0;j--){const l=out[j];if((l.t==='lian'||l.t==='banhui'||l.t==='anhe'||l.t==='anhe2')&&l.vx==null&&g.includes(chars[cs.find(x=>x.i===l.a).v])&&g.includes(chars[cs.find(x=>x.i===l.b).v]))out.splice(j,1);}
     [[0,1],[1,2],[0,2]].forEach(([p,q])=>{for(const A of at(g[p]))for(const B of at(g[q]))out.push({a:Math.min(A.i,B.i),b:Math.max(A.i,B.i),t:'sanhui',tip:`${g}三會${e}方（${g[p]}${g[q]}）`});});}
   // 箭咀權重（AW）：預設伏吟、合一個；連續、半合、招感字粘連半個；三合局每個字一個（每個字有兩對，每對一半）
   out.forEach(l=>l.w=l.vx!=null?(l.gong?AW.gong:AW.zg):l.t==='sanhe'?AW.sanhe/2:AW[l.t]??1);
+  // 🤖 三合局／三會方三個字齊：中間嗰個字（子午卯酉）受力最大，兩邊嘅字粘連力減半（第12堂 21:47、第28堂）。每條粘連喺兩邊各自計：中間字照計，兩邊字 ×0.5
+  if(k&&!CALC_T.noMid)out.forEach(l=>{if(l.t!=='sanhe'&&l.t!=='sanhui')return;const ca=cols[l.a].gz[1],cb=cols[l.b].gz[1],G=(l.t==='sanhe'?SANHE:SANHUI).find(([g])=>g.includes(ca)&&g.includes(cb));if(!G)return;
+    const mid=G[0][1];l.wa=ca===mid?l.w:l.w/2;l.wb=cb===mid?l.w:l.w/2;});
   return out;
 }
 // 七殺激活：冇粘連嘅七殺破除該字粘連；七殺本身再被激活就多一級
@@ -1413,7 +1420,7 @@ function activation(cols,k,links,virt=[],sha=[],opt={}){
   // 同一個字（例如甲）喺同一條啟動鏈入面只可以出現一次，唔會繞住七殺圈兜（Q3）；seen 記低鏈入面已經有嘅字，最多追 6 層，同一輪入面記住計過嘅結果
   // 兜返轉頭嘅字（本身又已經啟動）記低，畫面標「全盤連鎖」；同一層數，地支優先用沖（第16堂：地支啟動用沖）
   const lvl=(i,seen)=>{const key=i+'|'+[...seen].sort((a,b)=>a-b).join(',');if(memo.has(key))return memo.get(key);let best=seed[i]||[0,'',-1];if(seen.size>=6)return best;
-    for(let j=0;j<vals.length;j++){if(j===i||vals[j]<0||!killers(k,vals[i]).includes(vals[j]))continue;if(vals[j]===vals[i]||seen.has(vals[j])){loopC.push(j);continue;}
+    for(let j=0;j<vals.length;j++){if(j===i||vals[j]<0||!killers(k,vals[i]).includes(vals[j]))continue;if(CALC_T.yuanNoAct&&j<N&&cols[j].yuan)continue;if(vals[j]===vals[i]||seen.has(vals[j])){loopC.push(j);continue;}
       if(route&&i<N&&j<N&&j>i&&outer(cols[j])&&inner(cols[i])&&routeBlk(i,j))continue;
       const [n,why]=lvl(j,new Set([...seen,vals[i]]));if(chained.has(j)&&n===0)continue;const t=actName(k,vals[i],vals[j]);
       if(n+1>best[0]||(k&&n+1===best[0]&&t==='沖'&&!/^沖/.test(best[1])))best=[n+1,`${t}${lbl(j)}${k?'支':'干'}${chars[vals[j]]}${why?'（'+why+'）':''}`,j];}
@@ -1507,11 +1514,11 @@ function workRows(male){
     if(!n)parts.push(k?'冇粘連，唔使沖':'冇粘連，唔使七殺');
     else parts.push(...(k?zhiChain(i):ganChain(v,[i])));
     const res=[];if(n&&on&&S.act[k][i][1])res.push({txt:`盤上計法：${S.act[k][i][1].replace(/[子丑寅卯辰巳午未申酉戌亥]/g,m=>'\x01'+m)}`,cls:''});
-    const w=S.work[k][i],why=on?'':n?`粘連 ${n} 條（${lkBrk(lk(i,k))}），${k?'沖害刑佢嘅字未啟動':'七殺未啟動、招唔到'}，解唔開`:(k?'冇字沖害刑佢':'冇七殺剋佢');
+    const w=S.work[k][i],why=on?'':n?`粘連 ${n} 條（${lkBrk(lk(i,k),i)}），${k?'沖害刑佢嘅字未啟動':'七殺未啟動、招唔到'}，解唔開`:(k?'冇字沖害刑佢':'冇七殺剋佢');
     // 偏財（佢剋、同陰陽；地支用本氣）有伏吟或者粘連先要做功
     if(!w)res.push({txt:`唔使做功（偏財${k?'（本氣'+GAN[(gi(HIDE[cc[i].gz[1]][0])+4)%10]+'）':GAN[(v+4)%10]}冇伏吟、冇粘連）${on?'，已啟動':''}`,cls:''});
-    else if(w.zc)res.push({txt:`直沖${w.ti.length?`（偏財 ${w.ti.map(j=>`${lb(j,k)}（${lkBrk(lk(j,k))}）`).join('、')}）`:''}：本身冇粘連，被${k?'沖刑害':'七殺剋'}係直接受傷，唔係做功，主凶（第22、27、34堂）`,cls:'no'});
-    else res.push({txt:`${w.big?'做大功':w.done?'做到功':'做唔到功'}（偏財 ${w.ti.map(j=>`${lb(j,k)}（${lkBrk(lk(j,k))}）`).join('、')}）${w.big?'：'+w.big.join('；'):w.done?'':'：'+why}`,cls:w.done?'ok':'no'});
+    else if(w.zc)res.push({txt:`直沖${w.ti.length?`（偏財 ${w.ti.map(j=>`${lb(j,k)}（${lkBrk(lk(j,k),j)}）`).join('、')}）`:''}：本身冇粘連，被${k?'沖刑害':'七殺剋'}係直接受傷，唔係做功，主凶（第22、27、34堂）`,cls:'no'});
+    else res.push({txt:`${w.big?'做大功':w.done?'做到功':'做唔到功'}（偏財 ${w.ti.map(j=>`${lb(j,k)}（${lkBrk(lk(j,k),j)}）`).join('、')}）${w.big?'：'+w.big.join('；'):w.done?'':'：'+why}`,cls:w.done?'ok':'no'});
     // 評分（每個字，唔設上限）：做到功 +5、做唔到功 −5、唔使做功 0，再加淨箭咀，每 5 個 ±1（↑ 加、↓ 扣）
     // 相關字被沖刑剋：天干睇同柱地支同其他同五行地支有冇被沖、刑、害；地支睇同柱天干同其他同五行天干有冇被七殺剋（天干沖）
     // 做到功 → 分數 ×2；做唔到功 → 扣分減半；唔使做功唔變
@@ -1581,7 +1588,7 @@ const XJ={key:'',res:null,tok:0};
 function xjEngine(cc,k,nat){
   const ZG=zhaogan(cc.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0]}))),V=k?ZG.br:ZG.st;
   const links=chains(cc,k,V),act=activation(cc,k,links,V,S.useSha?shaCalc(cc,links,k,VIEW.shaAll):[],{route:VIEW.route});
-  const lock=cc.map((c,i)=>links.filter(l=>l.a===i||l.b===i).reduce((t,l)=>t+l.w,0)),st=x=>gi(k?HIDE[x.gz[1]][0]:x.gz[0]);
+  const lock=cc.map((c,i)=>links.filter(l=>l.a===i||l.b===i).reduce((t,l)=>t+lwOf(l,i),0)),st=x=>gi(k?HIDE[x.gz[1]][0]:x.gz[0]);
   // 冇粘連被剋（直沖）唔當做到功（第1條）；ws[i]：null＝唔使做功、'ok'＝做到功、'no'＝做唔到功（包括直沖）
   let ok=0,no=0;const ws={};nat.forEach(i=>{const pc=(st(cc[i])+4)%10;if(!cc.some((x,j)=>j!==i&&x.gz&&st(x)===pc&&lock[j]>0)){if(act[i][0]>0&&!(lock[i]>0)){no++;ws[i]='no';}return;}if(act[i][0]>0&&lock[i]>0){ok++;ws[i]='ok';}else{no++;ws[i]='no';}});
   return [ok,no,V,act,lock,ws];}
@@ -1602,7 +1609,7 @@ function dayWk(){if(!ADMIN||!S||!S.cc||!S.ds)return null;const cc0=S.cc.map(c=>c
   const res=S.ds.map(x=>{const cc=cc0.map((c,i)=>i===di?{...c,gz:x.gz}:c),st={};
     [0,1].forEach(k=>{const ZG=zhaogan(cc.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.aux?c.h:c.dyn?c.h.replace('大運','運'):c.h[0]}))),V=k?ZG.br:ZG.st;
       const links=chains(cc,k,V),act=activation(cc,k,links,V,S.useSha?shaCalc(cc,links,k,VIEW.shaAll):[],{route:VIEW.route});
-      const lock=cc.map((c,i)=>links.filter(l=>l.a===i||l.b===i).reduce((t,l)=>t+l.w,0)),gv=c=>gi(k?HIDE[c.gz[1]][0]:c.gz[0]);
+      const lock=cc.map((c,i)=>links.filter(l=>l.a===i||l.b===i).reduce((t,l)=>t+lwOf(l,i),0)),gv=c=>gi(k?HIDE[c.gz[1]][0]:c.gz[0]);
       nat.forEach(i=>{const v=gv(cc[i]),ss0=!k&&cc[i].dm?'日主':shishen(dm,v),ss=ss0==='比肩'?'日主':ss0,pc=(v+4)%10;
         if(!cc.some((c,j)=>j!==i&&c.gz&&gv(c)===pc&&lock[j]>0))return;st[ss]=st[ss]==='no'||act[i][0]===0||!(lock[i]>0)?'no':'ok';});});
     return st;});
@@ -1736,7 +1743,7 @@ function nlList(k,ci,cols){
   const me=cols[ci].gz[k],seen={},order=[];
   S.links[k].forEach(l=>{if(l.a!==ci&&l.b!==ci)return;
     const virt=l.vx!=null,other=virt?l.vc:cols[l.a===ci?l.b:l.a].gz[k];
-    const txt=l.t==='fu'?me+other+'伏吟粘連':l.t==='he'?me+other+'合':l.t==='banhe'?me+other+(l.vx!=null?'拱':'半合'):l.t==='sanhe'?me+other+'三合局':l.t==='anhe'||l.t==='anhe2'?me+other+'暗合':l.t==='sanhui'?me+other+'三會方':me+other+'連';
+    const txt=l.t==='fu'?me+other+'伏吟粘連':l.t==='he'?me+other+'合':l.t==='banhe'?me+other+(l.vx!=null?'拱':'半合'):l.t==='sanhe'?me+other+'三合局':l.t==='anhe'||l.t==='anhe2'?me+other+'暗合':l.t==='sanhui'?me+other+'三會方':l.t==='banhui'?me+other+'半會':me+other+'連';
     const key=l.t+txt+(virt?'v':'')+(l.broken?'x':'');
     if(!seen[key]){seen[key]={t:l.t,txt,virt,broken:l.broken,n:0,other};order.push(key);}seen[key].n++;});
   if(!order.length)return '';
@@ -1809,7 +1816,7 @@ const fmtN=n=>Number.isInteger(n)?''+n:(+n.toFixed(2))+'';
 // 最強五行同五行嘅字：箭咀乘 AW.sw（最強五行有顯示先計）
 const swMul=(k,ch)=>S&&S.swEl!=null&&S.swEl>=0&&(k?ZWX[zi(ch)]:gw(gi(ch)))===S.swEl&&AW.sw!==1?AW.sw:1;
 // 粘連分類：帶伏吟、帶合、連、半合、三合局、招感連／招感合，每類幾多條同每條幾多個箭咀
-const lkBrk=ls=>{const m=new Map();ls.forEach(l=>{const n=l.vx!=null?'招感'+(l.t==='he'?'合':l.t==='banhe'?'拱':'連'):{fu:'帶伏吟',he:'帶合',lian:'連',banhe:'半合',sanhe:'三合局',anhe:'暗合',anhe2:'暗合（卯申）',sanhui:'三會方'}[l.t]||l.t,k=n+'|'+l.w;m.set(k,(m.get(k)||0)+1);});
+const lkBrk=(ls,ci)=>{const m=new Map();ls.forEach(l=>{const n=l.vx!=null?'招感'+(l.t==='he'?'合':l.t==='banhe'?'拱':'連'):{fu:'帶伏吟',he:'帶合',lian:'連',banhe:'半合',sanhe:'三合局',anhe:'暗合',anhe2:'暗合（卯申）',sanhui:'三會方',banhui:'半會'}[l.t]||l.t,k=n+'|'+(ci==null?l.w:lwOf(l,ci));m.set(k,(m.get(k)||0)+1);});
   return [...m].map(([k,c])=>{const [n,w]=k.split('|');return `${n} ${c} 條×${fmtN(+w)}`;}).join('、');};
 const swNote=m=>m!==1?`；最強五行同五行，×${fmtN(m)}`:'';
 // 箭咀：電腦版逐個畫；手機版（CSS 揀）淨係一個箭咀加數字，例如 ↓3.5
@@ -1820,10 +1827,10 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&
   const pwDn=!up&&dn>0,ex=pw.n+yr+E.add,dir=pwDn?' ↓':' ↑',st=pwDn?'；未啟動，粘得更實':up?'；已啟動，激活更大力':'';
   const pwT=(pw.n?`　力度${dir}${fmtN(pw.n)}（${pw.why.join('，')}${st}）`:'')+(yr?`　陽刃${dir}${fmtN(yr)}（見自己嘅陽刃${YANGREN[S.cols[ci].gz[0]]}×${pw.yrN}${st}）`:'')+(E.why.length?`　${E.why.join('；')}`:'');
   const U=n=>ARW(n,0),D=n=>ARW(n,1),ls=S.links[k].filter(l=>l.a===ci||l.b===ci),nl=ls.length,R=n=>Math.round(n*m*2)/2;
-  if(up){const c=(up-1)*AW.chain,n=R(dn+c+ex);if(!n)return '';const tip=`↑${fmtN(n)}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${nl} 條粘連（${lkBrk(ls)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}`:'；本身冇粘連'}${up>1?`；啟動鏈 ${up} 層，多 ${up-1} 層加 ↑${fmtN(c)}`:''}${swNote(m)}）${pwT}`;
+  if(up){const c=(up-1)*AW.chain,n=R(dn+c+ex);if(!n)return '';const tip=`↑${fmtN(n)}（${chainTxt(S.act[k][ci][1],selfLbl(k,ci))}${dn?`；本身 ${nl} 條粘連（${lkBrk(ls,ci)}，計 ${fmtN(dn)} 個箭咀）被破除，↓${fmtN(dn)} 變 ↑${fmtN(dn)}`:'；本身冇粘連'}${up>1?`；啟動鏈 ${up} 層，多 ${up-1} 層加 ↑${fmtN(c)}`:''}${swNote(m)}）${pwT}`;
     return `<span class="act" title="${tip}">${U(n)}</span>`;}
   if(!dn)return ex?`<span class="act" title="${pwT.trim()}${m!==1?`　↑${fmtN(R(ex))}${swNote(m)}`:''}">${U(R(ex))}</span>`:'';
-  return `<span class="act" title="↓${fmtN(R(dn+ex))}（${nl} 條粘連（${lkBrk(ls)}），計 ${fmtN(dn)} 個箭咀，未啟動${swNote(m)}）${pwT}">${D(R(dn+ex))}</span>`;}
+  return `<span class="act" title="↓${fmtN(R(dn+ex))}（${nl} 條粘連（${lkBrk(ls,ci)}），計 ${fmtN(dn)} 個箭咀，未啟動${swNote(m)}）${pwT}">${D(R(dn+ex))}</span>`;}
 // 撳天干／地支／招感字：彈出點樣啟動、箭咀點計、做功同粘連（電腦同手機都得；電腦版滑鼠提示照舊）
 // 彈框入面嘅天干、地支同五行字加返五行顏色（「自己」、「未啟動」、「子女」呢類唔係干支嘅字唔變色）
 const WXRE=/(?<!自)己|未(?![啟被起有解開確])|子(?!女)|[甲乙丙丁戊庚辛壬癸丑寅卯辰巳午申酉戌亥木火土金水]/g;
@@ -1889,7 +1896,7 @@ function lockTag(k,ci){const n=S.lock[k][ci];if(!n)return '';const f=2**n,act=S.
 const isMob=()=>matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
 // 手機版：顯示選項同圖例預設收埋
 const FOLD={opt:false,leg:false};
-const VIEW={yuanTrig:false,lnJin:false,lnJinCalc:true,dyJin:false,dyJinCalc:true,route:false,newBlk:false,prevMoCalc:true,jinqiCalc:true,xiaoCalc:true,virt:true,dyn:false,dynZg:true,only4:false,yuan:true,aux:false,ming:false,yuanCalc:true,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:null,shaAll:true,tkAll:false,jinqi:false,muku:false,ssTag:true,noMidL:true,ganTop:true,wkMark:true,work:false,arNum:false,natL:true,cInfo:true,hr:false,hrCalc:true,sw:null,swm:'s1'};
+const VIEW={yuanTrig:true,lnJin:false,lnJinCalc:true,dyJin:false,dyJinCalc:true,route:false,newBlk:false,prevMoCalc:true,jinqiCalc:true,xiaoCalc:true,virt:true,dyn:false,dynZg:true,only4:false,yuan:true,aux:false,ming:false,yuanCalc:true,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:null,shaAll:true,tkAll:false,jinqi:false,muku:false,ssTag:true,noMidL:true,ganTop:true,wkMark:true,work:false,arNum:false,natL:true,cInfo:true,hr:false,hrCalc:true,sw:null,swm:'s1'};
 // 分享連結帶埋顯示選項（v=鍵.值,鍵.值，淨係寫同預設唔同嘅），打開連結嘅人見到同一個樣
 // 管理員專用、會員級別限定、會扣分嘅選項（做功、招感殺星、最強五行）唔帶
 const VIEW0={...VIEW},VIEW_NOSHARE=['work','sha','shaAll','sw','swm'];
@@ -2163,9 +2170,10 @@ function jiaoTuo(dys,di,li){const n=dys[di].getLiuNian().length;if(li===0&&di>0&
   if(li===n-1&&dys[di+1]&&dys[di+1].getGanZhi())return {prev:false,gz:dys[di+1].getGanZhi()};return null;}
 // 流年進氣：月支寅卯＝年頭兩個月，加上一年；子丑＝年尾兩個月，加下一年
 function lnJinQi(Y,moGz){const z=moGz&&moGz[1],d=z==='寅'||z==='卯'?-1:z==='子'||z==='丑'?1:0;if(!d)return null;const y=Y+d;return {d,Y:y,gz:JIAZI60[((y-4)%60+60)%60]};}
-// 元運要引動先計（第6條，第98堂）：大運、流年、流月等見到元運同一個天干，或者原局夾拱出呢個天干，元運柱先參與計算；冇引動就當唔存在
-function yuanGate(cc){if(!VIEW.yuanTrig)return cc;const nat=cc.filter(c=>c.gz&&/^[年月日時]柱$/.test(c.h)),zg=zhaogan(nat.map(c=>({gz:c.gz,dyn:false,lbl:c.h[0]}))).st;
-  return cc.map(c=>{if(!c.yuan||!c.gz)return c;const g=c.gz[0],on=cc.some(d=>d.gz&&d.dyn&&!d.yuan&&d.gz[0]===g)||zg.some(z=>(z.kind==='jia'||z.kind==='gong')&&z.c===g);return on?c:{...c,gz:null,yOff:true};});}
+// 元運要填實先計（第98堂；Tom 11月10日定）：原局、大運或者流年有元運嘅天干或者地支（實字），或者由原局、大運、流年招感出嚟（招），元運柱先參與計算；冇填實就當唔存在
+function yuanGate(cc){if(!VIEW.yuanTrig)return cc;const src=cc.filter(c=>c.gz&&!c.yuan&&(/^[年月日時]柱$/.test(c.h)||c.h==='大運'||c.h==='流年')),
+    ZG=zhaogan(src.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.dyn?c.h.replace('大運','運'):c.h[0]})));
+  return cc.map(c=>{if(!c.yuan||!c.gz)return c;const [g,z]=c.gz,on=src.some(d=>d.gz[0]===g||d.gz[1]===z)||ZG.st.some(x=>x&&x.c===g)||ZG.br.some(x=>x&&x.c===z);return on?c:{...c,gz:null,yOff:true};});}
 function render(){
   const {inp,c,sol,lun,ec,yun,dys,P,dm}=S;
   const today=refDay().toYmd();
@@ -2203,7 +2211,7 @@ function render(){
     if(!VIEW.noDyn)cols.push(
     {h:'大運',sub:dy.getGanZhi()?`${yearS(dy.getStartYear())}–${yearS(dy.getEndYear())}`:'未起運',gz:dy.getGanZhi(),dyn:true},
     // 小運：由時柱起，陽男陰女順行、陰男陽女逆行，每歲一柱
-    ...(VIEW.xiao&&!eNoLN?[{h:'小運',sub:`${ln.getAge()}歲`,gz:dy.getXiaoYun()[S.li].getGanZhi(),dyn:true,show:'xiaoCalc'}]:[]),
+    ...((VIEW.xiao||(CALC_T.xiaoPre&&!dy.getGanZhi()))&&!eNoLN?[{h:'小運',sub:`${ln.getAge()}歲`,gz:dy.getXiaoYun()[S.li].getGanZhi(),dyn:true,show:'xiaoCalc'}]:[]),
     ...(eNoLN?[]:[{h:'流年',sub:`${yearS(ln.getYear())} · ${ln.getAge()}歲`,gz:ln.getGanZhi(),dyn:true}]),
     // 上月流月：揀咗嘅流月嘅前一個月，同流月一樣參與招感粘連
     ...(eNoMD||!VIEW.prevMo?[]:[(pm=>({h:'上月流月',sub:`${pm.name}起 ${pm.start.getMonth()}/${pm.start.getDay()}`,gz:pm.gz,dyn:true,show:'prevMoCalc'}))(S.mi>0?S.mos[S.mi-1]:months(ln.getYear()-1)[11])]),
@@ -2251,7 +2259,7 @@ function render(){
   S.act=[0,1].map(k=>activation(cc,k,S.links[k],k?ZG.br:ZG.st,S.sha[k],{route:VIEW.route}));
   S.vact=S.act.map(a=>a.vact);S.zg=[ZG.st,ZG.br];S.vdown=[0,1].map(k=>(k?ZG.br:ZG.st).map((_,vi)=>S.links[k].filter(l=>l.vi===vi).reduce((t,l)=>t+l.w,0)));
   // 粘連力：每條粘連乘二
-  S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).reduce((t,l)=>t+l.w,0)));
+  S.lock=[0,1].map(k=>cols.map((c,i)=>S.links[k].filter(l=>l.a===i||l.b===i).reduce((t,l)=>t+lwOf(l,i),0)));
   S.ex=[0,1].map(k=>arrowEx(cc,k,S.links[k],S.act[k]));S.vex=virtEx(cc,ZG);
   // 做功（W1）：只睇佢嘅偏財（佢剋、同陰陽嗰個字，例如丁剋辛）有冇伏吟或者粘連；地支用本氣計（例如午本氣丁，偏財係本氣辛嘅酉）；有就要做功；要做功而本身被啟動（有已啟動或冇粘連嘅七殺剋佢），就係做到功
   S.work=[0,1].map(k=>cc.map((c,i)=>{if(!c.gz)return null;const st=x=>gi(k?HIDE[x.gz[1]][0]:x.gz[0]),pc=(st(c)+4)%10;
@@ -2259,10 +2267,11 @@ function render(){
     // 直沖（第27堂 22:19、第34堂 8:17、第22堂 57:04）：被七殺剋（地支沖刑害）嘅字有粘連＝做功；冇粘連而被剋＝直沖，主凶，唔當做到功。唔使做功嘅字冇粘連被剋都係直沖
     const on=S.act[k][i][0]>0,ch=S.lock[k][i]>0;if(!tg.length)return on&&!ch&&!c.sha?{done:false,zc:true,ti:[],tg:[]}:null;
     return {done:on&&ch,zc:on&&!ch,ti:tg,tg:tg.map(j=>(cc[j].dyn?cc[j].h.replace('大運','運'):cc[j].aux?cc[j].h:cc[j].h[0])+cc[j].gz[k])};}));
+  const BIG_LOCK=CALC_T.bigLock??4;
   // 做大功（第14、40、43、51、72、75堂等）：做到功之外再有以下其中一樣：① 一打二：一個字剋（沖）兩個或以上嘅同一個字；② 被打嗰個字夾得實（粘連 ≥ 2）；③ 同一柱天干地支一齊做到功。層層遞進（啟動佢嘅字本身都係被啟動）只係加註，唔單獨計
   S.work.forEach((ws,k)=>ws.forEach((w,i)=>{if(!w||!w.done)return;const why=[];
     if(w.ti.length>=2&&cc.filter(x=>x.gz&&x.gz[k]===cc[i].gz[k]).length===1)why.push(`一打二：一個${cc[i].gz[k]}打${w.ti.length}個${cc[w.ti[0]].gz[k]}`);
-    const jl=w.ti.filter(j=>S.lock[k][j]>=2);if(jl.length)why.push(`被打嘅${jl.map(j=>cc[j].gz[k]).join('、')}夾得實（粘連 ≥ 2）`);
+    const jl=w.ti.filter(j=>S.lock[k][j]>=BIG_LOCK);if(jl.length)why.push(`被打嘅${jl.map(j=>cc[j].gz[k]).join('、')}夾得好實（粘連 ≥ ${BIG_LOCK}）`);
     const o=S.work[1-k][i];if(o&&o.done&&!cc[i].sha)why.push('同柱天干地支一齊做到功');
     if(why.length){if(S.act[k][i][0]>=2)why.push('層層遞進：啟動佢嘅字本身都被啟動');w.big=why;}}));
   // 天干力度（Q7）：坐辰戌 +1（魁罡用 AW.kg 代替）；盤上每見一個同五行嘅地支 +1（方向跟個字狀態）；盤上每見一個佢自己嘅陽刃地支 +1 ↑（yr，永遠向上）。只係顯示多啲箭咀，唔影響啟動計算
@@ -2337,7 +2346,7 @@ function render(){
   const rels=relations(items);
   const pillName={he:'合',chong:'沖',xing:'刑',chuan:'穿',po:'破'};
   const lab=(i,k)=>(cols[i].dyn||cols[i].aux?cols[i].h:cols[i].h[0])+(k?'支':'干')+cols[i].gz[k];
-  const LN={fu:'伏吟',lian:'連續',he:'合',banhe:'半合',sanhe:'三合局'};
+  const LN={fu:'伏吟',lian:'連續',he:'合',banhe:'半合',sanhe:'三合局',banhui:'半會',sanhui:'三會方'};
   const nlHtml=[0,1].flatMap(k=>S.links[k].map(l=>({k,l,dyn:!!(cols[l.a].dyn||(l.vx==null&&cols[l.b].dyn))}))).sort((a,b)=>a.dyn-b.dyn||a.k-b.k)
     .map(({k,l,dyn})=>`<div class="rel"><span class="pill p-nl-${l.t}">粘</span><b>${LN[l.t]}</b><span>${l.vx!=null?l.vname+' · '+lab(l.a,k):lab(l.a,k)+' · '+lab(l.b,k)}</span>${l.broken?'<span class="dyn" style="color:var(--bad)">已被七殺解開</span>':''}${dyn?'<span class="dyn">行運引動</span>':''}</div>`).join('');
   const zgHtml=[...ZG.st,...ZG.br].sort((a,b)=>a.dyn-b.dyn).map(x=>`<div class="rel"><span class="pill p-zg">感</span><b>${x.tag}出${x.c}</b><span>${x.from}</span>${x.dyn?'<span class="dyn">行運引動</span>':''}</div>`).join('');
@@ -2364,7 +2373,7 @@ function render(){
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
-  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png title="存做圖片" aria-label="存做圖片">⤓ 下載圖片</button><button type="button" class="lnk pngbtn" data-share title="複製連結" aria-label="複製連結">🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><div class="calcnote"><b>⚙️ 顯示選項會改變計法</b>唔同嘅顯示方式同選項，會影響招感、粘連、做唔做到功同力度。大家可以按自己相信嘅理論去揀，例如加唔加三桓命宮入計算、用唔用流月流日、開唔開元運柱。<span class="cnx">上月流月、時柱進氣、小運開咗預設會入計算，各自可以用「入計算」開關閂走，閂咗就只係顯示。</span></div><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk" title="原局四柱、三桓、命宮之間嘅招感線同粘連線；唔剔就唔畫，計法唔變"><input type="checkbox" id="vNatL" ${VIEW.natL?'checked':''}>原局同三桓命宮粘連線</label><label class="chk" title="收埋天干同地支中間兩行粘連線，天干地支貼埋一齊；計法唔變"><input type="checkbox" id="vNoMidL" ${VIEW.noMidL?'checked':''}>唔顯示黏連線</label><label class="chk" title="天干嘅陰陽五行、做功、粘連等資料擺喺字上面（預設）；閂咗就擺返字下面；計法唔變"><input type="checkbox" id="vGanTop" ${VIEW.ganTop?'checked':''}>天干資料放上面</label><label class="chk" title="每個字旁邊嘅合、粘連、做唔做到功、伏吟、陽刃、坐辰戌等標籤；閂咗淨係留陰陽五行；計法唔變"><input type="checkbox" id="vCInfo" ${VIEW.cInfo?'checked':''}>字旁標籤（合、粘連、做功等）</label><label class="chk arnumL" title="每個字淨係一個箭咀加數字，好似手機版咁；計法唔變"><input type="checkbox" id="vArNum" ${VIEW.arNum?'checked':''}>箭咀用數字顯示</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk" title="流日右邊加一柱流時，用柱頂 ‹ › 揀時辰"><input type="checkbox" id="vHr" ${VIEW.hr?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD||VIEW.noD?'disabled':''}>顯示流時</label><label class="chk"><input type="checkbox" id="vHrCalc" ${VIEW.hrCalc?'checked':''} ${VIEW.hr&&!(VIEW.only4||VIEW.noDyn||VIEW.noMD||VIEW.noD)?'':'disabled'}>流時入計算</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vPrevMoCalc" ${VIEW.prevMoCalc?'checked':''} ${VIEW.prevMo&&!(VIEW.only4||VIEW.noDyn||VIEW.noMD)?'':'disabled'}>上月流月入計算</label><label class="chk" title="流月係寅、卯月（年頭兩個月）就喺流年左邊加上一年流年；子、丑月（年尾兩個月）就喺右邊加下一年流年（第95堂）"><input type="checkbox" id="vLnJin" ${VIEW.lnJin?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>流年進氣</label><label class="chk"><input type="checkbox" id="vLnJinCalc" ${VIEW.lnJinCalc?'checked':''} ${VIEW.lnJin&&!(VIEW.only4||VIEW.noDyn||VIEW.noMD)?'':'disabled'}>流年進氣入計算</label><label class="chk" title="流年係呢步大運第一年，大運右邊加上一步大運；最後一年加下一步大運（第94堂）"><input type="checkbox" id="vDyJin" ${VIEW.dyJin?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>交脫運</label><label class="chk"><input type="checkbox" id="vDyJinCalc" ${VIEW.dyJinCalc?'checked':''} ${VIEW.dyJin&&!(VIEW.only4||VIEW.noDyn)?'':'disabled'}>交脫運入計算</label><label class="chk" title="大運、流年等外圍柱嘅七殺去啟動原局天干，要行過中間嘅柱（經年干入），途中合住或者擋走就啟動唔到（第53、56、57堂）"><input type="checkbox" id="vRoute" ${VIEW.route?'checked':''}>外圍柱入局要經年干</label><label class="chk" title="測試中，預設閂。開咗：殺星途中合住要睇殺星自己嘅七殺自唔自由，擋走睇四種狀態（黐住、啟動、自由、被剋住）。閂咗：途中嘅字未啟動就合得住、擋得住，已啟動就合唔住、擋唔住。用命例測試，閂住（舊判斷）先分得出過身日子"><input type="checkbox" id="vNewBlk" ${VIEW.newBlk?'checked':''}>殺星合住擋走新判斷（測試）</label><label class="chk" title="${S.jq.side?`出世喺時辰${S.jq.side<0?'頭':'尾'} 30 分鐘內（第 ${S.jq.into+1} 分鐘），${S.jq.side<0?'時柱左邊加上個':'時柱右邊加下個'}時柱 ${S.jq.gz}`:`出世喺時辰第 ${S.jq.into+1} 分鐘，唔喺頭尾 30 分鐘，冇進氣時柱`}"><input type="checkbox" id="vJinqi" ${VIEW.jinqi?'checked':''}>時柱進氣${VIEW.jinqi&&!S.jq.side?'（呢個盤冇）':''}</label><label class="chk"><input type="checkbox" id="vJinqiCalc" ${VIEW.jinqiCalc?'checked':''} ${VIEW.jinqi?'':'disabled'}>時柱進氣入計算</label><label class="chk" title="辰水庫、戌火庫、丑金庫、未木庫：標出邊啲字入墓、開庫未；淨係標籤，唔改箭咀同啟動"><input type="checkbox" id="vMuku" ${VIEW.muku?'checked':''}>墓庫</label><label class="chk" title="每個天干地支右上角細字寫十神（地支取本氣）"><input type="checkbox" id="vSsTag" ${VIEW.ssTag?'checked':''}>字旁十神</label><label class="chk" title="做到功嘅字右下角綠剔 ✓，做唔到功紅交叉 ✗"><input type="checkbox" id="vWkMark" ${VIEW.wkMark?'checked':''}>做功剔交叉</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label><label class="chk"><input type="checkbox" id="vXiaoCalc" ${VIEW.xiaoCalc?'checked':''} ${VIEW.xiao&&!(VIEW.only4||VIEW.noDyn)?'':'disabled'}>小運入計算</label>${S.shaOk?`<label class="chk" title="有粘連但盤上冇七殺嘅天干（地支冇沖害刑），自動由最右邊招殺星（規則 Q6）"><input type="checkbox" id="vSha" ${shaOn()?'checked':''}>招感殺星${can.sha()?'':(COST.sha?`（會扣分：每個盤 ${COST.sha} 分）`:'')}</label><label class="chk" title="日主同九個十神逐行睇七殺鏈，寫明做唔做到功同原因；剔咗會記住，下次開網自動開返"><input type="checkbox" id="vWork" ${VIEW.work?'checked':''}>做功計算${!ADMIN&&CLOUD&&COST.work?`（每次開扣 ${COST.work} 分）`:''}</label><label class="chk" title="開：盤上顯示緊嘅所有柱（大運、流年、流月、流日等）都會招殺星；閂：只係原局四柱招（規則 Q6）"><input type="checkbox" id="vShaAll" ${VIEW.shaAll?'checked':''} ${shaOn()?'':'disabled'}>招殺星計全部柱</label>`:''}${can.sw()?`<label class="chk" title="計法未確定，暫時所有人都睇到"><input type="checkbox" id="vSw" ${S.swOn?'checked':''}>最強五行（推測）</label><select id="vSwm" aria-label="最強五行計法" title="最強五行用邊種計法" ${S.swOn?'':'disabled'}>${Object.entries(SWM).map(([k,n])=>`<option value="${k}"${VIEW.swm===k?' selected':''}>${n}</option>`).join('')}</select>`:''}<label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk" title="大運、流年、流月等見到元運同一個天干，或者原局夾拱出呢個天干，元運先參與計算；冇引動就當唔存在（第98堂）"><input type="checkbox" id="vYuanTrig" ${VIEW.yuanTrig?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan||!VIEW.yuanCalc?'disabled':''}>元運要引動先計</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${BUY.msg?`<div class="hint loopnote">${esc(BUY.msg)}</div>`:''}${S.evP?`<div class="hint loopnote">📌 事件「${esc(S.evT||'')}」淨係知道${S.evP==='dy'?'大運':S.evP==='y'?'年份':'月份'}，所以收埋${S.evP==='dy'?'流年、流月、流日':S.evP==='y'?'流月、流日':'流日'}，唔計入去。<button type="button" class="lnk" data-evpclr>顯示返</button></div>`:''}${hshNote()}${loopNote()}${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
+  <section class="panel" id="chartBox"><h2>命盤 <button type="button" class="lnk pngbtn" data-png title="存做圖片" aria-label="存做圖片">⤓ 下載圖片</button><button type="button" class="lnk pngbtn" data-share title="複製連結" aria-label="複製連結">🔗 複製連結</button><span class="hint" id="pngMsg"></span></h2><div class="calcnote"><b>⚙️ 顯示選項會改變計法</b>唔同嘅顯示方式同選項，會影響招感、粘連、做唔做到功同力度。大家可以按自己相信嘅理論去揀，例如加唔加三桓命宮入計算、用唔用流月流日、開唔開元運柱。<span class="cnx">上月流月、時柱進氣、小運開咗預設會入計算，各自可以用「入計算」開關閂走，閂咗就只係顯示。</span></div><details class="mfold" data-fold="opt" ${!isMob()||FOLD.opt?'open':''}><summary>顯示選項</summary><div class="row viewopt"><span class="cap">顯示粘連線：</span><label class="chk"><input type="checkbox" id="vVirt" ${VIEW.virt?'checked':''}>招感字</label><label class="chk" title="原局四柱、三桓、命宮之間嘅招感線同粘連線；唔剔就唔畫，計法唔變"><input type="checkbox" id="vNatL" ${VIEW.natL?'checked':''}>原局同三桓命宮粘連線</label><label class="chk" title="收埋天干同地支中間兩行粘連線，天干地支貼埋一齊；計法唔變"><input type="checkbox" id="vNoMidL" ${VIEW.noMidL?'checked':''}>唔顯示黏連線</label><label class="chk" title="天干嘅陰陽五行、做功、粘連等資料擺喺字上面（預設）；閂咗就擺返字下面；計法唔變"><input type="checkbox" id="vGanTop" ${VIEW.ganTop?'checked':''}>天干資料放上面</label><label class="chk" title="每個字旁邊嘅合、粘連、做唔做到功、伏吟、陽刃、坐辰戌等標籤；閂咗淨係留陰陽五行；計法唔變"><input type="checkbox" id="vCInfo" ${VIEW.cInfo?'checked':''}>字旁標籤（合、粘連、做功等）</label><label class="chk arnumL" title="每個字淨係一個箭咀加數字，好似手機版咁；計法唔變"><input type="checkbox" id="vArNum" ${VIEW.arNum?'checked':''}>箭咀用數字顯示</label><label class="chk"><input type="checkbox" id="vDynZg" ${VIEW.dynZg?'checked':''}>大運流年流月流日招感線（上面）</label><label class="chk"><input type="checkbox" id="vDyn" ${VIEW.dyn?'checked':''}>大運流年流月流日粘連線（下面）</label><span class="hint">（全部只係收埋條線，招感同粘連照計）</span></div><div class="row viewopt"><span class="cap">命宮月份：</span><label class="chk"><input type="radio" name="mgq" value="qi" ${VIEW.mgQi?'checked':''}>過中氣當下月</label><label class="chk"><input type="radio" name="mgq" value="no" ${VIEW.mgQi?'':'checked'}>忽視中氣</label></div><div class="row viewopt"><span class="cap">顯示柱：</span><label class="chk"><input type="checkbox" id="vOnly4" ${VIEW.only4?'checked':''}>只顯示年月日時四柱</label><label class="chk"><input type="checkbox" id="vCore" ${VIEW.core?'checked':''}>只顯示四柱同大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoDyn" ${VIEW.noDyn?'checked':''}>唔顯示大運流年流月流日</label><label class="chk"><input type="checkbox" id="vNoMD" ${VIEW.noMD?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>唔顯示流月流日</label><label class="chk"><input type="checkbox" id="vNoD" ${VIEW.noD?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>唔顯示流日</label><label class="chk" title="流日右邊加一柱流時，用柱頂 ‹ › 揀時辰"><input type="checkbox" id="vHr" ${VIEW.hr?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD||VIEW.noD?'disabled':''}>顯示流時</label><label class="chk"><input type="checkbox" id="vHrCalc" ${VIEW.hrCalc?'checked':''} ${VIEW.hr&&!(VIEW.only4||VIEW.noDyn||VIEW.noMD||VIEW.noD)?'':'disabled'}>流時入計算</label><label class="chk"><input type="checkbox" id="vPrevMo" ${VIEW.prevMo?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>上月流月</label><label class="chk"><input type="checkbox" id="vPrevMoCalc" ${VIEW.prevMoCalc?'checked':''} ${VIEW.prevMo&&!(VIEW.only4||VIEW.noDyn||VIEW.noMD)?'':'disabled'}>上月流月入計算</label><label class="chk" title="流月係寅、卯月（年頭兩個月）就喺流年左邊加上一年流年；子、丑月（年尾兩個月）就喺右邊加下一年流年（第95堂）"><input type="checkbox" id="vLnJin" ${VIEW.lnJin?'checked':''} ${VIEW.only4||VIEW.noDyn||VIEW.noMD?'disabled':''}>流年進氣</label><label class="chk"><input type="checkbox" id="vLnJinCalc" ${VIEW.lnJinCalc?'checked':''} ${VIEW.lnJin&&!(VIEW.only4||VIEW.noDyn||VIEW.noMD)?'':'disabled'}>流年進氣入計算</label><label class="chk" title="流年係呢步大運第一年，大運右邊加上一步大運；最後一年加下一步大運（第94堂）"><input type="checkbox" id="vDyJin" ${VIEW.dyJin?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>交脫運</label><label class="chk"><input type="checkbox" id="vDyJinCalc" ${VIEW.dyJinCalc?'checked':''} ${VIEW.dyJin&&!(VIEW.only4||VIEW.noDyn)?'':'disabled'}>交脫運入計算</label><label class="chk" title="大運、流年等外圍柱嘅七殺去啟動原局天干，要行過中間嘅柱（經年干入），途中合住或者擋走就啟動唔到（第53、56、57堂）"><input type="checkbox" id="vRoute" ${VIEW.route?'checked':''}>外圍柱入局要經年干</label><label class="chk" title="測試中，預設閂。開咗：殺星途中合住要睇殺星自己嘅七殺自唔自由，擋走睇四種狀態（黐住、啟動、自由、被剋住）。閂咗：途中嘅字未啟動就合得住、擋得住，已啟動就合唔住、擋唔住。用命例測試，閂住（舊判斷）先分得出過身日子"><input type="checkbox" id="vNewBlk" ${VIEW.newBlk?'checked':''}>殺星合住擋走新判斷（測試）</label><label class="chk" title="${S.jq.side?`出世喺時辰${S.jq.side<0?'頭':'尾'} 30 分鐘內（第 ${S.jq.into+1} 分鐘），${S.jq.side<0?'時柱左邊加上個':'時柱右邊加下個'}時柱 ${S.jq.gz}`:`出世喺時辰第 ${S.jq.into+1} 分鐘，唔喺頭尾 30 分鐘，冇進氣時柱`}"><input type="checkbox" id="vJinqi" ${VIEW.jinqi?'checked':''}>時柱進氣${VIEW.jinqi&&!S.jq.side?'（呢個盤冇）':''}</label><label class="chk"><input type="checkbox" id="vJinqiCalc" ${VIEW.jinqiCalc?'checked':''} ${VIEW.jinqi?'':'disabled'}>時柱進氣入計算</label><label class="chk" title="辰水庫、戌火庫、丑金庫、未木庫：標出邊啲字入墓、開庫未；淨係標籤，唔改箭咀同啟動"><input type="checkbox" id="vMuku" ${VIEW.muku?'checked':''}>墓庫</label><label class="chk" title="每個天干地支右上角細字寫十神（地支取本氣）"><input type="checkbox" id="vSsTag" ${VIEW.ssTag?'checked':''}>字旁十神</label><label class="chk" title="做到功嘅字右下角綠剔 ✓，做唔到功紅交叉 ✗"><input type="checkbox" id="vWkMark" ${VIEW.wkMark?'checked':''}>做功剔交叉</label><label class="chk"><input type="checkbox" id="vXiao" ${VIEW.xiao?'checked':''} ${VIEW.only4||VIEW.noDyn?'disabled':''}>顯示小運</label><label class="chk"><input type="checkbox" id="vXiaoCalc" ${VIEW.xiaoCalc?'checked':''} ${VIEW.xiao&&!(VIEW.only4||VIEW.noDyn)?'':'disabled'}>小運入計算</label>${S.shaOk?`<label class="chk" title="有粘連但盤上冇七殺嘅天干（地支冇沖害刑），自動由最右邊招殺星（規則 Q6）"><input type="checkbox" id="vSha" ${shaOn()?'checked':''}>招感殺星${can.sha()?'':(COST.sha?`（會扣分：每個盤 ${COST.sha} 分）`:'')}</label><label class="chk" title="日主同九個十神逐行睇七殺鏈，寫明做唔做到功同原因；剔咗會記住，下次開網自動開返"><input type="checkbox" id="vWork" ${VIEW.work?'checked':''}>做功計算${!ADMIN&&CLOUD&&COST.work?`（每次開扣 ${COST.work} 分）`:''}</label><label class="chk" title="開：盤上顯示緊嘅所有柱（大運、流年、流月、流日等）都會招殺星；閂：只係原局四柱招（規則 Q6）"><input type="checkbox" id="vShaAll" ${VIEW.shaAll?'checked':''} ${shaOn()?'':'disabled'}>招殺星計全部柱</label>`:''}${can.sw()?`<label class="chk" title="計法未確定，暫時所有人都睇到"><input type="checkbox" id="vSw" ${S.swOn?'checked':''}>最強五行（推測）</label><select id="vSwm" aria-label="最強五行計法" title="最強五行用邊種計法" ${S.swOn?'':'disabled'}>${Object.entries(SWM).map(([k,n])=>`<option value="${k}"${VIEW.swm===k?' selected':''}>${n}</option>`).join('')}</select>`:''}<label class="chk"><input type="checkbox" id="vYuan" ${VIEW.yuan?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>元運柱</label><label class="chk"><input type="checkbox" id="vYuanCalc" ${VIEW.yuanCalc?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan?'disabled':''}>元運參與招感粘連</label><label class="chk" title="大運、流年、流月等見到元運同一個天干，或者原局夾拱出呢個天干，元運先參與計算；冇引動就當唔存在（第98堂）"><input type="checkbox" id="vYuanTrig" ${VIEW.yuanTrig?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.yuan||!VIEW.yuanCalc?'disabled':''}>元運要填實先計</label><label class="chk"><input type="checkbox" id="vAux" ${VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core?'disabled':''}>三桓命宮柱</label><label class="chk"><input type="checkbox" id="vMingLeft" ${VIEW.mingLeft?'checked':''} ${VIEW.only4||VIEW.core||!VIEW.aux?'disabled':''}>命宮放三桓左邊</label><label class="chk"><input type="checkbox" id="vMing" ${VIEW.ming&&!VIEW.aux?'checked':''} ${VIEW.only4||VIEW.core||VIEW.aux?'disabled':''}>只顯示命宮柱</label><label class="chk"><input type="checkbox" id="vAuxCalc" ${VIEW.auxCalc?'checked':''} ${VIEW.only4||VIEW.core||!(VIEW.aux||VIEW.ming)?'disabled':''}>三桓命宮參與招感粘連</label><label class="chk"><input type="checkbox" id="vZgMerge" ${VIEW.zgMerge?'checked':''}>同一招感字合併顯示（×次數）</label><label class="chk"><input type="checkbox" id="vLianSplit" ${VIEW.lianSplit?'checked':''}>粘連逐條分開（×次數）</label></div></details>${BUY.msg?`<div class="hint loopnote">${esc(BUY.msg)}</div>`:''}${S.evP?`<div class="hint loopnote">📌 事件「${esc(S.evT||'')}」淨係知道${S.evP==='dy'?'大運':S.evP==='y'?'年份':'月份'}，所以收埋${S.evP==='dy'?'流年、流月、流日':S.evP==='y'?'流月、流日':'流日'}，唔計入去。<button type="button" class="lnk" data-evpclr>顯示返</button></div>`:''}${hshNote()}${loopNote()}${table}<details class="mfold" data-fold="leg" ${!isMob()||FOLD.leg?'open':''}><summary>圖例</summary>${CHAIN_LEGEND}</details>${wx}</section>
   <section class="panel">
     <div class="row tkopt"><span class="cap">天剋地沖／天合地合標籤比對</span><label class="chk"><input type="radio" name="tkm" value="n4" ${VIEW.tkAll?'':'checked'}>只限原局四柱</label><label class="chk"><input type="radio" name="tkm" value="all" ${VIEW.tkAll?'checked':''}>盤上顯示緊嘅所有柱</label></div>
     <div class="lvl"><h3>大運（撳選） <button type="button" class="lnk" data-gotoday title="跳返今日嘅大運、流年、流月、流日" aria-label="跳返今日">📅</button></h3><div class="strip">${dyStrip}</div></div>
