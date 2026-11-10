@@ -89,7 +89,7 @@ h2{font-family:var(--f-display);font-size:18px;margin:0 0 10px;font-weight:700;l
 @media (min-width:701px) and (pointer:fine),(min-width:701px) and (pointer:none),(min-width:1001px){
   .fold>.foldh{display:block;cursor:pointer;user-select:none}.fold>.foldh::before{content:'▾ ';color:var(--muted,#888)}
   .fold.folded>.foldh::before{content:'▸ '}.fold.folded>:not(.foldh){display:none!important}.fold.folded>.foldh{margin:0}
-  h2.foldh{display:block}.fold>h2.foldh~.ntabs{margin-top:8px}.anmh{display:none}}
+  h2.foldh{display:block}.fold>h2.foldh~.ntabs{margin-top:8px}.anmh{display:none}#anBox.folded>.npane{display:none!important}}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
 form{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px}
 fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -2678,7 +2678,7 @@ function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelect
     const zd=r=>(r.W&&r.W.zd)||{},pick=re=>r=>[...r.F].find(f=>re.test(f))||null;
     const multi=(lab,L)=>L.map(f=>[f,all.filter(r=>r.F.has(f))]).filter(([,v])=>v.length>=2).map(([f,v])=>anGroup('zg'+lab+f,f,v,all,anEvBreak(v))).join('');
     // 主導力吻合率：老師講過嘅命例，唔用老師講法、淨係電腦自己計
-    const T=all0.filter(r=>ZD_T[r.P.join('')]),ck=T.map(r=>{const [a,b]=ZD_T[r.P.join('')];let z={};try{z=zhudao(r.P,true);}catch(e){}return {r,a,b,z,o1:z.p1===a,o2:z.p1===a&&(!b||z.p2===b)};});
+    const T=all0.filter(r=>ZD_T[r.P.join('')]&&(r.c.tags||[]).some(t=>t==='隱師命例'||t==='夏仲奇老師命例')&&!/未驗證時間/.test(r.c.name||'')),ck=T.map(r=>{const [a,b]=ZD_T[r.P.join('')];let z={};try{z=zhudao(r.P,true);}catch(e){}return {r,a,b,z,o1:z.p1===a,o2:z.p1===a&&(!b||z.p2===b)};});
     const acc=T.length?`<p class="hint"><b>主導力吻合率</b>：老師親口講過主導力嘅 ${T.length} 個命例，唔用老師講法、淨係電腦自己計，第一主導力啱 ${ck.filter(x=>x.o1).length} 個，第一同第二都啱 ${ck.filter(x=>x.o2).length} 個。${ck.filter(x=>!x.o2).length?'唔夾：'+ck.filter(x=>!x.o2).map(x=>`${anBtn(x.r)}（老師 ${esc(x.a+(x.b?'／'+x.b:''))}，電腦 ${esc((x.z.p1||'—')+(x.z.p2?'／'+x.z.p2:''))}）`).join('　'):''}</p>`:'';
     h=acc+`<p class="hint">按課堂講嘅做功結構分組（原局四柱）：主導力、日主有冇被粘住、七殺喺邊、有冇招感夾拱、粘連解唔解得開。撳開每組睇共同特徵同事件。</p>`
       +`<h4>第一主導力</h4>${grp('p1',r=>zd(r).p1?'第一主導力 '+zd(r).p1+'（'+WX[gw(gi(zd(r).p1))]+'）':null)}`
