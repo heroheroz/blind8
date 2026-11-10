@@ -111,7 +111,7 @@ button.go{background:var(--accent);color:var(--paper);border:0;border-radius:6px
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .err{color:var(--bad);font-size:14px}
 a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:13px;white-space:nowrap}a.kofi:hover{background:var(--accent);color:var(--paper)}
-#kofiDlg{border:0;border-radius:12px;padding:0;width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:var(--paper);color:var(--ink);box-shadow:0 10px 40px #0006}#kofiDlg::backdrop{background:#0008}#kofiDlg .kfh{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px}#kofiDlg .kfh button{font:inherit;font-size:18px;background:none;border:0;color:var(--ink);cursor:pointer}#kofiDlg iframe{display:block;border:0;width:100%;height:min(690px,calc(100vh - 110px));background:#f9f9f9}#kofiDlg .kff{padding:6px 12px 10px;font-size:12px;color:var(--muted)}
+#kofiDlg{border:0;border-radius:12px;padding:0;width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:var(--paper);color:var(--ink);box-shadow:0 10px 40px #0006}#kofiDlg::backdrop{background:#0008}#kofiDlg .kfh{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px}#kofiDlg .kfh button{font:inherit;font-size:18px;background:none;border:0;color:var(--ink);cursor:pointer}#kofiDlg iframe{display:block;border:0;width:100%;height:min(690px,calc(100vh - 110px));background:#f9f9f9}#kofiDlg .kff{padding:6px 12px 10px;font-size:12px;color:var(--muted)}#kofiDlg .kft{display:flex;gap:6px;padding:0 12px 8px}#kofiDlg .kft button{flex:1;font:inherit;font-size:13px;padding:6px 4px;border:1px solid var(--line);border-radius:8px;background:none;color:var(--ink);cursor:pointer}#kofiDlg .kft button.on{background:var(--soft);font-weight:600}#kofiDlg .kfps{padding:6px 16px 16px;text-align:center;font-size:14px}#kofiDlg .kfps img{background:#fff;padding:8px;border-radius:8px;max-width:100%;height:auto}#kofiDlg .kfps p{margin:8px 0 0}
 @media (max-width:899px){#fsAt{margin-top:6px}.dkonly{display:none}}#ziRow{display:flex;flex-direction:column;gap:6px}
 @media (min-width:900px){
   #f{grid-template-columns:minmax(220px,1fr) minmax(340px,2.4fr);grid-template-areas:"nm bi" "pl at" "ac at";gap:14px 22px;align-items:start}
@@ -1165,7 +1165,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>類別</th><th>內容</th></tr></thead><tbody id="auList"></tbody></table></div>
   <div class="gbpager" id="auPager"></div>
 </section>
-<dialog id="kofiDlg" aria-label="請飲咖啡"><div class="kfh"><b>☕ 多謝支持！</b><button type="button" data-kfx aria-label="關閉">✕</button></div><iframe title="Ko-fi" loading="lazy" data-src="https://ko-fi.com/heroheroz/?hidefeed=true&amp;widget=true&amp;embed=true&amp;preview=true"></iframe><div class="kff">經 Ko-fi 安全付款。睇唔到？<a href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener">喺新分頁開</a></div></dialog>
+<dialog id="kofiDlg" aria-label="請飲咖啡"><div class="kfh"><b>☕ 多謝支持！</b><button type="button" data-kfx aria-label="關閉">✕</button></div><div class="kft"><button type="button" data-kft="kofi" class="on">Ko-fi（信用卡／PayPal）</button><button type="button" data-kft="fps">轉數快 FPS（香港）</button></div><div data-kfp="kofi"><iframe title="Ko-fi" loading="lazy" data-src="https://ko-fi.com/heroheroz/?hidefeed=true&amp;widget=true&amp;embed=true&amp;preview=true"></iframe><div class="kff">經 Ko-fi 安全付款。睇唔到？<a href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener">喺新分頁開</a></div></div><div data-kfp="fps" class="kfps" hidden><img src="fps-qr.png" alt="轉數快收款碼" width="260" height="260" loading="lazy"><p>用銀行 app 或者 PayMe、支付寶香港嘅「轉數快」掃呢個碼，金額隨意。</p><p>或者輸入 FPS ID：<b>166244350</b> <button type="button" class="lnk" data-kfcopy="166244350">複製</button></p><p class="hint">多謝支持！</p></div></dialog>
 <footer class="madeby">Created by 隱姓師父天字第一號小粉絲 - 叉油雞飯多汁 <a class="kofi" href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener">☕ 請飲咖啡</a></footer>
 </div>
 </div>
@@ -2167,7 +2167,7 @@ const CALC_VERS={
   5:{n:'v5（11月10日自刑版）',d:['同 v4 一樣，再加：','自刑：辰辰、午午、酉酉、亥亥照計伏吟粘連，同時當刑：自己做功分開自己，啟動一層（只係分開自己，唔會再沿住啟動鏈去啟動其他字），箭咀乘「地支被刑啟動」嘅數（第16堂 54:33：分開最有力係沖，其次刑，再其次害；第49堂辰辰自刑解開申子黏合）'],ct:{ysTh:2.5,bigNoMD:true,zixing:true},view:{yuanTrig:true}},
   6:{n:'v6（11月10日會局版）',d:['同 v5 一樣，再加（同學答案）：','三合局、三會方有重複字（例如一亥一子兩丑）只當一組特別緊密嘅會局：每個字對另外兩種字各計一次，重複字之間嘅伏吟照計','招感字被大運流年流月流日嘅實字填實，當同一個字：招感字嗰條粘連唔再另外計，實字嘅粘連同填實加力照計'],ct:{ysTh:2.5,bigNoMD:true,zixing:true,huiOnce:true,tianOne:true},view:{yuanTrig:true}},
   7:{n:'v7（11月11日自刑修正版）',d:['同 v6 一樣，但改咗自刑：','自刑（辰辰、午午、酉酉、亥亥）唔可以自己刑開自己，冇外力就照舊黐實、做唔到功（v5、v6 當佢自己分開自己，張國榮過身嗰日午午變咗做到功，唔啱）','自刑嗰對字嘅伏吟粘連力度減半，所以外力打開佢容易啲'],ct:{ysTh:2.5,bigNoMD:true,huiOnce:true,tianOne:true,zxWeak:true},view:{yuanTrig:true}}};
-const YS_TH=()=>CALC_T.ysTh??2,CALC_VDEF=4,CALC_CT_KEYS=[...new Set(Object.values(CALC_VERS).flatMap(v=>Object.keys(v.ct)))];
+const YS_TH=()=>CALC_T.ysTh??2,CALC_VDEF=7,CALC_CT_KEYS=[...new Set(Object.values(CALC_VERS).flatMap(v=>Object.keys(v.ct)))];
 let CALC_V=CALC_VDEF,CALC_SITE=CALC_VDEF;
 const calcTry=()=>{try{return +localStorage.getItem('b8-calcv-try')||0;}catch(e){return 0;}};
 function applyCalcVer(v){v=CALC_VERS[v]?+v:CALC_VDEF;CALC_V=v;const P=CALC_VERS[v];CALC_CT_KEYS.forEach(k=>delete CALC_T[k]);Object.assign(CALC_T,P.ct);
@@ -3871,6 +3871,8 @@ function showErr(e){try{let d=document.getElementById('jsErr');if(!d){d=document
   d.textContent='⚠ 程式出錯（請截圖畀管理員；撳一下收埋）：'+(e&&e.message||e)+'\n'+String(e&&e.stack||'').split('\n').slice(0,4).join('\n');clearTimeout(d._t);d._t=setTimeout(()=>d.remove(),15000);}catch(x){}}
 addEventListener('error',ev=>{if(ev.error)showErr(ev.error);});addEventListener('unhandledrejection',ev=>{const r=ev.reason;if(r&&r.stack&&!/fetch|權限|network/i.test(r.message||''))showErr(r);});
 // Ko-fi：撳「請飲咖啡」喺網頁入面彈個付款框（Ko-fi 官方嵌入），唔使離開網站；瀏覽器唔支援 dialog 就照開新分頁
+document.addEventListener('click',e=>{const c=e.target.closest('[data-kfcopy]');if(!c)return;(navigator.clipboard?navigator.clipboard.writeText(c.dataset.kfcopy):Promise.reject()).then(()=>{c.textContent='已複製';},()=>{c.textContent='請手動複製';});});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-kft]');if(!t)return;const d=document.getElementById('kofiDlg');d.querySelectorAll('[data-kft]').forEach(b=>b.classList.toggle('on',b===t));d.querySelectorAll('[data-kfp]').forEach(p=>p.hidden=p.dataset.kfp!==t.dataset.kft);});
 document.addEventListener('click',e=>{const k=e.target.closest('a.kofi'),d=document.getElementById('kofiDlg');if(k&&d&&d.showModal&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){e.preventDefault();const f=d.querySelector('iframe');if(!f.src)f.src=f.dataset.src;d.showModal();return;}
   if(e.target.closest('[data-kfx]')||e.target===d)d&&d.close();});
 // 繁簡轉換：右上角個掣將成頁文字轉做簡體（用 OpenCC，第一次撳先載入），再撳就還原繁體原文。
