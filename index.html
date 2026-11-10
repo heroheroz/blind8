@@ -184,6 +184,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .tiny{font-size:11px;color:var(--muted);display:block}
 .mk{display:inline-block;margin-top:3px;font-size:11px;padding:0 6px;border-radius:9px;border:1.5px dashed var(--muted,#888);color:var(--muted,#888);line-height:1.5}.mk.open{border-style:solid;border-color:var(--accent);color:var(--accent);font-weight:700}
 .cx{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--accent);color:var(--accent);line-height:1.5}
+.cx.zx{border-color:var(--bad);color:var(--bad);border-style:dashed;margin-left:2px}
 .cx.kg{background:var(--accent);color:var(--paper)}
 .wk{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px dashed var(--muted);color:var(--muted);line-height:1.5}.wk.done{border:1.5px solid var(--good);background:var(--good);color:var(--paper)}.wk.zc{border:1.5px solid var(--bad);color:var(--bad)}
 .yr{display:inline-block;margin-top:3px;margin-left:2px;font-size:11px;font-weight:700;padding:0 7px;border-radius:9px;border:1.5px solid var(--bad);color:var(--bad);line-height:1.5}
@@ -2022,6 +2023,10 @@ function workTag(k,ci){const w=S.work&&S.work[k]&&S.work[k][ci];if(!w)return '';
   return `<span class="wk${w.done?' done':''}" title="偏財${w.tg.join('、')}有伏吟或者粘連，所以要做功；${w.done?'本身已經被啟動，做到功':'本身未被啟動，做唔到功'}（規則 W1）">${w.done?'做到功':'做唔到功'}</span>`;}
 function chenxu(gz){if(gz[1]!=='辰'&&gz[1]!=='戌')return '';const kg=KUIGANG.includes(gz);
   return `<span class="cx${kg?' kg':''}" title="${kg?'魁罡：庚辰、庚戌、壬辰、戊戌。':''}辰戌強旺：上面嘅天干坐辰戌，做功特別有力；用得唔好係天羅地網。">${kg?'魁罡':'辰戌強旺'}</span>`;}
+// 自刑：辰辰、午午、酉酉、亥亥，盤上有另一個同字就標「X X自刑」（v5 起當刑做功分開自己，第16堂 54:33）
+function zixingTag(ci){const c=S.cc[ci];if(!c||!c.gz||!'辰午酉亥'.includes(c.gz[1]))return '';const z=c.gz[1];
+  const at=S.cc.map((x,j)=>j!==ci&&x.gz&&x.gz[1]===z?(x.aux?x.h:x.dyn?x.h.replace('大運','運'):x.h[0])+'支':null).filter(Boolean);if(!at.length)return '';
+  return `<span class="cx zx" title="${z}${z}自刑（同${at.join('、')}）：照計伏吟粘連，${CALC_T.zixing?'同時當刑，自己做功分開自己（計法 v5）':'而家用緊嘅計法版本唔計自刑啟動（v5 先計）'}。第16堂 54:33：分開最有力係沖，其次刑，再其次害；第91堂：留意大運流年有冇自刑沖。">${z}${z}自刑</span>`;}
 // 天干坐辰戌：標喺天干下面（地支本身標「辰戌強旺」）
 // 陽刃引動：陽干（甲丙戊庚壬）見到盤上有自己嘅陽刃地支，天干標「陽刃引動」（淨係標籤，箭咀照 Q7 計）
 function yrMove(ci){const c=S.cc[ci];if(!c||!c.gz)return '';const z=YANGREN[c.gz[0]];if(!z)return '';
@@ -2091,7 +2096,7 @@ function tipPop(cell,x,y){let el=$('tipPop');if(!el){el=document.createElement('
   const items=[stT,...[...cell.querySelectorAll('.act[title]')].flatMap(e=>e.title.split('　')).map(t=>(chain?t.replace(chain+'；','').replace('（'+chain+'）','').replace(chain,''):t).replace('（）','').trim())].filter(Boolean);
   const wk=cell.querySelector('.wk'),cx=cell.querySelector('.cx'),mk=cell.querySelector('.mk');
   const nl=[...cell.querySelectorAll('.nl>span')].map(x=>[...x.childNodes].filter(n=>n.nodeName!=='SUP').map(n=>n.textContent).join('').replace(/×\d+$/,'')+(x.querySelector('sup')?'（同招感字）':'')+(x.classList.contains('nlx')?'（已解開）':'')+(+x.dataset.n>1?'×'+x.dataset.n:''));
-  const body=sec('啟動同箭咀',items)+sec('做功',wk?wk.title.split('；'):[])+sec('粘連',nl)+sec('墓庫',mk?mk.title.split('；'):[])+sec('其他',cx?(cx.title.startsWith(cx.textContent)?cx.title:cx.textContent+'：'+cx.title).split('。').map(t=>t.trim()).filter(Boolean):[]);
+  const body=sec('啟動同箭咀',items)+sec('做功',wk?wk.title.split('；'):[])+sec('粘連',nl)+sec('墓庫',mk?mk.title.split('；'):[])+sec('其他',[...cell.querySelectorAll('.cx')].flatMap(cx=>(cx.title.startsWith(cx.textContent)?cx.title:cx.textContent+'：'+cx.title).split('。').map(t=>t.trim()).filter(Boolean)));
   el.innerHTML=`${close}<b class="tt">${esc(h)}${row} ${esc(ch)}</b>${body||'<span class="hint">未啟動，冇粘連，唔使做功。</span>'}`;
   place();}
 // 撳「剋沖」標籤：彈出同原局邊柱天剋地沖，唔會揀咗嗰格
@@ -2574,7 +2579,7 @@ function render(){
       return VIEW.ganTop?`<div class="gmeta">${meta}</div>${ch}`:ch+meta;},shaCell(0))}</tr>
     ${VIEW.noMidL?'':`<tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="0" data-m="p" data-up="1"></td></tr>
     <tr class="chainrow"><th class="rl">粘連</th><td colspan="${N}" class="chain" data-k="1" data-m="p" data-up="0"></td></tr>`}
-    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}${fxc(1,ci)}"><span class="ch"><span class="gl">${col.gz[1]}</span>${VIEW.ssTag?`<sup class="ssc">${SS1[shishen(dm,gi(HIDE[col.gz[1]][0]))]}</sup>`:''}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${VIEW.cInfo?`${chenxu(col.gz)}${VIEW.muku?muku(col,ci,cols,dm):''}${yangren(col.gz[1],cols,P[2][0],ci)}${workTag(1,ci)}${nlList(1,ci,cols)}`:''}`,shaCell(1))}</tr>
+    <tr class="zhirow"><th class="rl">地支</th>${td((col,g,z,ci)=>`${status(1,ci)}<span class="big w${ZWX[z]}${fxc(1,ci)}"><span class="ch"><span class="gl">${col.gz[1]}</span>${VIEW.ssTag?`<sup class="ssc">${SS1[shishen(dm,gi(HIDE[col.gz[1]][0]))]}</sup>`:''}${netArrows(1,ci)}</span></span><span class="tiny">${z%2?'陰':'陽'}${WX[ZWX[z]]}</span>${VIEW.cInfo?`${chenxu(col.gz)}${zixingTag(ci)}${VIEW.muku?muku(col,ci,cols,dm):''}${yangren(col.gz[1],cols,P[2][0],ci)}${workTag(1,ci)}${nlList(1,ci,cols)}`:''}`,shaCell(1))}</tr>
     <tr class="chainrow"><th class="rl">招感線</th><td colspan="${N}" class="chain" data-k="1" data-m="v" data-up="1"></td></tr>
     <tr class="zgrow"><th class="rl">招感</th><td colspan="${N}">${zgStrip(ZGD[1],false,N)}</td></tr>
     <tr><th class="rl">地支<br class="mbr">十神</th>${td((col,g,z)=>`<span class="ss">${shishen(dm,gi(HIDE[col.gz[1]][0]))}</span>`)}</tr>
