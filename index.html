@@ -112,11 +112,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .err{color:var(--bad);font-size:14px}
 a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);text-decoration:none;font-size:13px;white-space:nowrap}a.kofi:hover{background:var(--accent);color:var(--paper)}
 #kofiDlg{border:0;border-radius:12px;padding:0;width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:var(--paper);color:var(--ink);box-shadow:0 10px 40px #0006}#kofiDlg::backdrop{background:#0008}#kofiDlg .kfh{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:14px}#kofiDlg .kfh button{font:inherit;font-size:18px;background:none;border:0;color:var(--ink);cursor:pointer}#kofiDlg iframe{display:block;border:0;width:100%;height:min(690px,calc(100vh - 110px));background:#f9f9f9}#kofiDlg .kff{padding:6px 12px 10px;font-size:12px;color:var(--muted)}
-@media (max-width:899px){#fsAt{margin-top:6px}}
+@media (max-width:899px){#fsAt{margin-top:6px}.dkonly{display:none}}
 @media (min-width:900px){
-  #f{grid-template-columns:minmax(200px,1fr) minmax(340px,1.5fr) minmax(220px,1fr);grid-template-areas:"nm bi tm" "pl at ac";gap:14px 22px;align-items:start}
+  #f{grid-template-columns:minmax(190px,.8fr) minmax(340px,1.9fr) minmax(210px,.8fr);grid-template-areas:"nm bi tm" "pl at ac";gap:14px 22px;align-items:start}
   #fsName{grid-area:nm}#fsBirth{grid-area:bi}#fsTime{grid-area:tm}#fsPlace{grid-area:pl}#fsAt{grid-area:at}#f>.actions{grid-area:ac;align-self:end;flex-wrap:wrap}
   #f fieldset{gap:5px}#f select,#f input[type=number]{padding:6px 5px}#f input[type=number]{width:4.4em}#fsAt>.row,#fsBirth>.row{flex-wrap:nowrap}#f .bzpk{margin:0}#fsPlace .hint{font-size:11px}
+  #fsBirth>.row{flex-wrap:wrap}#fsBirth #tmRow{flex-wrap:nowrap}#fsTime>legend{display:none}
   #f>.actions .go{width:100%;padding:10px 26px}#f>.actions .err:empty{display:none}
 }
 /* element colours */
@@ -500,7 +501,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   </fieldset>
 
   <fieldset id="fsBirth">
-    <legend>出生日期</legend>
+    <legend>出生日期<span class="dkonly">、時間（當地鐘錶時間）</span></legend>
     <div class="seg" role="radiogroup" aria-label="曆法">
       <label><input type="radio" name="cal" id="calS" value="solar" checked>公曆（西曆）</label>
       <label><input type="radio" name="cal" id="calL" value="lunar">農曆</label>
@@ -527,7 +528,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 
   <fieldset id="fsTime">
     <legend>出生時間（當地鐘錶時間）</legend>
-    <div class="row">
+    <div class="row" id="tmRow">
       <select id="h" aria-label="時"></select> :
       <select id="mi" aria-label="分"></select>
     </div>
@@ -1188,6 +1189,9 @@ function nayin(g,z){return NAYIN[Math.floor(jz(g,z)/2)];}
 function xunkong(g,z){const s=(z-g+12)%12;return ZHI[(s+10)%12]+ZHI[(s+11)%12];}
 const pad=n=>String(n).padStart(2,'0');
 const $=id=>document.getElementById(id);
+// 桌面版：出生時間放喺出生日期同一行；手機版留返原位
+(()=>{const r=$('tmRow');if(!r)return;const home=r.parentNode,nx=r.nextSibling,mq=matchMedia('(min-width:900px)');
+  const f=()=>{if(mq.matches)$('d').parentNode.appendChild(r);else home.insertBefore(r,nx);};f();mq.addEventListener('change',f);})();
 
 /* ---------- form setup ---------- */
 function fillSel(el,arr){el.innerHTML=arr.map(([v,t])=>`<option value="${v}">${t}</option>`).join('');}
