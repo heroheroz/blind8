@@ -33,3 +33,7 @@ Also add `https://heroheroz.github.io/blind8/` under Supabase → Authentication
 ## Backup
 
 `.github/workflows/backup.yml` runs every Monday (and on demand from the Actions tab). It reads the shared 命例 and 留言版 with the public key and commits them to `backup/`: `cases.csv` uses the website's export format, so it can be brought back with 匯入; `cases.json` and `guestbook.json` keep everything.
+
+## 計法測試同校準規則（Tom，2026-11-10）
+
+所有計法測試、校準、版本比較（元神斷滅門檻、做大功、最強五行觸犯、主導力、神煞等），**只用標籤有 `隱師命例` 或者 `夏仲奇老師命例` 嘅命例**：呢兩組時辰有老師驗證，八字比較可靠。正例同反例（例如同一批人平常日子）都要喺呢兩組入面揀，其他命例一律唔用。每個測試結果要寫明用咗幾多個命例（n）。
