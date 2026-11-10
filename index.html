@@ -898,7 +898,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <li>🔮 <b>招感殺星</b>：每個盤每日扣 <b data-pcostv="sha">1</b> 分（進階用戶、高級用戶免費）。</li>
     <li>⚙️ <b>做功計算</b>：每次開扣 <b data-pcostv="work">5</b> 分；剔住會記住，下次開網自動開返，會再扣。</li>
   </ul>
-  <p class="hint">排行榜按活躍程度排（加命例、事件、投票、筆記、留言、登入日數、用分都計），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。筆記夠👍之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳 👍嘅人唔可以係筆記嘅主人。標籤唔計分。🔒 私人命例同佢嘅事件、筆記、投票都唔計分，轉返公開先計。管理員唔上榜。</p>
+  <p class="hint">排行榜按分數排，分數最高排最頂（同分就睇邊個活躍啲），未參與過嘅用戶唔顯示。同一個盤當日開過就唔會再扣；分唔夠就開唔到。筆記夠👍之後，就算有人撤回都唔會扣返分；命例或者筆記刪咗先會冇分。撳 👍嘅人唔可以係筆記嘅主人。標籤唔計分。🔒 私人命例同佢嘅事件、筆記、投票都唔計分，轉返公開先計。管理員唔上榜。</p>
   </details>
   <p class="hint" id="lbMsg"></p>
   <div class="auf"><select id="lbN" aria-label="每頁幾多個"><option value="10" selected>每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="0">全部</option></select></div>
@@ -2903,9 +2903,9 @@ const LB={p:0,n:(()=>{try{const v=localStorage.getItem('b8-lbn');return v==null?
 document.addEventListener('change',e=>{if(e.target.id==='lbN'){LB.n=+e.target.value;LB.p=0;try{localStorage.setItem('b8-lbn',LB.n);}catch(_){}drawPoints();}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lbpage]');if(!b||b.disabled)return;LB.p=+b.dataset.lbpage-1;drawPoints();});
 function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSION);if(box.hidden)return;
-  $('lbMsg').textContent=PT.err;{const sel=$('lbN');if(sel)sel.value=String(LB.n);}// 最活躍排最頂：活躍度＝加命例、事件、投票、筆記、留言、登入日數、用分次數（用過分當 1）、獎勵；乜都未做過嘅唔顯示
+  $('lbMsg').textContent=PT.err;{const sel=$('lbN');if(sel)sel.value=String(LB.n);}// 分數最高排最頂（同分就睇活躍度）；活躍度＝加命例、事件、投票、筆記、留言、登入日數、用分次數（用過分當 1）、獎勵；乜都未做過嘅唔顯示
   const act=r=>(r.cases||0)+(r.events||0)+(r.votes||0)+(r.notes||0)+(r.posts||0)+(r.logins||0)+(r.spent?1:0)+(r.bonus?1:0);
-  const all=(PT.rows||[]).filter(r=>act(r)>0).sort((x,y)=>act(y)-act(x)||y.points-x.points);
+  const all=(PT.rows||[]).filter(r=>act(r)>0).sort((x,y)=>y.points-x.points||act(y)-act(x));
   // 分頁：預設每頁 10 個，名次跨頁連續
   const pn=LB.n||1e9,np=Math.max(1,Math.ceil(all.length/pn));LB.p=Math.min(Math.max(0,LB.p),np-1);const off=LB.n?LB.p*pn:0,rows=all.slice(off,off+pn);
   $('lbPager').innerHTML=pagerHtml(LB.p+1,np,'lbpage');
