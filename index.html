@@ -867,8 +867,8 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   </ul>
 
   <h4>二、17個未揭破秘訣（第75堂，老師留畀大家破解）</h4>
-  <p class="hint">第75堂《盲派至今尚未揭破的17個算命秘訣》。標題跟畫面投影片（全堂已用好模型重做核對）；★＝老師喺畫面打星（特別重要或者暗示過）。老師尾段（55:09–56:57）講：17 點搞通咗，盲派就通竅好多；生仔生女、兄弟姊妹排第幾呢類佢自己都未有方向，所以冇列入。老師話呢17點未必會直接說破（56:11）。以下係未解答嘅問題，唔係規則。</p>
-  <ul>
+  <p class="hint" data-lsn="75">第75堂《盲派至今尚未揭破的17個算命秘訣》。標題跟畫面投影片（全堂已用好模型重做核對）；★＝老師喺畫面打星（特別重要或者暗示過）。老師尾段（55:09–56:57）講：17 點搞通咗，盲派就通竅好多；生仔生女、兄弟姊妹排第幾呢類佢自己都未有方向，所以冇列入。老師話呢17點未必會直接說破（56:11）。以下係未解答嘅問題，唔係規則。</p>
+  <ul data-lsn="75">
     <li>🎓 1 元運柱的地支如何找？（04:01）</li>
     <li>🎓 2 八字的最強五行是否只有一個？（13:06）</li>
     <li>🎓 3 天干地支如何轉旺或強化？（盲派另有2種判斷方法）（15:24）</li>
@@ -2750,7 +2750,12 @@ function lsRefs(root){if(!LS.idx||!LS.idx.length||!root)return;const by={};LS.id
   for(let n;n=tw.nextNode();){if(n.nodeValue.indexOf('堂')<0||!n.parentElement||n.parentElement.closest('a,button,select,textarea,script,style,input'))continue;re.lastIndex=0;if(re.test(n.nodeValue))todo.push(n);}
   todo.forEach(n=>{const h=esc(n.nodeValue).replace(re,(m,num,ts)=>{const id=by[+num];if(!id)return m;
     return '第'+num+'堂'+ts.replace(/(\[?)(\d{1,3}):(\d\d)(?::(\d\d))?(\]?)/g,(x,o,a,b,c,z)=>`<a class="lref" href="${lsYT(id,c!=null?a*3600+b*60+ +c:a*60+ +b)}" target="_blank" rel="noopener noreferrer" title="開第${num}堂條片，由呢個時間播">${x}</a>`);});
-    if(h.indexOf('<a ')<0)return;const sp=document.createElement('span');sp.innerHTML=h;n.replaceWith(...sp.childNodes);});}
+    if(h.indexOf('<a ')<0)return;const sp=document.createElement('span');sp.innerHTML=h;n.replaceWith(...sp.childNodes);});
+  // 成段都係講同一堂（data-lsn="堂數"）：入面淨係寫時間嘅都連去嗰堂
+  root.querySelectorAll('[data-lsn]').forEach(el=>{const num=el.dataset.lsn,id=by[+num];if(!id)return;const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),td=[];
+    for(let n;n=w.nextNode();)if(/\d:\d\d/.test(n.nodeValue)&&!n.parentElement.closest('a,button'))td.push(n);
+    td.forEach(n=>{const h=esc(n.nodeValue).replace(/(?<![\d:])(\d{1,3}):(\d\d)(?::(\d\d))?(?![\d:])/g,(x,a,b,c)=>`<a class="lref" href="${lsYT(id,c!=null?a*3600+b*60+ +c:a*60+ +b)}" target="_blank" rel="noopener noreferrer" title="開第${num}堂條片，由呢個時間播">${x}</a>`);
+      if(h.indexOf('<a ')<0)return;const sp=document.createElement('span');sp.innerHTML=h;n.replaceWith(...sp.childNodes);});});}
 function lsRefsWatch(){const box=document.querySelector('.notes');if(!box)return;lsRefs(box);let q=0;
   new MutationObserver(ms=>{if(q)return;if(!ms.some(m=>[...m.addedNodes].some(x=>!(x.nodeType===1&&x.classList.contains('lref')))))return;q=1;setTimeout(()=>{q=0;lsRefs(box);},60);}).observe(box,{childList:true,subtree:true});}
 // 隱姓先生歌曲庫：說明區第一個分頁（np-song）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
