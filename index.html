@@ -2802,7 +2802,7 @@ function lsQA(ord){const q=(LS.qq||'').trim(),nm=id=>{const c=(typeof CASES!=='u
 document.addEventListener('input',e=>{if(e.target.matches('[data-xzq]')){const q=e.target.value.trim();document.querySelectorAll('#np-xzq details.xzq').forEach(d=>{const hit=!q||d.textContent.includes(q);d.hidden=!hit;d.open=!!q&&hit;d.querySelectorAll('details.xzqd').forEach(x=>x.open=!!q&&hit);});}});
 document.addEventListener('input',e=>{if(e.target.matches('[data-lqa]')){LS.qq=e.target.value;lsIndex().then(idx=>lsQA([...idx].sort((a,b)=>(b.n||0)-(a.n||0))));}});
 // 命例數據庫分析：用全部公開命例（唔計私人命例）分組，睇每組有乜共同特徵；全部喺瀏覽器計，唔改任何計法
-const AN={sub:'ev',g:'mo',open:{},t:false};
+const AN={sub:'ev',g:'mo',open:{},t:''};try{const v=localStorage.getItem('anT');if(v==='y'||v==='yx')AN.t=v;}catch(_){}
 // 事件分組跟返命例標籤：有呢個標籤，或者事件文字有呢個字（同義詞）而前面冇父母兄弟等親人字，就入呢組
 const AN_SRC=new Set(['隱師命例','夏仲奇老師命例','通明師兄命例','盲摸摸學盲派','驗證時辰','兄弟數目','國家地區']);
 const AN_SYN={過身:'去世|離世|病逝|被殺|遇刺|自殺',結婚:'嫁|娶|大婚',意外:'撞車|車禍|受傷|雷電|墮|跌傷',疾病:'病|癌|中風|生蛇|入醫院',坐監:'入獄|被捕',財運:'首富|發達|賺錢|中獎',轉工:'新工|第一份工',搬屋:'搬去|搬返|遷移',生仔:'生女|生BB'};
@@ -2978,12 +2978,12 @@ function anGroup(id,title,rows,all,extra){const op=AN.open[id];
 function anEvBreak(rows){const ids=new Set(rows.map(r=>r.c.id)),C=AN.cats;if(!C)return '';const s=[...C.A,...C.B].map(x=>[x.n,x.rows.filter(y=>ids.has(y.r.c.id)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([n,k])=>n+' '+k);return s.length?`<p class="hint">標籤／事件：${esc(s.join('、'))}</p>`:'';}
 function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelector('.lbody');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先睇到命例分析。</p>';return;}
-  const all0=CASES.filter(c=>!c.private&&!(c.tags||[]).includes('國家地區')).map(anCase).filter(Boolean),nT=all0.filter(r=>(r.c.tags||[]).includes('隱師命例')).length;
-  const all=AN.t?all0.filter(r=>(r.c.tags||[]).includes('隱師命例')):all0;
+  const all0=CASES.filter(c=>!c.private&&!(c.tags||[]).includes('國家地區')).map(anCase).filter(Boolean),anIs=(r,x)=>x.some(t=>(r.c.tags||[]).includes(t)),nT=all0.filter(r=>anIs(r,['隱師命例'])).length,nT2=all0.filter(r=>anIs(r,['隱師命例','夏仲奇老師命例'])).length;
+  const all=AN.t==='y'?all0.filter(r=>anIs(r,['隱師命例'])):AN.t==='yx'?all0.filter(r=>anIs(r,['隱師命例','夏仲奇老師命例'])):all0;
   box.querySelectorAll('[data-ansub]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ansub===AN.sub));
   if(!all.length){body.innerHTML='<p class="hint">未有命例。</p>';return;}
   AN.cats=anCats(all);
-  const head=`<label class="hint"><input type="checkbox" data-ant${AN.t?' checked':''}> 🎓 淨係睇老師講過嘅命例（隱師命例，${nT} 個）</label><p class="hint">用 ${all.length} 個公開命例（唔計私人命例同國家地區盤）。「倍數」= 呢組有呢個特徵嘅比例 ÷ 全部命例嘅比例；樣本少，只係俾大家搵線索，唔係定論。撳開每組先計特徵。</p>`;
+  const head=`<label class="hint">🎓 用邊啲命例：<select data-ant aria-label="用邊啲命例"><option value="">全部公開命例（${all0.length} 個）</option><option value="y"${AN.t==='y'?' selected':''}>淨係隱姓先生命例（${nT} 個）</option><option value="yx"${AN.t==='yx'?' selected':''}>隱姓先生＋夏仲奇命例（${nT2} 個）</option></select></label><p class="hint">用 ${all.length} 個公開命例（唔計私人命例同國家地區盤）。「倍數」= 呢組有呢個特徵嘅比例 ÷ 全部命例嘅比例；樣本少，只係俾大家搵線索，唔係定論。撳開每組先計特徵。</p>`;
   let h='';
   if(AN.sub==='zg'){
     const grp=(lab,f)=>{const m=new Map();all.forEach(r=>{const k=f(r);if(k==null)return;if(!m.has(k))m.set(k,[]);m.get(k).push(r);});return [...m].filter(([,v])=>v.length>=2).sort((a,b)=>b[1].length-a[1].length).map(([k,v])=>anGroup('zg'+lab+k,k,v,all,anEvBreak(v))).join('')||'<p class="hint">冇（每組最少 2 個命例）。</p>';};
@@ -3024,7 +3024,7 @@ function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelect
     const feat=fx.map(f=>[f,all.filter(r=>r.F.has(f))]).filter(([,v])=>v.length>=2).sort((a,b)=>b[1].length-a[1].length);
     h=`<h4>相同八字</h4>${same(r=>r.P.join(' '),'八字')||'<p class="hint">冇。</p>'}<h4>相同日柱</h4>${same(r=>r.P[2],'日柱')}<h4>干支組合</h4>${feat.map(([f,v])=>anGroup('gzf'+f,f,v,all,anEvBreak(v))).join('')}`;}
   body.innerHTML=head+h;}
-document.addEventListener('change',e=>{if(e.target.matches('[data-ant]')){AN.t=e.target.checked;anDraw();}});
+document.addEventListener('change',e=>{if(e.target.matches('[data-ant]')){AN.t=e.target.value;try{localStorage.setItem('anT',AN.t);}catch(_){}anDraw();}});
 document.addEventListener('click',e=>{const s=e.target.closest('[data-ansub]');if(s){AN.sub=s.dataset.ansub;anDraw();return;}
   const g=e.target.closest('[data-ang]');if(g){AN.g=g.dataset.ang;anDraw();}});
 document.addEventListener('toggle',e=>{const d=e.target;if(!d.matches||!d.matches('[data-angrp]'))return;const id=d.dataset.angrp,was=!!AN.open[id];AN.open[id]=d.open;if(d.open&&!was)anDraw();},true);
