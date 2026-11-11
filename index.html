@@ -281,11 +281,14 @@ td.chain{position:relative;overflow:visible}
 .notes p{margin:0 0 4px}
 .ssfold{margin-top:22px}.ntabs{margin-bottom:10px}.notes .ntabs label:has(input[value=an]){display:none}#anBox>.npane{display:block!important}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
-.nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}
-.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=mj]:checked)) #np-mj,.notes:not(:has(input[value=song]:checked)) #np-song,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=xzq]:checked)) #np-xzq,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
+.nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}body.nologin .notes #np-tut{display:block!important}
+.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=mj]:checked)) #np-mj,.notes:not(:has(input[value=tut]:checked)) #np-tut,.notes:not(:has(input[value=song]:checked)) #np-song,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=xzq]:checked)) #np-xzq,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
 .tut:not([hidden]){display:block;position:fixed;z-index:60;right:16px;bottom:16px;width:min(360px,calc(100vw - 24px));background:var(--paper);color:var(--ink);border:2px solid var(--accent);border-radius:12px;padding:12px 14px;box-shadow:0 6px 24px #0005;font-size:15px;line-height:1.6}
 .tut h2{font-size:17px;margin:2px 0 4px}.tut p{margin:0 0 8px}.tutbtn{display:flex;justify-content:space-between;align-items:center}.tutgo{font:inherit;font-weight:700;color:#fff;background:var(--accent);border:0;border-radius:8px;padding:6px 16px;cursor:pointer}
 .tutdots{display:flex;gap:5px}.tutdots i{width:8px;height:8px;border-radius:50%;background:var(--line,#8886)}.tutdots i.on{background:var(--accent)}
+.tut:not([hidden]){border-color:var(--tc,var(--accent));border-top-width:8px}.tutmain{display:flex;gap:12px;align-items:center;margin:6px 0 8px}.tutic{font-size:40px;line-height:1;flex:none}.tut h2{color:var(--tc,var(--accent))}.tut p{font-size:16px}
+.tut .tutgo,.tutcard .tutgo{background:var(--tc,var(--accent))}.tutdots i.on{background:var(--tc,var(--accent))!important;width:20px;border-radius:4px}
+.tutcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:8px 0}.tutcard{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:2px solid var(--tc);border-left-width:8px;background:color-mix(in srgb,var(--tc) 9%,transparent)}.tutcard>div{flex:1;min-width:0}.tutcard b{color:var(--tc);font-size:16px}.tutcard p{margin:2px 0 0;font-size:14px}
 .tuthl{outline:3px solid var(--accent)!important;outline-offset:2px;border-radius:8px}
 @media (max-width:899px){.tut:not([hidden]){left:12px;right:12px;width:auto;bottom:calc(76px + env(safe-area-inset-bottom))}}
 .tblwrap{overflow-x:auto}.sctbl{border-collapse:collapse;font-size:14px}.sctbl th,.sctbl td{border:1px solid var(--line,#8884);padding:4px 8px;text-align:left}.sctbl td.scok{color:#1a8a3c;font-weight:700}.sctbl td.scno{color:#c0392b;font-weight:700}
@@ -490,7 +493,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 
 <div class="tut" id="tut" hidden role="dialog" aria-label="新手教學">
   <div class="tutdots" id="tutDots"></div>
-  <h2 id="tutH"></h2><p id="tutP"></p>
+  <div class="tutmain"><span class="tutic" id="tutIc"></span><div><h2 id="tutH"></h2><p id="tutP"></p></div></div>
   <div class="tutbtn"><button type="button" class="lnk" data-tut="skip">跳過</button><button type="button" class="tutgo" data-tut="next">下一步</button></div>
 </div>
 <div class="mguide" id="mGuide" hidden>
@@ -594,7 +597,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <section class="panel notes fold folded" data-sec="calc">
   <h2 class="foldh">隱姓先生課堂 · 盲派八字摘要 · 八字口訣 · 計法說明</h2>
   <p class="hint nlogin">🔒 登入先睇到隱姓先生課堂、盲派八字摘要、八字口訣、計法說明同命例數據庫分析。</p>
-  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="song" checked>🎤 隱姓先生歌曲庫</label><label><input type="radio" name="ntab" value="lsum">隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="xzq">夏仲奇卜命遺例集</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="mj">盲派秘訣 8＋17</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
+  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="song" checked>🎤 隱姓先生歌曲庫</label><label><input type="radio" name="ntab" value="tut">📖 新手教學</label><label><input type="radio" name="ntab" value="lsum">隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="xzq">夏仲奇卜命遺例集</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="mj">盲派秘訣 8＋17</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
   <div class="npane" id="np-calc">
   <p id="r-p-cal"><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
@@ -1113,6 +1116,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 
   <p class="hint">合飛、沖飛原文出處：<a href="http://m.udxd.com/news/show-102920.html" target="_blank" rel="noopener">udxd.com</a>、<a href="https://zhuanlan.zhihu.com/p/1976362559935366444" target="_blank" rel="noopener">知乎</a>、<a href="https://zhuanlan.zhihu.com/p/2081950982699800162" target="_blank" rel="noopener">知乎</a>、<a href="https://www.163.com/dy/article/KDM937E80521DJ4J.html" target="_blank" rel="noopener">網易</a></p>
   </div>
+  <div class="npane" id="np-tut"></div>
   <div class="npane sifu" id="np-song"><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lsum"><div class="lsel row"><span class="lpick"></span></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lqa"><div class="lsel row"><input type="search" class="lq" data-lqa placeholder="搵問題…" aria-label="搵問題"></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
@@ -3216,17 +3220,22 @@ function mTab(k){document.body.dataset.mtab=k;if(k==='an'){placeAn();anDraw();}d
 mTab('in');
 // 新手教學：淨係新用戶見到（未排過盤、未登入過、未睇過／跳過）；唔遮住畫面，隨時可以跳過；頁腳「新手教學」可以再睇
 const TUT={i:-1,steps:[
-  ['in','#inPanel','① 排盤','填出生日期、時間同出生地，撳「排盤」。唔知時辰可以剔「唔知時辰」；預設用真太陽時，子時 23:00 換日。'],
-  ['chart','#chartBox','② 睇命盤','排完會見到四柱同大運、流年。箭咀係粘連同做功：綠色做到功，紅色做唔到。撳大運、流年、流月、流日嘅格仔就轉去嗰段時間。'],
-  ['case','aside.cases','③ 命例','呢度可以搵同打開大家儲嘅命例，有老師講過嘅命例可以對照。登入之後可以儲自己嘅命例同加事件，有貢獻分（睇「排行」）。'],
-  ['learn','.notes','④ 課堂同筆記','隱姓先生課堂總結、文字稿、八字摘要同口訣都喺呢度。筆記入面「第幾堂 幾分幾秒」可以撳，會開嗰堂條片由嗰個時間播。']]};
+  ['in','#inPanel','🧭','排盤','填生日，撳「排盤」','wood'],
+  ['chart','#chartBox','☯','睇命盤','綠箭咀做到功，紅箭咀做唔到','fire'],
+  ['chart','details[data-fold=opt]','⚙️','顯示選項','剔一個選項＝多一條柱','earth'],
+  ['chart','#chartBox thead','☑️','柱頂剔格','加出嚟嘅柱：剔「計」先計','metal'],
+  ['case','aside.cases','📚','命例','搵命例；登入可以儲同賺分','water'],
+  ['learn','.notes','🎓','課堂','撳「第幾堂 幾分」即刻睇片','accent']]};
 function tutShow(i){document.querySelectorAll('.tuthl').forEach(e=>e.classList.remove('tuthl'));const box=$('tut');
   if(i<0||i>=TUT.steps.length){box.hidden=true;TUT.i=-1;try{localStorage.setItem('b8-tut-done','1');if(TUT_NEW){localStorage.setItem('b8-guide-off','1');$('mGuide').hidden=true;}}catch(e){}return;}
-  TUT.i=i;const [tab,sel,h,p]=TUT.steps[i],mob=matchMedia('(max-width:899px)').matches;
-  $('tutH').textContent=h;$('tutP').textContent=p;$('tutDots').innerHTML=TUT.steps.map((_,j)=>`<i${j===i?' class="on"':''}></i>`).join('');
-  box.querySelector('[data-tut=next]').textContent=i===TUT.steps.length-1?'完成':'下一步';box.hidden=false;
+  TUT.i=i;const [tab,sel,ic,h,p,col]=TUT.steps[i],mob=matchMedia('(max-width:899px)').matches;
+  box.style.setProperty('--tc',`var(--${col})`);$('tutIc').textContent=ic;$('tutH').textContent=h;$('tutP').textContent=p;$('tutDots').innerHTML=TUT.steps.map((s,j)=>`<i${j===i?' class="on"':''} style="--tc:var(--${s[5]})"></i>`).join('');
+  box.querySelector('[data-tut=next]').textContent=i===TUT.steps.length-1?'完成 ✓':'下一步 ›';box.hidden=false;
   if(mob){const b=document.querySelector(`.mnav [data-mtab-go="${tab}"]`);if(b){mTab(tab);b.classList.add('tuthl');}}
-  else{const el=document.querySelector(sel);if(el){el.classList.add('tuthl');el.scrollIntoView({block:'nearest',behavior:'smooth'});}}}
+  const el=document.querySelector(sel);if(el){if(el.tagName==='DETAILS')el.open=true;el.classList.add('tuthl');if(!mob||i===2||i===3)el.scrollIntoView({block:i===3?'center':'nearest',behavior:'smooth'});}}
+function tutCards(){const b=$('np-tut');if(!b)return;b.innerHTML=`<div class="tutcards">${TUT.steps.map((s,j)=>`<div class="tutcard" style="--tc:var(--${s[5]})"><span class="tutic">${s[2]}</span><div><b>${j+1}. ${s[3]}</b><p>${s[4]}</p></div><button type="button" class="tutgo" data-tut-go="${j}">試吓</button></div>`).join('')}</div><p class="hint">撳「試吓」會喺真畫面度指住嗰個位。</p>`;}
+tutCards();
+document.addEventListener('click',e=>{const g=e.target.closest('[data-tut-go]');if(g)tutShow(+g.dataset.tutGo);});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tut]');if(!b)return;const a=b.dataset.tut;tutShow(a==='open'?0:a==='next'?TUT.i+1:-1);});
 let TUT_NEW=false;try{const q=new URLSearchParams(location.search),link=q.has('y')||q.has('case');TUT_NEW=!localStorage.getItem('b8-tut-done')&&(!!localStorage.getItem('b8-tut-new')||(!link&&!localStorage.getItem('bazi-last')&&!localStorage.getItem('b8-session')&&!localStorage.getItem('b8-guide-off')));if(TUT_NEW)localStorage.setItem('b8-tut-new','1');}catch(e){}
 if(TUT_NEW)setTimeout(()=>tutShow(0),800);
