@@ -3224,7 +3224,11 @@ const TUT={i:-1,steps:[
   ['chart','#chartBox','☯','睇命盤','綠箭咀做到功，紅箭咀做唔到','fire'],
   ['chart','details[data-fold=opt]','⚙️','顯示選項','剔一個選項＝多一條柱','earth'],
   ['chart','#chartBox thead','☑️','柱頂剔格','加出嚟嘅柱：剔「計」先計','metal'],
-  ['case','aside.cases','📚','命例','搵命例；登入可以儲同賺分','water'],
+  ['case','aside.cases','📚','命例','撳命例個名＝跳去佢個命盤','water'],
+  ['case','#caseQ','🔍','篩選命例','打字搵，或者撳 #標籤 篩選','wood'],
+  ['case','#caseAdd','➕','加命例','登入可以儲，加埋標籤、事件、備註','fire'],
+  ['case','#casePrivL','🔒','私人命例','剔 🔒＝淨係自己睇到，唔公開唔計分','metal'],
+  ['case','aside.cases','👍','讚好','覺得準就 👍，加命例有貢獻分','earth'],
   ['learn','.notes','🎓','課堂','撳「第幾堂 幾分」即刻睇片','accent']]};
 let TUT_DEMO=false;
 function tutShow(i){document.querySelectorAll('.tuthl').forEach(e=>e.classList.remove('tuthl'));const box=$('tut');
@@ -3242,7 +3246,7 @@ function tutShow(i){document.querySelectorAll('.tuthl').forEach(e=>e.classList.r
     setTimeout(()=>{if(TUT.i!==i)return;const r=el.getBoundingClientRect(),t=box.getBoundingClientRect();box.classList.toggle('tuttop',r.bottom>t.top-8&&r.top>innerHeight*0.45);},600);};
   if(i===3){const ck=document.querySelector('label.colck');aim(ck||document.querySelector(sel),'center');}
   else if(tab==='learn'&&logged){aim(document.querySelector(sel),'start');setTimeout(()=>{const a=(document.querySelector('#np-lsum a.lref')||document.querySelector('#np-lsum a[href*="youtu"]'));if(a&&TUT.i===i){document.querySelectorAll('.tuthl').forEach(e=>e.classList.remove('tuthl'));if(mob){const b=document.querySelector('.mnav [data-mtab-go="learn"]');if(b)b.classList.add('tuthl');}aim(a,'center');}},1500);}
-  else{const el=document.querySelector(sel);if(el&&(!mob||i===2))aim(el,'nearest');else if(el){if(el.tagName==='DETAILS')el.open=true;el.classList.add('tuthl');}}}
+  else{let el=document.querySelector(sel);if(el&&!el.offsetParent&&tab==='case')el=document.querySelector('aside.cases');if(el&&sel==='#caseAdd'){const m=el.querySelector('details.more');if(m)m.open=true;}if(el)aim(el,sel==='aside.cases'||sel==='#inPanel'||sel==='#chartBox'?'start':'center');}}
 function tutCards(){const b=$('np-tut');if(!b)return;b.innerHTML=`<div class="tutcards">${TUT.steps.map((s,j)=>`<div class="tutcard" style="--tc:var(--${s[5]})"><span class="tutic">${s[2]}</span><div><b>${j+1}. ${s[3]}</b><p>${s[4]}</p></div><button type="button" class="tutgo" data-tut-go="${j}">試吓</button></div>`).join('')}</div><p class="hint">撳「試吓」會喺真畫面度指住嗰個位。</p>`;}
 tutCards();
 document.addEventListener('click',e=>{const g=e.target.closest('[data-tut-go]');if(g)tutShow(+g.dataset.tutGo);});
