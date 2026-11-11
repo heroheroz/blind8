@@ -277,6 +277,7 @@ td.chain{position:relative;overflow:visible}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}
 .notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=mj]:checked)) #np-mj,.notes:not(:has(input[value=song]:checked)) #np-song,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=xzq]:checked)) #np-xzq,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
+.notl{margin-left:8px;white-space:nowrap;font-size:14px}.notl input{vertical-align:middle}
 .xzq{border-top:1px solid var(--line,#8884);padding:6px 0}.xzq summary{cursor:pointer}.xzq ul{margin:4px 0 8px;padding-left:1.3em}.xzq p{margin:6px 0}.xzqd{margin:6px 0;padding:4px 8px;border-left:3px solid var(--line)}.ntabs{flex-wrap:wrap}.lpick{display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center}.lnavs{display:inline-flex;gap:6px;align-items:center}.lnav{min-width:2.4em}.ljump{width:6em}.lsel{margin:0 0 10px;gap:8px}.lsel select{font:inherit;font-size:14px;max-width:100%;padding:4px 6px}.lq{font:inherit;font-size:14px;padding:4px 8px;min-width:0;flex:1 1 160px;max-width:280px}.lline{display:flex;gap:10px;padding:1px 0}.lline a{flex:none;width:4.2em;font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none}.lline a:hover{color:var(--accent)}.lscr span{color:var(--muted);font-size:13px}.lline mark{background:#ffe58a;color:inherit}.lteach{border-left:3px solid var(--accent);padding-left:10px}.lqa{margin:0 0 14px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--soft);border-radius:6px}.lqa .q{font-weight:600}.lqa .meta{font-size:12px;color:var(--muted)}.lmat{background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;padding:8px 12px;margin:0 0 10px}.lmat ul{margin:4px 0 0}.clsn{margin:6px 0}.clsn,a.yt{font-size:12px}.rsrc{display:block;font-size:12px;color:var(--muted);margin-top:2px}.rsrc.none{opacity:.7}.anseg button{border:0;background:none;font:inherit;font-size:14px;padding:5px 12px;cursor:pointer;color:inherit}.anseg button[aria-pressed=true]{background:var(--accent);color:#fff}.angrp{margin:0 0 6px;padding:6px 10px;border:1px solid var(--line);border-radius:6px}.angrp summary{cursor:pointer}.ancases{margin-top:6px;font-size:14px;line-height:1.9}.antab{border-collapse:collapse;font-size:13px;margin:6px 0}.antab th,.antab td{padding:2px 8px;border-bottom:1px solid var(--line);text-align:left}.anpick{margin:0 0 8px}.anpick .on{font-weight:700;text-decoration:underline}
 .sifu{font-size:14px;color:var(--ink);line-height:1.7;max-width:900px}
 .sifu h3{margin:0 0 6px;font-size:18px}
@@ -532,6 +533,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
     <div class="row" id="tmRow">
       <select id="h" aria-label="時"></select> :
       <select id="mi" aria-label="分"></select>
+      <label class="notl" title="唔知出世時辰就剔呢度：個盤淨係排年、月、日三柱，時柱唔入任何計算"><input type="checkbox" id="noT"> 唔知時辰</label>
     </div>
     <div id="ziRow"><label class="cap" for="zi" style="margin-top:6px">子時換日</label>
     <select id="zi">
@@ -582,6 +584,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <p>大運、流年、流月、流日每一格都會同原局四柱逐柱比對兩種情況：① 天剋地沖：天干相剋（同陰陽，即七殺）而且地支六沖（子午、丑未、寅申、卯酉、辰戌、巳亥），標紅色「剋沖X」；② 天合地合：天干五合（甲己、乙庚、丙辛、丁壬、戊癸）而且地支六合（子丑、寅亥、卯戌、辰酉、巳申、午未），標綠色「天地合X」。X 係原局邊柱（年／月／日／時），例如「剋沖日」即係同日柱天剋地沖，同幾柱都有就寫埋一齊，例如「剋沖年月」。撳個標籤或者指住會講係邊個干支剋／合、邊個支沖／合，再撳一下收返。上面有個選項：「只限原局四柱」（預設）就只同原局年月日時比；「盤上顯示緊嘅所有柱」就連盤上顯示緊嘅大運、流年、流月、流日（同開咗嘅命宮、元運、進氣時柱等）都一齊比，標籤會寫埋係邊柱，例如「剋沖日·流年」。</p>
   <p id="r-p-jq">顯示選項「時柱進氣」：一個時辰兩個鐘（120 分鐘），用校正後嘅時間計，出世喺時辰頭 30 分鐘，就喺時柱左邊加一柱「進氣時柱」，係上一個時辰嘅時柱；出世喺時辰尾 30 分鐘，就喺時柱右邊加下一個時辰嘅時柱；中間 60 分鐘就冇。進氣時柱預設同原局柱一樣參與招感、粘連、啟動同做功嘅計算（例如 9:15 出世係巳時頭 15 分鐘，左邊加辰時嘅時柱）；上月流月同小運都一樣。三樣各自有「入計算」開關，閂咗就只係顯示，唔計。預設閂。<br>顯示選項「流年進氣」（預設閂；第95堂：年同月份都會提早入氣，進氣時兩條柱搭住睇）：流月係寅、卯月（年頭兩個月），流年左邊加上一年流年；子、丑月（年尾兩個月），流年右邊加下一年流年。顯示選項「交脫運」（預設閂；第94堂：交脫運時上一步運嘅氣未完，又加新運）：流年係呢步大運第一年，大運右邊加上一步大運；最後一年就加下一步大運。兩樣開咗預設入計算，各自有「入計算」開關。</p>
   <p>地支係辰或戌就標「辰戌強旺」，坐喺上面嗰個天干就標「坐辰戌」，做功特別有力；標「魁罡」：庚辰、庚戌、壬辰、戊戌，係坐辰戌入面嘅四柱。地支標「X刃」：盤上有陽干 X，呢個地支係佢嘅陽刃（甲卯、丙午、戊午、庚酉、壬子，陰干冇陽刃）；標「日主陽刃」就係日主嘅陽刃。盤上另一柱有沖陽刃嘅字（卯酉、子午）就標「X刃逢沖」並加外框；如果同時有字同陽刃六合或半合（例如卯見戌、亥、未），旁邊標「X合護」，即係要等個合被解開、再有天干引動先應事。陽刃逢沖要天干見壬或者丙引動先應（第45、49堂），盤上有壬丙又冇合護就標「X刃逢沖⚠」，冇壬丙嘅彈框寫「未應」。</p>
+  <p id="r-p-not">「唔知時辰」：出生時間嗰度剔咗「唔知時辰」，個盤淨係排年、月、日三柱（用正午嚟定日柱同起運，所以起運歲數可能有幾個月出入）。時柱唔會顯示，亦唔入任何計算：招感、粘連、啟動、做功、天剋地沖、最強五行都只用三柱；時柱進氣、小運、命宮、身宮同主導力因為要靠時辰，一律唔計。命例儲存咗之後會寫「時辰不詳」，唔使再求其填個時間。</p>
   <p id="r-p-yy">元運卡用三元九運（每運廿年，2024–2043 為下元九運）；元運柱每 60 年一柱，1924–1983 庚申，之後順排。胎元、胎息、身宮用傳統算法；命宮嘅月份預設用中氣計，出生喺本月中氣之後就當下一個月（例如寅月雨水後當卯月）；喺顯示選項揀「忽視中氣」就直接用月令計。小運由時柱起，陽男陰女順行、陰男陽女逆行，每歲（虛歲）行一柱；剔「顯示小運」先顯示，顯示咗就同大運流年一齊計招感粘連。地支「穿」即六害。</p>
   <div class="rules">
   <p><b>本派規則列表</b>　排盤嘅招感、粘連、啟動全部跟以下規則計。要加或者改規則，講返編號就得。</p>
@@ -2214,6 +2217,8 @@ document.addEventListener('change',e=>{if(e.target.closest&&e.target.closest('.v
 /* ---------- state & render ---------- */
 let S=null;
 function compute(inp){
+  // 唔知時辰（inp.noT）：用正午排年月日三柱，冇時柱（P 得三柱），時柱進氣、小運、命宮、身宮都唔計
+  const noT=!!inp.noT;if(noT)inp={...inp,h:12,mi:0};
   let y=inp.y,m=inp.m,d=inp.d;
   if(inp.lunar){const ls=Lunar.fromYmdHms(inp.y,inp.leap?-inp.m:inp.m,inp.d,inp.h,inp.mi,0).getSolar();y=ls.getYear();m=ls.getMonth();d=ls.getDay();}
   else if(!validDate(y,m,d))throw new Error(y===1582&&m===10?'1582 年 10 月 5 至 14 號因為改曆冇呢啲日子，請再揀過。':`${yearTxt(y)} 年 ${m} 月冇 ${d} 號，請再揀過日子。`);
@@ -2222,11 +2227,11 @@ function compute(inp){
   const lun=sol.getLunar();const ec=lun.getEightChar();ec.setSect(inp.zi);
   const yun=ec.getYun(inp.sex,1);
   const dys=yun.getDaYun(13);
-  const P=[ec.getYear(),ec.getMonth(),ec.getDay(),ec.getTime()];
+  const P=[ec.getYear(),ec.getMonth(),ec.getDay(),ec.getTime()];if(noT)P.length=3;
   // 時柱進氣：時辰頭 30 分鐘就攞上一個時辰嘅時柱，尾 30 分鐘就攞下一個時辰嘅時柱（用校正後時間）
-  const into=((c.h+1)%2)*60+c.mi,jside=into<30?-1:into>=90?1:0;
+  const into=((c.h+1)%2)*60+c.mi,jside=noT?0:into<30?-1:into>=90?1:0;
   const jq=jside?(()=>{const e=Solar.fromJulianDay(sol.getJulianDay()+jside/24).getLunar().getEightChar();e.setSect(inp.zi);return {side:jside,gz:e.getTime(),into};})():{side:0,into};
-  return {inp,birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,jq,dm:gi(P[2][0])};
+  return {inp,noT,birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,jq,dm:gi(P[2][0])};
 }
 // 「返今日」掣：用真正今日（唔理睇運日期）揀返大運流年流月流日
 document.addEventListener('click',e=>{if(e.target.closest('[data-evpclr]')&&S){S.evP=null;render();}});
@@ -2277,7 +2282,7 @@ function selectMonth(t){
 const LIUCHONG=['子午','丑未','寅申','卯酉','辰戌','巳亥'];
 // 天剋地沖：天干同陰陽相剋（七殺）而且地支六沖；VIEW.tkAll 開就同盤上顯示緊嘅所有柱比，閂就只同原局四柱比
 function tkdc(gz){if(!gz||!S||!S.P)return [];const g=gi(gz[0]);
-  const tg=VIEW.tkAll&&S.cols?S.cols.filter(c=>c.gz&&!c.sha).map(c=>({h:c.h,q:c.gz,n4:/^[年月日時]柱$/.test(c.h)})):[['年柱',0],['月柱',1],['日柱',2],['時柱',3]].map(([h,i])=>({h,q:S.P[i],n4:true}));
+  const tg=VIEW.tkAll&&S.cols?S.cols.filter(c=>c.gz&&!c.sha).map(c=>({h:c.h,q:c.gz,n4:/^[年月日時]柱$/.test(c.h)})):[['年柱',0],['月柱',1],['日柱',2],['時柱',3]].filter(x=>S.P[x[1]]).map(([h,i])=>({h,q:S.P[i],n4:true}));
   return tg.map(({h,q,n4})=>{const h2=gi(q[0]),s=n4?h[0]:h.replace('大運','運'),pre=`同${n4?'原局':''}${h}${q}`;
     const k1=(gw(g)+2)%5===gw(h2)&&g%2===h2%2,k2=(gw(h2)+2)%5===gw(g)&&g%2===h2%2,ch=LIUCHONG.some(x=>x===gz[1]+q[1]||x===q[1]+gz[1]);
     if((k1||k2)&&ch)return {h,s,k:'k',lbl:`剋${s}干 沖${s}支`,txt:`${pre}天剋地沖（${k1?gz[0]+'剋'+q[0]:q[0]+'剋'+gz[0]}、${gz[1]}沖${q[1]}）`};
@@ -2296,6 +2301,7 @@ function ssShort(dm,g){return shishen(dm,g);}
 
 // 命宮：預設月份用中氣計，出生喺本月中氣之後就當下一個月（例如寅月雨水後當卯月）；揀「忽視中氣」就直接用月令。再配時支，天干用五虎遁
 function mingGong(lun,ec){
+  if(S&&S.noT&&S.ec===ec)return null;
   const MZ='寅卯辰巳午未申酉戌亥子丑';let m=MZ.indexOf(ec.getMonthZhi())+1;
   const jie=lun.getPrevJie(false).getSolar(),qi=lun.getPrevQi(false).getSolar();
   if(VIEW.mgQi&&jie.isBefore(qi))m=m%12+1;
@@ -2308,12 +2314,12 @@ function mingGong(lun,ec){
 // 2. 日主要做功（日主所剋五行嘅天干有粘連或伏吟）取人元司令嘅正印，唔使做功取月令本氣嘅正印
 // 3. 日支被原局沖刑害但未啟動，陰陽倒轉　4. 正印五行同日主一樣，就取日主天干
 const BENQI='癸己甲乙戊丙丁己庚辛戊壬';
-function strongest(P,mg,slG){
+function strongest(P,mg,slG){mg=mg||'';
   const pair=(a,b,l)=>l.some(x=>x===a+b||x===b+a);
   const CHONG=['子午','丑未','寅申','卯酉','辰戌','巳亥'],XH=['子未','丑午','寅巳','卯辰','申亥','酉戌','巳申','申寅','丑戌','戌未','未丑','子卯'];
   const kill=(a,b)=>(gw(gi(a))+2)%5===gw(gi(b))&&gi(a)%2===gi(b)%2;
   const zyin=g=>GAN[((gw(gi(g))+4)%5)*2+(1-gi(g)%2)];
-  const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2],dm:true},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}];
+  const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2],dm:true},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}].filter(c=>c.gz);
   const steps=[];
   const cz=c4.filter(c=>pair(mg[1],c.gz[1],CHONG)),sk=c4.filter(c=>kill(mg[0],c.gz[0])||kill(c.gz[0],mg[0]));
   // 原局四柱（天干同地支五行，唔計藏干）已經有命宮地支嘅五行，就唔用命宮（蔣介石：命宮子沖午，但年支亥已經係水，答案丁火）
@@ -2331,7 +2337,7 @@ function strongest(P,mg,slG){
   // ③ 只計刑、害：六沖（包括丑未）唔倒轉（蔣介石巳被亥沖、蕭若元丑被未沖，答案都冇倒轉）
   const dz=P[2][1],att=c4.filter(c=>!c.dm&&c.gz[1]!==dz&&(pair(dz,c.gz[1],CHONG)||pair(dz,c.gz[1],XH))),xh=att.filter(c=>!pair(dz,c.gz[1],CHONG));
   if(xh.length){const a1=activation(c4,1,L[1],ZG4.br,[]);
-    if(!a1[1][0]){g=GAN[gi(g)^1];steps.push(`日支${dz}被${xh.map(c=>c.h[0]+'支'+c.gz[1]).join('、')}刑害但未啟動，陰陽倒轉變${g}`);}
+    if(!a1[c4.findIndex(c=>c.dm)][0]){g=GAN[gi(g)^1];steps.push(`日支${dz}被${xh.map(c=>c.h[0]+'支'+c.gz[1]).join('、')}刑害但未啟動，陰陽倒轉變${g}`);}
     else steps.push(`日支${dz}被刑害而且已啟動，唔倒轉`);}
   else if(att.length)steps.push(`日支${dz}只係被${att.map(c=>c.h[0]+'支'+c.gz[1]).join('、')}沖，唔係刑害，唔倒轉`);
   if(gw(gi(g))===gw(gi(dm))&&g!==dm){steps.push(`${g}同日主${dm}同五行，取日主${dm}`);g=dm;}
@@ -2365,6 +2371,7 @@ const ZD_T={'戊子癸亥癸卯癸亥':['己','甲','第20堂 [41:19]：有殺�
   '癸丑戊午己巳丁卯':['乙','甲','第14堂 [59:17]：戊己黐埋，第一乙木殺星；冇合住癸，第二甲木正官'],
   '乙亥辛巳丙午甲午':['壬','丁','第16堂 [02:00]–[03:33]：乙辛丙甲，第一必定招壬水殺星；第二丁火']};
 function zhudao(P,noT){
+  if(P.length<4)return {p1:'',p2:'',why:'唔知時辰，冇時柱，主導力暫時唔計',src:''};
   const key=P.join('');if(!noT&&ZD_T[key]){const [a,b,w]=ZD_T[key];return {p1:a,p2:b,why:w,src:'t'};}
   const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2]},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}];
   const ZG4=zhaogan(c4.map(c=>({gz:c.gz,lbl:c.h[0]}))),L=chains(c4,0,ZG4.st);
@@ -2462,7 +2469,7 @@ function render(){
   const today=refDay().toYmd();
   const dy=dys[S.di], ln=dy.getLiuNian()[S.li], mo=S.mos[S.mi], dd=S.ds[S.dd];
   const cols=[
-    {h:'時柱',sub:'子女 · 晚年',gz:P[3],bz:'主'},
+    ...(P[3]?[{h:'時柱',sub:'子女 · 晚年',gz:P[3],bz:'主'}]:[]),
     {h:'日柱',sub:'自身 · 配偶',gz:P[2],bz:'主',dm:true},
     {h:'月柱',sub:'父母兄弟 · 青年',gz:P[1],bz:'賓'},
     {h:'年柱',sub:'祖上 · 早年',gz:P[0],bz:'賓'},
@@ -2470,11 +2477,12 @@ function render(){
   // 三桓（胎元、胎息、身宮）同命宮，放喺時柱左邊
   if(!VIEW.only4&&!VIEW.core&&VIEW.aux){
     // 計算永遠用「身宮 胎息 胎元 命宮」呢個次序；「命宮放三桓左邊」只係顯示時調位（見 DO）
-    const sg=[{h:'身宮',sub:'三桓',gz:ec.getShenGong(),aux:true},{h:'胎息',sub:'三桓',gz:ec.getTaiXi(),aux:true},{h:'胎元',sub:'三桓',gz:ec.getTaiYuan(),aux:true}],
-      mg={h:'命宮',sub:'命主所居',gz:mingGong(lun,ec),aux:true};
+    const sg=[{h:'身宮',sub:'三桓',gz:S.noT?'':ec.getShenGong(),aux:true},{h:'胎息',sub:'三桓',gz:ec.getTaiXi(),aux:true},{h:'胎元',sub:'三桓',gz:ec.getTaiYuan(),aux:true}],
+      mg={h:'命宮',sub:'命主所居',gz:S.noT?'':mingGong(lun,ec),aux:true};
+    if(S.noT){cols.unshift(sg[1],sg[2]);cols[2].first=true;}else{
     cols.unshift(...sg,mg);
-    cols[4].first=true;
-  }else if(!VIEW.only4&&!VIEW.core&&VIEW.ming){
+    cols[4].first=true;}
+  }else if(!VIEW.only4&&!VIEW.core&&VIEW.ming&&!S.noT){
     // 只顯示命宮，唔要其他三桓
     cols.unshift({h:'命宮',sub:'命主所居',gz:mingGong(lun,ec),aux:true});
     cols[1].first=true;
@@ -2494,7 +2502,7 @@ function render(){
     if(!VIEW.noDyn)cols.push(
     {h:'大運',sub:dy.getGanZhi()?`${yearS(dy.getStartYear())}–${yearS(dy.getEndYear())}`:'未起運',gz:dy.getGanZhi(),dyn:true},
     // 小運：由時柱起，陽男陰女順行、陰男陽女逆行，每歲一柱
-    ...((VIEW.xiao||(CALC_T.xiaoPre&&!dy.getGanZhi()))&&!eNoLN?[{h:'小運',sub:`${ln.getAge()}歲`,gz:dy.getXiaoYun()[S.li].getGanZhi(),dyn:true,show:'xiaoCalc'}]:[]),
+    ...((VIEW.xiao||(CALC_T.xiaoPre&&!dy.getGanZhi()))&&!eNoLN&&!S.noT?[{h:'小運',sub:`${ln.getAge()}歲`,gz:dy.getXiaoYun()[S.li].getGanZhi(),dyn:true,show:'xiaoCalc'}]:[]),
     ...(eNoLN?[]:[{h:'流年',sub:`${yearS(ln.getYear())} · ${ln.getAge()}歲`,gz:ln.getGanZhi(),dyn:true}]),
     // 上月流月：揀咗嘅流月嘅前一個月，同流月一樣參與招感粘連
     ...(eNoMD||!VIEW.prevMo?[]:[(pm=>({h:'上月流月',sub:`${pm.name}起 ${pm.start.getMonth()}/${pm.start.getDay()}`,gz:pm.gz,dyn:true,show:'prevMoCalc'}))(S.mi>0?S.mos[S.mi-1]:months(ln.getYear()-1)[11])]),
@@ -2629,7 +2637,7 @@ function render(){
   const card=(t,gz,n)=>{const g=gi(gz[0]),z=zi(gz[1]);return `<div class="card"><div class="t">${t}</div><div class="gz"><span class="w${gw(g)}">${gz[0]}</span><span class="w${ZWX[z]}">${gz[1]}</span></div><div class="n">${nayin(g,z)}</div></div>`;};
 
   // relations
-  const items=[{pos:'年',g:P[0][0],z:P[0][1]},{pos:'月',g:P[1][0],z:P[1][1]},{pos:'日',g:P[2][0],z:P[2][1]},{pos:'時',g:P[3][0],z:P[3][1]}];
+  const items=[{pos:'年',g:P[0][0],z:P[0][1]},{pos:'月',g:P[1][0],z:P[1][1]},{pos:'日',g:P[2][0],z:P[2][1]},...(P[3]?[{pos:'時',g:P[3][0],z:P[3][1]}]:[])];
   if(dy.getGanZhi())items.push({pos:'運',g:dy.getGanZhi()[0],z:dy.getGanZhi()[1],dyn:true});
   items.push({pos:'流年',g:ln.getGanZhi()[0],z:ln.getGanZhi()[1],dyn:true});
   const rels=relations(items);
@@ -2656,9 +2664,9 @@ function render(){
   <section class="panel">
     <div class="summary">
       <div class="name">${esc(inp.name||'未命名')}　<span style="font-size:15px;color:var(--muted)">${sex}</span></div>
-      <div><span class="k">出生</span>${inLabel} ${pad(inp.h)}:${pad(inp.mi)}</div>
-      <div><span class="k">${c.info.label}</span><b>${yearTxt(sol.getYear())}-${pad(sol.getMonth())}-${pad(sol.getDay())} ${pad(sol.getHour())}:${pad(sol.getMinute())}</b>（${c.info.detail}）</div>
-      <div><span class="k">農曆</span>${lun.getYearInGanZhi()}年 ${lun.getMonth()<0?'閏':''}${LMON[Math.abs(lun.getMonth())-1]}月${lunarDay(lun.getDay())} ${lun.getTimeZhi()}時</div>
+      <div><span class="k">出生</span>${inLabel} ${S.noT?'時辰不詳（冇時柱，時柱唔入計算）':pad(inp.h)+':'+pad(inp.mi)}</div>
+      ${S.noT?'':`<div><span class="k">${c.info.label}</span><b>${yearTxt(sol.getYear())}-${pad(sol.getMonth())}-${pad(sol.getDay())} ${pad(sol.getHour())}:${pad(sol.getMinute())}</b>（${c.info.detail}）</div>`}
+      <div><span class="k">農曆</span>${lun.getYearInGanZhi()}年 ${lun.getMonth()<0?'閏':''}${LMON[Math.abs(lun.getMonth())-1]}月${lunarDay(lun.getDay())}${S.noT?'':' '+lun.getTimeZhi()+'時'}</div>
       <div><span class="k">起運</span>出生後 ${yun.getStartYear()}年${yun.getStartMonth()}個月${yun.getStartDay()}日，${yearTxt(startSol.getYear())}-${pad(startSol.getMonth())}-${pad(startSol.getDay())} 交運（${yun.isForward()?'順排':'逆排'}）</div>
     </div>
   </section>
@@ -2672,7 +2680,7 @@ function render(){
   </section>
   <div class="grid2">
     <section class="panel"><h2>胎元 · 命宮 · 身宮</h2>
-      <div class="cards">${card('胎元',ec.getTaiYuan())}${card('命宮',mingGong(lun,ec))}${card('身宮',ec.getShenGong())}</div>
+      <div class="cards">${card('胎元',ec.getTaiYuan())}${S.noT?'<span class="hint">唔知時辰，冇命宮同身宮</span>':card('命宮',mingGong(lun,ec))+card('身宮',ec.getShenGong())}</div>
     </section>
     <section class="panel"><h2>元運（三元九運）</h2>
       <div class="yun"><div class="gua w${'木火土金水'.indexOf(yb.name.slice(-1))}">${yb.name.slice(0,2)}</div>
@@ -2873,7 +2881,7 @@ function anCase(c){const k=c.id+JSON.stringify(c.input);if(AN_C.has(k))return AN
     if(zs[2]==='辰'||zs[2]==='戌')add('日坐辰戌');
     gs.forEach(g=>{const r=YANGREN[g];if(r&&zs.includes(r)){add('有陽刃');if(zs.includes(RENCHONG[r]))add('陽刃逢沖');}});
     const pr=(a,b)=>[a+b,b+a];
-    for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
       const g2=pr(gs[i],gs[j]),z2=pr(zs[i],zs[j]);
       const h=g2.find(x=>GHE[x]);if(h)add('天干'+h+GHE[h]);
       const gc=g2.find(x=>GCHONG.includes(x));if(gc)add('天干'+gc+'沖');
@@ -2894,8 +2902,8 @@ function anCase(c){const k=c.id+JSON.stringify(c.input);if(AN_C.has(k))return AN
 // 做功角度（原局四柱）：最強五行三個推論、某五行嘅字有冇粘連、粘連解唔解得開（啟動＝七殺嚟咗解開；冇啟動＝解唔開／做唔到功）
 function anWork(inp){try{const X=compute(inp),{P,lun,ec,sol}=X;
   const jie=lun.getPrevJie(false),d=sol.getJulianDay()-jie.getSolar().getJulianDay(),T=SL_T[P[1][1]];let slG=T[T.length-1][0];for(let a=0,i=0;i<T.length;i++){a+=T[i][1];if(d<a){slG=T[i][0];break;}}
-  const mg=mingGong(lun,ec),sw={};['s1','yue','sl'].forEach(m=>sw[m]=strongestBy(m,P,mg,slG).el);
-  const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2],dm:true},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}];
+  const mg=X.noT?null:mingGong(lun,ec),sw={};['s1','yue','sl'].forEach(m=>sw[m]=strongestBy(m,P,mg,slG).el);
+  const c4=[{h:'時柱',gz:P[3]},{h:'日柱',gz:P[2],dm:true},{h:'月柱',gz:P[1]},{h:'年柱',gz:P[0]}].filter(c=>c.gz);
   const ZG=zhaogan(c4.map(c=>({gz:c.gz,dyn:false,lbl:c.h[0]}))),L=[0,1].map(k=>chains(c4,k,k?ZG.br:ZG.st)),A=[0,1].map(k=>activation(c4,k,L[k],k?ZG.br:ZG.st,[]));
   const info=E=>{let n=0,lk=0,stuck=0,ok=0;[0,1].forEach(k=>c4.forEach((c,i)=>{const e=k?ZWX[zi(c.gz[1])]:gw(gi(c.gz[0]));if(e!==E)return;n++;const m=L[k].filter(l=>l.a===i||l.b===i).length;lk+=m;if(m){if(A[k][i][0]>0)ok++;else stuck++;}}));return {n,lk,stuck,ok};};
   const F=new Set(),W={sw,info:{}};
@@ -3054,14 +3062,17 @@ $('out').addEventListener('click',e=>{
   render();
 });
 
+const tmTxt=v=>v.noT?'時辰不詳':`${pad(v.h)}:${pad(v.mi)}`;
+function noTSync(){const on=$('noT').checked;$('h').disabled=$('mi').disabled=on;}
+document.addEventListener('change',e=>{if(e.target.id==='noT')noTSync();});
 function readForm(){
   return {name:$('name').value.trim(),sex:$('sexM').checked?1:0,lunar:isLunar(),leap:$('leap').checked,
-    y:$('era').value==='-1'?1-(+$('y').value):+$('y').value,m:+$('m').value,d:+$('d').value,h:+$('h').value,mi:+$('mi').value,zi:+$('zi').value,
+    y:$('era').value==='-1'?1-(+$('y').value):+$('y').value,m:+$('m').value,d:+$('d').value,h:+$('h').value,mi:+$('mi').value,noT:$('noT').checked||undefined,zi:+$('zi').value,
     at:$('aty').value&&!isTodayAt()?{y:$('atEra').value==='-1'?1-(+$('aty').value):+$('aty').value,m:+$('atm').value,d:+$('atd').value}:null,city:+$('city').value,lon:parseFloat($('lon').value),tz:parseFloat($('tz').value),dst:$('dst').checked,tst:$('tst').checked};
 }
 function writeForm(v){
   $('name').value=v.name||'';(v.sex===0?$('sexF'):$('sexM')).checked=true;(v.lunar?$('calL'):$('calS')).checked=true;refreshMD();
-  $('leap').checked=!!v.leap;$('era').value=v.y<=0?'-1':'1';$('y').value=v.y<=0?1-v.y:v.y;$('m').value=v.m;$('d').value=v.d;$('h').value=v.h;$('mi').value=v.mi;$('zi').value=v.zi||1;
+  $('leap').checked=!!v.leap;$('era').value=v.y<=0?'-1':'1';$('y').value=v.y<=0?1-v.y:v.y;$('m').value=v.m;$('d').value=v.d;$('h').value=v.h;$('mi').value=v.mi;$('noT').checked=!!v.noT;noTSync();$('zi').value=v.zi||1;
   if(v.at){$('atEra').value=v.at.y<=0?'-1':'1';$('aty').value=v.at.y<=0?1-v.at.y:v.at.y;$('atm').value=v.at.m;$('atd').value=v.at.d;}else atToday();
   $('city').value=v.city??0;$('lon').value=v.lon;$('tz').value=v.tz;$('dst').checked=!!v.dst;$('tst').checked=v.tst!==false;
 }
@@ -3069,12 +3080,12 @@ function writeForm(v){
 const SHARE_BASE=/github\.io$/.test(location.hostname)?location.origin+location.pathname:'https://heroheroz.github.io/blind8/';
 let LAST_V=null,PENDING_CASE=new URLSearchParams(location.search).get('case');
 function toQuery(v){const q=new URLSearchParams();if(v.name)q.set('name',v.name);
-  for(const k of ['y','m','d','h','mi'])q.set(k,v[k]);q.set('sex',v.sex?'m':'f');if(v.lunar)q.set('lunar',1);if(v.leap)q.set('leap',1);if(v.zi!==1)q.set('zi',v.zi);
+  for(const k of ['y','m','d','h','mi'])q.set(k,v[k]);q.set('sex',v.sex?'m':'f');if(v.noT)q.set('not',1);if(v.lunar)q.set('lunar',1);if(v.leap)q.set('leap',1);if(v.zi!==1)q.set('zi',v.zi);
   if(v.city)q.set('city',v.city);q.set('lon',v.lon);q.set('tz',v.tz);if(v.dst)q.set('dst',1);if(v.tst===false)q.set('tst',0);if(v.at)q.set('at',`${v.at.y}-${v.at.m}-${v.at.d}`);
   const c=typeof CUR!=='undefined'&&CUR&&CASES.find(x=>x.id===CUR);if(c&&['y','m','d','h','mi'].every(k=>c.input[k]===v[k]))q.set('case',c.id);
   return q.toString();}
 function fromQuery(){const q=new URLSearchParams(location.search);if(!q.has('y')||isNaN(+q.get('y')))return null;const n=(k,d)=>q.has(k)&&!isNaN(parseFloat(q.get(k)))?parseFloat(q.get(k)):d;
-  const v={name:(q.get('name')||'').slice(0,60),y:n('y'),m:n('m',1),d:n('d',1),h:n('h',0),mi:n('mi',0),sex:q.get('sex')==='f'?0:1,lunar:q.get('lunar')==='1',leap:q.get('leap')==='1',
+  const v={name:(q.get('name')||'').slice(0,60),y:n('y'),m:n('m',1),d:n('d',1),h:n('h',0),mi:n('mi',0),sex:q.get('sex')==='f'?0:1,lunar:q.get('lunar')==='1',leap:q.get('leap')==='1',noT:q.get('not')==='1'||undefined,
     zi:n('zi',1),city:n('city',0),lon:n('lon',114.17),tz:n('tz',8),dst:q.get('dst')==='1',tst:q.get('tst')!=='0',at:null};
   const a=(q.get('at')||'').match(/^(-?\d+)-(\d+)-(\d+)$/);if(a)v.at={y:+a[1],m:+a[2],d:+a[3]};return v;}
 // 流時：S.hr＝時辰（0 子 … 11 亥），未揀就用而家個時辰；子時用 00:00（當日日干起時）
@@ -3096,7 +3107,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-nav]');if(
 const HSH={base:null,off:{y:0,m:0,d:0,t:0},busy:false},HSH_U={時柱:'t',日柱:'d',月柱:'m',年柱:'y'},HSH_N={y:'年',m:'個月',d:'日',t:'個時辰'};
 // 移咗出生時間就喺盤上面寫低移咗幾多同原本時間，撳「還原」返原本
 const hshNote=()=>{if(!HSH.base)return '';const o=HSH.off,t=['y','m','d','t'].filter(u=>o[u]).map(u=>(o[u]>0?'+':'')+o[u]+HSH_N[u]).join(' '),b=HSH.base;
-  return `<div class="hint loopnote">🕒 對盤：出生時間${t?`移咗 ${t}`:'冇變'}（原本 ${b.lunar?'農曆':''}${yearS(b.y)}-${pad(b.m)}-${pad(b.d)} ${pad(b.h)}:${pad(b.mi)}），命例資料冇改。<button type="button" class="lnk" data-hsh="0">還原</button></div>`;};
+  return `<div class="hint loopnote">🕒 對盤：出生時間${t?`移咗 ${t}`:'冇變'}（原本 ${b.lunar?'農曆':''}${yearS(b.y)}-${pad(b.m)}-${pad(b.d)} ${tmTxt(b)}），命例資料冇改。<button type="button" class="lnk" data-hsh="0">還原</button></div>`;};
 const hshBtns=h=>{const u=HSH_U[h],nm={t:'時辰',d:'日',m:'個月',y:'年'}[u];
   return `<span class="mhsh"><button type="button" data-hsh="${u}" data-dir="-1" aria-label="上一${nm}">‹</button><button type="button" data-hsh="${u}" data-dir="1" aria-label="下一${nm}">›</button></span>`;};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-hsh]');if(!b||!S||!LAST_V)return;const u=b.dataset.hsh,dir=+b.dataset.dir;
@@ -3132,7 +3143,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-msave]')){mTab('case');const n=$('caseName');if(n&&!$('caseAdd').hidden)n.focus();}
 });
 // 手機版：排完盤就收埋輸入表，頂部只顯示一行出生資料，撳「修改」再打開
-function setInSum(v){$('inSum').textContent=$('mWho').textContent=`${v.name||'未命名'} · ${v.lunar?'農曆':'公曆'} ${yearS(v.y)}-${v.m}-${v.d} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;}
+function setInSum(v){$('inSum').textContent=$('mWho').textContent=`${v.name||'未命名'} · ${v.lunar?'農曆':'公曆'} ${yearS(v.y)}-${v.m}-${v.d} ${tmTxt(v)} · ${v.sex===1?'乾造':'坤造'}`;}
 let RUN_N=0;
 function foldIn(c){$('inPanel').classList.toggle('incol',c);$('inToggle').setAttribute('aria-expanded',String(!c));}
 $('inToggle').addEventListener('click',()=>foldIn(!$('inPanel').classList.contains('incol')));
@@ -3398,7 +3409,7 @@ const tagUse=()=>{const n={};CASES.forEach(c=>(c.tags||[]).forEach(t=>n[t]=(n[t]
 const byUse=(a,n=tagUse())=>[...a].sort((x,y)=>(n[y]||0)-(n[x]||0)||x.localeCompare(y));
 const caseScore=c=>(c.likes||0)+(c.unlikes||0)+(c.comments||[]).length+(c.tags||[]).length;
 const tagChips=(tags,id)=>(tags||[]).length?`<span class="tags">${byUse(tags).map(t=>`<button type="button" class="tag${TAGF.has(t)?' on':''}" data-tagf="${esc(t)}">#${esc(t)}</button>${id?`<button type="button" class="tagx" data-untag="${esc(t)}" data-id="${id}" aria-label="移除標籤 ${esc(t)}">×</button>`:''}`).join('')}</span>`:'';
-const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${yearTxt(v.y)}-${pad(v.m)}-${pad(v.d)} ${pad(v.h)}:${pad(v.mi)} · ${v.sex===1?'乾造':'坤造'}`;
+const birthTxt=v=>`${v.lunar?'農曆 '+(v.leap?'閏':''):''}${yearTxt(v.y)}-${pad(v.m)}-${pad(v.d)} ${tmTxt(v)} · ${v.sex===1?'乾造':'坤造'}`;
 const voteBtns=c=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
   return `<span class="votes"><button type="button" class="vb${c.myVote===1?' on':''}" data-vote="1" data-id="${c.id}" aria-pressed="${c.myVote===1}" title="準"${dis}>👍 ${c.likes}</button><button type="button" class="vb no${c.myVote===-1?' on':''}" data-vote="-1" data-id="${c.id}" aria-pressed="${c.myVote===-1}" title="唔準"${dis}>👎 ${c.unlikes}</button></span>`;};
 const cvoteBtns=(c,m)=>{const dis=can.vote()?'':' disabled title="登入先可以投票"';
