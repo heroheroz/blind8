@@ -2743,6 +2743,16 @@ async function lsIndex(){if(!LS.idx){try{const r=await fetch('lessons/index.json
 async function lsLoad(id){if(!LS.data[id]){const r=await fetch(`lessons/${id}.json`,{cache:'no-cache'});if(!r.ok)throw new Error('讀唔到呢一課');LS.data[id]=await r.json();}return LS.data[id];}
 function lsCaseRefs(c){const hit=(LS.idx||[]).flatMap(l=>(l.cases||[]).filter(x=>x[0]===c.id).map(x=>({l,t:x[1]})));if(!hit.length)return '';
   return `<div class="clsn hint">📖 課堂提到：${hit.map(({l,t})=>`<button type="button" class="lnk" data-lgo="${l.id}">${esc(l.short||l.title)}</button>${t!=null?' '+lsA(l.id,t):''}`).join('　')}</div>`;}
+// 筆記入面「第N堂 mm:ss」自動變連結，跳去嗰堂片嗰個時間（堂數跟 lessons/index.json 嘅 n；搵唔到嗰堂就保持純文字）
+// 支援 第28堂 14:06、第28堂 06:40、23:16、第75堂 [13:45]–[14:21]、82:09（分鐘過 59）同 1:02:03
+function lsRefs(root){if(!LS.idx||!LS.idx.length||!root)return;const by={};LS.idx.forEach(l=>{if(l.n&&!(l.series&&by[l.n]))by[l.n]=l.id;});
+  const re=/第(\d+)堂((?:\s*(?:[、，,–—~至-]\s*)?[（(]?\[?\d{1,3}:\d\d(?::\d\d)?\]?)+)/g,tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),todo=[];
+  for(let n;n=tw.nextNode();){if(n.nodeValue.indexOf('堂')<0||!n.parentElement||n.parentElement.closest('a,button,select,textarea,script,style,input'))continue;re.lastIndex=0;if(re.test(n.nodeValue))todo.push(n);}
+  todo.forEach(n=>{const h=esc(n.nodeValue).replace(re,(m,num,ts)=>{const id=by[+num];if(!id)return m;
+    return '第'+num+'堂'+ts.replace(/(\[?)(\d{1,3}):(\d\d)(?::(\d\d))?(\]?)/g,(x,o,a,b,c,z)=>`<a class="lref" href="${lsYT(id,c!=null?a*3600+b*60+ +c:a*60+ +b)}" target="_blank" rel="noopener noreferrer" title="開第${num}堂條片，由呢個時間播">${x}</a>`);});
+    if(h.indexOf('<a ')<0)return;const sp=document.createElement('span');sp.innerHTML=h;n.replaceWith(...sp.childNodes);});}
+function lsRefsWatch(){const box=document.querySelector('.notes');if(!box)return;lsRefs(box);let q=0;
+  new MutationObserver(ms=>{if(q)return;if(!ms.some(m=>[...m.addedNodes].some(x=>!(x.nodeType===1&&x.classList.contains('lref')))))return;q=1;setTimeout(()=>{q=0;lsRefs(box);},60);}).observe(box,{childList:true,subtree:true});}
 // 隱姓先生歌曲庫：說明區第一個分頁（np-song）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
 const SONGS='__songs';
 async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.json',{cache:'no-cache'});LS.songs=r.ok?await r.json():[];}catch(e){LS.songs=[];}}
@@ -3017,7 +3027,7 @@ document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab]')&&
 document.addEventListener('input',e=>{if(e.target.matches('[data-lq]')){LS.q=e.target.value;clearTimeout(LS.tm);LS.tm=setTimeout(lsDraw,200);}});
 document.addEventListener('click',e=>{const g=e.target.closest('[data-lgo]');if(g){lsOpen(g.dataset.lgo);return;}
   if(e.target.closest('[data-lcase]')&&document.body.dataset.mtab)setTimeout(()=>mTab('chart'),0);});
-lsIndex().then(()=>{if(CUR)renderCases();const h=new URLSearchParams(location.hash.slice(1)).get('lesson');if(h)lsOpen(h);else lsDraw();});
+lsIndex().then(()=>{lsRefsWatch();if(CUR)renderCases();const h=new URLSearchParams(location.hash.slice(1)).get('lesson');if(h)lsOpen(h);else lsDraw();});
 
 // 撳大運／流年／流月／流日之後，上面嘅內容（例如招感殺星）高度會變，令個框郁；重新排完盤之後捲返，令撳嗰格留喺原位
 const KEEP={};
