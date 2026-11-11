@@ -3232,7 +3232,8 @@ function tutShow(i){document.querySelectorAll('.tuthl').forEach(e=>e.classList.r
   box.style.setProperty('--tc',`var(--${col})`);$('tutIc').textContent=ic;$('tutH').textContent=h;$('tutP').textContent=p;$('tutDots').innerHTML=TUT.steps.map((s,j)=>`<i${j===i?' class="on"':''} style="--tc:var(--${s[5]})"></i>`).join('');
   box.querySelector('[data-tut=next]').textContent=i===TUT.steps.length-1?'完成 ✓':'下一步 ›';box.hidden=false;
   if(mob){const b=document.querySelector(`.mnav [data-mtab-go="${tab}"]`);if(b){mTab(tab);b.classList.add('tuthl');}}
-  const el=document.querySelector(sel);if(el){if(el.tagName==='DETAILS')el.open=true;el.classList.add('tuthl');if(!mob||i===2||i===3)el.scrollIntoView({block:i===3?'center':'nearest',behavior:'smooth'});}}
+  if(tab==='learn'){const r=document.querySelector('input[name=ntab][value=lsum]');if(r&&!document.body.classList.contains('nologin')){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));}}
+  const el=document.querySelector(sel);if(el){if(el.tagName==='DETAILS')el.open=true;el.classList.add('tuthl');if(!mob||i===2||i===3||tab==='learn')el.scrollIntoView({block:i===3?'center':'nearest',behavior:'smooth'});}}
 function tutCards(){const b=$('np-tut');if(!b)return;b.innerHTML=`<div class="tutcards">${TUT.steps.map((s,j)=>`<div class="tutcard" style="--tc:var(--${s[5]})"><span class="tutic">${s[2]}</span><div><b>${j+1}. ${s[3]}</b><p>${s[4]}</p></div><button type="button" class="tutgo" data-tut-go="${j}">試吓</button></div>`).join('')}</div><p class="hint">撳「試吓」會喺真畫面度指住嗰個位。</p>`;}
 tutCards();
 document.addEventListener('click',e=>{const g=e.target.closest('[data-tut-go]');if(g)tutShow(+g.dataset.tutGo);});
