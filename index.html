@@ -2782,7 +2782,7 @@ function render(){
   $('out').innerHTML=`
   <section class="panel">
     <div class="summary">
-      <div class="name">${esc(inp.name||'未命名')}　<span style="font-size:15px;color:var(--muted)">${sex}</span></div>
+      <div class="name">${esc(inp.name||(PENDING_CASE?'命例（登入先睇到名）':'未命名'))}　<span style="font-size:15px;color:var(--muted)">${sex}</span></div>
       <div><span class="k">出生</span>${inLabel} ${S.noT?'時辰不詳（冇時柱，時柱唔入計算）':pad(inp.h)+':'+pad(inp.mi)}</div>
       ${S.noT?'':`<div><span class="k">${c.info.label}</span><b>${yearTxt(sol.getYear())}-${pad(sol.getMonth())}-${pad(sol.getDay())} ${pad(sol.getHour())}:${pad(sol.getMinute())}</b>（${c.info.detail}）</div>`}
       <div><span class="k">農曆</span>${lun.getYearInGanZhi()}年 ${lun.getMonth()<0?'閏':''}${LMON[Math.abs(lun.getMonth())-1]}月${lunarDay(lun.getDay())}${S.noT?'':' '+lun.getTimeZhi()+'時'}</div>
@@ -3273,13 +3273,13 @@ function writeForm(v){
 }
 // 分享連結：出生資料放喺網址（?y=1997&m=7&d=1&h=0…），貼出去人哋一撳就見到同一個盤
 const SHARE_BASE=/github\.io$/.test(location.hostname)?location.origin+location.pathname:'https://heroheroz.github.io/blind8/';
-let LAST_V=null,PENDING_CASE=new URLSearchParams(location.search).get('case');
+const URL_NAME=!!new URLSearchParams(location.search).get('name');let LAST_V=null,PENDING_CASE=new URLSearchParams(location.search).get('case')||new URLSearchParams(location.search).get('c');
 function toQuery(v){const q=new URLSearchParams();if(v.name)q.set('name',v.name);
   for(const k of ['y','m','d','h','mi'])q.set(k,v[k]);q.set('sex',v.sex?'m':'f');if(v.noT)q.set('not',1);if(v.lunar)q.set('lunar',1);if(v.leap)q.set('leap',1);if(v.zi!==1)q.set('zi',v.zi);
   if(v.city)q.set('city',v.city);q.set('lon',v.lon);q.set('tz',v.tz);if(v.dst)q.set('dst',1);if(v.tst===false)q.set('tst',0);if(v.at)q.set('at',`${v.at.y}-${v.at.m}-${v.at.d}`);
   const c=typeof CUR!=='undefined'&&CUR&&CASES.find(x=>x.id===CUR);if(c&&['y','m','d','h','mi'].every(k=>c.input[k]===v[k]))q.set('case',c.id);
   return q.toString();}
-// 分享用短連結（主人 11月12日）：預設值唔寫（分 0、男、香港經度時區）；已儲命例唔寫名，命例編號淨係用頭 8 個字；唔帶顯示選項
+// 分享用短連結（主人 11月12日）：預設值唔寫（分 0、男、香港經度時區）；已儲命例唔寫名，命例編號淨係用頭 8 個字；顯示選項淨係寫同預設唔同嗰啲
 function shareQuery(v){const q=new URLSearchParams(toQuery(v)),id=q.get('case');if(id){q.delete('name');q.set('case',id.slice(0,8));}
   if(q.get('mi')==='0')q.delete('mi');if(q.get('sex')==='m')q.delete('sex');if(+q.get('lon')===114.17)q.delete('lon');if(+q.get('tz')===8)q.delete('tz');return q.toString();}
 function fromQuery(){const q=new URLSearchParams(location.search);if(!q.has('y')||isNaN(+q.get('y')))return null;const n=(k,d)=>q.has(k)&&!isNaN(parseFloat(q.get(k)))?parseFloat(q.get(k)):d;
@@ -3943,7 +3943,9 @@ async function reloadCases(){
   if(CLOUD&&!SESSION){CASES=[];$('caseMsg').textContent='';}
   else try{if(CLOUD)TAG_SUG=await TagStore.list().catch(()=>TAG_SUG);CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
   catch(e){$('caseMsg').innerHTML=/Failed to fetch|NetworkError|Load failed/i.test(e.message)?'連唔到伺服器（可能網絡斷咗，或者呢個瀏覽器擋咗）。<button type="button" class="lnk" data-casesretry>撳此重試</button>':esc('讀唔到命例：'+e.message);}
-  if(PENDING_CASE){const c=CASES.find(x=>x.id===PENDING_CASE)||(PENDING_CASE.length>=8?CASES.find(x=>x.id.startsWith(PENDING_CASE)):null);if(c)CUR=c.id;PENDING_CASE=null;}
+  if(PENDING_CASE){const c=CASES.find(x=>x.id===PENDING_CASE)||(PENDING_CASE.length>=8?CASES.find(x=>x.id.startsWith(PENDING_CASE)):null);if(c){CUR=c.id;
+    // 短連結冇寫名：搵到命例就用返命例嘅資料開（名、時區等），睇運日期照連結
+    if(!URL_NAME){const inp=Object.assign({},c.input,LAST_V&&LAST_V.at?{at:LAST_V.at}:{});try{writeForm(inp);TRK.skip=true;run(inp);}catch(e){console.error(e);}finally{TRK.skip=false;}}PENDING_CASE=null;}}
   renderCases();reloadGB();
 }
 // CSV：第一行係欄名；Excel 開得到（加 BOM）
@@ -4095,7 +4097,7 @@ async function savePng(btn){
   catch(e){msg.textContent='存唔到：'+(e.message||e);}
   finally{cap.remove();box.classList.remove('pngmode');box.style.width='';drawChains();btn.disabled=false;setTimeout(()=>{if(msg.textContent==='已存。')msg.textContent='';},3000);}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-png]');if(b)savePng(b);});
-document.addEventListener('click',e=>{if(!e.target.closest('[data-share]')||!LAST_V)return;const url=SHARE_BASE+'?'+shareQuery(LAST_V),msg=$('pngMsg');
+document.addEventListener('click',e=>{if(!e.target.closest('[data-share]')||!LAST_V)return;const vq=viewQ(),url=SHARE_BASE+'?'+shareQuery(LAST_V)+(vq?'&v='+vq:''),msg=$('pngMsg');
   const done=()=>{msg.textContent='已複製連結';setTimeout(()=>{if(msg.textContent.startsWith('已複製連結'))msg.textContent='';},4000);};
   (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(done).catch(()=>{prompt('複製呢條連結：',url);});});
 // 搜尋用：轉細楷，再用 OpenCC 轉簡體，咁繁簡都對得上；轉換程式第一次搜尋先載入，載入前只比大細楷
