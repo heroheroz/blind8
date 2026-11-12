@@ -1173,6 +1173,11 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auf"><select id="lbN" aria-label="每頁幾多個"><option value="10" selected>每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="0">全部</option></select></div>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th title="一路以嚟賺過嘅分，唔會減；排名跟呢個">貢獻值</th><th title="可以用嚟換功能嘅餘額，用咗會減">積分</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
   <div class="gbpager" id="lbPager"></div>
+  <div id="pcWrap" hidden>
+  <h3>計分設定 <span class="hint">（只有管理員睇到；冇等級嘅用戶用貢獻分換功能，每個盤每日扣一次，扣分設做 0 就免費；改👍門檻唔會扣返已經加咗嘅分）</span></h3>
+  <div class="row" id="pcBox"></div>
+  <p class="hint" id="pcMsg"></p>
+  </div>
 </section>
 <section class="panel fold folded" id="anBox" data-sec="an" hidden><h2 class="foldh">命例數據庫分析</h2><h2 class="anmh">命例數據庫分析</h2></section>
 <section class="panel" id="gb">
@@ -1198,9 +1203,6 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><select id="usN" aria-label="每頁幾多個"><option value="6" selected>每頁 6 個</option><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="100000">全部</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>出生資料</th><th></th></tr></thead><tbody id="usList"></tbody></table></div>
   <div class="gbpager" id="usPager"></div>
-  <h2>計分設定 <span class="hint">（只有管理員睇到；冇等級嘅用戶用貢獻分換功能，每個盤每日扣一次，扣分設做 0 就免費；改👍門檻唔會扣返已經加咗嘅分）</span></h2>
-  <div class="row" id="pcBox"></div>
-  <p class="hint" id="pcMsg"></p>
   <h2>計法版本 <span class="hint">（只有管理員睇到；揀咗就全站即刻用嗰個版本計，隨時可以轉返；「自己試」只影響你呢部機）</span></h2>
   <div id="cvBox"></div>
   <p class="hint" id="cvMsg"></p>
@@ -3790,7 +3792,7 @@ function renderAuth(){calcVis();mytLoad();if(supLoad.s!==undefined&&supLoad.s!==
   if(CLOUD&&SESSION)checkin();
   if(CLOUD&&SESSION&&!PT.loaded)loadPoints();else if(!SESSION){PT.loaded=false;PT.rows=null;}drawPoints();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
-  $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();supAdmin();}else if(!ADMIN)AU.loaded=false;
+  $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);$('pcWrap').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();supAdmin();}else if(!ADMIN)AU.loaded=false;
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
   $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();$('casePrivL').hidden=!(CLOUD&&PRIV_OK);
   const box=$('caseAuth'),ma=$('mAuth');if(!CLOUD){box.hidden=true;ma.innerHTML='';return;}box.hidden=false;
