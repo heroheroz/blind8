@@ -4047,7 +4047,7 @@ const SUP_ICON=['☕','☕','🍰','🎁','👑'],SUP_CUR={HKD:'HK$',CNY:'¥',US
 const supAmt=r=>r.amount!=null?`${SUP_CUR[r.currency]||'$'}${+r.amount}`:'';
 function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="amt">${esc(a)}</span>`:'',t=/^師[兄姐]$/.test(r.title)?r.title:'',nm=r.name?`<b>${esc(r.name+(t&&!/師[兄姐]$/.test(r.name)?t:''))}</b>`:'';
   const mo=r.recurring;  // Ko-fi 月供：每月支持，繼續供就一直喺榜
-  return `<span class="supi">${mo?'💎':ic} ${r.message?`${nm||`<b>${t||'有心人'}</b>`}${mo?' <small>月供</small>':''}${am}【${esc(r.message)}】`:`感謝 ${nm||'一位'+(t||'有心人')} ${mo?'每月':''}支持${am}`}</span><span class="supsep">✦</span>`;}
+  return `<span class="supi">${mo?'💎':ic} 感謝 ${nm||'一位'+(t||'有心人')} ${mo?'每月':''}支持${am}${r.message?`【${esc(r.message)}】`:''}</span><span class="supsep">✦</span>`;}
 function supShow(rows){const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.length?rows[0].approved_at||'':'';if(!rows.length||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
   const h=rows.map(supItem).join('');$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)*0.45)+'s');
