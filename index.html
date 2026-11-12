@@ -283,7 +283,7 @@ td.chain{position:relative;overflow:visible}
 .notes p{margin:0 0 4px}
 .ssfold{margin-top:22px}.ntabs{margin-bottom:10px}.notes .ntabs label:has(input[value=an]){display:none}#anBox>.npane{display:block!important}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
-.nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}body.nologin .notes #np-tut{display:block!important}
+.nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}body.nologin .notes:not(.folded) #np-tut{display:block!important}
 .notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=mj]:checked)) #np-mj,.notes:not(:has(input[value=tut]:checked)) #np-tut,.notes:not(:has(input[value=song]:checked)) #np-song,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=xzq]:checked)) #np-xzq,.notes:not(:has(input[value=an]:checked)) #np-an{display:none}
 .tut:not([hidden]){display:block;position:fixed;z-index:60;right:16px;bottom:16px;width:min(360px,calc(100vw - 24px));background:var(--paper);color:var(--ink);border:2px solid var(--accent);border-radius:12px;padding:12px 14px;box-shadow:0 6px 24px #0005;font-size:15px;line-height:1.6}
 .tut h2{font-size:17px;margin:2px 0 4px}.tut p{margin:0 0 8px}.tutbtn{display:flex;justify-content:space-between;align-items:center}.tutgo{font:inherit;font-weight:700;color:#fff;background:var(--accent);border:0;border-radius:8px;padding:6px 16px;cursor:pointer}
@@ -3994,8 +3994,8 @@ $('caseImport').addEventListener('change',async e=>{const file=e.target.files[0]
   }catch(err){$('caseMsg').textContent='匯入失敗：'+err.message;e.target.value='';return;}
   e.target.value='';await reloadCases();$('caseMsg').textContent=`匯入咗 ${n} 個命例${dup?`，${dup} 個已經有咗冇再加`:''}${bad?`，${bad} 行缺名稱或年份冇匯入`:''}。`;});
 // 側欄收埋／打開：記住上次；細畫面預設收埋
-{let o=null;try{o=localStorage.getItem('b8-side');}catch(e){}$('caseBox').open=o?o==='1':!matchMedia('(max-width:1099px)').matches;}
-$('caseBox').addEventListener('toggle',()=>{try{localStorage.setItem('b8-side',$('caseBox').open?'1':'0');}catch(e){}});
+{let o=null;try{o=localStorage.getItem('b8-side');}catch(e){}const mid=matchMedia('(min-width:701px) and (max-width:1099px)');$('caseBox').open=mid.matches?false:o?o==='1':!matchMedia('(max-width:1099px)').matches;
+$('caseBox').addEventListener('toggle',()=>{if(mid.matches)return;try{localStorage.setItem('b8-side',$('caseBox').open?'1':'0');}catch(e){}});}
 (async()=>{
   if(CLOUD){
     // 撳完確認電郵條 link 返嚟，網址會帶住登入資料
