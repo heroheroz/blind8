@@ -613,6 +613,11 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 
 <section class="panel fold folded" id="aw" data-sec="aw">
   <h2 class="foldh">箭咀力度 <span class="hint">（大家一齊完善）</span></h2>
+  <div id="cvWrap" hidden>
+  <h3>計法版本 <span class="hint">（只有管理員睇到；揀咗就全站即刻用嗰個版本計，隨時可以轉返；「自己試」只影響你呢部機）</span></h3>
+  <div id="cvBox"></div>
+  <p class="hint" id="cvMsg"></p>
+  </div>
   <p class="lbwhy">💡 <b>理念</b>：做功同粘連嘅力度點計，冇一個絕對嘅答案。我希望師兄師姐一齊參與，用大家手上嘅命例去印證，一齊完善做功力度嘅計法。下面每個數值都係而家盤上用緊嘅箭咀數（1 = 一個大箭咀，0.5 = 一個細箭咀）。覺得某個數應該大啲就撳 👍 應該加，細啲就撳 👎 應該減；登入咗先投到，每人每項一票，再撳一次就取消。管理員會參考大家嘅投票調整。</p>
   <p class="hint" id="awMsg"></p>
   <div class="auwrap"><table class="audit awt"><thead><tr><th>項目</th><th>箭咀</th><th>意見</th></tr></thead><tbody id="awList"></tbody></table></div>
@@ -1203,9 +1208,6 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><select id="usN" aria-label="每頁幾多個"><option value="6" selected>每頁 6 個</option><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="100000">全部</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>出生資料</th><th></th></tr></thead><tbody id="usList"></tbody></table></div>
   <div class="gbpager" id="usPager"></div>
-  <h2>計法版本 <span class="hint">（只有管理員睇到；揀咗就全站即刻用嗰個版本計，隨時可以轉返；「自己試」只影響你呢部機）</span></h2>
-  <div id="cvBox"></div>
-  <p class="hint" id="cvMsg"></p>
   <h2>手動加分 <span class="hint">（只有管理員睇到；例如補返之前做咗嘅貢獻；填負數就係扣分；每筆都入審計紀錄）</span></h2>
   <div class="auf"><select id="bnUser" aria-label="用戶"></select><input id="bnAmt" type="number" step="1" placeholder="分數" aria-label="分數" style="width:6em"><input id="bnWhy" type="text" maxlength="200" placeholder="原因（用戶睇唔到）" aria-label="原因"><button type="button" class="go sm" data-bnadd>加分</button></div>
   <p class="hint" id="bnMsg"></p>
@@ -3792,7 +3794,7 @@ function renderAuth(){calcVis();mytLoad();if(supLoad.s!==undefined&&supLoad.s!==
   if(CLOUD&&SESSION)checkin();
   if(CLOUD&&SESSION&&!PT.loaded)loadPoints();else if(!SESSION){PT.loaded=false;PT.rows=null;}drawPoints();
   if(CLOUD&&ADMIN&&!TU.loaded){TU.loaded=true;loadTiers();}else if(!ADMIN)TU.loaded=false;
-  $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);$('pcWrap').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();supAdmin();}else if(!ADMIN)AU.loaded=false;
+  $('audit').hidden=$('mAuditTab').hidden=!(CLOUD&&ADMIN);$('pcWrap').hidden=!(CLOUD&&ADMIN);$('cvWrap').hidden=!(CLOUD&&ADMIN);if(!(CLOUD&&ADMIN)&&document.body.dataset.mtab==='audit')mTab('in');if(CLOUD&&ADMIN&&!AU.loaded){AU.loaded=true;loadUsage();loadAudit();supAdmin();}else if(!ADMIN)AU.loaded=false;
   const nm=(S&&S.inp&&S.inp.name)||'';$('caseName').placeholder=nm?`名稱（預設：${nm}）`:'命例名稱';
   $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();$('casePrivL').hidden=!(CLOUD&&PRIV_OK);
   const box=$('caseAuth'),ma=$('mAuth');if(!CLOUD){box.hidden=true;ma.innerHTML='';return;}box.hidden=false;
