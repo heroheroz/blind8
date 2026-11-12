@@ -2235,7 +2235,10 @@ const VIEW={colOff:{},jinMode:'both',adjDyP:false,adjDyN:false,adjLnP:false,adjL
 // 分享連結帶埋顯示選項（v=鍵.值,鍵.值，淨係寫同預設唔同嘅），打開連結嘅人見到同一個樣
 // 管理員專用、會員級別限定、會扣分嘅選項（做功、招感殺星、最強五行）唔帶
 const VIEW0={...VIEW},VIEW_NOSHARE=['work','sha','shaAll','sw','swm'];
-const viewQ=()=>Object.keys(VIEW0).filter(k=>!VIEW_NOSHARE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null).map(k=>k+'.'+(typeof VIEW[k]==='boolean'?+VIEW[k]:VIEW[k])).join(',');
+// 分享連結嘅顯示選項短碼（主人 11月12日）：開關類選項每個兩個字（喺 VIEW_CODES 嘅位置，36 進制），寫咗即係同預設相反。VIEW_CODES 只可以喺尾加新嘢，唔可以改次序或者刪，否則舊連結會錯
+const VIEW_CODES='adjDyP,adjDyN,adjLnP,adjLnN,adjMoN,moJin,moJinCalc,lnJinG,lnJinGCalc,yuanTrig,lnJin,lnJinCalc,dyJin,dyJinCalc,route,newBlk,prevMoCalc,jinqiCalc,xiaoCalc,virt,dyn,dynZg,only4,yuan,aux,ming,yuanCalc,auxCalc,zgMerge,lianSplit,core,noDyn,noMD,noD,xiao,mingLeft,mgQi,prevMo,shaAll,tkAll,jinqi,muku,ssTag,noMidL,ganTop,wkMark,work,arNum,natL,cInfo,hr,hrCalc'.split(',');
+const viewQ=()=>{const ks=Object.keys(VIEW0).filter(k=>!VIEW_NOSHARE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null),sh=k=>typeof VIEW0[k]==='boolean'&&typeof VIEW[k]==='boolean'&&VIEW_CODES.includes(k),b=ks.filter(sh).map(k=>VIEW_CODES.indexOf(k).toString(36).padStart(2,'0')).join('');
+  return [b?'_'+b:''].concat(ks.filter(k=>!sh(k)).map(k=>k+'.'+(typeof VIEW[k]==='boolean'?+VIEW[k]:VIEW[k]))).filter(Boolean).join(',');};
 // 記住用戶自己剔過嘅顯示選項（存喺呢部機）；會扣分、管理員專用嘅（做功、招感殺星、最強五行）唔記，免得自動扣分
 const VIEW_NOSAVE=['work','sha','sw'],LS_VIEW='b8-view';
 try{const o=JSON.parse(localStorage.getItem(LS_VIEW)||'{}');Object.keys(o).forEach(k=>{if(k in VIEW0&&!VIEW_NOSAVE.includes(k)&&typeof o[k]===typeof VIEW0[k])VIEW[k]=o[k];});}catch(e){}
@@ -2257,7 +2260,7 @@ function applyCalcVer(v){v=CALC_VERS[v]?+v:CALC_VDEF;CALC_V=v;const P=CALC_VERS[
   Object.entries(P.view).forEach(([k,x])=>{VIEW0[k]=x;if(!(k in saved))VIEW[k]=x;});}
 applyCalcVer(calcTry()||CALC_VDEF);
 function saveView(){try{const o={};Object.keys(VIEW0).forEach(k=>{if(!VIEW_NOSAVE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null)o[k]=VIEW[k];});localStorage.setItem(LS_VIEW,JSON.stringify(o));}catch(e){}}
-(()=>{const v=new URLSearchParams(location.search).get('v');if(!v)return;v.split(',').forEach(x=>{const [k,val]=x.split('.');if(!(k in VIEW0)||VIEW_NOSHARE.includes(k))return;
+(()=>{const v=new URLSearchParams(location.search).get('v');if(!v)return;v.split(',').forEach(x=>{if(x[0]==='_'){(x.slice(1).match(/../g)||[]).forEach(c=>{const k=VIEW_CODES[parseInt(c,36)];if(k&&k in VIEW0&&!VIEW_NOSHARE.includes(k)&&typeof VIEW0[k]==='boolean')VIEW[k]=!VIEW0[k];});return;}const [k,val]=x.split('.');if(!(k in VIEW0)||VIEW_NOSHARE.includes(k))return;
   const d=VIEW0[k];VIEW[k]=typeof d==='string'?val:val==='1'?true:val==='0'?false:d;});})();
 // 招感殺星：未撳過（null）就跟等級，免費嘅（進階、高級、管理員）預設開，普通用戶預設閂（唔會自動扣分）
 const shaOn=()=>VIEW.sha==null?can.sha():VIEW.sha;
