@@ -4050,7 +4050,7 @@ function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="
   const mo=r.recurring;  // Ko-fi 月供：每月支持，繼續供就一直喺榜
   return `<span class="supi">${mo?'💎':ic} 感謝 ${nm||'一位'+(t||'有心人')} ${mo?'每月':''}支持${am}${r.message?`【${esc(r.message)}】`:''}</span><span class="supsep">✦</span>`;}
 // 加命例嘅鳴謝（038 case_thanks）：r={name,n,last_case（未登入＝null）}
-function caseItem(r){const nm=r.name?`<b>${esc(r.name+(/師[兄姐]$/.test(r.name)?'':'師兄'))}</b>`:'一位師兄';
+function caseItem(r){const t=r.title==null?'師兄':r.title,nm=r.name?`<b>${esc(r.name+(/師[兄姐]$/.test(r.name)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 function supShow(rows,cs){cs=cs||[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.length?rows[0].approved_at||'':'';if(!(rows.length+cs.length)||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
