@@ -1,5 +1,6 @@
--- 035：鳴謝榜稱呼（師兄／師姐／有心人），支持者自己揀
-alter table public.supporters add column if not exists title text not null default '有心人' check (title in ('師兄','師姐','有心人'));
+-- 035：鳴謝榜稱呼（師兄／師姐／有心人），支持者自己揀；空白 '' = 唔加稱呼（管理員手動入數用）
+alter table public.supporters add column if not exists title text default '有心人'
+  check (title is null or title in ('師兄','師姐','有心人',''));
 create or replace view public.supporter_ticker as
   select id, approved_at,
          case when anon then null else name end as name,
