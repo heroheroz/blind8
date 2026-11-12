@@ -2905,7 +2905,7 @@ async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorA
   document.querySelectorAll('.notes .lpick').forEach(s=>s.innerHTML=`<select data-lsel aria-label="揀課堂">${opt}</select><span class="lnavs">${nb(-1,'◀','上一個（較新）')}${nb(1,'▶','下一個（較舊）')}<input type="number" class="ljump" data-ljump min="1" inputmode="numeric" placeholder="第幾堂" aria-label="跳去第幾堂"></span>`);
   let L;try{L=await lsLoad(LS.cur);}catch(e){bodies.forEach(b=>b.innerHTML=`<p class="hint">${esc(e.message)}</p>`);return;}
   if(L.id!==LS.cur)return;
-  const head=`<h3>${esc(L.title)}</h3><p class="hint">${esc(L.date||'')}${L.dur?' · '+esc(L.dur):''} · ${lsA(L.id,0,'▶ YouTube')}${L.quality==='lite'?' · <span title="用 lite 模型轉錄，可能有錯字，之後會重做">📝 初稿</span>':''}</p>${L.note?`<p class="hint">⚠️ ${esc(L.note)}</p>`:''}`;
+  const head=`<h3>${esc(L.title)}</h3><p class="hint">${esc(L.date||'')}${L.dur?' · '+esc(L.dur):''} · ${lsA(L.id,0,'▶ YouTube')}${` · <button type="button" class="lnk" data-lshare="${L.id}" title="複製呢一堂嘅連結，畀人一開就去到呢堂">🔗 複製連結</button><span class="hint" data-lsharemsg></span>`}${L.quality==='lite'?' · <span title="用 lite 模型轉錄，可能有錯字，之後會重做">📝 初稿</span>':''}</p>${L.note?`<p class="hint">⚠️ ${esc(L.note)}</p>`:''}`;
   const sec=(L.summary||[]).map(s=>`<h4>${lsFmt(L.id,s.h)}</h4><ul>${(s.items||[]).map(x=>`<li>${lsFmt(L.id,x)}</li>`).join('')}</ul>`).join('');
   const cs=(L.cases||[]).length?`<h4>命例</h4><ul>${L.cases.map(c=>`<li>${c.id?`<button type="button" class="lnk" data-open="${c.id}" data-lcase>${esc(c.name)}</button>`:esc(c.name)}${c.t!=null?' '+lsA(L.id,c.t):''}${c.note?'　'+lsFmt(L.id,c.note):''}</li>`).join('')}</ul>`:'';
   const tc=L.teacher&&(L.teacher.items||[]).length?`<h4>老師總結${L.teacher.t!=null?' '+lsA(L.id,L.teacher.t):''}</h4><div class="lteach"><ul>${L.teacher.items.map(x=>`<li>${lsFmt(L.id,x)}</li>`).join('')}</ul></div>`:'';
@@ -3232,7 +3232,10 @@ document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab]')&&
 document.addEventListener('input',e=>{if(e.target.matches('[data-lq]')){LS.q=e.target.value;clearTimeout(LS.tm);LS.tm=setTimeout(lsDraw,200);}});
 document.addEventListener('click',e=>{const g=e.target.closest('[data-lgo]');if(g){lsOpen(g.dataset.lgo);return;}
   if(e.target.closest('[data-lcase]')&&document.body.dataset.mtab)setTimeout(()=>mTab('chart'),0);});
-lsIndex().then(()=>{lsRefsWatch();if(CUR)renderCases();const h=new URLSearchParams(location.hash.slice(1)).get('lesson');if(h)lsOpen(h);else lsDraw();});
+lsIndex().then(()=>{lsRefsWatch();if(CUR)renderCases();const hp=new URLSearchParams(location.hash.slice(1)),h0=hp.get('lesson'),hn=/^\d{1,3}$/.test(h0||'')?(LS.idx||[]).find(x=>x.n===+h0):null,h=hn?hn.id:h0;if(h)lsOpen(h,hp.get('tab')==='ltxt'?'ltxt':undefined);else lsDraw();});
+// 課堂直達連結（主人 11月12日）：#lesson=8（第幾堂）或 #lesson=影片id；&tab=ltxt 開文字稿。🔗 複製連結 喺每堂標題下面
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lshare]');if(!b)return;const l=(LS.idx||[]).find(x=>x.id===b.dataset.lshare),txt=!!b.closest('#np-ltxt'),url=SHARE_BASE+'#lesson='+(l&&l.n?l.n:b.dataset.lshare)+(txt?'&tab=ltxt':''),m=b.parentNode.querySelector('[data-lsharemsg]'),done=ok=>{if(m){m.textContent=ok?' 已複製':' '+url;setTimeout(()=>{if(ok)m.textContent='';},2500);}};
+  try{navigator.clipboard.writeText(url).then(()=>done(true),()=>done(false));}catch(_){done(false);}});
 
 // 撳大運／流年／流月／流日之後，上面嘅內容（例如招感殺星）高度會變，令個框郁；重新排完盤之後捲返，令撳嗰格留喺原位
 const KEEP={};
