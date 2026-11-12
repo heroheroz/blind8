@@ -1,4 +1,4 @@
--- 033：支持加分改做每港幣 $1 = 10 分（Tom 2026-11-12）；可以喺 point_settings 加 key='support' 改比率。
+-- 033：支持加分比率由 point_settings key='support' 決定（Tom 2026-11-12 定咗每港幣 $1 = 1 分）。
 create or replace function public.supporters_points() returns trigger
 language plpgsql security definer set search_path to 'public' as $$
 declare r public.supporters; pts int;
@@ -12,4 +12,5 @@ begin
   end if;
   return new;
 end $$;
+insert into public.point_settings(key, value) values ('support', 1) on conflict (key) do nothing;
 select '033 completed' as status;
