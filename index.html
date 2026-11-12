@@ -4041,6 +4041,7 @@ $('caseBox').addEventListener('toggle',()=>{if(mid.matches)return;try{localStora
     if(INIT_Q&&LAST_V)trackChart(LAST_V,true);
   }
   reloadCases();
+})();
 // 支持者走馬燈（031_supporters.sql）：公眾讀 supporter_ticker（淨係已確認）；「請飲咖啡」入面填表＝待確認；管理員喺審計頁確認／改金額／刪除
 const SUP_ICON=['☕','☕','🍰','🎁','👑'],SUP_CUR={HKD:'HK$',CNY:'¥',USD:'US$',AUD:'A$',OTHER:'$'},SUP_M={kofi:'Ko-fi',fps:'轉數快',ahk:'AlipayHK',acn:'支付寶內地',wcn:'微信內地'};
 const supAmt=r=>r.amount!=null?`${SUP_CUR[r.currency]||'$'}${+r.amount}`:'';
@@ -4070,7 +4071,6 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-supd
     else{const a=parseFloat(tr.querySelector('[data-supamt]').value);await api('supporters?id=eq.'+id,{method:'PATCH',body:JSON.stringify({status:k,amount:a>0?a:null,...(k==='pending'?{approved_at:null}:{})})});}
     await supAdmin();supLoad();}catch(x){alert('做唔到：'+x.message);}});
 supLoad();
-})();
 writeForm(init);run(init);TRK.skip=false;TRK.last=JSON.stringify(LAST_V);
 document.addEventListener('toggle',e=>{const f=e.target.dataset&&e.target.dataset.fold;if(f)FOLD[f]=e.target.open;},true);
 })();
