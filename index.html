@@ -124,6 +124,7 @@ a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(-
 .suptk .supt{display:inline-block;white-space:nowrap;animation:supmv var(--supd,40s) linear infinite}.suptk:hover .supt{animation-play-state:paused}
 .suptk .supvip{background:linear-gradient(90deg,#e0503a,#e39a1f,#d4c12a,#3fae5a,#3a8fd6,#8a5bd6,#e0503a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:supvr 4s linear infinite}@keyframes supvr{0%{background-position:0 0}100%{background-position:300% 0}}
 .suptk .supst{font-style:normal;display:inline-block;animation:supvt 1.4s ease-in-out infinite}.suptk .supst.b{animation-delay:.7s}@keyframes supvt{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+.suptk .supvip2,.suptk .supvip3{background-size:250% 100%;animation:supvs 2.6s linear infinite}.suptk .supvip2{background-image:linear-gradient(100deg,#b8860b 0%,#d4a52a 35%,#fff3b0 50%,#d4a52a 65%,#b8860b 100%)}.suptk .supvip3{background-image:linear-gradient(100deg,#7d8590 0%,#a9b1bb 35%,#ffffff 50%,#a9b1bb 65%,#7d8590 100%)}@keyframes supvs{0%{background-position:120% 0}100%{background-position:-130% 0}}
 @media(prefers-reduced-motion:reduce){.suptk .supvip,.suptk .supst{animation:none}}
 .suptk .supi{display:inline-block;padding:0 1.8em}.suptk .supi b{font-weight:700}.suptk .supi .amt{color:var(--warn);font-weight:700;margin-left:.3em}.suptk .supsep{color:var(--muted);opacity:.55}
 .suptk .suph{flex:none;font-size:13px;color:var(--accent);white-space:nowrap}.suptk>button{flex:none;font:inherit;border:0;background:none;color:var(--muted);cursor:pointer;padding:0 4px}
@@ -4134,7 +4135,7 @@ $('caseBox').addEventListener('toggle',()=>{if(mid.matches)return;try{localStora
 // 支持者走馬燈（031_supporters.sql）：公眾讀 supporter_ticker（淨係已確認）；「請飲咖啡」入面填表＝待確認；管理員喺審計頁確認／改金額／刪除
 const SUP_ICON=['☕','☕','🍰','🎁','👑'],SUP_CUR={HKD:'HK$',CNY:'¥',USD:'US$',AUD:'A$',OTHER:'$'},SUP_M={kofi:'Ko-fi',fps:'轉數快',ahk:'AlipayHK',acn:'支付寶內地',wcn:'微信內地'};
 const supAmt=r=>r.amount!=null?`${SUP_CUR[r.currency]||'$'}${+r.amount}`:'';
-function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="amt">${esc(a)}</span>`:'',t=/^師[兄姐]$/.test(r.title)?r.title:'',vip=(r.tier||1)>=4,st=d=>vip?`<i class="supst${d}">✨</i>`:'',nm=r.name?`${st('')}<b${vip?' class="supvip"':''}>${esc(r.name+(t&&!/師[兄姐]$/.test(r.name)?t:''))}</b>${st(' b')}`:'';  // 👑 級（HK$500／A$100 或以上）：個名彩虹字＋閃星（主人 11月12日）
+function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="amt">${esc(a)}</span>`:'',t=/^師[兄姐]$/.test(r.title)?r.title:'',vip=r.fx>=1&&r.fx<=3?r.fx:0,st=d=>vip?`<i class="supst${d}">✨</i>`:'',nm=r.name?`${st('')}<b${vip?` class="supvip supvip${vip}"`:''}>${esc(r.name+(t&&!/師[兄姐]$/.test(r.name)?t:''))}</b>${st(' b')}`:'';  // 榜上面支持最多嘅頭三位（043 fx，過咗期唔計）：第一彩虹字、第二金色流光、第三銀色流光，全部加閃星（主人 11月12日）
   const mo=r.recurring;  // Ko-fi 月供：每月支持，繼續供就一直喺榜
   return `<span class="supi">${mo?'💎':ic} 感謝 ${nm||'一位'+(t||'有心人')} ${mo?'每月':''}支持${am}${r.message?`【${esc(r.message)}】`:''}</span><span class="supsep">✦</span>`;}
 // 加命例嘅鳴謝（038 case_thanks）：r={name,n,last_case（未登入＝null）}
