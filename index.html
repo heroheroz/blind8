@@ -4142,7 +4142,9 @@ function supShow(rows,cs){cs=cs||[];const b=$('supTk');if(!b)return;let x=null;t
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,'');if(!(rows.length+cs.length)||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
   // 次序（主人 11月12日）：支持由最新排到最舊，全部出完先到加命例嘅感謝（都係新排先）
   const tm=r=>r.created_at||r.approved_at||'';rows=rows.slice().sort((p,q)=>tm(q)<tm(p)?-1:tm(q)>tm(p)?1:0);cs=cs.slice().sort((p,q)=>(q.last_at||'')<(p.last_at||'')?-1:1);
-  const h=rows.map(supItem).join('')+cs.map(caseItem).join('');$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,(rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)+cs.reduce((n,r)=>n+18+(r.last_case||'').length+(r.name||'').length,0))*0.45)+'s');
+  // 命例感謝合併做一行（主人 11月12日）：最多出頭 6 個名，其餘用「等 N 位」
+  const csn=cs.filter(r=>r.name).map(r=>{const t=r.title==null?'師兄':r.title,n0=shortName(r.name);return esc(n0+(/師[兄姐]$/.test(n0)?'':t));}),csLine=cs.length?`<span class="supi">📚 感謝 ${csn.length?`<b>${csn.slice(0,6).join('、')}</b>${cs.length>Math.min(6,csn.length)?` 等 ${cs.length} 位`:''}`:`${cs.length} 位有心人`}加咗命例，多謝支持</span><span class="supsep">✦</span>`:'';
+  const h=rows.map(supItem).join('')+csLine;$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,(rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)+(cs.length?30+csn.slice(0,6).join('').length:0))*0.45)+'s');
   b.hidden=false;b.dataset.last=last;}
 async function supLoad(){supLoad.s=!!SESSION;if(!CLOUD){$('kfSup').hidden=true;return;}try{const cs=await api('case_thanks?select=*').catch(()=>[]);supShow(await api('supporter_ticker?select=*&order=created_at.desc&limit=30'),cs);$('kfSup').hidden=false;}catch(e){$('kfSup').hidden=true;}}
 $('supX').addEventListener('click',()=>{try{localStorage.setItem('b8-suptk-x',JSON.stringify({l:$('supTk').dataset.last||'',t:Date.now()}));}catch(e){}$('supTk').hidden=true;});
