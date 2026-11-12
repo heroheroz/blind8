@@ -391,8 +391,8 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   .ssc{font-size:.42em;top:-.6em;right:-.3em}.wd .gl::after,.wn .gl::after{font-size:.36em;right:-.2em}.chart.sst .ganrow .big,.chart.sst .zhirow .big{padding-top:8px}.arF{display:none}.arC{display:inline-flex;flex-direction:column;align-items:center;line-height:1;font-weight:900;letter-spacing:0;color:var(--bad);margin-right:1px;position:relative;z-index:3}.arC.dn{color:var(--water)}.arC i{font-style:normal;font-size:10px;font-weight:700;letter-spacing:-.3px;background:var(--paper);border-radius:3px;padding:0 1px}
   body{padding-block:0 32px;font-size:16px}
   .mtop{display:block;position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 10px 4px;margin:0 -16px 12px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-  .mauth{display:flex;align-items:center;gap:8px;font-size:14px;min-height:28px;padding-right:76px}.mkofi{position:absolute;right:10px;top:calc(7px + env(safe-area-inset-top));line-height:24px;margin:0}.mauth .who{font-weight:600;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .mauth button{font:inherit;font-size:14px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 12px;cursor:pointer}
+  .mauth{display:flex;align-items:center;gap:6px;font-size:14px;min-height:28px;padding-right:100px}.mauth>*{flex:none}.mauth .who{flex:0 1 auto;min-width:3.2em}.mauth select{max-width:4.4em!important;padding:1px 0!important}.mkofi{font-size:12px}.mkofi{position:absolute;right:10px;top:calc(7px + env(safe-area-inset-top));line-height:24px;margin:0}.mauth .who{font-weight:600;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mauth button{font:inherit;font-size:13px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:3px 7px;cursor:pointer;white-space:nowrap}
   .mauth .adm{font-size:12px}
   .mnav{display:flex}.mbr{display:inline}.mhsh{display:flex;justify-content:center;gap:2px;white-space:nowrap}.mhsh button{font:inherit;font-size:13px;line-height:1;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer}.mhsh .hshn{font-size:11px;padding:3px 3px;color:var(--accent)}
   .notes .lpick{display:block;min-width:0;max-width:100%}.notes .lpick select{width:100%}.notes .lnavs{display:flex;gap:8px;margin-top:6px}.notes .lnav{flex:1;font-size:18px;padding:6px}.notes .ljump{flex:1;min-width:0;font:inherit;font-size:15px;padding:4px 8px}.notes .lsel{flex-wrap:wrap}
@@ -454,7 +454,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 </head><body>
 
 <div class="layout">
-<div class="mtop"><div class="mauth" id="mAuth"></div><a class="kofi mkofi" href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener" aria-label="請飲咖啡" title="請飲咖啡">☕ 請飲</a>
+<div class="mtop"><div class="mauth" id="mAuth"></div><a class="kofi mkofi" href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener" aria-label="請飲咖啡" title="請飲咖啡">☕ 請飲咖啡</a>
 <nav class="mnav" aria-label="分頁">
   <button type="button" data-mtab-go="in"><b>✎</b>排盤</button>
   <button type="button" data-mtab-go="chart"><b>☯</b>命盤</button>
@@ -507,6 +507,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <button type="button" id="zhBtn" class="zhbtn" data-nozh aria-label="繁簡轉換" title="繁簡轉換"><span class="t on">繁</span><span class="s">简</span></button>
   <button type="button" id="darkBtn" class="zhbtn" data-nozh aria-label="深色模式" title="深色模式開／關"><span class="lt">☀</span><span class="dk">☾</span></button>
 </header>
+<div class="suptk" id="mytAsk" hidden style="gap:8px;flex-wrap:wrap"><b class="suph">👋 想我哋點稱呼你？</b><span><button type="button" class="lnk" data-mytset="師兄">師兄</button> <button type="button" class="lnk" data-mytset="師姐">師姐</button> <button type="button" class="lnk" data-mytset="">唔加稱呼</button></span><button type="button" id="mytX" aria-label="遲啲先" style="margin-left:auto">✕</button></div>
 <div class="suptk" id="supTk" hidden aria-label="鳴謝榜"><b class="suph">🙏 鳴謝榜</b><div class="supv"><span class="supt" id="supT"></span></div><button type="button" id="supX" aria-label="收埋" title="收埋">✕</button></div>
 
 <div class="tut" id="tut" hidden role="dialog" aria-label="新手教學">
@@ -3690,10 +3691,14 @@ function calcVis(){placeAn();const ok=can.sha();document.body.classList.toggle('
 // 自己揀稱呼（師兄／師姐／唔加）：user_titles，鳴謝榜用；未揀＝師兄
 const MYT={u:'',v:null};
 function mytSel(){return `<select data-mytitle aria-label="稱呼" title="鳴謝榜點稱呼你" style="font:inherit;font-size:12px;padding:1px 2px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);max-width:5.5em">${MYT.v==null?'<option value="?" selected>稱呼…</option>':''}${[['師兄','師兄'],['師姐','師姐'],['','唔加稱呼']].map(([v,l])=>`<option value="${v}"${MYT.v===v?' selected':''}>${l}</option>`).join('')}</select>`;}
-async function mytLoad(){const u=SESSION&&SESSION.user.id||'';if(MYT.u===u)return;MYT.u=u;MYT.v=null;if(!u||!CLOUD)return;
-  try{const r=await api('user_titles?select=title&user_id=eq.'+u);if(MYT.u===u&&r&&r[0]){MYT.v=r[0].title;renderAuth();}}catch(e){}}
+async function mytLoad(){const u=SESSION&&SESSION.user.id||'';if(MYT.u===u)return;MYT.u=u;MYT.v=null;mytAsk(false);if(!u||!CLOUD)return;
+  try{const r=await api('user_titles?select=title&user_id=eq.'+u);if(MYT.u!==u)return;if(r&&r[0]){MYT.v=r[0].title;renderAuth();}else mytAsk(true);}catch(e){}}
+// 未揀過稱呼：登入後問一次（細橫條，唔遮住個盤）；撳 ✕ 就唔再問，之後可以喺登入名後面改
+function mytAsk(on){const b=$('mytAsk');if(!b)return;let x='';try{x=localStorage.getItem('b8-myt-x')||'';}catch(e){}b.hidden=!(on&&SESSION&&MYT.v==null&&x!==MYT.u);}
+async function mytSave(v){await api('user_titles',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({user_id:SESSION.user.id,title:v})});MYT.v=v;mytAsk(false);renderAuth();supLoad();}
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-mytset],#mytX');if(!t)return;if(t.id==='mytX'){try{localStorage.setItem('b8-myt-x',MYT.u);}catch(x){}mytAsk(false);return;}if(SESSION)mytSave(t.dataset.mytset).catch(x=>alert('儲唔到稱呼：'+x.message));});
 document.addEventListener('change',async e=>{const t=e.target.closest&&e.target.closest('[data-mytitle]');if(!t||!SESSION||t.value==='?')return;const v=t.value;
-  try{await api('user_titles',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({user_id:SESSION.user.id,title:v})});MYT.v=v;renderAuth();supLoad();}catch(x){alert('儲唔到稱呼：'+x.message);}});
+  try{await mytSave(v);}catch(x){alert('儲唔到稱呼：'+x.message);}});
 function renderAuth(){calcVis();mytLoad();if(supLoad.s!==undefined&&supLoad.s!==!!SESSION)supLoad();  // 登入／登出：鳴謝榜重新攞（命例名要登入先有）
 
   const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION||(!VIEW.work&&WORK_KEEP()&&!WORK_TRY)))render();
@@ -3895,7 +3900,9 @@ const setNums=(inp,sib,kid)=>{const o={...inp};delete o.sib;delete o.kid;if(sib!
 const numTxt=i=>[i&&i.sib!=null?`兄弟姊妹+命主合共 ${i.sib}`:'',i&&i.kid!=null?`子女 ${i.kid}`:''].filter(Boolean).join(' · ');
 const caseKey=c=>{const i=c.input||{};return [String(c.name||'').trim(),i.sex,!!i.lunar,!!i.leap,i.y,i.m,i.d,i.h,i.mi,i.zi,i.lon,i.tz,!!i.dst,!!i.tst].join('|');};
 let SAVING=false;
-const busy=async(fn)=>{try{await fn();}catch(e){const m=(e.dup?'':'出錯：')+e.message;$('caseMsg').textContent=m;await reloadCases();$('caseMsg').textContent=m;return;}await reloadCases();};
+const busy=async(fn)=>{try{await fn();}catch(e){const m=(e.dup?'':'出錯：')+e.message;$('caseMsg').textContent=m;await reloadCases();$('caseMsg').textContent=m;return;}await reloadCases();if(DUPW){$('caseMsg').innerHTML=`<b style="color:var(--bad)">${esc(DUPW)}</b>`;DUPW='';}};
+let DUPW='';  // 啱啱儲嘅命例同現有命例出生資料一樣：照儲，但出紅字提醒
+const birthKey=c=>{const i=c.input||{};return [i.sex,!!i.lunar,!!i.leap,i.y,i.m,i.d,i.h,i.mi].join('|');};
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-ksgo],[data-evgo],[data-evdel],[data-evedit],[data-evcancel],[data-resend],[data-open],[data-vote],[data-cvote],[data-cdel],[data-evote],[data-close],[data-priv],[data-del],#caseExport,[data-tagf],[data-tagclear],[data-untag],[data-sug],[data-addsug],[data-tagdel],[data-edit],[data-editcancel],[data-logout],[data-signup]');if(!t)return;
   if(t.dataset.tagf){const g=t.dataset.tagf;TAGF.has(g)?TAGF.delete(g):TAGF.add(g);renderCases();return;}
@@ -3949,6 +3956,7 @@ document.addEventListener('submit',e=>{
     busy(async()=>{if(CLOUD)CASES=await Store.list();const k=caseKey({name,input}),dup=CASES.find(c=>caseKey(c)===k);
       if(dup){CUR=dup.id;throw Object.assign(new Error(`已經有一個同名又同出生資料嘅命例「${dup.name}」，冇再儲存。`),{dup:true});}
       const priv=CLOUD&&PRIV_OK&&$('casePriv').checked;
+      {const bk=birthKey({input}),same=CASES.filter(c=>birthKey(c)===bk);DUPW=same.length?`⚠ 已經儲咗，不過命例庫已經有出生資料一樣嘅命例：${same.slice(0,3).map(c=>'「'+c.name+'」').join('')}${same.length>3?'等 '+same.length+' 個':''}。如果係重複，請刪返其中一個。`:'';}
       // 私人命例嘅新標籤唔加入共享標籤表，免得其他人見到
       CUR=await Store.add({name,input,notes,tags,private:priv});const nw=tags.filter(x=>!TAG_SUG.includes(x));if(nw.length&&!priv)await TagStore.add(nw).catch(()=>{});$('caseName').value='';$('casePriv').checked=false;$('caseNotes').value='';$('caseTags').value='';$('caseSib').value='';$('caseKid').value='';document.querySelector('#caseAdd .more').open=false;}).finally(()=>{SAVING=false;if(btn)btn.disabled=false;});}
   else if(f.id==='loginF'){e.preventDefault();
@@ -4057,7 +4065,8 @@ function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="
   const mo=r.recurring;  // Ko-fi 月供：每月支持，繼續供就一直喺榜
   return `<span class="supi">${mo?'💎':ic} 感謝 ${nm||'一位'+(t||'有心人')} ${mo?'每月':''}支持${am}${r.message?`【${esc(r.message)}】`:''}</span><span class="supsep">✦</span>`;}
 // 加命例嘅鳴謝（038 case_thanks）：r={name,n,last_case（未登入＝null）}
-function caseItem(r){const t=r.title==null?'師兄':r.title,nm=r.name?`<b>${esc(r.name+(/師[兄姐]$/.test(r.name)?'':t))}</b>`:'一位'+(t||'有心人');
+const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return m?m[1]:n;};  // 英文全名淨係出個名（Christina Lee → Christina）；中文名、暱稱照出
+function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 function supShow(rows,cs){cs=cs||[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.length?rows[0].approved_at||'':'';if(!(rows.length+cs.length)||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
