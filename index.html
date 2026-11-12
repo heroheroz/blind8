@@ -1227,7 +1227,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <button type="submit">送出</button>
 <p class="hint" id="supHint">站長確認收到之後先會出街，同時加貢獻值同積分（每港幣 $1 = 1 分）。</p>
 <p id="supMsg" role="status"></p>
-</form></details></dialog>
+</form></details><p style="margin:8px 0 0"><button type="button" class="lnk" id="supBack">🙏 顯示返頂嗰條「鳴謝榜」</button></p></dialog>
 <footer class="madeby"><button type="button" class="lnk" data-tut="open">📖 新手教學</button> · Created by 隱姓師父天字第一號小粉絲 - 叉油雞飯多汁 <a class="kofi" href="https://ko-fi.com/heroheroz" target="_blank" rel="noopener">☕ 請飲咖啡</a></footer>
 </div>
 </div>
@@ -4047,12 +4047,12 @@ const SUP_ICON=['☕','☕','🍰','🎁','👑'],SUP_CUR={HKD:'HK$',CNY:'¥',US
 const supAmt=r=>r.amount!=null?`${SUP_CUR[r.currency]||'$'}${+r.amount}`:'';
 function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="amt">${esc(a)}</span>`:'',t=/^師[兄姐]$/.test(r.title)?r.title:'',nm=r.name?`<b>${esc(r.name+(t&&!/師[兄姐]$/.test(r.name)?t:''))}</b>`:'';
   return `<span class="supi">${ic} ${r.message?`${nm||`<b>${t||'有心人'}</b>`}${am}【${esc(r.message)}】`:`感謝 ${nm||'一位'+(t||'有心人')} 支持${am}`}</span><span class="supsep">✦</span>`;}
-function supShow(rows){const b=$('supTk');if(!b)return;let x='';try{x=localStorage.getItem('b8-suptk-x')||'';}catch(e){}
-  const last=rows.length?rows[0].approved_at||'':'';if(!rows.length||(x&&x>=last)){b.hidden=true;return;}
+function supShow(rows){const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
+  const last=rows.length?rows[0].approved_at||'':'';if(!rows.length||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
   const h=rows.map(supItem).join('');$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)*0.45)+'s');
   b.hidden=false;b.dataset.last=last;}
 async function supLoad(){if(!CLOUD){$('kfSup').hidden=true;return;}try{supShow(await api('supporter_ticker?select=*&order=approved_at.desc&limit=30'));$('kfSup').hidden=false;}catch(e){$('kfSup').hidden=true;}}
-$('supX').addEventListener('click',()=>{try{localStorage.setItem('b8-suptk-x',$('supTk').dataset.last||'9');}catch(e){}$('supTk').hidden=true;});
+$('supX').addEventListener('click',()=>{try{localStorage.setItem('b8-suptk-x',JSON.stringify({l:$('supTk').dataset.last||'',t:Date.now()}));}catch(e){}$('supTk').hidden=true;});
 $('supForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,m=$('supMsg'),d=document.getElementById('kofiDlg');
   const tab=(d.querySelector('[data-kft].on')||{dataset:{}}).dataset.kft||'kofi',amt=parseFloat(f.amount.value);
   const row={name:f.name.value.trim()||null,title:f.title.value,anon:f.anon.checked,amount:amt>0?amt:null,currency:f.currency.value,show_amount:!f.hide.checked,method:tab,message:f.message.value.trim()||null};
@@ -4070,6 +4070,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-supd
   try{if(k==='del'){if(t.dataset.arm!=='1'){t.dataset.arm='1';t.textContent='再撳一次確認刪除';return;}await api('supporters?id=eq.'+id,{method:'DELETE'});}
     else{const a=parseFloat(tr.querySelector('[data-supamt]').value);await api('supporters?id=eq.'+id,{method:'PATCH',body:JSON.stringify({status:k,amount:a>0?a:null,...(k==='pending'?{approved_at:null}:{})})});}
     await supAdmin();supLoad();}catch(x){alert('做唔到：'+x.message);}});
+$('supBack').addEventListener('click',()=>{try{localStorage.removeItem('b8-suptk-x');}catch(e){}supLoad();document.getElementById('kofiDlg').close();});
 supLoad();
 writeForm(init);run(init);TRK.skip=false;TRK.last=JSON.stringify(LAST_V);
 document.addEventListener('toggle',e=>{const f=e.target.dataset&&e.target.dataset.fold;if(f)FOLD[f]=e.target.open;},true);
