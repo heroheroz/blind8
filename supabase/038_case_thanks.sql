@@ -9,6 +9,8 @@ create or replace view public.case_thanks as
     where c.owner is not null and not coalesce(c.private, false)
       and c.created_at > now() - interval '7 days'
       and not exists (select 1 from public.admins a where a.user_id = c.owner)
+      -- 預設日期（1997-07-01 00:00「香港回歸」）嘅舊命例唔計
+      and not (c.input->>'y' = '1997' and c.input->>'m' = '7' and c.input->>'d' = '1' and c.input->>'h' = '0' and c.input->>'mi' = '0')
     group by c.owner)
   select (select left(btrim(v), 30)
           from unnest(array[au.raw_user_meta_data->>'full_name', au.raw_user_meta_data->>'name', g.oname]) with ordinality t(v, o)
