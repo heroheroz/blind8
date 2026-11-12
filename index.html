@@ -1218,7 +1218,8 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <details class="kfs" id="kfSup" hidden><summary>📣 支持咗？留低打氣留言，上「鳴謝榜」</summary>
 <p class="hint" id="supLogin" hidden>🔒 想留言上「鳴謝榜」（網站頂嗰條）同攞貢獻分，請先登入網站，再返嚟呢度填。</p>
 <form id="supForm">
-<label>名 <input type="text" name="name" maxlength="30" placeholder="例如：陳師兄"></label>
+<label>名 <input type="text" name="name" maxlength="30" placeholder="例如：陳"></label>
+<label>稱呼 <select name="title" aria-label="稱呼"><option>師兄</option><option>師姐</option><option>有心人</option></select></label>
 <label><input type="checkbox" name="anon"> 匿名（唔出名）</label>
 <label>金額 <input type="number" name="amount" min="1" step="any" inputmode="decimal"> <select name="currency"><option value="HKD">港幣</option><option value="CNY">人民幣</option><option value="USD">美元</option><option value="AUD">澳元</option><option value="OTHER">其他</option></select></label>
 <label><input type="checkbox" name="hide"> 唔顯示金額</label>
@@ -4043,8 +4044,8 @@ $('caseBox').addEventListener('toggle',()=>{if(mid.matches)return;try{localStora
 // 支持者走馬燈（031_supporters.sql）：公眾讀 supporter_ticker（淨係已確認）；「請飲咖啡」入面填表＝待確認；管理員喺審計頁確認／改金額／刪除
 const SUP_ICON=['☕','☕','🍰','🎁','👑'],SUP_CUR={HKD:'HK$',CNY:'¥',USD:'US$',AUD:'A$',OTHER:'$'},SUP_M={kofi:'Ko-fi',fps:'轉數快',ahk:'AlipayHK',acn:'支付寶內地',wcn:'微信內地'};
 const supAmt=r=>r.amount!=null?`${SUP_CUR[r.currency]||'$'}${+r.amount}`:'';
-function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="amt">${esc(a)}</span>`:'',nm=r.name?`<b>${esc(r.name)}</b>`:'';
-  return `<span class="supi">${ic} ${r.message?`${nm||'<b>有心人</b>'}${am}【${esc(r.message)}】`:`多謝 ${nm||'一位有心人'} 支持${am}`}</span><span class="supsep">✦</span>`;}
+function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="amt">${esc(a)}</span>`:'',t=/^師[兄姐]$/.test(r.title)?r.title:'',nm=r.name?`<b>${esc(r.name+(t&&!/師[兄姐]$/.test(r.name)?t:''))}</b>`:'';
+  return `<span class="supi">${ic} ${r.message?`${nm||`<b>${t||'有心人'}</b>`}${am}【${esc(r.message)}】`:`多謝 ${nm||'一位'+(t||'有心人')} 支持${am}`}</span><span class="supsep">✦</span>`;}
 function supShow(rows){const b=$('supTk');if(!b)return;let x='';try{x=localStorage.getItem('b8-suptk-x')||'';}catch(e){}
   const last=rows.length?rows[0].approved_at||'':'';if(!rows.length||(x&&x>=last)){b.hidden=true;return;}
   const h=rows.map(supItem).join('');$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)*0.45)+'s');
@@ -4053,7 +4054,7 @@ async function supLoad(){if(!CLOUD){$('kfSup').hidden=true;return;}try{supShow(a
 $('supX').addEventListener('click',()=>{try{localStorage.setItem('b8-suptk-x',$('supTk').dataset.last||'9');}catch(e){}$('supTk').hidden=true;});
 $('supForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,m=$('supMsg'),d=document.getElementById('kofiDlg');
   const tab=(d.querySelector('[data-kft].on')||{dataset:{}}).dataset.kft||'kofi',amt=parseFloat(f.amount.value);
-  const row={name:f.name.value.trim()||null,anon:f.anon.checked,amount:amt>0?amt:null,currency:f.currency.value,show_amount:!f.hide.checked,method:tab,message:f.message.value.trim()||null};
+  const row={name:f.name.value.trim()||null,title:f.title.value,anon:f.anon.checked,amount:amt>0?amt:null,currency:f.currency.value,show_amount:!f.hide.checked,method:tab,message:f.message.value.trim()||null};
   if(!row.name&&!row.anon){m.textContent='請填個名，或者剔「匿名」。';return;}
   if(!CLOUD){m.textContent='而家連唔到伺服器，請遲啲再試。';return;}
   m.textContent='送出緊…';try{await api('supporters',{method:'POST',body:JSON.stringify(row)});f.reset();m.textContent='✅ 多謝支持！站長確認收到之後，就會喺網站頂出現。';}
@@ -4062,7 +4063,7 @@ $('kfSup').addEventListener('toggle',()=>{const ok=!!(CLOUD&&SESSION);$('supForm
 document.addEventListener('click',e=>{const t=e.target.closest('[data-kft]');if(!t)return;const c=$('supForm').currency;if(c)c.value=/^(acn|wcn)$/.test(t.dataset.kft)?'CNY':'HKD';});
 async function supAdmin(){const b=$('supAdm');if(!b||!(CLOUD&&ADMIN))return;
   try{const rows=await api('supporters?select=*&order=created_at.desc&limit=200'),np=rows.filter(r=>r.status==='pending').length;
-    b.innerHTML=`<h2>鳴謝榜（打氣留言） <span class="hint">（待確認 ${np}；喺你收款 app 見到支持先撳 ✓，確認咗先會上走馬燈同加分）</span></h2>`+(rows.length?`<div class="auwrap"><table class="audit"><tr><th>時間</th><th>名</th><th>方法</th><th>金額（可改）</th><th>留言</th><th>狀態</th><th></th></tr>${rows.map(r=>`<tr class="${r.status==='pending'?'pend':''}" data-sup="${r.id}"><td class="t">${esc(new Date(r.created_at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${esc(r.name||'')}${r.anon?' <small>（匿名）</small>':''}${r.user_id?'':' <small>未登入</small>'}</td><td>${esc(SUP_M[r.method]||r.method)}</td><td><input type="number" min="0" step="any" value="${r.amount??''}" data-supamt> ${esc(SUP_CUR[r.currency]||'')}${r.show_amount?'':' <small>唔顯示</small>'}</td><td>${esc(r.message||'')}</td><td>${r.status==='approved'?'✅ 已出街':r.status==='pending'?'⏳ 待確認':'已拒絕'}</td><td>${r.status==='approved'?'<button type="button" class="lnk" data-supdo="pending">收返</button>':'<button type="button" class="lnk" data-supdo="approved">✓ 確認</button>'} <button type="button" class="lnk" data-supdo="del">刪除</button></td></tr>`).join('')}</table></div>`:'<p class="hint">未有人提交。</p>');
+    b.innerHTML=`<h2>鳴謝榜（打氣留言） <span class="hint">（待確認 ${np}；喺你收款 app 見到支持先撳 ✓，確認咗先會上走馬燈同加分）</span></h2>`+(rows.length?`<div class="auwrap"><table class="audit"><tr><th>時間</th><th>名</th><th>方法</th><th>金額（可改）</th><th>留言</th><th>狀態</th><th></th></tr>${rows.map(r=>`<tr class="${r.status==='pending'?'pend':''}" data-sup="${r.id}"><td class="t">${esc(new Date(r.created_at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${esc(r.name||'')} <small>${esc(r.title||'')}</small>${r.anon?' <small>（匿名）</small>':''}${r.user_id?'':' <small>未登入</small>'}</td><td>${esc(SUP_M[r.method]||r.method)}</td><td><input type="number" min="0" step="any" value="${r.amount??''}" data-supamt> ${esc(SUP_CUR[r.currency]||'')}${r.show_amount?'':' <small>唔顯示</small>'}</td><td>${esc(r.message||'')}</td><td>${r.status==='approved'?'✅ 已出街':r.status==='pending'?'⏳ 待確認':'已拒絕'}</td><td>${r.status==='approved'?'<button type="button" class="lnk" data-supdo="pending">收返</button>':'<button type="button" class="lnk" data-supdo="approved">✓ 確認</button>'} <button type="button" class="lnk" data-supdo="del">刪除</button></td></tr>`).join('')}</table></div>`:'<p class="hint">未有人提交。</p>');
   }catch(e){b.innerHTML=/supporters|42P01|PGRST20/.test(e.message)?'':`<p class="hint">支持者留言載入唔到：${esc(e.message)}</p>`;}}
 document.addEventListener('click',async e=>{const t=e.target.closest('[data-supdo]');if(!t)return;const tr=t.closest('[data-sup]'),id=tr.dataset.sup,k=t.dataset.supdo;
   try{if(k==='del'){if(t.dataset.arm!=='1'){t.dataset.arm='1';t.textContent='再撳一次確認刪除';return;}await api('supporters?id=eq.'+id,{method:'DELETE'});}
