@@ -4094,7 +4094,9 @@ const CSV_COLS=[['名稱',c=>c.name],['性別',c=>c.input.sex===1?'男':'女'],[
   ['年',c=>c.input.y],['月',c=>c.input.m],['日',c=>c.input.d],['時',c=>c.input.h],['分',c=>c.input.mi],['子時換日',c=>c.input.zi],
   ['城市',c=>c.input.city],['經度',c=>c.input.lon],['時區',c=>c.input.tz],['夏令時間',c=>c.input.dst?'是':''],['真太陽時',c=>c.input.tst===false?'否':'是'],
   ['姓名',c=>c.input.name||''],['備註',c=>c.notes||''],['標籤',c=>(c.tags||[]).join(' ')],['新增者',c=>c.by||''],['準',c=>c.likes||0],['唔準',c=>c.unlikes||0],['私人',c=>c.private?'是':''],['兄弟姊妹+命主合共',c=>c.input.sib??''],['子女',c=>c.input.kid??''],
-  ['事件',c=>(c.input.events||[]).map(v=>`${v.t}:${v.y}-${v.m}-${v.d}${v.hr!=null?' '+EV_HR[v.hr]+'時':''}`).join('; ')],['補充備註',c=>(c.comments||[]).map(m=>`${m.by?m.by+'：':''}${m.body}`).join('\n---\n')]];
+  ['事件',c=>(c.input.events||[]).map(v=>`${v.t}:${v.y}-${v.m}-${v.d}${v.hr!=null?' '+EV_HR[v.hr]+'時':''}`).join('; ')],['補充備註',c=>(c.comments||[]).map(m=>`${m.by?m.by+'：':''}${m.body}`).join('\n---\n')],
+  // 備份用：唔知時辰、加入日期，同成份出生資料原文（事件準確度、農曆事件等全部喺入面；匯入時有呢欄就照佢還原）
+  ['唔知時辰',c=>c.input.noT?'是':''],['加入日期',c=>c.created||''],['命例編號',c=>c.id||''],['原始資料',c=>JSON.stringify(c.input)]];
 const csvCell=v=>{v=String(v??'');return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
 const toCSV=list=>'\ufeff'+[CSV_COLS.map(x=>x[0]).join(','),...list.map(c=>CSV_COLS.map(x=>csvCell(x[1](c))).join(','))].join('\r\n');
 function parseCSV(t){t=t.replace(/^\ufeff/,'');const rows=[];let row=[],f='',q=false;
@@ -4111,6 +4113,9 @@ function caseFromRow(o){
     dst:/是|1|true/i.test(o['夏令時間']||''),tst:!/否|0|false/i.test(o['真太陽時']||'是')};
   const ev=[...(o['事件']||'').matchAll(/([^:;]+):(-?\d+)-(\d+)-(\d+)(?: ([子丑寅卯辰巳午未申酉戌亥])時)?/g)].map(x=>({t:x[1].trim().slice(0,30),y:+x[2],m:+x[3],d:+x[4],...(x[5]?{hr:EV_HR.indexOf(x[5])}:{})}));if(ev.length)input.events=sortEv(ev);
   const sb=numIn(o['兄弟姊妹+命主合共']??o['兄弟姊妹']),kd=numIn(o['子女']);if(sb!=null)input.sib=sb;if(kd!=null)input.kid=kd;
+  if(/是|1|true/i.test(o['唔知時辰']||''))input.noT=true;
+  // 有「原始資料」欄（新版匯出）就照佢還原成份出生資料，唔會走樣
+  if(o['原始資料']){try{const raw=JSON.parse(o['原始資料']);if(raw&&typeof raw==='object'&&!Array.isArray(raw)&&typeof raw.y==='number'){Object.keys(input).forEach(k=>delete input[k]);Object.assign(input,raw);}}catch(e){}}
   if(!o['名稱']||isNaN(input.y))return null;
   return {name:o['名稱'].slice(0,60),input,notes:(o['備註']||'').slice(0,2000),tags:parseTags(o['標籤']),...(PRIV_OK&&/是|1|true/i.test(o['私人']||'')?{private:true}:{})};}
 // 有啲環境（例如 claude 預覽）封鎖 confirm()，所以改用撳兩下確認：第一下變紅色「再撳一下…」，四秒內再撳先執行
