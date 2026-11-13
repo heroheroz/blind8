@@ -2293,6 +2293,8 @@ function drawChains(){
       it.x1+=off(Math.round(it.x1));it.x2+=off(Math.round(it.x2));});
     const H=lanes.length*LH+8;
     td.style.height=H+'px';
+    // 改咗呢格高度之後，下面啲招感字會跟住移位，所以要重新度返條線落到邊（唔係就會短咗一截，掂唔到個字）
+    {const b2=td.getBoundingClientRect();items.forEach(it=>{if(it.vx==null)return;const bx=box(it.vi);if(bx)it.vy=k?bx.top-b2.top:bx.bottom-b2.top;});}
     td.innerHTML=`<svg class="chainsvg" width="${W}" height="${H}" role="img" aria-label="粘連">${items.map(it=>{
       const y=up?6+it.lane*LH:H-6-it.lane*LH,pe=up?-2:H+2,ve=it.vy!=null?it.vy:(up?H+2:-2),e1=it.vEnd===1?ve:pe,e2=it.vEnd===2?ve:pe;
       if(it.broken){const m=(it.x1+it.x2)/2;
