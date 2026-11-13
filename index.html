@@ -635,7 +635,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <p class="hint nlogin">🔒 登入先睇到隱姓先生課堂、盲派八字摘要、八字口訣、計法說明同命例數據庫分析。</p>
   <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="song" checked>🎤 隱姓先生歌曲庫</label><label><input type="radio" name="ntab" value="lsum">隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="xzq">夏仲奇卜命遺例集</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="mj">盲派秘訣 8＋17</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="tut">📖 新手教學</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
   <div class="npane" id="np-calc">
-  <p id="r-p-cal"><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時則換算成北京時間（UTC+8）排盤。</p>
+  <p id="r-p-cal"><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時，日柱、時柱就用出世地嘅當地鐘錶時間（有夏令時間就扣 1 小時），唔會轉做北京時間；年柱、月柱同起運就按節氣交接嘅真正時刻計（外國時區會自動換算）。<span class="hint">（2026-11-13 修正：之前外國命例會轉咗做北京時間先排，令日柱或者時柱錯。香港、中國、台灣命例冇變。）</span></p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
   <p>大運、流年、流月、流日每一格都會同原局四柱逐柱比對兩種情況：① 天剋地沖：天干相剋（同陰陽，即七殺）而且地支六沖（子午、丑未、寅申、卯酉、辰戌、巳亥），標紅色「剋沖X」；② 天合地合：天干五合（甲己、乙庚、丙辛、丁壬、戊癸）而且地支六合（子丑、寅亥、卯戌、辰酉、巳申、午未），標綠色「天地合X」。X 係原局邊柱（年／月／日／時），例如「剋沖日」即係同日柱天剋地沖，同幾柱都有就寫埋一齊，例如「剋沖年月」。撳個標籤或者指住會講係邊個干支剋／合、邊個支沖／合，再撳一下收返。上面有個選項：「只限原局四柱」（預設）就只同原局年月日時比；「盤上顯示緊嘅所有柱」就連盤上顯示緊嘅大運、流年、流月、流日（同開咗嘅命宮、元運、進氣時柱等）都一齊比，標籤會寫埋係邊柱，例如「剋沖日·流年」。</p>
   <p id="r-p-jq">顯示選項「時柱進氣」：一個時辰兩個鐘（120 分鐘），用校正後嘅時間計，出世喺時辰頭 30 分鐘，就喺時柱左邊加一柱「進氣時柱」，係上一個時辰嘅時柱；出世喺時辰尾 30 分鐘，就喺時柱右邊加下一個時辰嘅時柱；中間 60 分鐘就冇。進氣時柱預設同原局柱一樣參與招感、粘連、啟動同做功嘅計算（例如 9:15 出世係巳時頭 15 分鐘，左邊加辰時嘅時柱）；上月流月同小運都一樣。三樣各自有「入計算」開關，閂咗就只係顯示，唔計。預設閂。<br>顯示選項「流年進氣」（預設閂；第95堂：年同月份都會提早入氣，進氣時兩條柱搭住睇）：流月係寅、卯月（年頭兩個月），流年左邊加上一年流年；子、丑月（年尾兩個月），流年右邊加下一年流年。顯示選項「交脫運」（預設閂；第94堂：交脫運時上一步運嘅氣未完，又加新運）：流年係呢步大運第一年，大運右邊加上一步大運；最後一年就加下一步大運。兩樣開咗預設入計算，各自有「入計算」開關。</p>
@@ -1323,8 +1323,8 @@ function correct(y,m,d,h,mi,tz,dst,lon,tst){
   const off=(tz+(dst?1:0))*60;let diff,info;
   if(tst){const lonMin=lon*4, e=eot(y,m,d);diff=Math.round(lonMin+e-off);
     info={label:'真太陽時',detail:`經度時差 ${fmtMin(lonMin-tz*60)}，均時差 ${fmtMin(e)}${dst?'，扣夏令 1 小時':''}，合共 ${fmtMin(diff)}`};}
-  else{diff=Math.round(480-off);
-    info={label:'北京時間',detail:diff?`換算 ${fmtMin(diff)}`:'無需換算'};}
+  else{diff=dst?-60:0; // 唔用真太陽時：日柱時柱用出世地當地鐘錶時間（扣夏令），唔再轉做北京時間（2026-11-13 修正：外國命例日柱時柱錯）
+    info={label:tz===8?'北京時間':'當地時間',detail:diff?'扣夏令 1 小時':'無需換算'};}
   const t=Solar.fromJulianDay(jd(y,m,d,h,mi)+(diff+0.5/60)/1440);
   return {y:t.getYear(),m:t.getMonth(),d:t.getDay(),h:t.getHour(),mi:t.getMinute(),info};
 }
@@ -1977,8 +1977,10 @@ const dwkHtml=st=>`<span class="dwk" title="十神做功：灰＝唔使做功，
 function xjDay(so,dyFix){const lu=so.getLunar(),Y=gzYear(so),dy=dyFix||S.dys.find(d=>d.getLiuNian().some(l=>l.getYear()===Y))||S.dys[S.dys.length-1];
   const mo=lu.getMonthInGanZhiExact(),jz=JIAZI60.indexOf(mo),lns=dy.getLiuNian(),li=lns.findIndex(l=>l.getYear()===Y);
   const di=S.dys.indexOf(dy),jt=di>=0&&li>=0?jiaoTuo(S.dys,di,li):null,lj=VIEW.lnJin&&VIEW.lnJinCalc?lnJinQi(Y,mo):null,lg=!lj&&VIEW.lnJinG&&VIEW.lnJinGCalc?lnJinG(so):null,mj=moJinQi(so);
-  return {大運:dy.getGanZhi(),小運:li>=0?dy.getXiaoYun()[li].getGanZhi():null,流年:lu.getYearInGanZhiByLiChun(),流月:mo,上月流月:jz>=0?JIAZI60[(jz+59)%60]:mo,流日:lu.getDayInGanZhi(),交脫運:jt?jt.gz:null,進氣流年:lj?lj.gz:lg?lg.gz:null,進氣流月:mj?mj.gz:null,下月流月:jz>=0?JIAZI60[(jz+1)%60]:null,上年流年:JIAZI60[((Y-5)%60+60)%60],下年流年:JIAZI60[((Y-3)%60+60)%60],上個大運:di>0?S.dys[di-1].getGanZhi()||null:null,下個大運:di>=0&&S.dys[di+1]?S.dys[di+1].getGanZhi()||null:null,_d:{交脫運:jt&&jt.prev?-1:1,進氣流年:lj?lj.d:lg&&lg.d||1,進氣流月:1}};}
+  return {大運:dy.getGanZhi(),小運:li>=0?xyGz(dy.getXiaoYun()[li].getGanZhi()):null,流年:lu.getYearInGanZhiByLiChun(),流月:mo,上月流月:jz>=0?JIAZI60[(jz+59)%60]:mo,流日:lu.getDayInGanZhi(),交脫運:jt?jt.gz:null,進氣流年:lj?lj.gz:lg?lg.gz:null,進氣流月:mj?mj.gz:null,下月流月:jz>=0?JIAZI60[(jz+1)%60]:null,上年流年:JIAZI60[((Y-5)%60+60)%60],下年流年:JIAZI60[((Y-3)%60+60)%60],上個大運:di>0?S.dys[di-1].getGanZhi()||null:null,下個大運:di>=0&&S.dys[di+1]?S.dys[di+1].getGanZhi()||null:null,_d:{交脫運:jt&&jt.prev?-1:1,進氣流年:lj?lj.d:lg&&lg.d||1,進氣流月:1}};}
 const JIAZI60=Array.from({length:60},(_,i)=>GAN[i%10]+ZHI[i%12]);
+// 小運由時柱起：外國時區嘅大運係用北京時間嗰個時刻計，小運要推返去當地時柱
+const xyGz=gz=>S&&S.xyD?JIAZI60[(JIAZI60.indexOf(gz)+S.xyD)%60]:gz;
 function xjStart(){const box=$('wkXJ');if(!box||!S||!S.cc)return;
   const cc0=(S.ccJ||S.cc).map(c=>c.h==='流時'?{...c,gz:null}:c),dy=S.dys[S.di],ln=dy.getLiuNian()[S.li],mo=S.mos[S.mi],dd=S.ds[S.dd];
   const key=[VIEW.jinMode,chartKey(),S.di,S.li,S.mi,S.dd,cc0.map(c=>c.gz||'-').join(''),JSON.stringify(AW),S.useSha,VIEW.shaAll,CALC_V,VIEW.yuanTrig].join('|');
@@ -2347,13 +2349,16 @@ function compute(inp){
   const c=correct(y,m,d,inp.h,inp.mi,inp.tz,inp.dst,inp.lon,inp.tst);
   const sol=Solar.fromYmdHms(c.y,c.m,c.d,c.h,c.mi,0);
   const lun=sol.getLunar();const ec=lun.getEightChar();ec.setSect(inp.zi);
-  const yun=ec.getYun(inp.sex,1);
+  // 年柱、月柱、起運睇節氣交接嘅真正時刻：曆法庫嘅節氣係北京時間，所以外國時區要另外換算做北京時間嚟比；日柱、時柱就用當地時間
+  const bjOff=inp.tst?0:Math.round(480-(inp.tz+(inp.dst?1:0))*60)-(inp.dst?-60:0);
+  const ecB=bjOff?(()=>{const e=Solar.fromJulianDay(sol.getJulianDay()+bjOff/1440).getLunar().getEightChar();e.setSect(inp.zi);return e;})():ec;
+  const yun=ecB.getYun(inp.sex,1),xyD=ecB===ec?0:(JIAZI60.indexOf(ec.getTime())-JIAZI60.indexOf(ecB.getTime())+60)%60;
   const dys=yun.getDaYun(13);
-  const P=[ec.getYear(),ec.getMonth(),ec.getDay(),ec.getTime()];if(noT)P.length=3;
+  const P=[ecB.getYear(),ecB.getMonth(),ec.getDay(),ec.getTime()];if(noT)P.length=3;
   // 時柱進氣：時辰頭 30 分鐘就攞上一個時辰嘅時柱，尾 30 分鐘就攞下一個時辰嘅時柱（用校正後時間）
   const into=((c.h+1)%2)*60+c.mi,jside=noT?0:into<30?-1:into>=90?1:0;
   const jq=jside?(()=>{const e=Solar.fromJulianDay(sol.getJulianDay()+jside/24).getLunar().getEightChar();e.setSect(inp.zi);return {side:jside,gz:e.getTime(),into};})():{side:0,into};
-  return {inp,noT,birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,jq,dm:gi(P[2][0])};
+  return {inp,noT,xyD,birthSolar:Solar.fromYmdHms(y,m,d,inp.h,inp.mi,0),c,sol,lun,ec,yun,dys,P,jq,dm:gi(P[2][0])};
 }
 // 「返今日」掣：用真正今日（唔理睇運日期）揀返大運流年流月流日
 document.addEventListener('click',e=>{if(e.target.closest('[data-evpclr]')&&S){S.evP=null;render();}});
@@ -2653,7 +2658,7 @@ function render(){
     if(!VIEW.noDyn)cols.push(
     {h:'大運',sub:dy.getGanZhi()?`${yearS(dy.getStartYear())}–${yearS(dy.getEndYear())}`:'未起運',gz:dy.getGanZhi(),dyn:true},
     // 小運：由時柱起，陽男陰女順行、陰男陽女逆行，每歲一柱
-    ...((VIEW.xiao||(CALC_T.xiaoPre&&!dy.getGanZhi()))&&!eNoLN&&!S.noT?[{h:'小運',sub:`${ln.getAge()}歲`,gz:dy.getXiaoYun()[S.li].getGanZhi(),dyn:true,show:'xiaoCalc'}]:[]),
+    ...((VIEW.xiao||(CALC_T.xiaoPre&&!dy.getGanZhi()))&&!eNoLN&&!S.noT?[{h:'小運',sub:`${ln.getAge()}歲`,gz:xyGz(dy.getXiaoYun()[S.li].getGanZhi()),dyn:true,show:'xiaoCalc'}]:[]),
     ...(eNoLN?[]:[{h:'流年',sub:`${yearS(ln.getYear())} · ${ln.getAge()}歲`,gz:ln.getGanZhi(),dyn:true}]),
     // 上月流月：揀咗嘅流月嘅前一個月，同流月一樣參與招感粘連
     ...(eNoMD||!VIEW.prevMo?[]:[(pm=>({h:'上月流月',sub:`${pm.name}起 ${pm.start.getMonth()}/${pm.start.getDay()}`,gz:pm.gz,dyn:true,show:'prevMoCalc'}))(S.mi>0?S.mos[S.mi-1]:months(ln.getYear()-1)[11])]),
