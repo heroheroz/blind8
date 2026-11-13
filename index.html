@@ -1170,6 +1170,8 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 </section>
 <section class="panel fold" id="lb" data-sec="lb" hidden>
   <h2 class="foldh">貢獻排行榜 <button type="button" class="lnk" data-lbreload>↻ 更新</button></h2>
+  <div id="qzBdLb"></div>
+  <h3 style="margin:18px 0 6px">🏅 貢獻積分榜</h3>
   <p class="lbwhy">點解要有貢獻分？我哋希望大家一齊將命例資料庫做得越嚟越齊全：多啲收集真實命例，再喺每個命例補充事件同筆記，令每個盤都有更多可以印證嘅資料。資料越充足，大家研究同驗證計法就越有根據。貢獻分係對每位出力嘅師兄師姐嘅一點回饋，亦可以用嚟換取進階功能。</p>
   <details class="lbhow"><summary>💡 點樣賺分、點樣用分？<span class="lbmore">撳呢度睇詳情 ▾</span></summary><b>點樣賺分？好簡單：</b>
   <ul>
@@ -1193,7 +1195,6 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auf"><select id="lbN" aria-label="每頁幾多個"><option value="10" selected>每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="0">全部</option></select></div>
   <div class="auwrap"><table class="audit lbt"><thead><tr><th>#</th><th>用戶</th><th title="一路以嚟賺過嘅分，唔會減；排名跟呢個">貢獻值</th><th title="可以用嚟換功能嘅餘額，用咗會減">積分</th><th>計分項目</th></tr></thead><tbody id="lbList"></tbody></table></div>
   <div class="gbpager" id="lbPager"></div>
-  <div id="qzBdLb"></div>
   <div id="pcWrap" hidden>
   <h3>計分設定 <span class="hint">（只有管理員睇到；冇等級嘅用戶用貢獻分換功能，每個盤每日扣一次，扣分設做 0 就免費；改👍門檻唔會扣返已經加咗嘅分）</span></h3>
   <div class="row" id="pcBox"></div>
