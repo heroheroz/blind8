@@ -21,4 +21,19 @@ grant execute on function public.quiz_answer(text, int) to authenticated;
 -- 答案同解釋嘅資料唔放喺公開 repo（主人自己喺 SQL Editor 入）。
 -- insert into public.quiz_key(qid, ans, why) values (…) on conflict (qid) do update set ans = excluded.ans, why = excluded.why;
 
+-- 做完一輪要伺服器核實：過去 60 分鐘內真係答咗最少 10 條新題目先記（唔信前端）
+create or replace function public.quiz_round_done(p_ok int) returns boolean
+language plpgsql security definer set search_path = public as $$
+declare c int; k int;
+begin
+  if auth.uid() is null then return false; end if;
+  if exists (select 1 from quiz_rounds where user_id = auth.uid() and at > now() - interval '2 minutes') then return false; end if;
+  select count(*), count(*) filter (where correct) into c, k from (
+    select correct from quiz_answers where user_id = auth.uid() and at > now() - interval '60 minutes' order by at desc limit 10) t;
+  if c < 10 then return false; end if;
+  insert into quiz_rounds(user_id, ok) values (auth.uid(), k);
+  return true;
+end $$;
+grant execute on function public.quiz_round_done(int) to authenticated;
+
 select '048 completed' as status;
