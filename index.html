@@ -3688,8 +3688,9 @@ const Store={
   async list(){
     if(!CLOUD)return lsGet().map(c=>({evVotes:{},...c,comments:(c.comments||[]).map((m,i)=>({likes:0,unlikes:0,myVote:0,by:'我',...m,id:m.id||'i'+i}))}));
     const sel='cases?select=id,created_at,owner,owner_name,name,input,notes,tags,votes(voter,vote),comments(id,created_at,body,author,author_name,comment_votes(voter,vote))';
+    // Supabase 一次最多畀 1000 行，命例過咗 1000 個要分頁攞晒（11月13日）
     // event_votes 要行咗 004_event_votes.sql、private 要行咗 019_private_cases.sql 先有；未有就照舊載入
-    let rows=null;for(const x of [',private,event_votes(ev,voter,vote)',',event_votes(ev,voter,vote)','']){try{rows=await api(sel+x+'&order=created_at.desc');PRIV_OK=x.includes('private');break;}catch(e){if(!x)throw e;}}
+    let rows=null;for(const x of [',private,event_votes(ev,voter,vote)',',event_votes(ev,voter,vote)','']){try{rows=[];for(let o=0;;o+=1000){const r=await api(sel+x+'&order=created_at.desc,id&limit=1000&offset='+o);rows.push(...r);if(r.length<1000)break;}PRIV_OK=x.includes('private');break;}catch(e){if(!x)throw e;}}
     const uid=me();
     return rows.map(r=>({id:r.id,created:r.created_at,owner:r.owner,by:r.owner_name||'',name:r.name,private:!!r.private,input:r.input,notes:r.notes||'',tags:r.tags||[],
       likes:r.votes.filter(v=>v.vote===1).length,unlikes:r.votes.filter(v=>v.vote===-1).length,myVote:(r.votes.find(v=>v.voter===uid)||{}).vote||0,
