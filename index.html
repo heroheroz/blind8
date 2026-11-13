@@ -3009,6 +3009,7 @@ document.addEventListener('click',e=>{const o=e.target.closest('[data-qzopt]');i
   if(e.target.closest('[data-qznext]')){qzNext();const b=$('np-quiz');if(b)b.scrollIntoView({block:'nearest'});return;}
   const l=e.target.closest('[data-qzlesson]');if(l){lsOpen(l.dataset.qzlesson,'lsum');return;}
   if(e.target.closest('[data-qzchart]')&&QZ.cur){const c=CASES.find(k=>k.id===QZ.cur.case);if(!c)return;const inp={...c.input,name:'測驗命例',events:[]};CUR=null;EDIT=false;writeForm(inp);TRK.skip=true;try{run(inp);}catch(err){$('err').textContent='排盤出錯：'+err.message;}finally{TRK.skip=false;}if(document.body.dataset.mtab)mTab('chart');else{const t=$('chartBox');if(t)t.scrollIntoView({block:'start',behavior:'smooth'});}}});
+document.addEventListener('click',e=>{if(!e.target.closest('[data-newsopen]'))return;const c=$('cl');if(!c)return;if(isMob())mTab('more');c.classList.remove('folded');c.scrollIntoView({block:'start',behavior:'smooth'});});
 // 隱姓先生歌曲庫：說明區第一個分頁（np-song）；lessons/songs.json（純唱歌片同課堂入面唱歌嗰段；songs 可以係字串，或者 [{name,t}] 每首歌一個開始時間）
 const SONGS='__songs';
 async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.json',{cache:'no-cache'});LS.songs=r.ok?await r.json():[];}catch(e){LS.songs=[];}}
@@ -4374,8 +4375,11 @@ function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="
 const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return m?m[1]:n;};  // 英文全名淨係出個名（Christina Lee → Christina）；中文名、暱稱照出
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
+// 走馬燈最前面：最新改動（主人 11月14日）。每次上線改呢行：[日期, 好短嘅描述]；出 7 日，撳落去開更新日誌
+const NEWS=['2026-11-14','新增 🎯 測驗同每週積分榜'];
 function supShow(rows,cs,qz,qr){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
-  const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,'');if(!(rows.length+cs.length+qz.length+qr.length)||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
+  const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);const nw=Date.now()-new Date(NEWS[0]+'T00:00:00+08:00')<7*864e5?`<span class="supi"><button type="button" class="lnk" data-newsopen style="font:inherit;color:inherit">🆕 ${esc(NEWS[1])}</button></span><span class="supsep">✦</span>`:'';
+  if(!(rows.length+cs.length+qz.length+qr.length+(nw?1:0))||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
   // 次序（主人 11月12日）：支持由最新排到最舊，全部出完先到加命例嘅感謝（都係新排先）
   const tm=r=>r.created_at||r.approved_at||'';rows=rows.slice().sort((p,q)=>tm(q)<tm(p)?-1:tm(q)>tm(p)?1:0);cs=cs.slice().sort((p,q)=>(q.last_at||'')<(p.last_at||'')?-1:1);
   // 命例感謝合併做一行（主人 11月12日）：全部名出晒（主人：唔好縮），每個名淨係出 3 日（042）
@@ -4384,7 +4388,7 @@ function supShow(rows,cs,qz,qr){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.is
   const qzLine=qz.length?`<span class="supi">🎯 本週測驗榜：${qz.map(r=>{const v=r.rk<=3?r.rk:0;return `${'①②③④⑤'[r.rk-1]||''} ${v?'<i class="supst">✨</i>':''}<b${v?` class="supvip supvip${v}"`:''}>${esc(qzName(r))}</b> ${r.score} 分`;}).join('　')}</span><span class="supsep">✦</span>`:'';
   // 過去 24 小時做完一輪（10 題）嘅師兄師姐（046）：鼓勵，唔用「感謝」（主人 11月14日）
   const qrn=qr.filter(r=>r.name).map(r=>esc(qzName(r))),qrLine=qr.length?`<span class="supi">💪 ${qrn.length?`<b>${qrn.join('、')}</b>${qr.length>qrn.length?` 等 ${qr.length} 位`:''}`:`${qr.length} 位師兄師姐`} 成功挑戰小測驗！你都嚟試吓？</span><span class="supsep">✦</span>`:'';
-  const h=qrLine+qzLine+rows.map(supItem).join('')+csLine;$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,(rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)+(cs.length?30+csn.join('').length:0)+qz.length*14+(qr.length?24+qrn.join('').length:0))*0.45)+'s');
+  const h=nw+qrLine+qzLine+rows.map(supItem).join('')+csLine;$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,(rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)+(cs.length?30+csn.join('').length:0)+qz.length*14+(qr.length?24+qrn.join('').length:0))*0.45)+'s');
   b.hidden=false;b.dataset.last=last;}
 async function supLoad(){supLoad.s=!!SESSION;if(!CLOUD){$('kfSup').hidden=true;return;}try{const cs=await api('case_thanks?select=*').catch(()=>[]),qz=await api('rpc/quiz_top5',{method:'POST',body:'{}'}).catch(()=>[]),qr=await api('rpc/quiz_recent',{method:'POST',body:'{}'}).catch(()=>[]);supShow(await api('supporter_ticker?select=*&order=created_at.desc&limit=30'),cs,qz,qr);$('kfSup').hidden=false;}catch(e){$('kfSup').hidden=true;}}
 $('supX').addEventListener('click',()=>{try{localStorage.setItem('b8-suptk-x',JSON.stringify({l:$('supTk').dataset.last||'',t:Date.now()}));}catch(e){}$('supTk').hidden=true;});
