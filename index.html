@@ -1671,6 +1671,12 @@ const elOf=(k,ch)=>k?ZWX[zi(ch)]:gw(gi(ch));
 const CHAIN_LEGEND=`<div class="wxbar chainleg"><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[2],EC[2])}</svg>兩端同五行（例如己己）</span><span><svg width="40" height="10" aria-hidden="true">${chainPaths('M4 5 H36',EC[0],EC[2])}</svg>兩端唔同五行（例如甲己），兩色交替</span><span><svg width="40" height="12" aria-hidden="true"><path d="M3 6 H13 M27 6 H37" stroke="var(--muted)" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M16 0 L12 12 M28 0 L24 12" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round"/></svg>已破除</span><span><b class="st">啟動</b>天干：七殺冇粘連或已啟動；地支：沖、害、刑嘅字冇粘連或已啟動</span><span><b class="actl">↑</b>啟動：每條被破除嘅粘連一個（冇粘連就一個），啟動鏈每多一層再加一個（↑ 越多激活越大力）　<b class="actl dn">↓</b>未啟動：每條粘連一個（↓ 越多粘得越實）</span></div>`;
 // 箭咀力度（015_arrow_weights.sql）：管理員喺「箭咀力度」改，所有人睇到；讀唔到就用呢度嘅預設
 const AW={fu:1,he:1,lian:0.5,banhe:0.5,sanhe:1,zg:0.5,gong:1,zgb:0.5,chain:1,cx:1,kg:1,se:0.5,yr:1,sw:1.5,sem:1,anhe:1,anhe2:0.5,sanhui:1,banhui:0.5,hai:0.5,xing:0.5,he2:1,cg:1,cgy:0.5,kw:0.35,tian:1,jgz:1,gw:1.5,zc:2.5};
+// 規則版本紀錄（主人 11月14日）：每次測試記低計法版本、試驗開關同箭咀力度；箭咀力度用一個短編號代表成套數值，數值一改編號就變
+const cfgHash=o=>{const t=JSON.stringify(Object.keys(o).sort().map(k=>[k,o[k]]));let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))>>>0;return h.toString(36).padStart(6,'0').slice(-6);};
+const AW_DEF={...AW},AW_DEF_ID=cfgHash(AW_DEF);
+// 箭咀力度快照：編號 → 成套數值；用過唔係預設嘅數值做測試，就要喺度加一行（預設嗰套自動有）
+const AN_CFG={[AW_DEF_ID]:{note:'程式預設數值',aw:AW_DEF}};
+const cfgNow=()=>({at:new Date().toISOString().slice(0,16).replace('T',' '),ver:CALC_V,site:CALC_SITE,flags:{...CALC_T},aw_id:cfgHash(AW),aw:{...AW}});
 const AW_META=[['banhui','半會（每條）','三會方（亥子丑、寅卯辰、巳午未、申酉戌）其中兩個相連嘅字，例如亥子、卯辰；本來算連續'],['fu','伏吟（每條）','同一個字，例如丙丙'],['he','合（每條）','天干五合、地支六合'],['lian','連續（每條）','次序相差一位，例如甲乙、子丑'],['banhe','半合（每條）','三合局其中兩個字，要有中神'],['gong','三合拱（每條）','三合局缺一個字（例如申辰拱子），招感出嚟嘅字同兩個來源字各一條'],
   ['sanhe','三合局（每個字）','三個字齊，例如申子辰，每個字合共計幾多'],['zg','招感字粘連（每條）','招感字同來源字嘅連續或合'],['zgb','招感重字（第三個起每多一個）','例如三個丙招合'],
   ['chain','啟動鏈（每多一層）','第一層係基本，之後每層加'],['cx','坐辰戌','天干坐辰或戌（魁罡另計）'],['kg','魁罡','庚辰、庚戌、壬辰、戊戌；用呢個數代替坐辰戌，唔會兩樣疊加'],['se','見同五行地支（每個）','天干見同五行嘅地支'],['yr','見自己陽刃（每個）','甲卯、丙午、戊午、庚酉、壬子'],['sem','多個同五行地支（倍數）','見同五行地支多過一個嗰陣，見同五行嗰部分再乘呢個數'],['sw','最強五行同五行嘅字（倍數）','同最強五行同一五行嘅字，箭咀總數乘呢個數'],
@@ -3007,14 +3013,14 @@ function anKw(tag){const re=new RegExp(tag.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 // 分析歷史（估估下）（主人 11月12日）：每次測試，成功又好失敗又好，都記低一行；新嘅加喺最頂，舊嘅唔刪
 // [日期, 測試, 每年平均危險日, 死期正日中, 前後幾日中, 亂估都中, 結果(ok/no/''), 備註]
 const AN_HIST=[
-['11月13日','地支招殺星三種做法：A 黐住就招對沖字（而家）；B 只限比劫地支招財；C 完全唔招','—','A：做到功 37、做唔到 121','B：24／134；C：24／134','—','','13 個隱師、夏仲奇命例本人過身日；B 同 C 結果一樣，即係「比劫招財」幾乎唔會觸發；A 多咗 13 個字做到功（隠姓先父 6 個、袁世凱 2 個、早夭男孩 1 個等）；元神斷滅三步齊三種都係 6/13；老師第15堂 7:00、第86堂 35:03 明講地支黐住招對沖字，所以保留 A，冇改計法'],
-['11月13日','計法 v13（試驗）：地支見沖就當沖開，唔使等啟動鏈，對過身日有冇影響','—','v11：做到功 37、做唔到 121','v13：做到功 98、做唔到 60','—','no','13 個隱師、夏仲奇命例本人過身日；一見沖就開，再沿住刑害傳開去，過身日大部份字變咗做到功（李小龍 13 個字全部做到功），違反「過身日大部份要做唔到」；平常日子 96% 都係全部地支啟動，冇分辨力；唔上線'],
-['11月13日','「全部有粘連嘅地支都被沖開」做唔做得保險線（元神斷滅多一步）','過身日 13 日','照網站啟動計：0/13；全部見沖：1/13；全部見沖刑害：6/13（46%）','平常日子 1,560 日：3.6%；0.9%；39%','—','no','過身日前後 180 日每 3 日抽一日做對照，計招感殺星；三種計法都分唔出過身日同平常日子；順帶發現：6 個過身日係每個地支都有字沖刑害，但冇一個啟動到（互相黐住兜圈）；老師第50堂 35:48 話全沖只係解咗其中一條保險線、第86堂 12:11 話盲派唔怕地支沖'],
-['11月13日','計法 v12（試驗）：元運未填實都照計粘連，但力度減半，對過身日有冇影響','—','v11：做到功 37、做唔到 121','v12：做到功 37、做唔到 122','—','','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支；多咗一個字做唔到，冇命例變差；元神斷滅三步齊都係 6/13；未上線，等 Tom 決定；根據第38堂 46:11、第44堂 2:56、第39堂 9:08'],
-['11月13日','計法 v11：強流月（甲寅、庚申、壬子、丙午、坐辰戌共 14 個）都填實到元運，對過身日有冇影響','—','v10：做到功 37、做唔到 121','v11：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支，兩版結果一樣；元神斷滅三步齊都係 6/13；根據第46堂 36:33–36:51 同第61堂 21:42'],
-['11月13日','計法 v10：N 個重字招 N−1 個合字（三個招兩個），對過身日有冇影響','—','v9：做到功 37、做唔到 121','v10：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支，兩版結果一樣；元神斷滅三步齊都係 6/13；根據第51堂 8:03 同第96堂 39:21'],
-['11月13日','計法 v9：流年月日之間唔互拱；夾拱以多嗰邊計（一甲三壬拱三個癸），對過身日有冇影響','—','v8：做到功 37、做唔到 121','v9：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支，兩版結果一樣；元神斷滅三步齊都係 6/13；第66堂張雪峰例子（原局甲、三個壬）v9 拱出三個癸，同老師講嘅一致'],
-['11月13日','計法 v8：三合拱淨係兩頭拱中間（唔再拱頭拱尾），對過身日有冇影響','—','v7：做到功 39、做唔到 120','v8：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支；元神斷滅三步齊兩版都係 6/13；袁世凱由 9 個做到功變 7 個，冇命例變差'],
+['11月13日','地支招殺星三種做法：A 黐住就招對沖字（而家）；B 只限比劫地支招財；C 完全唔招','—','A：做到功 37、做唔到 121','B：24／134；C：24／134','—','','13 個隱師、夏仲奇命例本人過身日；B 同 C 結果一樣，即係「比劫招財」幾乎唔會觸發；A 多咗 13 個字做到功（隠姓先父 6 個、袁世凱 2 個、早夭男孩 1 個等）；元神斷滅三步齊三種都係 6/13；老師第15堂 7:00、第86堂 35:03 明講地支黐住招對沖字，所以保留 A，冇改計法','v11（另試 B、C 兩種）'],
+['11月13日','計法 v13（試驗）：地支見沖就當沖開，唔使等啟動鏈，對過身日有冇影響','—','v11：做到功 37、做唔到 121','v13：做到功 98、做唔到 60','—','no','13 個隱師、夏仲奇命例本人過身日；一見沖就開，再沿住刑害傳開去，過身日大部份字變咗做到功（李小龍 13 個字全部做到功），違反「過身日大部份要做唔到」；平常日子 96% 都係全部地支啟動，冇分辨力；唔上線','v11 對 v13'],
+['11月13日','「全部有粘連嘅地支都被沖開」做唔做得保險線（元神斷滅多一步）','過身日 13 日','照網站啟動計：0/13；全部見沖：1/13；全部見沖刑害：6/13（46%）','平常日子 1,560 日：3.6%；0.9%；39%','—','no','過身日前後 180 日每 3 日抽一日做對照，計招感殺星；三種計法都分唔出過身日同平常日子；順帶發現：6 個過身日係每個地支都有字沖刑害，但冇一個啟動到（互相黐住兜圈）；老師第50堂 35:48 話全沖只係解咗其中一條保險線、第86堂 12:11 話盲派唔怕地支沖','v11'],
+['11月13日','計法 v12（試驗）：元運未填實都照計粘連，但力度減半，對過身日有冇影響','—','v11：做到功 37、做唔到 121','v12：做到功 37、做唔到 122','—','','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支；多咗一個字做唔到，冇命例變差；元神斷滅三步齊都係 6/13；未上線，等 Tom 決定；根據第38堂 46:11、第44堂 2:56、第39堂 9:08','v11 對 v12'],
+['11月13日','計法 v11：強流月（甲寅、庚申、壬子、丙午、坐辰戌共 14 個）都填實到元運，對過身日有冇影響','—','v10：做到功 37、做唔到 121','v11：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支，兩版結果一樣；元神斷滅三步齊都係 6/13；根據第46堂 36:33–36:51 同第61堂 21:42','v10 對 v11'],
+['11月13日','計法 v10：N 個重字招 N−1 個合字（三個招兩個），對過身日有冇影響','—','v9：做到功 37、做唔到 121','v10：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支，兩版結果一樣；元神斷滅三步齊都係 6/13；根據第51堂 8:03 同第96堂 39:21','v9 對 v10'],
+['11月13日','計法 v9：流年月日之間唔互拱；夾拱以多嗰邊計（一甲三壬拱三個癸），對過身日有冇影響','—','v8：做到功 37、做唔到 121','v9：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支，兩版結果一樣；元神斷滅三步齊都係 6/13；第66堂張雪峰例子（原局甲、三個壬）v9 拱出三個癸，同老師講嘅一致','v8 對 v9'],
+['11月13日','計法 v8：三合拱淨係兩頭拱中間（唔再拱頭拱尾），對過身日有冇影響','—','v7：做到功 39、做唔到 120','v8：做到功 37、做唔到 121','—','ok','13 個隱師、夏仲奇命例本人過身日，計晒全盤干支；元神斷滅三步齊兩版都係 6/13；袁世凱由 9 個做到功變 7 個，冇命例變差','v7 對 v8'],
   ['11月13日','運動員、軍人係咪多魁罡日（日柱庚辰、庚戌、壬辰、戊戌）','—','運動員 8/136（6%）','軍人 2/40（5%）','7%','no','其他命例 43/750（6%），三組都同撞彩（60 日有 4 日）差唔多；呢批命例時辰未驗證，淨係睇日柱'],
 ['11月12日','六步＋「魁罡、坐辰戌、陽刃」三樣中最少兩樣受犯','1','0/12','前後7日 0/12','4%','no','日子夠少，但一個死期都中唔到'],
 ['11月12日','六步＋三樣中最少一樣受犯','13','0/12','前後7日 4/12','22%','no','12 個盤入面 5 個根本冇魁罡、辰戌或者陽刃，所以點都中唔到'],
@@ -3256,7 +3262,7 @@ function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelect
   const all=AN.t==='y'?all0.filter(r=>anIs(r,['隱師命例'])):AN.t==='yx'?all0.filter(r=>anIs(r,['隱師命例','夏仲奇老師命例'])):all0;
   box.querySelectorAll('[data-ansub]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ansub===AN.sub));
   if(AN.sub==='sc'||AN.sub==='rs'){anScore(body);return;}
-  if(AN.sub==='hs'){body.innerHTML=`<p class="hint">每次測試都記低，成功又好失敗又好，最新喺最頂。全部用 12 個隱姓先生有死期嘅命例，死期前後九個月逐日計。<b>亂估都中</b>＝隨便揀一日都中嘅機會；中嘅比例要明顯高過佢先算有用。目標：每年危險日唔多過 10 日。樣本細，只係估估下，唔係定論。</p><div class="tblwrap"><table class="sctbl"><thead><tr><th>日期</th><th>測試</th><th>每年危險日</th><th>死期正日中</th><th>前後幾日中</th><th>亂估都中</th><th>結果</th><th>備註</th></tr></thead><tbody>${AN_HIST.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(r[5])}</td><td class="${r[6]==='ok'?'scok':r[6]==='no'?'scno':''}">${r[6]==='ok'?'👍 有用':r[6]==='no'?'👎 冇用':'未定'}</td><td class="hint">${esc(r[7])}</td></tr>`).join('')}</tbody></table></div>`;return;}
+  if(AN.sub==='hs'){const cn=cfgNow();body.innerHTML=`<p class="hint cfgnow">⚙️ 而家網站用緊：<b>計法 v${cn.ver}</b>${Object.keys(cn.flags).length?'':''} · <button type="button" class="lnk" data-cfgshow="${cn.aw_id}">箭咀 #${cn.aw_id}</button>${cn.aw_id===AW_DEF_ID?'（同程式預設一樣）':'（管理員改過，同預設唔同）'} · <button type="button" class="lnk pngbtn" data-cfgcopy>複製成套設定</button><span id="cfgMsg"></span><br>由 11月13日起，每個測試都記低用邊個計法版本同邊套箭咀力度（編號代表成套數值，數值一改編號就變），之後改咗箭咀力度都知舊結果係點計出嚟。更早嘅測試當時冇記。</p><p class="hint">每次測試都記低，成功又好失敗又好，最新喺最頂。全部用 12 個隱姓先生有死期嘅命例，死期前後九個月逐日計。<b>亂估都中</b>＝隨便揀一日都中嘅機會；中嘅比例要明顯高過佢先算有用。目標：每年危險日唔多過 10 日。樣本細，只係估估下，唔係定論。</p><div class="tblwrap"><table class="sctbl"><thead><tr><th>日期</th><th>測試</th><th>每年危險日</th><th>死期正日中</th><th>前後幾日中</th><th>亂估都中</th><th>結果</th><th>計法／箭咀設定</th><th>備註</th></tr></thead><tbody>${AN_HIST.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(r[5])}</td><td class="${r[6]==='ok'?'scok':r[6]==='no'?'scno':''}">${r[6]==='ok'?'👍 有用':r[6]==='no'?'👎 冇用':'未定'}</td><td class="hint">${r[8]?`${esc(r[8])}<br><button type="button" class="lnk" data-cfgshow="${esc(r[9]||AW_DEF_ID)}">箭咀 #${esc(r[9]||AW_DEF_ID)}</button>`:'未有記錄'}</td><td class="hint">${esc(r[7])}</td></tr>`).join('')}</tbody></table></div>`;return;}
   if(!all.length){body.innerHTML='<p class="hint">未有命例。</p>';return;}
   AN.cats=anCats(all);
   const head=`<label class="hint">🎓 用邊啲命例：<select data-ant aria-label="用邊啲命例"><option value="">全部公開命例（${all0.length} 個）</option><option value="y"${AN.t==='y'?' selected':''}>淨係隱姓先生命例（${nT} 個）</option><option value="yx"${AN.t==='yx'?' selected':''}>隱姓先生＋夏仲奇命例（${nT2} 個）</option></select></label><p class="hint">用 ${all.length} 個公開命例（唔計私人命例同國家地區盤）。「倍數」= 呢組有呢個特徵嘅比例 ÷ 全部命例嘅比例；樣本少，只係俾大家搵線索，唔係定論。撳開每組先計特徵。</p>`;
@@ -3300,6 +3306,9 @@ function anDraw(){const box=$('np-an');if(!box)return;const body=box.querySelect
     const feat=fx.map(f=>[f,all.filter(r=>r.F.has(f))]).filter(([,v])=>v.length>=2).sort((a,b)=>b[1].length-a[1].length);
     h=`<h4>相同八字</h4>${same(r=>r.P.join(' '),'八字')||'<p class="hint">冇。</p>'}<h4>相同日柱</h4>${same(r=>r.P[2],'日柱')}<h4>干支組合</h4>${feat.map(([f,v])=>anGroup('gzf'+f,f,v,all,anEvBreak(v))).join('')}`;}
   body.innerHTML=head+h;}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-cfgshow]');if(t){const id=t.dataset.cfgshow,c=AN_CFG[id]||(id===cfgHash(AW)?{note:'而家網站用緊嘅數值',aw:AW}:null);
+    tipTxt(c?`箭咀力度 #${id}（${c.note}）\n`+AW_META.map(m=>m[0] in c.aw?`${m[1]}：${c.aw[m[0]]}`:'').filter(Boolean).join('\n')+Object.keys(c.aw).filter(k=>!AW_META.some(m=>m[0]===k)).map(k=>`\n${k}：${c.aw[k]}`).join(''):`箭咀力度 #${id}：呢套數值冇存低。`,e.clientX,e.clientY);e.stopPropagation();return;}
+  if(e.target.closest('[data-cfgcopy]')){const txt=JSON.stringify(cfgNow());(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{$('cfgMsg').textContent=' 已複製';},()=>{$('cfgMsg').textContent=' 複製唔到';});}});
 document.addEventListener('change',e=>{if(e.target.matches('[data-ant]')){AN.t=e.target.value;try{localStorage.setItem('anT',AN.t);}catch(_){}anDraw();}});
 document.addEventListener('click',e=>{const s=e.target.closest('[data-ansub]');if(s){AN.sub=s.dataset.ansub;anDraw();return;}
   const g=e.target.closest('[data-ang]');if(g){AN.g=g.dataset.ang;anDraw();}});
