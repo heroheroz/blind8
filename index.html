@@ -3492,7 +3492,7 @@ mTab('in');
 // 新手教學：淨係新用戶見到（未排過盤、未登入過、未睇過／跳過）；唔遮住畫面，隨時可以跳過；頁腳「新手教學」可以再睇
 const TUT={i:-1,steps:[
   ['in','#inPanel','🧭','排盤','填生日，撳「排盤」','wood'],
-  ['chart','#chartBox','☯','睇命盤','綠箭咀做到功，紅箭咀做唔到','fire'],
+  ['chart','#chartBox','☯','睇命盤','字角 ✓＝做到功，✗＝做唔到；↑＝啟動，↓＝粘連','fire'],
   ['chart','details[data-fold=opt]','⚙️','顯示選項','剔一個選項＝多一條柱','earth'],
   ['chart','#chartBox thead','☑️','柱頂剔格','加出嚟嘅柱：剔「計」先計','metal'],
   ['case','aside.cases','📚','命例','撳命例個名＝跳去佢個命盤','water'],
@@ -3512,6 +3512,7 @@ function tutShow(i){document.querySelectorAll('.tuthl').forEach(e=>e.classList.r
   // 第 4 步：盤上未有加出嚟嘅柱，就暫時開「下年流年」做示範，離開呢步就閂返
   if(i===3&&S&&!document.querySelector('[data-colck]')&&!VIEW.only4&&!VIEW.noDyn){TUT_DEMO=true;VIEW.adjLnN=true;render();}
   const logged=!document.body.classList.contains('nologin');
+  if(tab==='learn'){const n=document.querySelector('section.notes.fold');if(n)n.classList.remove('folded');}
   if(tab==='learn'&&logged){const r=document.querySelector('input[name=ntab][value=lsum]');if(r){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));}}
   const aim=(el,blk)=>{if(!el||TUT.i!==i)return;if(el.tagName==='DETAILS')el.open=true;el.classList.add('tuthl');el.scrollIntoView({block:blk||'nearest',behavior:'smooth'});
     setTimeout(()=>{if(TUT.i!==i)return;const r=el.getBoundingClientRect(),t=box.getBoundingClientRect();box.classList.toggle('tuttop',r.bottom>t.top-8&&r.top>innerHeight*0.45);},600);};
