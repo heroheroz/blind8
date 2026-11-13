@@ -489,7 +489,12 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 </form>
 <div class="cfind">
 <input type="search" id="caseQ" placeholder="🔍 搵命例（名、備註、標籤、干支）" title="可以搵干支，例如：庚辰、日柱庚辰、時癸巳、魁罡、坐辰戌、陽刃、陽刃逢沖；幾個詞用空格分開" aria-label="搵命例">
-<div class="wdbox"><button type="button" class="lnk" id="wdGo" title="命例庫冇呢個人？用上面打嘅名去維基數據搵出生日期，揀咗就自動排盤">🌐 命例庫冇？去維基數據搵呢個名人</button><div id="wdRes" class="wdres"></div></div>
+<div class="wdbox"><button type="button" class="lnk" id="wdGo" title="命例庫冇呢個人？用上面打嘅名去維基數據搵出生日期，揀咗就自動排盤">🌐 命例庫冇？去維基數據搵呢個名人</button><div id="wdRes" class="wdres"></div>
+<details class="more" id="adbBox"><summary>📋 貼上 Astro-Databank 資料（有時辰）</summary>
+<p class="hint">① <a href="#" id="adbGo">🔍 開 Astro-Databank 搵呢個人 ↗</a>（用上面搜尋格嘅英文名）② 喺嗰頁由「Name」拖到「Rodden Rating」嗰幾行，copy ③ 貼落下面，撳「填表排盤」。</p>
+<textarea id="adbTxt" rows="4" style="width:100%;box-sizing:border-box" placeholder="born on 1 June 1926 at 09:30 …&#10;Place Los Angeles, California, 34n03, 118w15&#10;Timezone PST h8w (is standard time)&#10;Rodden Rating AA"></textarea>
+<button type="button" class="go sm" id="adbFill">填表排盤</button>
+<div id="adbRes" class="wdres"></div></details></div>
 <div class="row"><span class="cap">標籤篩選</span><input type="search" id="tagQ" placeholder="搵標籤" aria-label="搵標籤"></div>
 <div id="tagBar" class="tagbar"></div>
 <p class="hint" id="findInfo"></p>
@@ -3359,6 +3364,45 @@ $('wdGo').addEventListener('click',wdSearch);
 $('wdRes').addEventListener('click',e=>{const bt=e.target.closest('[data-wd]');if(!bt)return;const r=WD_ROWS[+bt.dataset.wd];if(!r)return;
   writeForm({...readForm(),name:r.name,sex:r.sex,lunar:false,leap:false,y:r.b.y,m:r.b.m,d:r.b.d,h:12,mi:0,noT:true});
   $('wdRes').innerHTML=`<p class="hint">已填：<b>${esc(r.name)}</b> ${r.b.y}-${r.b.m}-${r.b.d}，冇時辰，排三柱。${r.multi?'<br>⚠️ 維基數據有幾個出生日期講法（'+r.multi.join('、')+'），用咗第一個，要小心。':''}${r.b.jul?'<br>⚠️ 呢個係舊曆（儒略曆）日期，日柱可能唔準。':''}<br>想要時辰：<a href="https://www.astro.com/astro-databank/Special:Search?search=${encodeURIComponent(r.eng)}" target="_blank" rel="noopener">去占星資料庫查 ↗</a>，見到 Rodden Rating 係 AA（出世紙）嘅時間，就取消「唔知時辰」，填返時分同出世地時區再排盤。</p>`;
+  run(readForm(),true);});
+// 貼上 Astro-Databank 資料：astro.com 唔畀程式直接讀，所以由用戶自己 copy 嗰幾行貼入嚟，呢度讀出日期、時間、經緯度、時區、夏令時間同 Rodden 評級再填表
+const ADB_MON={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+const ADB_RR={AA:'出世紙／官方紀錄',A:'本人或家人憑記憶',B:'傳記／自傳',C:'來源不明，要小心',DD:'幾個講法有衝突',X:'冇出生時間',XX:'連日期都唔肯定'};
+function adbParse(t){t=t.replace(/ /g,' ');const o={};
+  let m=/\((\d{1,2})\s+([A-Za-z]{3})[a-z]*\.?\s+(\d{3,4})\s+greg\.?\)/i.exec(t);const b=/born on\s+(\d{1,2})\s+([A-Za-z]{3})[a-z]*\s+(\d{3,4})/i.exec(t);
+  if(m)o.jul=true;else m=b;if(!m||!ADB_MON[m[2].toLowerCase()])return null;
+  o.y=+m[3];o.m=ADB_MON[m[2].toLowerCase()];o.d=+m[1];
+  const tm=/born on[^\n]*?\bat\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/i.exec(t);if(tm){o.h=+tm[1];o.mi=+tm[2];o.hasT=true;}
+  const pl=/(\d{1,3})\s*([ns])\s*(\d{1,2})\s*,\s*(\d{1,3})\s*([ew])\s*(\d{1,2})/i.exec(t);
+  if(pl){o.lat=(+pl[1]+pl[3]/60)*(/s/i.test(pl[2])?-1:1);o.lon=Math.round((+pl[4]+pl[6]/60)*(/w/i.test(pl[5])?-1:1)*100)/100;}
+  const pn=/Place\s+([^\n]*?),?\s*\d{1,3}\s*[ns]\s*\d{1,2}/i.exec(t);if(pn)o.place=pn[1].trim().replace(/,$/,'');
+  const tz=/Timezone\s+(\S+)\s+([hm])\s*(\d{1,3})\s*([ew])\s*(\d{1,2})?\s*(?:\(is ([^)]*)\))?/i.exec(t);
+  if(tz){o.zone=tz[1];const sg=/w/i.test(tz[4])?-1:1;
+    if(tz[2].toLowerCase()==='m'){o.off=sg*(+tz[3]+(+tz[5]||0)/60)/15;o.lmt=true;}else o.off=sg*(+tz[3]+(+tz[5]||0)/60);
+    o.dst=!o.lmt&&/daylight|war time|summer/i.test(tz[6]||'');}
+  const rr=/Rodden Rating\s*:?\s*(AA|A|B|C|DD|XX|X)\b/.exec(t);if(rr)o.rr=rr[1];
+  const nm=/Name\s+([^\n\t]+?)\s*(?:Gender\s*:\s*([MF]))?\s*(?:\n|\t|$)/.exec(t);
+  if(nm){const s=nm[1].trim(),c=s.split(/,\s*/);o.name=c.length===2?c[1]+' '+c[0]:s;if(nm[2])o.sex=nm[2]==='F'?0:1;}
+  else{const g=/Gender\s*:\s*([MF])/.exec(t);if(g)o.sex=g[1]==='F'?0:1;}
+  return o;}
+$('adbGo').addEventListener('click',e=>{e.preventDefault();open('https://www.astro.com/astro-databank/Special:Search?search='+encodeURIComponent($('caseQ').value.trim()||$('name').value.trim()),'_blank','noopener');});
+$('adbFill').addEventListener('click',()=>{const raw=$('adbTxt').value.trim(),box=$('adbRes'),o=raw&&adbParse(raw);
+  if(!o){box.innerHTML='<p class="hint">讀唔到出生日期。請連「born on …」嗰行一齊 copy 再貼。</p>';return;}
+  const good=o.hasT&&(o.rr==='AA'||o.rr==='A')&&o.off!=null,f=readForm(),warn=[];
+  let v={...f,lunar:false,leap:false,y:o.y,m:o.m,d:o.d,h:12,mi:0,noT:true};
+  let nm=o.name||f.name||$('caseQ').value.trim();if(o.sex!=null)v.sex=o.sex;
+  if(good){let std=o.off-(o.dst?1:0),z=TZS.includes(std)?std:TZS.reduce((a,b)=>Math.abs(b-std)<Math.abs(a-std)?b:a);
+    if(z!==std){const q=new Date(0);q.setUTCFullYear(o.y,o.m-1,o.d);q.setUTCHours(o.h,o.mi+Math.round((z-std)*60));v.y=q.getUTCFullYear();v.m=q.getUTCMonth()+1;v.d=q.getUTCDate();v.h=q.getUTCHours();v.mi=q.getUTCMinutes();
+      warn.push((o.lmt?'當年用地方平時（LMT）':'當年時區唔係整點')+'，已經換算做 UTC'+(z<0?'−':'+')+Math.abs(z)+' 嘅鐘錶時間。');}
+    else{v.h=o.h;v.mi=o.mi;}
+    v={...v,noT:false,tz:z,dst:!!o.dst,tst:true,city:CITIES.findIndex(c=>c[1]===null)};if(o.lon!=null)v.lon=o.lon;else warn.push('讀唔到經度，請自己填出生地經度。');}
+  else{if(!/未驗證時辰/.test(nm))nm+='（未驗證時辰）';warn.push(o.hasT?(o.off==null?'讀唔到時區，所以當唔知時辰。請連「Timezone」嗰行一齊貼。':'評級唔係 AA 或 A，時辰唔可靠，所以當唔知時辰，排三柱。'):'資料冇出生時間，排三柱。');}
+  if(o.jul)warn.push('原本係舊曆（儒略曆）日期，已經用括號入面嘅新曆日期。');
+  v.name=nm;writeForm(v);
+  const note='Astro-Databank Rodden '+(o.rr||'？')+(ADB_RR[o.rr]?'（'+ADB_RR[o.rr]+'）':'')+(o.place?'；出生地 '+o.place:'')+'\n'+raw.replace(/\s*\n\s*/g,' / ').slice(0,600);
+  if(!$('caseAdd').hidden){$('caseName').value=nm;if(!$('caseNotes').value.trim())$('caseNotes').value=note;}
+  const dup=CASES.filter(c=>c.input&&c.input.y===o.y&&c.input.m===o.m&&c.input.d===o.d&&!c.input.lunar);
+  box.innerHTML=`<p class="hint">已填：<b>${esc(nm)}</b> ${v.y}-${v.m}-${v.d}${good?' '+pad(v.h)+':'+pad(v.mi)+'，經度 '+v.lon+'，UTC'+(v.tz<0?'−':'+')+Math.abs(v.tz)+(v.dst?'（夏令時間）':''):''}，Rodden ${esc(o.rr||'？')}${ADB_RR[o.rr]?'（'+ADB_RR[o.rr]+'）':''}。${warn.map(w=>'<br>⚠️ '+w).join('')}${dup.length?'<br>⚠️ 命例庫已經有同一日出世嘅命例：'+dup.map(c=>esc(c.name)).join('、')+'，儲之前睇下係咪重複。':''}${$('caseAdd').hidden?'':'<br>名同備註已經填好，啱就撳上面 💾 儲存。'}</p>`;
   run(readForm(),true);});
 // 手機版分頁：排盤 in、命盤 chart、命例 case、更多 more（桌面版 CSS 唔理呢個設定）
 function mTab(k){document.body.dataset.mtab=k;if(k==='an'){placeAn();anDraw();}document.querySelectorAll('.mnav [data-mtab-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.mtabGo===k?'page':'false'));
