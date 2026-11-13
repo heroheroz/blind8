@@ -1211,6 +1211,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <h2>使用統計 <span class="hint">（只有管理員睇到）</span></h2>
   <p class="hint" id="usMsg"></p>
   <div class="auwrap"><table class="audit usage" id="usSum"></table></div>
+  <p class="tustats" id="usSpark"></p>
   <details class="usd"><summary>最近 14 日</summary><div class="auwrap"><table class="audit usage" id="usDaily"></table></div></details>
   <h3>最近排盤</h3>
   <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><select id="usN" aria-label="每頁幾多個"><option value="6" selected>每頁 6 個</option><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="100000">全部</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
@@ -3840,7 +3841,10 @@ async function loadActive(){const el=$('tuStats');if(!el)return;const adm=new Se
   TU.rows.forEach(u=>{if(u.last_sign_in_at){const t=Date.parse(u.last_sign_in_at);if(t>=now-30*D)ev.push([u.id,t]);}});
   const act=ev.filter(([u])=>!adm.has(u)),n=d=>new Set(act.filter(([,t])=>t>=now-d*D).map(([u])=>u)).size;
   const daily=Array.from({length:30},(_,i)=>{const a=now-(30-i)*D,b=a+D;return new Set(act.filter(([,t])=>t>=a&&t<b).map(([u])=>u)).size;}),mx=Math.max(1,...daily),bars='▁▂▃▄▅▆▇█';
-  el.innerHTML=`總用戶 <b>${tot}</b> 人（唔計管理員）　活躍用戶：今日（過去 24 小時）<b>${n(1)}</b>、過去 7 日 <b>${n(7)}</b>、過去 30 日 <b>${n(30)}</b><br><span class="hint" title="過去 30 日每日活躍人數，最右係最近 24 小時">30 日走勢 <span class="spark">${daily.map(x=>bars[Math.round(x/mx*7)]).join('')}</span> 最多 ${mx} 人／日。活躍＝有登入或者有任何動作（開命例、加命例、投票、筆記、留言等）。</span>`;}
+  // 總用戶 30 日走勢：每日完結嗰刻累計有幾多個戶口（唔計管理員）
+  const reg=TU.rows.filter(u=>!u.admin).map(u=>Date.parse(u.created_at)).filter(t=>!isNaN(t)),cum=Array.from({length:30},(_,i)=>reg.filter(t=>t<=now-(29-i)*D).length),c0=Math.min(...cum),c1=Math.max(...cum),dlb=i=>{const x=new Date(now-(29-i)*D);return (x.getMonth()+1)+'/'+x.getDate();};
+  const totSpark=`<br><span class="hint">總用戶 30 日走勢 <span class="spark">${cum.map((x,i)=>`<span title="${dlb(i)}：${x} 人">${bars[c1>c0?Math.round((x-c0)/(c1-c0)*7):3]}</span>`).join('')}</span> ${cum[0]} → ${cum[29]} 人（30 日多咗 ${cum[29]-cum[0]} 人）</span>`;
+  el.innerHTML=`總用戶 <b>${tot}</b> 人（唔計管理員）${totSpark}<br>活躍用戶：今日（過去 24 小時）<b>${n(1)}</b>、過去 7 日 <b>${n(7)}</b>、過去 30 日 <b>${n(30)}</b><br><span class="hint" title="過去 30 日每日活躍人數，最右係最近 24 小時">活躍用戶 30 日走勢 <span class="spark">${daily.map(x=>bars[Math.round(x/mx*7)]).join('')}</span> 最多 ${mx} 人／日。活躍＝有登入或者有任何動作（開命例、加命例、投票、筆記、留言等）。</span>`;}
 // 手動加分（管理員）：point_bonus 表（012_bonus.sql）；排行榜會計埋
 function drawBonusUsers(){const sel=$('bnUser'),v=sel.value;
   sel.innerHTML='<option value="">揀用戶</option>'+TU.rows.filter(u=>!u.admin).slice().sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','zh-HK')).map(u=>`<option value="${u.id}">${esc(u.name||'')}${u.email?' · '+esc(u.email):''}</option>`).join('');sel.value=v;}
@@ -3867,6 +3871,12 @@ async function setTier(id,tier){const msg=$('tuMsg');
     const u=TU.rows.find(x=>x.id===id);if(u)u.tier=tier||null;msg.textContent='已更新：'+((u&&(u.name||u.email))||'')+' → '+(TIER_N[tier]||'普通用戶');
     if(SESSION&&id===SESSION.user.id){TIER=tier;renderAuth();}}
   catch(e){msg.textContent='改唔到：'+e.message;drawTiers();}}
+// 使用統計 24 小時走勢：過去 24 個鐘，每個鐘一格（最右係啱啱呢個鐘）
+async function usSpark(){const el=$('usSpark');if(!el)return;const now=Date.now(),H=36e5,since=new Date(now-24*H).toISOString(),ev=[],bars='▁▂▃▄▅▆▇█';
+  try{for(let o=0;o<50000;o+=1000){const r=await api(`usage?select=at,kind,anon,user_id&at=gte.${since}&order=at&limit=1000&offset=${o}`);ev.push(...r);if(r.length<1000)break;}}catch(e){el.textContent='';return;}
+  const bk=f=>Array.from({length:24},(_,i)=>{const a=now-(24-i)*H,b=a+H;return f(ev.filter(r=>{const t=Date.parse(r.at);return t>=a&&t<b;}));}),hl=i=>{const x=new Date(now-(23-i)*H);return String(x.getHours()).padStart(2,'0')+':00';};
+  const rows=[['👥 人數（部機／戶口）',x=>new Set(x.map(r=>r.user_id||r.anon)).size,'人'],['🌐 開網',x=>x.filter(r=>r.kind==='visit').length,'次'],['🔮 排盤',x=>x.filter(r=>r.kind==='chart').length,'次'],['📖 開命例',x=>x.filter(r=>r.kind==='case').length,'次']];
+  el.innerHTML=`<span class="hint">24 小時走勢（每格一個鐘，左邊 ${hl(0)}，最右係而家；指住睇數字）</span>`+rows.map(([n,f,u])=>{const d=bk(f),mx=Math.max(1,...d);return `<br><span class="hint">${n} <span class="spark">${d.map((x,i)=>`<span title="${hl(i)}：${x} ${u}">${bars[Math.round(x/mx*7)]}</span>`).join('')}</span> 最多 ${Math.max(...d)} ${u}／鐘</span>`;}).join('');}
 async function loadUsage(){
   if(!(CLOUD&&ADMIN))return;
   const cols=[['guests','👥 未登入訪客（部機）','嗰段時間一次都冇登入過、淨係睇網站嘅部機（瀏覽器）；同一個人兩部機當兩部；登入過嘅部機只計入「登入咗嘅人」'],['users','👤 登入咗嘅人','幾多個唔同嘅戶口登入咗用'],['visits','🌐 開網次數','網站總共被打開咗幾多次'],['charts','🔮 排盤次數','總共排咗幾多個盤（自己輸入出世時間）'],['cases','📖 開命例次數','總共打開咗幾多次命例']];
@@ -3876,6 +3886,7 @@ async function loadUsage(){
     $('usDaily').innerHTML=`<thead><tr><th>日期</th>${cols.map(c=>`<th title="${c[2]}">${c[1]}</th>`).join('')}</tr></thead><tbody>${(st.daily||[]).map(r=>`<tr><td>${esc(r.day)}</td>${cols.map(c=>`<td>${r[c[0]]??'—'}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="6">冇紀錄</td></tr>'}</tbody>`;
   }catch(e){$('usSum').innerHTML=$('usDaily').innerHTML='';$('usList').innerHTML='';$('usPager').innerHTML='';
     $('usMsg').textContent=/usage|42P01|42883|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/006_stats.sql。':'載入唔到：'+e.message;return;}
+  usSpark();
   const k=$('usKind').value,q=$('usQ').value.trim().replace(/[,()*%]/g,'');
   const f=[k?'kind=eq.'+k:'kind=in.(chart,case)'];if(q)f.push('or='+encodeURIComponent(`(user_name.ilike.*${q}*,user_email.ilike.*${q}*)`));
   try{const {rows,total}=await api(`usage?select=id,at,kind,anon,user_id,user_name,user_email,mobile,input&order=at.desc&limit=${US.n+1}&offset=${US.p*US.n}&${f.join('&')}`,{count:true,headers:{Prefer:'count=exact'}});
