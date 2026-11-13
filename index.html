@@ -1208,7 +1208,6 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="gbpager" id="clPager"></div>
 </section>
 <section class="panel" id="audit" hidden>
-  <div id="supAdm"></div>
   <h2>使用統計 <span class="hint">（只有管理員睇到）</span></h2>
   <p class="hint" id="usMsg"></p>
   <div class="auwrap"><table class="audit usage" id="usSum"></table></div>
@@ -1217,6 +1216,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auf"><select id="usKind" aria-label="類別"><option value="">排盤同開命例</option><option value="chart">排盤</option><option value="case">開命例</option></select><select id="usN" aria-label="每頁幾多個"><option value="6" selected>每頁 6 個</option><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="100000">全部</option></select><input id="usQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"></div>
   <div class="auwrap"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>動作</th><th>出生資料</th><th></th></tr></thead><tbody id="usList"></tbody></table></div>
   <div class="gbpager" id="usPager"></div>
+  <div id="supAdm"></div>
   <h2>手動加分 <span class="hint">（只有管理員睇到；例如補返之前做咗嘅貢獻；填負數就係扣分；每筆都入審計紀錄）</span></h2>
   <div class="auf"><select id="bnUser" aria-label="用戶"></select><input id="bnAmt" type="number" step="1" placeholder="分數" aria-label="分數" style="width:6em"><input id="bnWhy" type="text" maxlength="200" placeholder="原因（用戶睇唔到）" aria-label="原因"><button type="button" class="go sm" data-bnadd>加分</button></div>
   <p class="hint" id="bnMsg"></p>
@@ -3792,6 +3792,13 @@ function auWhat(r){const o=r.row_new||r.row_old||{};
   switch(r.tbl){case 'cases':return `${o.private?'🔒 ':''}「${o.name||''}」`;case 'comments':return auCase(o.case_id)+' '+auCut(o.body);case 'guestbook':return auCut(o.body);case 'tags':return '#'+(o.name||'');
     case 'votes':return auCase(o.case_id)+' '+(AU_V[o.vote]||o.vote);case 'comment_votes':return AU_V[o.vote]||o.vote;case 'event_votes':return auCase(o.case_id)+' '+(o.ev||'')+' '+(AU_V[o.vote]||o.vote);
     case 'users':case 'logins':{const pv=(o.providers&&o.providers.length?o.providers:[o.provider]).filter(Boolean).map(x=>AU_PV[x]||x);return pv.length?'方法：'+pv.join('／'):'';}case 'point_bonus':return `${auUser(o.user_id)} ${o.amount>0?'+':''}${o.amount} 分${o.reason?'（'+o.reason+'）':''}`;case 'point_settings':return `${{need:'準門檻',start:'開戶分',vday:'投票每日上限',gday:'留言每日上限',daily:'每日登入分'}[o.key]||o.key} ${o.value}`;case 'point_costs':return `${{sha:'招感殺星',sw:'最強五行',work:'做功'}[o.kind]||o.kind} ${o.cost} 分`;default:return o.user_id||'';}}
+// 命例名做連結：一撳就開嗰個命例，隔籬寫埋係邊個加嘅；命例已經刪咗就寫「已刪除」
+function auCaseLink(r){const o=r.row_new||r.row_old||{},id=r.tbl==='cases'?o.id:['comments','votes','event_votes'].includes(r.tbl)?o.case_id:null;if(!id)return null;
+  const c=CASES.find(x=>x.id===id),nm=c?c.name:(r.tbl==='cases'?o.name:'')||'',by=c?c.by:(r.tbl==='cases'?o.owner_name:'')||'',pv=c?c.private:r.tbl==='cases'&&o.private;
+  const head=(pv?'🔒 ':'')+(c?`<button type="button" class="lnk" data-open="${c.id}" data-lcase title="打開呢個命例">「${esc(nm)}」</button>`:`${nm?'「'+esc(nm)+'」':''}<small style="display:inline">（命例已刪除）</small>`)+(by?` <small style="display:inline">· ${esc(by)}</small>`:'');
+  const w=auWhat(r),lead=r.tbl==='cases'?`${o.private?'🔒 ':''}「${o.name||''}」`:auCase(id);
+  return head+esc(w.startsWith(lead)?w.slice(lead.length):' '+w);}
+$('auList').addEventListener('click',e=>{if(e.target.closest('[data-open]'))setTimeout(()=>{const t=document.querySelector('.tscroll');if(t)t.scrollIntoView({block:'start',behavior:'smooth'});},60);});
 function auUser(id){const u=TU.rows.find(x=>x.id===id);return u?(u.name||u.email||''):String(id||'').slice(0,8);}
 function auDiff(r){if(r.op!=='UPDATE'||!r.row_old||!r.row_new)return [];const a=r.row_old,b=r.row_new,out=[];
   for(const k of Object.keys(b)){if(k==='created_at'||JSON.stringify(a[k])===JSON.stringify(b[k]))continue;
@@ -3810,7 +3817,7 @@ async function loadAudit(){
   try{const {rows,total}=await api(`audit_log?select=*&order=at.desc&limit=${n+1}&offset=${AU.p*n}${f.length?'&'+f.join('&'):''}`,{count:true,headers:{Prefer:'count=exact'}});
     const more=rows.length>n,np=total!=null?Math.ceil(total/n):AU.p+1+(more?1:0);rows.length=Math.min(rows.length,n);
     $('auMsg').textContent=rows.length?'':'冇紀錄。';
-    $('auList').innerHTML=rows.map(r=>`<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.actor?`${esc(r.actor_name||'')}<small>${esc(r.actor_email||'')}</small>`:r.op==='VIEW'?`<small>未登入${r.row_new&&r.row_new.anon?'（機號 '+esc(String(r.row_new.anon).slice(0,8))+'）':''}</small>`:'<small>系統／SQL</small>'}</td><td class="op-${r.op}">${r.tbl==='users'&&r.op==='INSERT'?'註冊':AU_OP[r.op]||esc(r.op)}</td><td>${esc(AU_T[r.tbl]||r.tbl)}</td><td>${esc(auWhat(r))}${auDiff(r).map(x=>`<span class="chg">${esc(x)}</span>`).join('')}<details><summary class="hint">詳細</summary><pre>${esc(JSON.stringify(r.op==='UPDATE'?{改之前:r.row_old,改之後:r.row_new}:(r.row_new||r.row_old),null,1))}</pre></details></td></tr>`).join('');
+    $('auList').innerHTML=rows.map(r=>`<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.actor?`${esc(r.actor_name||'')}<small>${esc(r.actor_email||'')}</small>`:r.op==='VIEW'?`<small>未登入${r.row_new&&r.row_new.anon?'（機號 '+esc(String(r.row_new.anon).slice(0,8))+'）':''}</small>`:'<small>系統／SQL</small>'}</td><td class="op-${r.op}">${r.tbl==='users'&&r.op==='INSERT'?'註冊':AU_OP[r.op]||esc(r.op)}</td><td>${esc(AU_T[r.tbl]||r.tbl)}</td><td>${auCaseLink(r)||esc(auWhat(r))}${auDiff(r).map(x=>`<span class="chg">${esc(x)}</span>`).join('')}<details><summary class="hint">詳細</summary><pre>${esc(JSON.stringify(r.op==='UPDATE'?{改之前:r.row_old,改之後:r.row_new}:(r.row_new||r.row_old),null,1))}</pre></details></td></tr>`).join('');
     $('auPager').innerHTML=pagerHtml(AU.p+1,np,'aupage');
   }catch(e){$('auList').innerHTML='';$('auPager').innerHTML='';$('auMsg').textContent=/audit_log|42P01|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/005_audit.sql。':'載入唔到：'+e.message;}
 }
