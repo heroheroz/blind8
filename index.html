@@ -455,6 +455,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 }
 @media (prefers-reduced-motion:no-preference){.cell{transition:background .15s,border-color .15s}}
 @media (prefers-reduced-motion:no-preference){#tipPop.pin{animation:popIn .2s cubic-bezier(.2,.9,.3,1.2)}@keyframes popIn{from{opacity:0;transform:scale(.6)}}.vbump{animation:vBump .45s ease-out}@keyframes vBump{0%,100%{transform:scale(1)}35%{transform:scale(1.25)}65%{transform:scale(.95)}}}
+.wdbox{margin:0 0 8px}.wdres{display:flex;flex-direction:column;gap:4px;margin-top:4px}.wdpick{text-align:left;padding:6px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer}.wdpick:hover{background:rgba(127,127,127,.12)}
 </style>
 </head><body>
 
@@ -488,6 +489,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 </form>
 <div class="cfind">
 <input type="search" id="caseQ" placeholder="🔍 搵命例（名、備註、標籤、干支）" title="可以搵干支，例如：庚辰、日柱庚辰、時癸巳、魁罡、坐辰戌、陽刃、陽刃逢沖；幾個詞用空格分開" aria-label="搵命例">
+<div class="wdbox"><button type="button" class="lnk" id="wdGo" title="命例庫冇呢個人？用上面打嘅名去維基數據搵出生日期，揀咗就自動排盤">🌐 命例庫冇？去維基數據搵呢個名人</button><div id="wdRes" class="wdres"></div></div>
 <div class="row"><span class="cap">標籤篩選</span><input type="search" id="tagQ" placeholder="搵標籤" aria-label="搵標籤"></div>
 <div id="tagBar" class="tagbar"></div>
 <p class="hint" id="findInfo"></p>
@@ -3335,6 +3337,29 @@ function run(v,force){
 $('f').addEventListener('input',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
 $('f').addEventListener('change',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
 $('f').addEventListener('submit',e=>{e.preventDefault();run(readForm(),true);});
+// 搵名人：用維基數據（公開接口）搵出生日期，揀咗就自動填表排盤。維基數據冇時辰，所以用「唔知時辰」排三柱；時辰可以去占星資料庫（Astro-Databank）查 AA 級出世紙時間再自己填
+const WD='https://www.wikidata.org/w/api.php?format=json&origin=*&';let WD_ROWS=[];
+function wdDate(v){const m=/^\+(\d+)-(\d\d)-(\d\d)/.exec(v&&v.time||'');return m&&v.precision>=11?{y:+m[1],m:+m[2],d:+m[3],jul:/Q1985786$/.test(v.calendarmodel||'')}:null;}
+async function wdSearch(){const q=$('caseQ').value.trim(),box=$('wdRes');if(!q){box.innerHTML='<p class="hint">喺上面搜尋格打個名先（中文或英文）。</p>';return;}box.innerHTML='<p class="hint">搵緊…</p>';
+  try{const lang=/[㐀-鿿]/.test(q)?'zh':'en';
+    const s=await(await fetch(WD+'action=wbsearchentities&type=item&limit=10&language='+lang+'&uselang=zh-hant&search='+encodeURIComponent(q))).json();
+    const ids=(s.search||[]).map(x=>x.id);if(!ids.length){box.innerHTML='<p class="hint">搵唔到，試下用英文全名。</p>';return;}
+    const en=(await(await fetch(WD+'action=wbgetentities&props=claims%7Clabels%7Cdescriptions&languages=zh-hant%7Czh-hk%7Czh-tw%7Czh%7Cen&ids='+ids.join('%7C'))).json()).entities||{};
+    WD_ROWS=[];
+    for(const id of ids){const e=en[id],c=e&&e.claims;if(!c||!(c.P31||[]).some(x=>x.mainsnak&&x.mainsnak.datavalue&&x.mainsnak.datavalue.value.id==='Q5'))continue;
+      const vals=p=>{const ok=(c[p]||[]).filter(x=>x.rank!=='deprecated'&&x.mainsnak&&x.mainsnak.datavalue),pf=ok.filter(x=>x.rank==='preferred');return(pf.length?pf:ok).map(x=>x.mainsnak.datavalue.value);};
+      const bs=vals('P569').map(wdDate).filter(Boolean),uniq=[...new Set(bs.map(b=>b.y+'-'+b.m+'-'+b.d))];if(!bs.length)continue;
+      const L=k=>e.labels&&e.labels[k]&&e.labels[k].value,zh=L('zh-hant')||L('zh-hk')||L('zh-tw')||L('zh')||'',eng=L('en')||'';
+      const D=k=>e.descriptions&&e.descriptions[k]&&e.descriptions[k].value,ds=vals('P570').map(wdDate).filter(Boolean)[0];
+      const sx=vals('P21').map(v=>v.id)[0];
+      WD_ROWS.push({b:bs[0],multi:uniq.length>1?uniq:null,name:zh&&eng&&zh!==eng?zh+' '+eng:(zh||eng),eng:eng||zh,sex:sx==='Q6581072'||sx==='Q1052281'?0:1,desc:D('zh-hant')||D('zh-hk')||D('zh-tw')||D('zh')||D('en')||'',dd:ds});}
+    box.innerHTML=WD_ROWS.length?WD_ROWS.map((r,i)=>`<button type="button" class="wdpick" data-wd="${i}"><b>${esc(r.name)}</b> ${r.b.y}-${r.b.m}-${r.b.d}${r.dd?' ～ '+r.dd.y+'-'+r.dd.m+'-'+r.dd.d:''}${r.multi?' ⚠️':''}<br><span class="hint">${esc(r.desc)}</span></button>`).join(''):'<p class="hint">搵到嘅結果都冇準確到日嘅出生日期。</p>';
+  }catch(err){box.innerHTML='<p class="hint">連唔到維基數據，遲啲再試。</p>';}}
+$('wdGo').addEventListener('click',wdSearch);
+$('wdRes').addEventListener('click',e=>{const bt=e.target.closest('[data-wd]');if(!bt)return;const r=WD_ROWS[+bt.dataset.wd];if(!r)return;
+  writeForm({...readForm(),name:r.name,sex:r.sex,lunar:false,leap:false,y:r.b.y,m:r.b.m,d:r.b.d,h:12,mi:0,noT:true});
+  $('wdRes').innerHTML=`<p class="hint">已填：<b>${esc(r.name)}</b> ${r.b.y}-${r.b.m}-${r.b.d}，冇時辰，排三柱。${r.multi?'<br>⚠️ 維基數據有幾個出生日期講法（'+r.multi.join('、')+'），用咗第一個，要小心。':''}${r.b.jul?'<br>⚠️ 呢個係舊曆（儒略曆）日期，日柱可能唔準。':''}<br>想要時辰：<a href="https://www.astro.com/astro-databank/Special:Search?search=${encodeURIComponent(r.eng)}" target="_blank" rel="noopener">去占星資料庫查 ↗</a>，見到 Rodden Rating 係 AA（出世紙）嘅時間，就取消「唔知時辰」，填返時分同出世地時區再排盤。</p>`;
+  run(readForm(),true);});
 // 手機版分頁：排盤 in、命盤 chart、命例 case、更多 more（桌面版 CSS 唔理呢個設定）
 function mTab(k){document.body.dataset.mtab=k;if(k==='an'){placeAn();anDraw();}document.querySelectorAll('.mnav [data-mtab-go]').forEach(b=>b.setAttribute('aria-current',b.dataset.mtabGo===k?'page':'false'));
   if(k==='case')$('caseBox').open=true;if(isMob())scrollTo(0,0);}
