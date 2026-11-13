@@ -4378,7 +4378,7 @@ const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 // 走馬燈最前面：最新改動（主人 11月14日）。每次上線改呢行：[日期, 好短嘅描述]；出 7 日，撳落去開更新日誌
-const NEWS=['2026-11-14','新增 🎯 測驗同每週積分榜'];
+const NEWS=['',''];  // 更新消息唔上走馬燈（主人 11月14日）；留空＝唔顯示
 function supShow(rows,cs,qz,qr){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);const nw=Date.now()-new Date(NEWS[0]+'T00:00:00+08:00')<7*864e5?`<span class="supi"><button type="button" class="lnk" data-newsopen style="font:inherit;color:inherit">🆕 ${esc(NEWS[1])}</button></span><span class="supsep">✦</span>`:'';
   if(!(rows.length+cs.length+qz.length+qr.length+(nw?1:0))||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
