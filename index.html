@@ -141,7 +141,7 @@ a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(-
 @media (min-width:900px){
   #f{grid-template-columns:minmax(220px,1fr) minmax(340px,2.4fr);grid-template-areas:"nm bi" "pl at" "ac at";gap:14px 22px;align-items:start}
   #fsName{grid-area:nm}#fsBirth{grid-area:bi}#fsTime{grid-area:tm}#fsPlace{grid-area:pl}#fsAt{grid-area:at}#f>.actions{grid-area:ac;align-self:end;flex-wrap:wrap}
-  #f fieldset{gap:5px}#f select,#f input[type=number]{padding:6px 5px}#f input[type=number]{width:4.4em}#fsAt>.row,#fsBirth>.row{flex-wrap:nowrap}#f .bzpk{margin:0}#fsPlace .hint{font-size:11px}
+  #f fieldset{gap:5px}#f fieldset>.seg{align-self:flex-start}#f select,#f input[type=number]{padding:6px 5px}#f input[type=number]{width:4.4em}#fsAt>.row,#fsBirth>.row{flex-wrap:nowrap}#f .bzpk{margin:0}#fsPlace .hint{font-size:11px}
   #fsBirth>.row{flex-wrap:wrap}#fsBirth #tmRow{flex-wrap:nowrap}#fsTime{display:none}#fsBirth #ziRow{flex-direction:row;align-items:center;gap:8px}#fsBirth #ziRow label{margin:0!important}
   #f>.actions .go{width:100%;padding:10px 26px}#f>.actions .err:empty{display:none}
 }
@@ -2592,6 +2592,9 @@ function swFan(sw,cols){const el=sw.el,g=sw.g?gi(sw.g):-1,cs=cols.map((c,i)=>({c
   const r=[['結論',[bad?`觸犯${WX[el]}（最強五行）又解唔開 ${bad} 處：老師話應嚴重事，應喺自己身體或者六親（第75堂 [13:45]、第53堂 [04:30]）🤖 推論`:`冇觸犯${WX[el]}又解唔開，唔算唔好。人人都有最強五行，有粘連、被夾住本身唔係問題（第53堂 [06:15]）`,hit?`被剋沖刑害 ${hit} 處（天干剋 ${gk.length}、地支沖刑害 ${zs.length}、地支剋 ${zk.length}）；做到功就係解開咗`:'冇被剋沖刑害']],['觸犯又解唔開',nw.length?nw:['冇']],['天干剋'+WX[el],gk.length?gk:['冇']],['地支沖刑害屬'+WX[el]+'嘅地支',zel.length?(zs.length?zs:['冇']):['盤上冇屬'+WX[el]+'嘅地支']],['地支剋'+WX[el],zk.length?zk:['冇']],['屬'+WX[el]+'嘅字粘連',nl.length?nl:['盤上冇屬'+WX[el]+'嘅字']]];r.bad=bad;r.why=nw;return r;}
 // 神煞（主人提供嘅神煞代表表）：日干查紅艷、羊刃、文昌、詞館、學堂、祿、天乙；年支查紅鸞、桃花、華蓋、驛馬
 // 每行按 甲乙丙丁戊己庚辛壬癸 或 子丑寅卯辰巳午未申酉戌亥 排；學堂表入面寫嘅係天干，所以對天干；其他全部對地支
+// 九星五行：一白水，二黑五黃八白土，三碧四綠木，六白七赤金，九紫火
+const yxW=y=>'w'+[4,2,0,0,2,3,3,2,1]['一二三四五六七八九'.indexOf(y.name[0])];
+const wxH=s=>[...s].map(ch=>{const g=GAN.indexOf(ch),z=ZHI.indexOf(ch);return g>=0||z>=0?`<span class="wxc w${g>=0?gw(g):ZWX[z]}">${ch}</span>`:ch;}).join('');
 const SS_GAN=[['紅艷','戀愛','午申寅未辰辰戌酉子申'],['羊刃','災傷','卯辰午未午丑酉戌子丑'],['文昌','學業運','巳午申酉申酉亥子寅卯'],['詞館','語言能力','亥亥寅寅申申巳巳申申'],
   ['學堂','學校緣','己己丙丙戊戊辛辛甲甲',1],['祿','財富／名譽','寅卯巳午巳午申酉亥子'],['天乙','貴人／升遷',['未丑','子申','亥酉','亥酉','未丑','子申','未丑','午寅','巳卯','巳卯']]];
 const SS_YUE=[['天德貴人','祖宗積德、逢凶化吉','巳庚丁申壬辛亥甲癸寅丙乙',2],['月德貴人','祖宗積德、心性慈和','壬庚丙甲壬庚丙甲壬庚丙甲',2]];
@@ -2600,12 +2603,12 @@ function shenSha(cols){const nat=h=>cols.find(c=>c.h===h&&c.gz),D=nat('日柱'),
   const on=cols.filter(c=>c.gz&&!c.sha),lb=c=>c.dyn?c.h:c.h.replace('柱','');
   // 神煞要做緊功先有效（第56堂 [16:52]、第65堂 [24:51]）：嗰個字做到功就標「做功」；gan＝2 即係天干地支都對（天德、月德）
   const wk=(c,k)=>{const i=cols.indexOf(c),w=S.work&&S.work[k]&&S.work[k][i];return w&&w.done?'<b class="ok">（做功）</b>':'';};
-  const row=([n,mean,tb,gan],base,i)=>{const want=Array.isArray(tb[i])?tb[i]:[...tb[i]],hit=on.flatMap(c=>(gan===2?[0,1]:[gan?0:1]).flatMap(k=>{const ch=c.gz[k];return want.includes(ch)?[`${lb(c)}${k?'支':'干'}${ch}${wk(c,k)}`]:[];}));
-    return `<tr${hit.length?' class="on"':''}><th>${n}</th><td class="hint">${mean}</td><td>${base}→<b>${want.join('、')}</b></td><td>${hit.length?hit.join('、'):'<span class="hint">冇</span>'}</td></tr>`;};
+  const row=([n,mean,tb,gan],base,i)=>{const want=Array.isArray(tb[i])?tb[i]:[...tb[i]],hit=on.flatMap(c=>(gan===2?[0,1]:[gan?0:1]).flatMap(k=>{const ch=c.gz[k];return want.includes(ch)?[`${lb(c)}${k?'支':'干'}${wxH(ch)}${wk(c,k)}`]:[];}));
+    return `<tr${hit.length?' class="on"':''}><th>${n}</th><td class="hint">${mean}</td><td>${base.slice(0,2)}${wxH(base.slice(2))}→<b>${want.map(wxH).join('、')}</b></td><td>${hit.length?hit.join('、'):'<span class="hint">冇</span>'}</td></tr>`;};
   const g=gi(D.gz[0]),z=zi(Y.gz[1]),mz=zi(M.gz[1]);
   // 全表：等人自己查，命主嗰行（日干、年支）加底色
-  const full=(tbl,keys,cap)=>`<table class="sstab ssfull"><thead><tr><th>${cap}</th>${tbl.map(r=>`<th>${r[0]}<br><span class="hint">${r[1]}</span></th>`).join('')}</tr></thead><tbody>${[...keys].map((k,i)=>`<tr${(cap==='日干'?i===g:cap==='月支'?i===mz:i===z)?' class="me"':''}><th>${k}</th>${tbl.map(r=>`<td>${[...r[2][i]].join('、')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-  return `<section class="panel" id="ssBox"><details data-ss ${SS_OPEN?'open':''}><summary><h2 class="plh">神煞 <span class="hint">日干${D.gz[0]}、月支${M.gz[1]}、年支${Y.gz[1]}</span></h2></summary><table class="sstab"><thead><tr><th>神煞</th><th>代表</th><th>查法</th><th>盤上邊度有</th></tr></thead><tbody>
+  const full=(tbl,keys,cap)=>`<table class="sstab ssfull"><thead><tr><th>${cap}</th>${tbl.map(r=>`<th>${r[0]}<br><span class="hint">${r[1]}</span></th>`).join('')}</tr></thead><tbody>${[...keys].map((k,i)=>`<tr${(cap==='日干'?i===g:cap==='月支'?i===mz:i===z)?' class="me"':''}><th>${wxH(k)}</th>${tbl.map(r=>`<td>${[...r[2][i]].map(wxH).join('、')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  return `<section class="panel" id="ssBox"><details data-ss ${SS_OPEN?'open':''}><summary><h2 class="plh">神煞 <span class="hint">日干${wxH(D.gz[0])}、月支${wxH(M.gz[1])}、年支${wxH(Y.gz[1])}</span></h2></summary><table class="sstab"><thead><tr><th>神煞</th><th>代表</th><th>查法</th><th>盤上邊度有</th></tr></thead><tbody>
     ${SS_GAN.map(r=>row(r,'日干'+D.gz[0],g)).join('')}${SS_ZHI.map(r=>row(r,'年支'+Y.gz[1],z)).join('')}${SS_YUE.map(r=>row(r,'月支'+M.gz[1],mz)).join('')}</tbody></table>
     <details class="ssfold" data-ssfull ${SS_FULL?'open':''}><summary><h3 style="display:inline">神煞代表表（自己查）</h3></summary><div class="ssw">${full(SS_GAN,GAN,'日干')}</div><div class="ssw">${full(SS_ZHI,ZHI,'年支')}</div><div class="ssw">${full(SS_YUE,ZHI,'月支')}</div></details>
     <p class="hint">日干查紅艷至天乙，年支查紅鸞至驛馬，月支查天德、月德貴人（第17堂 [34:39]、第56堂 [16:42]）；對盤上顯示緊嘅柱（原局、大運、流年、流月、流日等）。學堂對天干，天德、月德天干地支都對，其他對地支。老師講神煞只係輔助參考（第12堂 [17:24]、第51堂 [42:35]），要嗰個字做緊功先有效（第56堂 [16:52]、第65堂 [24:51]），所以做到功嘅字會標「（做功）」。神煞只係標示，唔影響計法。</p></details></section>`;}
@@ -2883,9 +2886,9 @@ function render(){
       <div class="cards">${card('胎元',ec.getTaiYuan())}${S.noT?'<span class="hint">唔知時辰，冇命宮同身宮</span>':card('命宮',mingGong(lun,ec))+card('身宮',ec.getShenGong())}</div>
     </details></section>
     <section class="panel"><details data-fold="yy" ${FOLD.yy===false?'':'open'}><summary><h2 class="plh">元運（三元九運）</h2></summary>
-      <div class="yun"><div class="gua w${'木火土金水'.indexOf(yb.name.slice(-1))}">${yb.name.slice(0,2)}</div>
-      <div><p>出生於<b>${yb.yuan}${yb.name.slice(0,1)}運</b>（${yb.name}，${yb.start}–${yb.end}）</p>
-      <p>而家行<b>${yn.yuan}${yn.name.slice(0,1)}運</b>（${yn.name}，${yn.start}–${yn.end}）</p></div></div>
+      <div class="yun"><div class="gua ${yxW(yb)}">${yb.name.slice(0,2)}</div>
+      <div><p>出生於<b class="${yxW(yb)}">${yb.yuan}${yb.name.slice(0,1)}運</b>（${yb.name}，${yb.start}–${yb.end}）</p>
+      <p>而家行<b class="${yxW(yn)}">${yn.yuan}${yn.name.slice(0,1)}運</b>（${yn.name}，${yn.start}–${yn.end}）</p></div></div>
     </details></section>
   </div>
   ${shenSha(S.cols)}
