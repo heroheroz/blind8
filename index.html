@@ -4367,17 +4367,19 @@ function supItem(r){const ic=SUP_ICON[r.tier||1],a=supAmt(r),am=a?`<span class="
 const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return m?m[1]:n;};  // 英文全名淨係出個名（Christina Lee → Christina）；中文名、暱稱照出
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
-function supShow(rows,cs,qz){cs=cs||[];qz=Array.isArray(qz)?qz:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
-  const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,'');if(!(rows.length+cs.length+qz.length)||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
+function supShow(rows,cs,qz,qr){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
+  const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,'');if(!(rows.length+cs.length+qz.length+qr.length)||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
   // 次序（主人 11月12日）：支持由最新排到最舊，全部出完先到加命例嘅感謝（都係新排先）
   const tm=r=>r.created_at||r.approved_at||'';rows=rows.slice().sort((p,q)=>tm(q)<tm(p)?-1:tm(q)>tm(p)?1:0);cs=cs.slice().sort((p,q)=>(q.last_at||'')<(p.last_at||'')?-1:1);
   // 命例感謝合併做一行（主人 11月12日）：全部名出晒（主人：唔好縮），每個名淨係出 3 日（042）
   const csn=cs.filter(r=>r.name).map(r=>{const t=r.title==null?'師兄':r.title,n0=shortName(r.name);return esc(n0+(/師[兄姐]$/.test(n0)?'':t));}),csLine=cs.length?`<span class="supi">📚 感謝 ${csn.length?`<b>${csn.join('、')}</b>${cs.length>csn.length?` 等 ${cs.length} 位`:''}`:`${cs.length} 位有心人`}加咗命例，多謝支持</span><span class="supsep">✦</span>`:'';
   // 本週測驗榜頭 5 名擺最前（主人 11月14日）：第一彩虹、第二流金、第三流銀
   const qzLine=qz.length?`<span class="supi">🎯 本週測驗榜：${qz.map(r=>{const v=r.rk<=3?r.rk:0;return `${'①②③④⑤'[r.rk-1]||''} ${v?'<i class="supst">✨</i>':''}<b${v?` class="supvip supvip${v}"`:''}>${esc(qzName(r))}</b> ${r.score} 分`;}).join('　')}</span><span class="supsep">✦</span>`:'';
-  const h=qzLine+rows.map(supItem).join('')+csLine;$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,(rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)+(cs.length?30+csn.join('').length:0)+qz.length*14)*0.45)+'s');
+  // 過去 24 小時做完一輪（10 題）嘅師兄師姐（046）：鼓勵，唔用「感謝」（主人 11月14日）
+  const qrn=qr.filter(r=>r.name).map(r=>esc(qzName(r))),qrLine=qr.length?`<span class="supi">💪 ${qrn.length?`<b>${qrn.join('、')}</b>${qr.length>qrn.length?` 等 ${qr.length} 位`:''}`:`${qr.length} 位師兄師姐`} 成功挑戰小測驗！你都嚟試吓？</span><span class="supsep">✦</span>`:'';
+  const h=qzLine+qrLine+rows.map(supItem).join('')+csLine;$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,(rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)+(cs.length?30+csn.join('').length:0)+qz.length*14+(qr.length?24+qrn.join('').length:0))*0.45)+'s');
   b.hidden=false;b.dataset.last=last;}
-async function supLoad(){supLoad.s=!!SESSION;if(!CLOUD){$('kfSup').hidden=true;return;}try{const cs=await api('case_thanks?select=*').catch(()=>[]),qz=await api('rpc/quiz_top5',{method:'POST',body:'{}'}).catch(()=>[]);supShow(await api('supporter_ticker?select=*&order=created_at.desc&limit=30'),cs,qz);$('kfSup').hidden=false;}catch(e){$('kfSup').hidden=true;}}
+async function supLoad(){supLoad.s=!!SESSION;if(!CLOUD){$('kfSup').hidden=true;return;}try{const cs=await api('case_thanks?select=*').catch(()=>[]),qz=await api('rpc/quiz_top5',{method:'POST',body:'{}'}).catch(()=>[]),qr=await api('rpc/quiz_recent',{method:'POST',body:'{}'}).catch(()=>[]);supShow(await api('supporter_ticker?select=*&order=created_at.desc&limit=30'),cs,qz,qr);$('kfSup').hidden=false;}catch(e){$('kfSup').hidden=true;}}
 $('supX').addEventListener('click',()=>{try{localStorage.setItem('b8-suptk-x',JSON.stringify({l:$('supTk').dataset.last||'',t:Date.now()}));}catch(e){}$('supTk').hidden=true;});
 $('supForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,m=$('supMsg'),d=document.getElementById('kofiDlg');
   const tab=(d.querySelector('[data-kft].on')||{dataset:{}}).dataset.kft||'kofi',amt=parseFloat(f.amount.value);
