@@ -121,7 +121,7 @@ a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(-
 /* 支持者走馬燈＋「我已支持」表格 */
 .suptk{display:flex;align-items:center;gap:6px;margin:6px 0 10px;padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--sel) 55%,var(--paper));font-size:14px;overflow:hidden}
 .suptk[hidden]{display:none}.suptk .supv{flex:1;min-width:0;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
-.suptk .supt{display:inline-block;white-space:nowrap;animation:supmv var(--supd,40s) linear infinite}.suptk:hover .supt{animation-play-state:paused}
+.suptk .supt{display:inline-block;white-space:nowrap;animation:supmv var(--supd,40s) linear 5s infinite}.suptk:hover .supt{animation-play-state:paused}
 .suptk .supvip{background:linear-gradient(90deg,#e0503a,#e39a1f,#d4c12a,#3fae5a,#3a8fd6,#8a5bd6,#e0503a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:supvr 4s linear infinite}@keyframes supvr{0%{background-position:0 0}100%{background-position:300% 0}}
 .suptk .supst{font-style:normal;display:inline-block;animation:supvt 1.4s ease-in-out infinite}.suptk .supst.b{animation-delay:.7s}@keyframes supvt{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
 .suptk .supvip2,.suptk .supvip3{background-size:250% 100%;animation:supvs 2.6s linear infinite}.suptk .supvip2{background-image:linear-gradient(100deg,#b8860b 0%,#d4a52a 35%,#fff3b0 50%,#d4a52a 65%,#b8860b 100%)}.suptk .supvip3{background-image:linear-gradient(100deg,#7d8590 0%,#a9b1bb 35%,#ffffff 50%,#a9b1bb 65%,#7d8590 100%)}@keyframes supvs{0%{background-position:120% 0}100%{background-position:-130% 0}}
