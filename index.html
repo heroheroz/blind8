@@ -3310,7 +3310,7 @@ function jbgHand(){const X={小:230,無:178,中:126,食:74},Y=[38,84,126,170],P=
   return bfMk(`<figure class="bfwh wide" style="max-width:280px"><svg viewBox="0 0 280 250" role="img" aria-label="十二地支掌訣：左手，由無名指根子位起"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>${g}</svg><figcaption class="hint">左手（跟一般掌訣圖畫法，拇指喺左，順時針行）：①子由無名指根起，跟箭咀行到⑫亥（小指根），再返去子</figcaption></figure>`);}
 // 📘 八字基本功教學（主人 11月15日）：天干地支生剋合沖刑害、十二長生、心算起盤，全部用圖示；做完可以去 🧱 基本功練習
 function jbgRender(){const b=$('np-jbg');if(!b||b.dataset.done)return;b.dataset.done=1;
-  const W=x=>bfWheel(x),MZ=BF_MZ,sec=(t,body,open)=>`<details class="jbgsec"${open?' open':''}><summary><b>${t}</b></summary>${body}</details>`,G=(...f)=>`<div class="jbgg">${f.join('')}</div>`,P=t=>`<p>${t}</p>`;
+  const W=x=>bfWheel(x),MZ=BF_MZ,sec=(t,body)=>`<details class="jbgsec" open><summary><b>${t}</b></summary>${body}</details>`,G=(...f)=>`<div class="jbgg">${f.join('')}</div>`,P=t=>`<p>${t}</p>`;
   const tg=sec('一、天干：陰陽、五行、五合、生剋、十神',
     P('十天干：甲 乙 丙 丁 戊 己 庚 辛 壬 癸。順序一陽一陰咁輪（甲陽乙陰…），兩個一組屬同一五行：甲乙木、丙丁火、戊己土、庚辛金、壬癸水。')
     +G(bfG10({l:Object.fromEntries([...GAN].map((q,j)=>[q,j%2?'陰':'陽'])),h:'甲丙戊庚壬',c:'陽干：甲丙戊庚壬；陰干：乙丁己辛癸'}),bfG10({l:Object.fromEntries([...GAN].map((q,j)=>[q,'木木火火土土金金水水'[j]])),h:'',c:'兩個一組：甲乙木、丙丁火、戊己土、庚辛金、壬癸水'}))
@@ -3364,7 +3364,7 @@ function jbgRender(){const b=$('np-jbg');if(!b||b.dataset.done)return;b.dataset.
   const lqs=sec('六、六親星同宮位（老師講法）',
     P('<b>六親星</b>（以日干做我）：男命正財係老婆（偏財亦可以代表妻星，第17堂）；偏財睇親生爸爸（第61堂）；正印睇親生媽媽（第87堂）；女命睇老公用官星（第69堂）；男命睇仔女用殺星，其次官星（第43堂）；女命睇仔女用食神、傷官（第24堂）；兄弟姊妹係劫財（第76堂）；細個睇撫養自己嘅人用殺星（第46堂）。')
     +P('<b>宮位</b>（傳統講法）：年柱祖上宮、月柱父母兄弟宮、日支夫妻宮、時柱子女宮。不過老師提醒：盲派斷結婚唔使睇夫妻宮、生仔唔使睇子女宮，主要睇粒星有冇做功（第58堂）。'),0);
-  b.innerHTML=`<p class="hint">由零開始學天干地支同起盤，全部用圖示。睇完可以去「🧱 基本功練習」做題（有 🧠 心算起盤，仲用隱姓先生同夏仲奇老師嘅真命例）。撳標題打開／收埋。</p>`+tg+dz+cs12+qp+ts+lqs+`<p><button type="button" class="lnk" data-bfgo>🧱 去基本功練習做題 ›</button></p>`;
+  b.innerHTML=`<p class="hint">由零開始學天干地支同起盤，全部用圖示。睇完可以去「🧱 基本功練習」做題（有 🧠 心算起盤，仲用隱姓先生同夏仲奇老師嘅真命例）。撳標題可以收埋。</p>`+tg+dz+cs12+qp+ts+lqs+`<p><button type="button" class="lnk" data-bfgo>🧱 去基本功練習做題 ›</button></p>`;
   b.querySelectorAll('.jbgsec>p,.jbgsec td').forEach(e=>wxColor(e));}
 document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab][value=jbg]'))jbgRender();});
 function bfOpen(){const r=document.querySelector('input[name=ntab][value=bf]');if(!r)return;if(isMob())mTab('learn');const n=r.closest('section');if(n)n.classList.remove('folded');r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));const b=$('np-bf');if(b)b.scrollIntoView({block:'start'});}
