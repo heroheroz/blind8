@@ -146,6 +146,7 @@ a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(-
   #f>.actions .go{width:100%;padding:10px 26px}#f>.actions .err:empty{display:none}
 }
 /* element colours */
+.bfwh.wide{max-width:250px}.bfwh{margin:10px auto 2px;max-width:210px;text-align:center}.bfwh svg{width:100%;height:auto;display:block}.bfwh figcaption{margin-top:2px}
 .w0{color:var(--wood)}.w1{color:var(--fire)}.w2{color:var(--earth)}.w3{color:var(--metal)}.w4{color:var(--water)}
 .bg0{background:color-mix(in srgb,var(--wood) 16%,transparent)}.bg1{background:color-mix(in srgb,var(--fire) 16%,transparent)}
 .bg2{background:color-mix(in srgb,var(--earth) 16%,transparent)}.bg3{background:color-mix(in srgb,var(--metal) 18%,transparent)}
@@ -2225,7 +2226,7 @@ function netArrows(k,ci){const up=S.act[k][ci][0],dn=S.lock[k][ci],pw=!k&&S.pw&&
 // 撳天干／地支／招感字：彈出點樣啟動、箭咀點計、做功同粘連（電腦同手機都得；電腦版滑鼠提示照舊）
 // 彈框入面嘅天干、地支同五行字加返五行顏色（「自己」、「未啟動」、「子女」呢類唔係干支嘅字唔變色）
 const WXRE=/(?<!自)己|未(?![啟被起有解開確])|子(?!女)|[甲乙丙丁戊庚辛壬癸丑寅卯辰巳午申酉戌亥木火土金水]/g;
-function wxColor(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())if(!w.currentNode.parentElement.closest('.x,.wxc'))ns.push(w.currentNode);
+function wxColor(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())if(!w.currentNode.parentElement.closest('.x,.wxc,svg'))ns.push(w.currentNode);
   ns.forEach(n=>{const t=n.nodeValue;WXRE.lastIndex=0;if(!WXRE.test(t))return;WXRE.lastIndex=0;const f=document.createDocumentFragment();let i=0;
     t.replace(WXRE,(m,o)=>{if(o>i)f.appendChild(document.createTextNode(t.slice(i,o)));const sp=document.createElement('span');const g=GAN.indexOf(m),z=ZHI.indexOf(m);
       sp.className='wxc w'+(g>=0?gw(g):z>=0?ZWX[z]:WX.indexOf(m));sp.textContent=m;f.appendChild(sp);i=o+m.length;return m;});
@@ -3019,17 +3020,17 @@ document.addEventListener('change',e=>{if(e.target.matches('[data-qzwrsk]')){QZ.
 const BF={cat:'',cur:null,pick:-1,ok:0,n:0,miss:[],wk:null,rn:0,rok:0,sum:null,wr:false,bw:true,bd:null};  // 基本功獨立一頁（主人 11月14日）：每輪 20 題，每星期 5 輪計分，有自己嘅排行榜，唔入狀元榜
 const BF_CATS=[
  ['he5','天干五合',5,1429,()=>{const P=['甲己','乙庚','丙辛','丁壬','戊癸'],p=bfR(P),i=bfR([0,1]);return bfQ(`天干「${p[i]}」同邊個天干相合？`,p[1-i],[...GAN],`${p[0]}${p[1]}合。五合：甲己、乙庚、丙辛、丁壬、戊癸。`);}],
- ['chong','地支六沖',4,1776,()=>{const P=['子午','丑未','寅申','卯酉','辰戌','巳亥'],p=bfR(P),i=bfR([0,1]);return bfQ(`地支「${p[i]}」同邊個地支相沖？`,p[1-i],[...ZHI],`${p[0]}${p[1]}沖。六沖：子午、丑未、寅申、卯酉、辰戌、巳亥。`);}],
- ['he6','地支六合',5,1429,()=>{const P=['子丑','寅亥','卯戌','辰酉','巳申','午未'],p=bfR(P),i=bfR([0,1]);return bfQ(`地支「${p[i]}」同邊個地支六合？`,p[1-i],[...ZHI],`${p[0]}${p[1]}合。六合：子丑、寅亥、卯戌、辰酉、巳申、午未。`);}],
- ['he3','三合局',16,1864,()=>{const P=[['申子辰','水'],['亥卯未','木'],['寅午戌','火'],['巳酉丑','金']],p=bfR(P),i=bfR([0,1,2]),r=[...p[0]].filter((_,j)=>j!==i);return bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三合${p[1]}局？`,p[0][i],[...ZHI],`${p[0]}三合${p[1]}局。三合局：申子辰水、亥卯未木、寅午戌火、巳酉丑金。`);}],
- ['hui3','三會方',16,1864,()=>{const P=[['寅卯辰','木'],['巳午未','火'],['申酉戌','金'],['亥子丑','水']],p=bfR(P),i=bfR([0,1,2]),r=[...p[0]].filter((_,j)=>j!==i);return bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三會${p[1]}方？`,p[0][i],[...ZHI],`${p[0]}三會${p[1]}方。三會方：寅卯辰木、巳午未火、申酉戌金、亥子丑水。`);}],
- ['hai','地支相害',92,1622,()=>{const P=['子未','丑午','寅巳','卯辰','申亥','酉戌'],p=bfR(P),i=bfR([0,1]);return bfQ(`地支「${p[i]}」同邊個地支相害？`,p[1-i],[...ZHI],`${p[0]}${p[1]}相害。六害：子未、丑午、寅巳、卯辰、申亥、酉戌。`);}],
- ['ke','地支相剋',6,1439,()=>{const W='水土木木土火火土金金土水',KE={木:'土',土:'水',水:'火',火:'金',金:'木'},z=bfR([...ZHI]),w=W[ZHI.indexOf(z)],rev=Math.random()<0.5,t=rev?Object.keys(KE).find(k=>KE[k]===w):KE[w],good=[...ZHI].filter(x=>W[ZHI.indexOf(x)]===t),why=`五行相剋：木剋土、土剋水、水剋火、火剋金、金剋木。${z}屬${w}，${rev?`${t}剋${w}`:`${w}剋${t}`}（${good.join('')}屬${t}）。`;return bfQ(rev?`以下邊個地支剋「${z}」（${z}屬${w}）？`:`地支「${z}」（屬${w}）剋以下邊個地支？`,bfR(good.filter(x=>x!==z)),[...ZHI].filter(x=>!good.includes(x)),why);}],
- ['xing','地支相刑',92,1205,()=>{if(Math.random()<0.35){const z=bfR([...'辰午酉亥']);return bfQ('以下邊個地支係自刑（兩個相同就自己刑自己）？',z,[...'子丑寅卯巳未申戌',z],'自刑得四個：辰辰、午午、酉酉、亥亥。');}
-   const P=['寅巳申','丑戌未'],p=bfR(P),i=bfR([0,1,2]),r=[...p].filter((_,j)=>j!==i);return bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三刑？`,p[i],[...ZHI],`${p}三刑。三刑：寅巳申、丑戌未；另外子卯相刑。`);}],
+ ['chong','地支六沖',4,1776,()=>{const P=['子午','丑未','寅申','卯酉','辰戌','巳亥'],p=bfR(P),i=bfR([0,1]);const x=bfQ(`地支「${p[i]}」同邊個地支相沖？`,p[1-i],[...ZHI],`${p[0]}${p[1]}沖。六沖：子午、丑未、寅申、卯酉、辰戌、巳亥。`);x.wh={k:'chong',p};return x;}],
+ ['he6','地支六合',5,1429,()=>{const P=['子丑','寅亥','卯戌','辰酉','巳申','午未'],p=bfR(P),i=bfR([0,1]);const x=bfQ(`地支「${p[i]}」同邊個地支六合？`,p[1-i],[...ZHI],`${p[0]}${p[1]}合。六合：子丑、寅亥、卯戌、辰酉、巳申、午未。`);x.wh={k:'he6',p};return x;}],
+ ['he3','三合局',16,1864,()=>{const P=[['申子辰','水'],['亥卯未','木'],['寅午戌','火'],['巳酉丑','金']],p=bfR(P),i=bfR([0,1,2]),r=[...p[0]].filter((_,j)=>j!==i);const x=bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三合${p[1]}局？`,p[0][i],[...ZHI],`${p[0]}三合${p[1]}局。三合局：申子辰水、亥卯未木、寅午戌火、巳酉丑金。`);x.wh={k:'he3',p:p[0]};return x;}],
+ ['hui3','三會方',16,1864,()=>{const P=[['寅卯辰','木'],['巳午未','火'],['申酉戌','金'],['亥子丑','水']],p=bfR(P),i=bfR([0,1,2]),r=[...p[0]].filter((_,j)=>j!==i);const x=bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三會${p[1]}方？`,p[0][i],[...ZHI],`${p[0]}三會${p[1]}方。三會方：寅卯辰木、巳午未火、申酉戌金、亥子丑水。`);x.wh={k:'hui3',p:p[0]};return x;}],
+ ['hai','地支相害',92,1622,()=>{const P=['子未','丑午','寅巳','卯辰','申亥','酉戌'],p=bfR(P),i=bfR([0,1]);const x=bfQ(`地支「${p[i]}」同邊個地支相害？`,p[1-i],[...ZHI],`${p[0]}${p[1]}相害。六害：子未、丑午、寅巳、卯辰、申亥、酉戌。`);x.wh={k:'hai',p};return x;}],
+ ['ke','地支相剋',6,1439,()=>{const W='水土木木土火火土金金土水',KE={木:'土',土:'水',水:'火',火:'金',金:'木'},z=bfR([...ZHI]),w=W[ZHI.indexOf(z)],rev=Math.random()<0.5,t=rev?Object.keys(KE).find(k=>KE[k]===w):KE[w],good=[...ZHI].filter(x=>W[ZHI.indexOf(x)]===t),why=`五行相剋：木剋土、土剋水、水剋火、火剋金、金剋木。${z}屬${w}，${rev?`${t}剋${w}`:`${w}剋${t}`}（${good.join('')}屬${t}）。`;const x=bfQ(rev?`以下邊個地支剋「${z}」（${z}屬${w}）？`:`地支「${z}」（屬${w}）剋以下邊個地支？`,bfR(good.filter(x=>x!==z)),[...ZHI].filter(x=>!good.includes(x)),why);x.wh={k:'ke',p:z,g:good.join(''),r:rev};return x;}],
+ ['xing','地支相刑',92,1205,()=>{if(Math.random()<0.35){const z=bfR([...'辰午酉亥']);const x=bfQ('以下邊個地支係自刑（兩個相同就自己刑自己）？',z,[...'子丑寅卯巳未申戌',z],'自刑得四個：辰辰、午午、酉酉、亥亥。');x.wh={k:'zx',p:z};return x;}
+   const P=['寅巳申','丑戌未'],p=bfR(P),i=bfR([0,1,2]),r=[...p].filter((_,j)=>j!==i);const x=bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三刑？`,p[i],[...ZHI],`${p}三刑。三刑：寅巳申、丑戌未；另外子卯相刑。`);x.wh={k:'xing',p};return x;}],
  ['yy','陰陽',3,1664,()=>{const g=Math.random()<0.5,all=g?[...GAN]:[...ZHI],c=bfR(all),yang=all.indexOf(c)%2===0;return bfQ(`${g?'天干':'地支'}「${c}」屬陰定屬陽？`,yang?'陽':'陰',['陽','陰'],g?'陽干：甲丙戊庚壬；陰干：乙丁己辛癸。':'陽支：子寅辰午申戌；陰支：丑卯巳未酉亥。',2);}],
  ['wx','五行',3,1664,()=>{const g=Math.random()<0.5,c=bfR(g?[...GAN]:[...ZHI]),w=g?'木木火火土土金金水水'[GAN.indexOf(c)]:'水土木木土火火土金金土水'[ZHI.indexOf(c)];return bfQ(`${g?'天干':'地支'}「${c}」五行屬乜？`,w,[...'木火土金水'],g?'甲乙木、丙丁火、戊己土、庚辛金、壬癸水。':'寅卯木、巳午火、申酉金、亥子水、辰戌丑未土。');}],
- ['sha','七殺',65,490,()=>{const c=bfR([...GAN]),k=GAN[(GAN.indexOf(c)+6)%10];return bfQ(`邊個天干係「${c}」嘅七殺（剋佢而且陰陽相同）？`,k,[...GAN],`${k}剋${c}，陰陽相同，係七殺。口訣：甲見庚、乙見辛、丙見壬、丁見癸、戊見甲、己見乙、庚見丙、辛見丁、壬見戊、癸見己。`);}],
+ ['sha','七殺',65,490,()=>{const c=bfR([...GAN]),k=GAN[(GAN.indexOf(c)+6)%10];const x=bfQ(`邊個天干係「${c}」嘅七殺（剋佢而且陰陽相同）？`,k,[...GAN],`${k}剋${c}，陰陽相同，係七殺。口訣：甲見庚、乙見辛、丙見壬、丁見癸、戊見甲、己見乙、庚見丙、辛見丁、壬見戊、癸見己。`);const W5='木火土金水',wc=W5[GAN.indexOf(c)>>1],wk=W5[GAN.indexOf(k)>>1];x.wh={k:'wx5',m:wc+wk,me:wc,e:wk+wc,c:`星形箭咀：${wk}剋${wc}，${k}同${c}陰陽相同＝七殺`};return x;}],
  ['cang','支藏本氣',29,935,()=>{const z=bfR([...ZHI]),a=HIDE[z][0];return bfQ(`地支「${z}」嘅本氣（主要藏嘅天干）係邊個？`,a,[...GAN],`${z}本氣係${a}。本氣：子癸、丑己、寅甲、卯乙、辰戊、巳丙、午丁、未己、申庚、酉辛、戌戊、亥壬。`);}],
  ['ren','陽刃（羊刃）',7,1144,()=>{const P=['甲卯','丙午','戊午','庚酉','壬子'],p=bfR(P);return bfQ(`陽干「${p[0]}」嘅陽刃（羊刃）喺邊個地支？`,p[1],[...ZHI],`${p[0]}嘅陽刃喺${p[1]}。陽刃得五個陽干先有：甲卯、丙午、戊午、庚酉、壬子。`);}],
  ['kui','魁罡',2,1637,()=>{const K=['壬辰','戊戌','庚辰','庚戌'],O=['甲辰','丙辰','戊辰','甲戌','丙戌','壬戌'],k=bfR(K),why='四魁罡：壬辰、戊戌、庚辰、庚戌，係最強旺嘅柱。';if(Math.random()<0.5)return bfQ('以下邊條柱係魁罡？',k,O,why);const r=K.filter(x=>x!==k);return bfQ(`魁罡得四條柱：${r.join('、')}，仲有邊條？`,k,O,why);}],
@@ -3037,33 +3038,36 @@ const BF_CATS=[
  // 第二批（主人 11月14日）：十二長生、神煞、墓庫、三桓命宮、五虎遁、五鼠遁；解釋要寫埋點樣推算。老師冇專門教推算嘅，出處寫明係傳統口訣
  ['cs','十二長生',10,209,()=>{const ST=['長生','沐浴','冠帶','臨官','帝旺','衰','病','死','墓','絕','胎','養'],SP='亥午寅酉寅酉巳子申卯',gi=bfR([0,1,2,3,4,5,6,7,8,9]),g=GAN[gi],yang=gi%2===0,si=ZHI.indexOf(SP[gi]),at=k=>ZHI[(si+(yang?k:12-k))%12],seq=k=>Array.from({length:k+1},(_,j)=>at(j)+ST[j]).join('、'),
      head=`推算：由長生位起，陽干順數、陰干逆數，次序係長生、沐浴、冠帶、臨官、帝旺、衰、病、死、墓、絕、胎、養。長生位：甲亥、丙戊寅、庚巳、壬申；乙午、丁己酉、辛子、癸卯。${g}係${yang?'陽':'陰'}干，由${SP[gi]}起${yang?'順':'逆'}數：`,r=Math.random();
-   if(r<0.3)return bfQ(`天干「${g}」嘅長生喺邊個地支？`,SP[gi],[...ZHI],head+seq(2)+'…');
-   if(r<0.55){const k=bfR([4,8,3]);return bfQ(`天干「${g}」嘅${ST[k]}喺邊個地支？`,at(k),[...ZHI],head+seq(k)+'。');}
-   const k=bfR([0,1,2,3,4,5,6,7,8,9,10,11]);return bfQ(`天干「${g}」行到地支「${at(k)}」，十二長生係邊個階段？`,ST[k],ST.slice(),head+seq(k)+'。');},'老師排盤畫面有顯示十二長生（推算口訣係傳統）：'],
+   const wh=h=>({k:'lab',l:Object.fromEntries(ST.map((t,j)=>[at(j),t])),h,c:`${g}：由${SP[gi]}長生起，${yang?'順時針':'逆時針'}數`});
+   if(r<0.3){const x=bfQ(`天干「${g}」嘅長生喺邊個地支？`,SP[gi],[...ZHI],head+seq(2)+'…');x.wh=wh(SP[gi]);return x;}
+   if(r<0.55){const k=bfR([4,8,3]);const x=bfQ(`天干「${g}」嘅${ST[k]}喺邊個地支？`,at(k),[...ZHI],head+seq(k)+'。');x.wh=wh(at(k));return x;}
+   const k=bfR([0,1,2,3,4,5,6,7,8,9,10,11]);const x=bfQ(`天干「${g}」行到地支「${at(k)}」，十二長生係邊個階段？`,ST[k],ST.slice(),head+seq(k)+'。');x.wh=wh(at(k));return x;},'老師排盤畫面有顯示十二長生（推算口訣係傳統）：'],
  ['mu','墓庫',0,0,()=>{const P=[['水','辰','申子辰'],['火','戌','寅午戌'],['金','丑','巳酉丑'],['木','未','亥卯未']],p=bfR(P),why=`推算：三合局最尾嗰個字，就係嗰個五行嘅墓庫。${p[2]}三合${p[0]}局，最尾係${p[1]}，所以${p[1]}係${p[0]}庫。四庫：辰水庫、戌火庫、丑金庫、未木庫。`;
-   return Math.random()<0.5?bfQ(`五行屬${p[0]}嘅墓庫，係邊個地支？`,p[1],[...'辰戌丑未'],why):bfQ(`地支「${p[1]}」係邊個五行嘅墓庫？`,p[0]+'庫',['水庫','火庫','金庫','木庫'],why);},'出處：傳統講法（老師課堂冇專門教點推）'],
+   const x=Math.random()<0.5?bfQ(`五行屬${p[0]}嘅墓庫，係邊個地支？`,p[1],[...'辰戌丑未'],why):bfQ(`地支「${p[1]}」係邊個五行嘅墓庫？`,p[0]+'庫',['水庫','火庫','金庫','木庫'],why);x.wh={k:'mu',p:p[2]};return x;},'出處：傳統講法（老師課堂冇專門教點推）'],
  ['ss','神煞',7,1634,()=>{const k=bfR(['天乙','祿','文昌','桃花','驛馬','華蓋','紅鸞']),gi=bfR([0,1,2,3,4,5,6,7,8,9]),zi=bfR([0,1,2,3,4,5,6,7,8,9,10,11]),g=GAN[gi],z=ZHI[zi],tb=n=>(SS_GAN.find(r=>r[0]===n)||SS_ZHI.find(r=>r[0]===n))[2];
-   if(k==='天乙'){const T=['丑、未','子、申','亥、酉','亥、酉','丑、未','子、申','丑、未','寅、午','卯、巳','卯、巳'];return bfQ(`日干「${g}」嘅天乙貴人，喺邊兩個地支？`,T[gi],[...new Set(T)],`用日干查。口訣：甲戊庚牛羊（丑未），乙己鼠猴鄉（子申），丙丁豬雞位（亥酉），壬癸兔蛇藏（卯巳），六辛逢馬虎（午寅）。${g}嘅天乙貴人係${T[gi]}。`);}
-   if(k==='祿')return bfQ(`日干「${g}」嘅祿，喺邊個地支？`,tb('祿')[gi],[...ZHI],`用日干查。祿即係十二長生嘅臨官位：甲祿寅、乙祿卯、丙戊祿巳、丁己祿午、庚祿申、辛祿酉、壬祿亥、癸祿子。`);
-   if(k==='文昌')return bfQ(`日干「${g}」嘅文昌，喺邊個地支？`,tb('文昌')[gi],[...ZHI],`用日干查。口訣：甲乙巳午報君知，丙戊申宮丁己雞，庚豬辛鼠壬逢虎，癸人見卯入雲梯。${g}嘅文昌喺${tb('文昌')[gi]}。`);
+   if(k==='天乙'){const T=['丑、未','子、申','亥、酉','亥、酉','丑、未','子、申','丑、未','寅、午','卯、巳','卯、巳'];const x=bfQ(`日干「${g}」嘅天乙貴人，喺邊兩個地支？`,T[gi],[...new Set(T)],`用日干查。口訣：甲戊庚牛羊（丑未），乙己鼠猴鄉（子申），丙丁豬雞位（亥酉），壬癸兔蛇藏（卯巳），六辛逢馬虎（午寅）。${g}嘅天乙貴人係${T[gi]}。`);x.wh={k:'lab',l:bfInv(T.map(v=>v.replace('、',''))),h:T[gi].replace('、',''),c:`外圈係邊啲日干嘅天乙貴人喺嗰個地支；圈住係${g}`};return x;}
+   if(k==='祿'){const x=bfQ(`日干「${g}」嘅祿，喺邊個地支？`,tb('祿')[gi],[...ZHI],`用日干查。祿即係十二長生嘅臨官位：甲祿寅、乙祿卯、丙戊祿巳、丁己祿午、庚祿申、辛祿酉、壬祿亥、癸祿子。`);x.wh={k:'lab',l:bfInv([...tb('祿')]),h:tb('祿')[gi],c:`外圈係邊個日干嘅祿喺嗰度；圈住係${g}祿`};return x;}
+   if(k==='文昌'){const x=bfQ(`日干「${g}」嘅文昌，喺邊個地支？`,tb('文昌')[gi],[...ZHI],`用日干查。口訣：甲乙巳午報君知，丙戊申宮丁己雞，庚豬辛鼠壬逢虎，癸人見卯入雲梯。${g}嘅文昌喺${tb('文昌')[gi]}。`);x.wh={k:'lab',l:bfInv([...tb('文昌')]),h:tb('文昌')[gi],c:`外圈係邊個日干嘅文昌喺嗰度；圈住係${g}`};return x;}
    const SH=['申子辰','巳酉丑','寅午戌','亥卯未'],sh=SH.find(x=>x.includes(z)),a=tb(k)[zi],lt=1698;let why;
    if(k==='桃花')why=`用年支查。推算：睇年支屬邊個三合局，桃花就係嗰個局第一個字嘅下一位：申子辰見酉、寅午戌見卯、巳酉丑見午、亥卯未見子。${z}屬${sh}，桃花喺${a}。`;
    else if(k==='驛馬')why=`用年支查。推算：驛馬係年支嗰個三合局第一個字嘅對沖：申子辰馬在寅、寅午戌馬在申、巳酉丑馬在亥、亥卯未馬在巳。${z}屬${sh}，${sh[0]}沖${a}，驛馬喺${a}。`;
    else if(k==='華蓋')why=`用年支查。推算：華蓋係年支嗰個三合局最尾嗰個字（即係個庫）：申子辰見辰、寅午戌見戌、巳酉丑見丑、亥卯未見未。${z}屬${sh}，華蓋喺${a}。`;
    else why=`用年支查。推算：子年紅鸞喺卯，之後年支每順行一位，紅鸞就逆行一位（子卯、丑寅、寅丑、卯子、辰亥、巳戌、午酉、未申、申未、酉午、戌巳、亥辰）。${z}年紅鸞喺${a}。`;
-   const x=bfQ(`年支「${z}」嘅${k}，喺邊個地支？`,a,[...ZHI],why);x.lt=lt;return x;}],
+   const x=bfQ(`年支「${z}」嘅${k}，喺邊個地支？`,a,[...ZHI],why);x.lt=lt;if(k!=='紅鸞')x.wh={k:'sh3',p:sh,a,n:k};return x;}],
  ['sh','三桓、命宮推算',58,1268,()=>{const r=Math.random(),gi=bfR([0,1,2,3,4,5,6,7,8,9]),zi=(gi%2)+2*bfR([0,1,2,3,4,5]),g=GAN[gi],z=ZHI[zi],G=k=>GAN[(gi+k)%10];
-   if(r<0.35){const a=G(1)+ZHI[(zi+3)%12];return bfQ(`月柱係「${g}${z}」，胎元係邊條柱？`,a,[G(1)+ZHI[(zi+1)%12],G(3)+ZHI[(zi+3)%12],G(9)+ZHI[(zi+9)%12],G(1)+ZHI[(zi+5)%12]],`推算：胎元＝月柱天干進一位、地支進三位。${g}進一位係${a[0]}，${z}進三位係${a[1]}，所以胎元係${a}。`);}
-   if(r<0.65){const H={子:'丑',丑:'子',寅:'亥',亥:'寅',卯:'戌',戌:'卯',辰:'酉',酉:'辰',巳:'申',申:'巳',午:'未',未:'午'},hi=ZHI.indexOf(H[z]),a=G(5)+H[z];const x=bfQ(`日柱係「${g}${z}」，胎息係邊條柱？`,a,[G(5)+ZHI[(hi+2)%12],G(5)+ZHI[(hi+10)%12],G(1)+H[z],G(9)+H[z]],`推算：胎息＝同日柱天干地支都相合嗰條柱（天干五合、地支六合）。${g}合${a[0]}，${z}合${a[1]}，所以胎息係${a}。`);x.ln=50;x.lt=75;x.pre='老師話胎息由日元推出嚟：';return x;}
+   if(r<0.35){const a=G(1)+ZHI[(zi+3)%12];const x=bfQ(`月柱係「${g}${z}」，胎元係邊條柱？`,a,[G(1)+ZHI[(zi+1)%12],G(3)+ZHI[(zi+3)%12],G(9)+ZHI[(zi+9)%12],G(1)+ZHI[(zi+5)%12]],`推算：胎元＝月柱天干進一位、地支進三位。${g}進一位係${a[0]}，${z}進三位係${a[1]}，所以胎元係${a}。`);x.wh={k:'lab',l:{[z]:'月支',[ZHI[(zi+1)%12]]:'1',[ZHI[(zi+2)%12]]:'2',[a[1]]:'3 胎元'},h:z+a[1],c:`地支由${z}順時針進三位到${a[1]}`};return x;}
+   if(r<0.65){const H={子:'丑',丑:'子',寅:'亥',亥:'寅',卯:'戌',戌:'卯',辰:'酉',酉:'辰',巳:'申',申:'巳',午:'未',未:'午'},hi=ZHI.indexOf(H[z]),a=G(5)+H[z];const x=bfQ(`日柱係「${g}${z}」，胎息係邊條柱？`,a,[G(5)+ZHI[(hi+2)%12],G(5)+ZHI[(hi+10)%12],G(1)+H[z],G(9)+H[z]],`推算：胎息＝同日柱天干地支都相合嗰條柱（天干五合、地支六合）。${g}合${a[0]}，${z}合${a[1]}，所以胎息係${a}。`);x.wh={k:'he6',p:z+H[z]};x.ln=50;x.lt=75;x.pre='老師話胎息由日元推出嚟：';return x;}
    const MZ='寅卯辰巳午未申酉戌亥子丑',m=bfR([1,2,3,4,5,6,7,8,9,10,11,12]),t=bfR([1,2,3,4,5,6,7,8,9,10,11,12]),sum=m+t,base=sum>=14?26:14,off=base-sum,a=MZ[off-1];
-   const x=bfQ(`用嚟計命宮嘅月係「${MZ[m-1]}」月，「${MZ[t-1]}」時出世，命宮地支係邊個？`,a,[...ZHI],`推算：由寅數起，寅 1、卯 2、辰 3…子 11、丑 12。月數加時數，用 14 減；加埋有 14 或以上就用 26 減；得數再由寅數起。${MZ[m-1]}月＝${m}，${MZ[t-1]}時＝${t}，${m}＋${t}＝${sum}，${base}－${sum}＝${off}，第 ${off} 個係${a}。命宮天干用年干五虎遁推。計命宮嘅月份用中氣分，過咗中氣當下個月。`);x.ln=42;x.lt=2481;x.pre='命宮用中氣，老師講過：';return x;},'推算係傳統起法；老師話命宮、胎元、胎息一定要用：'],
+   const x=bfQ(`用嚟計命宮嘅月係「${MZ[m-1]}」月，「${MZ[t-1]}」時出世，命宮地支係邊個？`,a,[...ZHI],`推算：由寅數起，寅 1、卯 2、辰 3…子 11、丑 12。月數加時數，用 14 減；加埋有 14 或以上就用 26 減；得數再由寅數起。${MZ[m-1]}月＝${m}，${MZ[t-1]}時＝${t}，${m}＋${t}＝${sum}，${base}－${sum}＝${off}，第 ${off} 個係${a}。命宮天干用年干五虎遁推。計命宮嘅月份用中氣分，過咗中氣當下個月。`);x.wh={k:'lab',l:Object.fromEntries([...MZ].map((z,j)=>[z,String(j+1)])),h:MZ[m-1]+MZ[t-1]+a,c:`外圈數字由寅＝1 起；${m}＋${t}＝${sum}，${base}－${sum}＝${off}＝${a}`};x.ln=42;x.lt=2481;x.pre='命宮用中氣，老師講過：';return x;},'推算係傳統起法；老師話命宮、胎元、胎息一定要用：'],
  ['hu','五虎遁（年起月）',0,0,()=>{const MZ='寅卯辰巳午未申酉戌亥子丑',yi=bfR([0,1,2,3,4,5,6,7,8,9]),k=bfR([0,1,2,3,4,5,6,7,8,9,10,11]),s=[2,4,6,8,0][yi%5],a=GAN[(s+k)%10],seq=Array.from({length:k+1},(_,j)=>GAN[(s+j)%10]+MZ[j]).join('、');
-   return bfQ(`「${GAN[yi]}」年嘅「${MZ[k]}」月，月柱天干係邊個？`,a,[...GAN].filter((_,j)=>j%2===(s+k)%2),`口訣（五虎遁，由年干起月干）：甲己之年丙作首，乙庚之歲戊為頭，丙辛必定尋庚起，丁壬壬位順行流，戊癸甲寅好追求。${GAN[yi]}年正月（寅月）係${GAN[s]}寅，順數落去：${seq}。`);},'出處：傳統起盤口訣（老師課堂冇專門教）'],
+   const x=bfQ(`「${GAN[yi]}」年嘅「${MZ[k]}」月，月柱天干係邊個？`,a,[...GAN].filter((_,j)=>j%2===(s+k)%2),`口訣（五虎遁，由年干起月干）：甲己之年丙作首，乙庚之歲戊為頭，丙辛必定尋庚起，丁壬壬位順行流，戊癸甲寅好追求。${GAN[yi]}年正月（寅月）係${GAN[s]}寅，順數落去：${seq}。`);x.wh={k:'lab',l:Object.fromEntries([...MZ].map((z,j)=>[z,GAN[(s+j)%10]])),h:MZ[k],c:`${GAN[yi]}年：由寅月${GAN[s]}寅起，順時針逐個月數`};return x;},'出處：傳統起盤口訣（老師課堂冇專門教）'],
  ['shu','五鼠遁（日起時）',0,0,()=>{const yi=bfR([0,1,2,3,4,5,6,7,8,9]),k=bfR([0,1,2,3,4,5,6,7,8,9,10,11]),s=[0,2,4,6,8][yi%5],a=GAN[(s+k)%10],seq=Array.from({length:k+1},(_,j)=>GAN[(s+j)%10]+ZHI[j]).join('、');
-   return bfQ(`「${GAN[yi]}」日嘅「${ZHI[k]}」時，時柱天干係邊個？`,a,[...GAN].filter((_,j)=>j%2===(s+k)%2),`口訣（五鼠遁，由日干起時干）：甲己還加甲，乙庚丙作初，丙辛從戊起，丁壬庚子居，戊癸何方發，壬子是真途。${GAN[yi]}日子時係${GAN[s]}子，順數落去：${seq}。`);},'出處：傳統起盤口訣（老師課堂冇專門教）'],
+   const x=bfQ(`「${GAN[yi]}」日嘅「${ZHI[k]}」時，時柱天干係邊個？`,a,[...GAN].filter((_,j)=>j%2===(s+k)%2),`口訣（五鼠遁，由日干起時干）：甲己還加甲，乙庚丙作初，丙辛從戊起，丁壬庚子居，戊癸何方發，壬子是真途。${GAN[yi]}日子時係${GAN[s]}子，順數落去：${seq}。`);x.wh={k:'lab',l:Object.fromEntries([...ZHI].map((z,j)=>[z,GAN[(s+j)%10]])),h:ZHI[k],c:`${GAN[yi]}日：由子時${GAN[s]}子起，順時針逐個時辰數`};return x;},'出處：傳統起盤口訣（老師課堂冇專門教）'],
+ // 心算起盤（主人 11月14日）：學盲人師傅咁喺腦入面起盤；全部用萬年曆（lunar 庫）同公式對過
+ ['xs','🧠 心算起盤',0,0,bfXs,'出處：傳統起盤方法（唔使睇萬年曆，心算）'],
  // 第三批（主人 11月14日）：十神、六親星（以老師講法為準）、宮位（傳統；老師話結婚生仔唔使睇宮）
  ['s10','十神',0,0,()=>{const a=bfR([0,1,2,3,4,5,6,7,8,9]),b=bfR([0,1,2,3,4,5,6,7,8,9]),d=((b>>1)-(a>>1)+5)%5,same=a%2===b%2,N=[['比肩','食神','偏財','七殺','偏印'],['劫財','傷官','正財','正官','正印']],R=['同我一樣五行','我生嘅五行','我剋嘅五行','剋我嘅五行','生我嘅五行'],W='木火土金水',ans=N[same?0:1][d];
-   return bfQ(`日主係「${GAN[a]}」，見到天干「${GAN[b]}」，係乜嘢十神？`,ans,[...N[0],...N[1]],`推算：先睇五行關係，再睇陰陽。同我：比肩（同陰陽）、劫財；我生：食神（同陰陽）、傷官；我剋：偏財（同陰陽）、正財；剋我：七殺（同陰陽）、正官；生我：偏印（同陰陽）、正印。${GAN[a]}屬${W[a>>1]}，${GAN[b]}屬${W[b>>1]}，係${R[d]}，陰陽${same?'相同':'唔同'}，所以係${ans}。`);},'出處：十神基本定義（老師每堂都用）'],
+   const x=bfQ(`日主係「${GAN[a]}」，見到天干「${GAN[b]}」，係乜嘢十神？`,ans,[...N[0],...N[1]],`推算：先睇五行關係，再睇陰陽。同我：比肩（同陰陽）、劫財；我生：食神（同陰陽）、傷官；我剋：偏財（同陰陽）、正財；剋我：七殺（同陰陽）、正官；生我：偏印（同陰陽）、正印。${GAN[a]}屬${W[a>>1]}，${GAN[b]}屬${W[b>>1]}，係${R[d]}，陰陽${same?'相同':'唔同'}，所以係${ans}。`);const wa=W[a>>1],wb=W[b>>1];x.wh={k:'wx5',m:wa+wb,me:wa,e:d===0?null:d===1||d===2?wa+wb:wb+wa,c:d===0?`${wa}見${wb}：同我一樣五行`:`${d===1||d===4?'外圈箭咀係相生':'星形箭咀係相剋'}：${d===1?wa+'生'+wb+'（我生）':d===2?wa+'剋'+wb+'（我剋）':d===3?wb+'剋'+wa+'（剋我）':wb+'生'+wa+'（生我）'}`};return x;},'出處：十神基本定義（老師每堂都用）'],
  ['lq','六親星',11,1135,()=>{const L=[['男命，邊個十神代表老婆？','正財',['正印','七殺','食神','比肩'],'老師話男命正財就係老婆；偏財亦可以代表妻星（第17堂 64:33）。',11,1135,2,1,'男命','老婆'],
      ['睇親生爸爸，用邊個十神？','偏財',['正印','正官','比肩','傷官'],'老師話偏財睇親生爸爸；男命嘅財又睇爸爸、又睇妻子、又睇財富。',61,751,2,0,'','親生爸爸'],
      ['睇親生媽媽，用邊個十神？','正印',['偏財','傷官','七殺','劫財'],'老師話講親生媽媽，一定係用正印星。',87,2662,4,1,'','親生媽媽'],
@@ -3127,14 +3131,87 @@ function bfWGet(){try{return JSON.parse(localStorage.getItem(bfWK())||'[]');}cat
 function bfWSet(a){try{localStorage.setItem(bfWK(),JSON.stringify(a.slice(0,100)));}catch(e){}}
 function bfWrongHtml(){const W=bfWGet();if(!W.length)return '';const idx=LS.idx||[];
   return `<h4 style="margin:14px 0 6px">🧱 基本功錯題（${W.length} 題）<span class="hint">　記喺呢部機；之後喺基本功練習答啱返就會自動消失</span></h4>`+W.map(r=>{const c=BF_CATS.find(k=>k[0]===r.c)||[],l=idx.find(k=>k.n===c[2]&&!k.series)||idx.find(k=>k.n===c[2]);
-    return `<div class="qzcard"><span class="qztag">${esc(c[1]||'基本功')}</span><span class="hint"> ${esc(new Date(r.at).toLocaleDateString('zh-HK'))} 答</span><p class="qzq">${esc(r.q)}</p><div class="qzopts">${r.opts.map(o=>`<button type="button" class="qzopt${o===r.a?' ok':o===r.p?' no':''}" disabled>${esc(o)}${o===r.a?' ✓ 正確答案':o===r.p?' ✗ 你揀咗呢個':''}</button>`).join('')}</div><div class="qzwhy">${esc(r.why)}<br><span class="hint">${bfSrc(r.ln!=null?r.ln:c[2],r.lt!=null?r.lt:c[3],r.pre||c[5])}</span></div></div>`;}).join('');}
+    return `<div class="qzcard"><span class="qztag">${esc(c[1]||'基本功')}</span><span class="hint"> ${esc(new Date(r.at).toLocaleDateString('zh-HK'))} 答</span><p class="qzq">${esc(r.q)}</p><div class="qzopts">${r.opts.map(o=>`<button type="button" class="qzopt${o===r.a?' ok':o===r.p?' no':''}" disabled>${esc(o)}${o===r.a?' ✓ 正確答案':o===r.p?' ✗ 你揀咗呢個':''}</button>`).join('')}</div><div class="qzwhy">${esc(r.why)}<br><span class="hint">${bfSrc(r.ln!=null?r.ln:c[2],r.lt!=null?r.lt:c[3],r.pre||c[5])}</span>${bfWheel(r.wh)}</div></div>`;}).join('');}
+// 十二地支圓盤（主人 11月14日）：沖＝穿過中心嘅對角線，六合＝橫線，六害＝直線，三合／三刑＝三角，三會＝弧，相剋＝箭咀；淡色係同類全部，深色係今題；地支用網站五行顏色
+// 其他類別（十二長生、五虎遁、五鼠遁、神煞）喺圓盤外圈寫埋推算；十神、七殺用五行生剋圖。全部由出題嗰條公式即場畫，同答案一致
+const BF_T={chong:['子午','丑未','寅申','卯酉','辰戌','巳亥'],hai:['子未','丑午','寅巳','卯辰','申亥','酉戌'],he6:['子丑','寅亥','卯戌','辰酉','巳申','午未'],he3:['申子辰','亥卯未','寅午戌','巳酉丑'],hui3:['寅卯辰','巳午未','申酉戌','亥子丑']};
+function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);
+  let ln=[],tri=[],arc=[],hl='',ring='',lab=null,cap='',big='';const T=BF_T,fl=(k,on)=>T[k].forEach(p=>{if(p!==on)(p.length>2?tri:ln).push([p,0]);});
+  if(w.k==='chong'||w.k==='hai'||w.k==='he6'){fl(w.k,w.p);ln.push([w.p,1]);hl=w.p;cap={chong:'六沖：對面直線穿過中心',hai:'六害：直線（虛線係其他五對）',he6:'六合：橫線（虛線係其他五對）'}[w.k];}
+  else if(w.k==='he3'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p;cap='三合：每隔三格成一個三角';}
+  else if(w.k==='hui3'){T.hui3.forEach(p=>arc.push([p,p===w.p?1:0]));hl=w.p;cap='三會：同一方位相連三個地支';}
+  else if(w.k==='xing'){['寅巳申','丑戌未'].forEach(p=>tri.push([p,p===w.p?1:0]));ln.push(['子卯',0]);hl=w.p;cap='三刑：寅巳申、丑戌未各成三角；虛線另有子卯刑';}
+  else if(w.k==='zx'){ring='辰午酉亥';hl=w.p;cap='自刑：辰、午、酉、亥（兩個相同自己刑自己）';}
+  else if(w.k==='ke'){[...w.g].forEach(z=>ln.push([w.r?z+w.p:w.p+z,1,1]));hl=w.p+w.g;cap=w.r?`箭咀：${w.g}剋${w.p}`:`箭咀：${w.p}剋${w.g}`;}
+  else if(w.k==='mu'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p;ring=w.p[2];big=w.p[2];cap=`${w.p}三合，圈住嗰個（最尾一個字）係墓庫`;}
+  else if(w.k==='sh3'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p+w.a;ring=w.a;if(w.n==='驛馬')ln.push([w.p[0]+w.a,1]);cap=w.n==='桃花'?`${w.p}三合，第一個字下一位（圈住）係桃花`:w.n==='驛馬'?`${w.p}三合，第一個字對沖（圈住）係驛馬`:`${w.p}三合，最尾一個字（圈住）係華蓋`;}
+  else if(w.k==='lab'){lab=w.l;hl=w.h;ring=w.h;cap=w.c;}
+  const S=lab?250:200,c=S/2,R=lab?78:74,pt=(z,r=R)=>{const a=(ZHI.indexOf(z)*30-15)*Math.PI/180;return [c-r*Math.sin(a),c+r*Math.cos(a)];},f=v=>v.toFixed(1);
+  const L=(a,b,on,ar)=>{const [x1,y1]=pt(a),[x2,y2]=pt(b),d=Math.hypot(x2-x1,y2-y1),k=15/d;return `<line x1="${f(x1+(x2-x1)*k)}" y1="${f(y1+(y2-y1)*k)}" x2="${f(x2-(x2-x1)*k)}" y2="${f(y2-(y2-y1)*k)}" stroke="currentColor" stroke-width="${on?2.6:1}" opacity="${on?0.95:0.22}"${on?'':' stroke-dasharray="3 3"'}${ar?' marker-end="url(#bfar)"':''}/>`;};
+  let g=ln.map(([p,on,ar])=>L(p[0],p[1],on,ar)).join('')+tri.map(([p,on])=>L(p[0],p[1],on)+L(p[1],p[2],on)+L(p[2],p[0],on)).join('')
+   +arc.map(([p,on])=>{const [x1,y1]=pt(p[0],R+(on?0:0)),[x2,y2]=pt(p[2]);return `<path d="M${f(x1)} ${f(y1)}A${R} ${R} 0 0 1 ${f(x2)} ${f(y2)}" fill="none" stroke="currentColor" stroke-width="${on?9:5}" stroke-linecap="round" opacity="${on?0.35:0.1}"/>`;}).join('');
+  const dots=[...ZHI].map(z=>{const [x,y]=pt(z),on=hl.includes(z),col=EC[ZWX[ZHI.indexOf(z)]];let o='';if(ring.includes(z))o+=`<circle cx="${f(x)}" cy="${f(y)}" r="16.5" fill="none" stroke="currentColor" stroke-width="${big===z||w.k!=='zx'?1.6:1}" stroke-dasharray="${w.k==='zx'?'2 2':'none'}" opacity="${w.k==='zx'?0.5:0.8}"/>`;
+    if(lab&&lab[z]){const [lx,ly]=pt(z,R+33);o+=`<text x="${f(lx)}" y="${f(ly+4)}" text-anchor="middle" font-size="11" font-weight="${on?700:400}" fill="currentColor" opacity="${on?1:0.7}">${esc(lab[z])}</text>`;}
+    return o+`<circle cx="${f(x)}" cy="${f(y)}" r="12.5" fill="${on?col:'var(--paper,#fff)'}" fill-opacity="${on?0.18:1}" stroke="${col}" stroke-width="${on?2.4:1}"/><text x="${f(x)}" y="${f(y+5)}" text-anchor="middle" font-size="${on?15:13}" font-weight="${on?700:400}" fill="${col}">${z}</text>`;}).join('');
+  return `<figure class="bfwh${lab?' wide':''}"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="十二地支圓盤：${esc(cap)}"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>${g}${dots}</svg><figcaption class="hint">${esc(cap)}</figcaption></figure>`;}
+// 五行生剋圖：外圈順時針相生（木→火→土→金→水），入面星形相剋；深色箭咀係今題嘅關係
+// 心算起盤題（主人 11月14日）：年柱、立春前後、月支跟節、月柱、日柱推算、時支、大運順逆、第一步大運、起運歲數、空亡
+const JZ=i=>GAN[((i%60)+60)%60%10]+ZHI[((i%60)+60)%60%12],JZi=p=>{for(let i=0;i<60;i++)if(JZ(i)===p)return i;return -1;},bfJzOpts=i=>[1,-1,12,-12,10,-10].sort(()=>Math.random()-0.5).slice(0,3).map(d=>JZ(i+d));
+const BF_JIE='立春驚蟄清明立夏芒種小暑立秋白露寒露立冬大雪小寒',BF_MZ='寅卯辰巳午未申酉戌亥子丑';
+function bfXs(){const r=Math.random(),pad=n=>String(n).padStart(2,'0');
+  const zLab=()=>Object.fromEntries([...ZHI].map((z,j)=>[z,String(j)]));
+  if(r<0.14){const y=1930+Math.floor(Math.random()*100),gi=(y-4)%10,zi=(y-4)%12,a=GAN[gi]+ZHI[zi];
+    const x=bfQ(`公元 ${y} 年（過咗立春）出世，年柱係乜？`,a,bfJzOpts(JZi(a)),`心算：天干睇年份尾數：4甲 5乙 6丙 7丁 8戊 9己 0庚 1辛 2壬 3癸，${y} 尾數 ${y%10}，係${GAN[gi]}。地支：（${y}－4）÷12 嘅餘數＝${zi}，由子＝0 數起（子0 丑1 寅2…亥11），係${ZHI[zi]}。所以係${a}年。`);
+    x.wh={k:'lab',l:zLab(),h:ZHI[zi],c:`外圈係餘數：（${y}－4）÷12 餘 ${zi}＝${ZHI[zi]}`};return x;}
+  if(r<0.24){const y=1931+Math.floor(Math.random()*99),m=1+Math.floor(Math.random()*2),d=m===1?6+Math.floor(Math.random()*20):1+Math.floor(Math.random()*2),gi=(y-5)%10,zi=(y-5)%12,a=GAN[gi]+ZHI[zi];
+    const x=bfQ(`公元 ${y} 年 ${m} 月 ${d} 日出世（未到立春），年柱係乜？`,a,[...new Set([GAN[(y-4)%10]+ZHI[(y-4)%12],...bfJzOpts(JZi(a))])],`八字用立春換年，唔係用元旦，亦唔係用農曆新年。立春大約喺 2 月 4 日前後，${m} 月 ${d} 日未到，所以仲係計上一年（${y-1}）：尾數 ${(y-1)%10} 係${GAN[gi]}，（${y-1}－4）÷12 餘 ${zi} 係${ZHI[zi]}，年柱係${a}。`);
+    x.wh={k:'lab',l:zLab(),h:ZHI[zi],c:`未過立春，用 ${y-1} 年計：餘 ${zi}＝${ZHI[zi]}`};return x;}
+  if(r<0.34){const k=Math.floor(Math.random()*12),j=BF_JIE.slice(k*2,k*2+2),a=BF_MZ[k];
+    const x=bfQ(`過咗「${j}」之後（下一個節之前），月支係乜？`,a,[...ZHI],`月支跟「節」換，唔跟農曆初一。口訣「正月建寅」：立春寅、驚蟄卯、清明辰、立夏巳、芒種午、小暑未、立秋申、白露酉、寒露戌、立冬亥、大雪子、小寒丑。${j}之後係${a}月。`);
+    x.wh={k:'lab',l:Object.fromEntries([...BF_MZ].map((z,i)=>[z,BF_JIE.slice(i*2,i*2+2)])),h:a,c:'外圈係每個月開始嗰個「節」'};return x;}
+  if(r<0.44){const y=1931+Math.floor(Math.random()*99),k=Math.floor(Math.random()*11),yi=(y-4)%10,s=[2,4,6,8,0][yi%5],a=GAN[(s+k)%10]+BF_MZ[k],j=BF_JIE.slice(k*2,k*2+2);
+    const x=bfQ(`公元 ${y} 年，過咗「${j}」出世，月柱係乜？`,a,bfJzOpts(JZi(a)),`第一步：${y} 年尾數 ${y%10}，年干係${GAN[yi]}。第二步：${j}之後係${BF_MZ[k]}月。第三步：五虎遁「${['甲己之年丙作首','乙庚之歲戊為頭','丙辛必定尋庚起','丁壬壬位順行流','戊癸甲寅好追求'][yi%5]}」，${GAN[yi]}年正月係${GAN[s]}寅，順數到${BF_MZ[k]}月係${a}。`);
+    x.wh={k:'lab',l:Object.fromEntries([...BF_MZ].map((z,i)=>[z,GAN[(s+i)%10]])),h:BF_MZ[k],c:`${GAN[yi]}年：寅月${GAN[s]}寅起順數`};return x;}
+  if(r<0.56){const t0=Date.UTC(1950,0,1)+Math.floor(Math.random()*80*365)*864e5,d0=new Date(t0),nY=Math.random()<0.5;let d1,n;
+    if(nY){d1=new Date(Date.UTC(d0.getUTCFullYear()+1,d0.getUTCMonth(),d0.getUTCDate()));if(d1.getUTCDate()!==d0.getUTCDate())return bfXs();n=Math.round((d1-d0)/864e5);}else{n=bfR([1,2,3,5,10,12,15,20,30,60]);d1=new Date(t0+n*864e5);}
+    const ds=d=>`${d.getUTCFullYear()} 年 ${d.getUTCMonth()+1} 月 ${d.getUTCDate()} 日`,dz=d=>Solar.fromYmd(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate()).getLunar().getDayInGanZhi(),p0=dz(d0),a=dz(d1),i0=JZi(p0);
+    const why=nY?`日柱 60 日一個循環。一年 ${n} 日，${n}÷60 餘 ${n%60}，所以同一日去到下一年，日柱向前推 ${n%60} 個（${n===366?'中間跨過 2 月 29 日，閏年要推 6 個':'平年推 5 個；如果中間跨過 2 月 29 日就推 6 個'}）。${p0}向前推 ${n%60} 個係${a}。`:`日柱 60 日一個循環：天干 10 日一轉，地支 12 日一轉。${n} 日之後：天干向前 ${n%10} 個、地支向前 ${n%12} 個${n%60===0?'（啱啱 60 日，返到同一個日柱）':''}。${p0}推 ${n} 日係${a}。`;
+    const x=bfQ(`${ds(d0)}係「${p0}」日，${ds(d1)}係乜日柱？`,a,bfJzOpts(JZi(a)).concat([JZ(i0+n+1)]).filter((v,i,A)=>v!==a&&A.indexOf(v)===i).slice(0,3),why+'（萬年曆核對過）');
+    x.wh={k:'lab',l:{[p0[1]]:p0,[a[1]]:(p0[1]===a[1]?p0+'→':'')+a},h:p0[1]+a[1],c:`地支由${p0[1]}行到${a[1]}`};return x;}
+  if(r<0.65){const h=Math.floor(Math.random()*24),mi=10+Math.floor(Math.random()*40),zi=Math.floor((h+1)/2)%12,a=ZHI[zi],st=(zi*2+23)%24;
+    const x=bfQ(`${pad(h)}:${pad(mi)} 出世，時支係乜？`,a,[...ZHI],`每個時辰兩粒鐘，由子時 23:00–01:00 開始：丑 1–3、寅 3–5、卯 5–7、辰 7–9、巳 9–11、午 11–13、未 13–15、申 15–17、酉 17–19、戌 19–21、亥 21–23。${pad(h)}:${pad(mi)} 喺 ${pad(st)}:00–${pad((st+2)%24)}:00，係${a}時。（呢度用當地鐘數；真太陽時另計。）`);
+    x.wh={k:'lab',l:Object.fromEntries([...ZHI].map((z,j)=>[z,String((j*2+23)%24)])),h:a,c:'外圈係每個時辰開始嘅鐘數'};return x;}
+  if(r<0.74){const g=Math.floor(Math.random()*10),male=Math.random()<0.5,yang=g%2===0,fw=yang===male,a=fw?'順排':'逆排';
+    const x=bfQ(`「${GAN[g]}」年出世嘅${male?'男':'女'}命，大運順排定逆排？`,a,['順排','逆排'],`口訣：陽男陰女順排，陰男陽女逆排。甲丙戊庚壬係陽年，乙丁己辛癸係陰年。${GAN[g]}係${yang?'陽':'陰'}年，${male?'男':'女'}命，所以${a}。`,2);return x;}
+  if(r<0.84){const mi=Math.floor(Math.random()*60),m=JZ(mi),fw=Math.random()<0.5,a=JZ(mi+(fw?1:-1));
+    const x=bfQ(`月柱係「${m}」，大運${fw?'順排':'逆排'}，第一步大運係乜？`,a,[JZ(mi+(fw?-1:1)),JZ(mi+(fw?2:-2)),JZ(mi+(fw?13:-13))],`大運由月柱起。${fw?'順排就向前行一個':'逆排就向後退一個'}干支：天干${m[0]}${fw?'下一個':'上一個'}係${a[0]}，地支${m[1]}${fw?'下一個':'上一個'}係${a[1]}，第一步大運係${a}，之後每步十年咁${fw?'順':'逆'}落去。`);
+    x.wh={k:'lab',l:{[m[1]]:'月柱',[a[1]]:'大運'},h:m[1]+a[1],c:fw?'順排：順時針行一格':'逆排：逆時針退一格'};return x;}
+  if(r<0.93){const D=Math.floor(Math.random()*30),S=bfR([0,0,1,2]),yr=Math.floor(D/3),mo=(D%3)*4,dy=S*10,fw=Math.random()<0.5,f=(y,m,d)=>`${y} 歲${m?` ${m} 個月`:''}${d?` ${d} 日`:''}`,a=f(yr,mo,dy);
+    const alt=[f(D,0,0),f(yr+1,mo,dy),f(yr,(mo+4)%12,dy),f(Math.floor(D/2),0,dy),f(yr,mo,dy+10)].filter((v,i,A)=>v!==a&&A.indexOf(v)===i);
+    const x=bfQ(`大運${fw?'順排':'逆排'}，由出世${fw?'數到下一個節':'倒數返上一個節'}，有 ${D} 日${S?` ${S} 個時辰`:''}。幾時起運？`,a,alt,`口訣「三日折一歲」：三日當一年，一日當四個月，一個時辰當十日。${D} 日÷3＝${yr} 年餘 ${D%3} 日（${D%3}×4＝${mo} 個月）${S?`，${S} 個時辰＝${dy} 日`:''}，所以 ${a}起運。${fw?'順排數去下一個節':'逆排數返上一個節'}。`);return x;}
+  const i=Math.floor(Math.random()*60),p=JZ(i),st=i-i%10,k1=ZHI[(st+10)%12],k2=ZHI[(st+11)%12],a=k1+k2;
+  const x=bfQ(`日柱係「${p}」，空亡係邊兩個地支？`,a,['子丑','寅卯','辰巳','午未','申酉','戌亥'],`推算：先搵旬首（${p}向前數返到「甲」）：${p}喺${JZ(st)}旬。甲配到第十個天干癸之後，剩低兩個地支冇天干配，就係空亡。${JZ(st)}旬由${JZ(st)}數到${JZ(st+9)}，${k1}${k2}冇得配，所以空${a}。口訣：甲子旬中戌亥空，甲戌旬中申酉空，甲申旬中午未空，甲午旬中辰巳空，甲辰旬中寅卯空，甲寅旬中子丑空。`);
+  x.wh={k:'lab',l:Object.assign(Object.fromEntries(Array.from({length:10},(_,j)=>[ZHI[(st+j)%12],GAN[j]])),{[k1]:'空',[k2]:'空'}),h:a,c:`${JZ(st)}旬：外圈係配到嘅天干，${a}冇天干配＝空亡`};return x;}
+// 由「每個日干對應地支」砌返「每個地支有邊啲日干」，畀圓盤外圈用
+function bfInv(arr){const o={};arr.forEach((v,gi)=>[...v].forEach(z=>{if(ZHI.includes(z))o[z]=(o[z]||'')+GAN[gi];}));return o;}
+function bfPenta(w){const S=200,c=100,R=70,W='木火土金水',pt=i=>{const a=(i*72)*Math.PI/180;return [c+R*Math.sin(a),c-R*Math.cos(a)];},f=v=>v.toFixed(1);
+  const A=(i,j,on)=>{const [x1,y1]=pt(i),[x2,y2]=pt(j),d=Math.hypot(x2-x1,y2-y1),k=17/d;return `<line x1="${f(x1+(x2-x1)*k)}" y1="${f(y1+(y2-y1)*k)}" x2="${f(x2-(x2-x1)*k)}" y2="${f(y2-(y2-y1)*k)}" stroke="currentColor" stroke-width="${on?2.8:1}" opacity="${on?0.95:0.25}"${on?'':' stroke-dasharray="3 3"'} marker-end="url(#bfar5${on?'b':''})"/>`;};
+  const h=w.e?[W.indexOf(w.e[0]),W.indexOf(w.e[1])]:null;let g='';
+  for(let i=0;i<5;i++){const s1=(i+1)%5,k1=(i+2)%5;if(!(h&&h[0]===i&&h[1]===s1))g+=A(i,s1,0);if(!(h&&h[0]===i&&h[1]===k1))g+=A(i,k1,0);}
+  if(h&&h[0]!==h[1])g+=A(h[0],h[1],1);
+  const dots=[...W].map((x,i)=>{const [px,py]=pt(i),on=w.m&&w.m.includes(x),col=EC[i];return `<circle cx="${f(px)}" cy="${f(py)}" r="14" fill="${on?col:'var(--paper,#fff)'}" fill-opacity="${on?0.18:1}" stroke="${col}" stroke-width="${on?2.4:1}"/><text x="${f(px)}" y="${f(py+5)}" text-anchor="middle" font-size="${on?15:13}" font-weight="${on?700:400}" fill="${col}">${x}</text>${w.me===x?`<text x="${f(px)}" y="${f(py+(py>c?30:-20))}" text-anchor="middle" font-size="11" fill="currentColor">（我）</text>`:''}`;}).join('');
+  const mk=id=>`<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="${id.endsWith('b')?6:5}" markerHeight="${id.endsWith('b')?6:5}" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>`;
+  return `<figure class="bfwh"><svg viewBox="0 0 ${S} ${S+10}" role="img" aria-label="五行生剋圖：${esc(w.c)}"><defs>${mk('bfar5')}${mk('bfar5b')}</defs>${g}${dots}</svg><figcaption class="hint">${esc(w.c)}</figcaption></figure>`;}
 function bfR(a){return a[Math.floor(Math.random()*a.length)];}
 function bfQ(q,ans,pool,why,n=4){const o=[ans];const ex=(q.match(/「[^」]*」/g)||[]).join('');pool=pool.filter(x=>x!==ans&&!ex.includes(x));while(o.length<n&&pool.length){o.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);}for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}return {q,opts:o,ans:o.indexOf(ans),why};}
 // 計分輪：揀「全部」而且今個星期未夠 5 輪；計分輪唔會重出答錯嘅題（費事變易）。揀咗單一類別或者做晒 5 輪就係練習，答錯嘅有四成機會再出
 const bfScored=()=>!BF.cat&&BF.wk!=null&&BF.wk<5;
-function bfNext(){const cats=BF.cat?BF_CATS.filter(c=>c[0]===BF.cat):BF_CATS;let x=null,c;
-  if(!bfScored()&&BF.miss.length&&Math.random()<0.4){const m=BF.miss.shift();if(!BF.cat||m.c===BF.cat){c=BF_CATS.find(k=>k[0]===m.c);x={q:m.q,opts:m.opts.slice().sort(()=>Math.random()-0.5),why:m.why,ln:m.ln,lt:m.lt,pre:m.pre};x.ans=x.opts.indexOf(m.a);x.again=true;}}
-  if(!x){c=bfR(cats);for(let t=0;t<6;t++){x=c[4]();if(!BF.cur||x.q!==BF.cur.q)break;}}
+// 唔好即刻重出同一題（主人 11月14日）：計分輪成輪唔重複；練習模式答錯嘅隔 3–5 題先再出，最近 8 題唔重複
+function bfNext(){const cats=BF.cat?BF_CATS.filter(c=>c[0]===BF.cat):BF_CATS;let x=null,c;const sc=bfScored();BF.qn=(BF.qn||0)+1;
+  if(sc&&BF.rn===0)BF.seen=[];if(!BF.seen)BF.seen=[];
+  if(!sc){const mi=BF.miss.findIndex(m=>m.due<=BF.qn&&(!BF.cat||m.c===BF.cat));if(mi>=0){const m=BF.miss.splice(mi,1)[0];c=BF_CATS.find(k=>k[0]===m.c);x={q:m.q,opts:m.opts.slice().sort(()=>Math.random()-0.5),why:m.why,ln:m.ln,lt:m.lt,pre:m.pre,wh:m.wh};x.ans=x.opts.indexOf(m.a);x.again=true;}}
+  if(!x){const recent=sc?BF.seen:BF.seen.slice(-8),pend=BF.miss.map(m=>m.q);for(let t=0;t<30;t++){c=bfR(cats);x=c[4]();if(!recent.includes(x.q)&&!pend.includes(x.q)&&(!BF.cur||x.q!==BF.cur.q))break;}}
+  BF.seen.push(x.q);if(!sc&&BF.seen.length>40)BF.seen=BF.seen.slice(-40);
   x.c=c[0];x.cn=c[1];if(x.ln==null)x.ln=c[2];if(x.lt==null)x.lt=c[3];if(!x.pre)x.pre=c[5]||'';x.sc=bfScored();BF.cur=x;BF.pick=-1;bfDraw();}
 function bfDraw(){const box=$('np-bf');if(!box)return;const body=box.querySelector('.lbody');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先玩到基本功練習。</p>';return;}
@@ -3144,7 +3221,7 @@ function bfDraw(){const box=$('np-bf');if(!box)return;const body=box.querySelect
   if(BF.sum){const m=BF.sum;body.innerHTML=`<div class="qzcard"><p class="qzq">🎉 做完一輪：答啱 ${m.ok}／20</p><p class="hint">${m.saved?`已經計入基本功排行榜。今個星期做咗 ${BF.wk}／5 輪${BF.wk>=5?'，計分用晒；之後係練習，唔計分，下星期一重新計。':'。'}`:(m.err?'成績記唔到（網絡問題），呢輪冇計入排行榜。':'今個星期 5 輪已經用晒，呢輪冇計分。')}</p><button type="button" class="qznext" data-bfagain>${BF.wk<5?'再嚟一輪 ›':'繼續練習 ›'}</button> <button type="button" class="lnk pngbtn" data-bfwrong>📕 錯題重溫</button></div><div id="bfBd"></div>`;bfBoard();return;}
   if(!BF.cur){bfNext();return;}const x=BF.cur,done=BF.pick>=0,last=x.sc&&BF.rn>=20;
   body.innerHTML=`<div class="qzbar"><b>🧱 基本功練習</b><label class="hint">練邊類：<select data-bfcat aria-label="基本功類別"><option value="">全部${BF.wk<5?'（計分）':''}</option>${BF_CATS.map(c=>`<option value="${c[0]}"${BF.cat===c[0]?' selected':''}>${c[1]}${BF.wk<5?'（練習）':''}</option>`).join('')}</select></label><button type="button" class="lnk pngbtn" data-bfwrong title="睇返基本功答錯過嘅題目">📕 錯題重溫</button><button type="button" class="lnk pngbtn" data-bfx>🎯 去測驗</button><span class="qzsc">${x.sc?`第 ${BF.wk+1}／5 輪　第 ${Math.min(20,BF.rn+(done?0:1))}／20 題　啱 ${BF.rok}`:`練習　答啱 ${BF.ok}／${BF.n}`}</span></div><p class="hint">${BF.wk<5?'揀「全部」就係計分輪：每輪 20 題，每星期最多 5 輪（100 題），計入下面嘅基本功排行榜（唔入狀元榜）。揀單一類別就係練習，唔計分。':BF.off?'而家連唔到排行榜，當練習做住先，唔計分。':'今個星期 5 輪計分已經做晒，而家係練習，唔計分；下星期一重新計。'}答錯嘅會入「📕 錯題重溫」。</p>
-  <div class="qzcard"><span class="qztag">${esc(x.cn)}</span><span class="qztag">${x.sc?'計分':'練習・唔計分'}</span>${x.again?'<span class="qztag">之前答錯過</span>':''}<p class="qzq">${esc(x.q)}</p><div class="qzopts">${x.opts.map((o,i)=>`<button type="button" class="qzopt${done?(i===x.ans?' ok':i===BF.pick?' no':''):''}" data-bfopt="${i}"${done?' disabled':''}>${'ABCD'[i]}. ${esc(o)}${done&&i===x.ans?' ✓':done&&i===BF.pick?' ✗':''}</button>`).join('')}</div>${done?`<div class="qzwhy"><b class="r">${BF.pick===x.ans?'👍 答啱':'👎 答錯，正確答案係 '+'ABCD'[x.ans]}</b><br>${esc(x.why)}<br><span class="hint">${bfSrc(x.ln,x.lt,x.pre)}</span></div><button type="button" class="qznext" data-bfnext>${last?'睇成績 ›':'下一題 ›'}</button>`:''}</div><div id="bfBd"></div>`;
+  <div class="qzcard"><span class="qztag">${esc(x.cn)}</span><span class="qztag">${x.sc?'計分':'練習・唔計分'}</span>${x.again?'<span class="qztag">之前答錯過</span>':''}<p class="qzq">${esc(x.q)}</p><div class="qzopts">${x.opts.map((o,i)=>`<button type="button" class="qzopt${done?(i===x.ans?' ok':i===BF.pick?' no':''):''}" data-bfopt="${i}"${done?' disabled':''}>${'ABCD'[i]}. ${esc(o)}${done&&i===x.ans?' ✓':done&&i===BF.pick?' ✗':''}</button>`).join('')}</div>${done?`<div class="qzwhy"><b class="r">${BF.pick===x.ans?'👍 答啱':'👎 答錯，正確答案係 '+'ABCD'[x.ans]}</b><br>${esc(x.why)}<br><span class="hint">${bfSrc(x.ln,x.lt,x.pre)}</span>${bfWheel(x.wh)}</div><button type="button" class="qznext" data-bfnext>${last?'睇成績 ›':'下一題 ›'}</button>`:''}</div><div id="bfBd"></div>`;
   body.querySelectorAll('.qzq,.qzopt,.qzwhy').forEach(e=>wxColor(e));bfBoard();}
 function bfOpen(){const r=document.querySelector('input[name=ntab][value=bf]');if(!r)return;if(isMob())mTab('learn');const n=r.closest('section');if(n)n.classList.remove('folded');r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));const b=$('np-bf');if(b)b.scrollIntoView({block:'start'});}
 // 基本功排行榜：基本功頁同排行榜都有；本週／本月；冇狀元稱號、冇獎分
@@ -3156,9 +3233,9 @@ async function bfBoard(){const els=()=>[$('bfBd'),$('bfBdLb')].filter(Boolean);i
 document.addEventListener('click',e=>{if(e.target.closest('[data-bfgo]')){bfOpen();return;}if(e.target.closest('[data-bfx]')){qzOpen();return;}if(e.target.closest('[data-bfwrong]')){BF.wr=true;bfDraw();return;}if(e.target.closest('[data-bfwrx]')){BF.wr=false;bfDraw();return;}
   if(e.target.closest('[data-bfagain]')){BF.sum=null;BF.cur=null;bfNext();return;}
   if(e.target.closest('[data-bfnext]')){if(BF.cur&&BF.cur.sc&&BF.rn>=20){const fin=j=>{BF.sum={ok:BF.rok,saved:!!(j&&j.saved),err:!j};if(j&&j.rounds!=null)BF.wk=+j.rounds;BF.rn=0;BF.rok=0;BF.cur=null;BF.bd=null;const l=$('bfBdLb');if(l)l.innerHTML='';bfDraw();if(l)bfBoard();const b=$('np-bf');if(b)b.scrollIntoView({block:'nearest'});};(BF.sub||Promise.resolve(null)).then(fin,()=>fin(null));BF.sub=null;return;}bfNext();const b=$('np-bf');if(b)b.scrollIntoView({block:'nearest'});return;}
-  const o=e.target.closest('[data-bfopt]');if(o&&BF.cur&&BF.pick<0){const x=BF.cur;BF.pick=+o.dataset.bfopt;const hit=BF.pick===x.ans;{const W=bfWGet().filter(r=>r.q!==x.q);if(!hit)W.unshift({c:x.c,q:x.q,opts:x.opts,a:x.opts[x.ans],p:x.opts[BF.pick],why:x.why,ln:x.ln,lt:x.lt,pre:x.pre,at:Date.now()});bfWSet(W);}
+  const o=e.target.closest('[data-bfopt]');if(o&&BF.cur&&BF.pick<0){const x=BF.cur;BF.pick=+o.dataset.bfopt;const hit=BF.pick===x.ans;{const W=bfWGet().filter(r=>r.q!==x.q);if(!hit)W.unshift({c:x.c,q:x.q,opts:x.opts,a:x.opts[x.ans],p:x.opts[BF.pick],why:x.why,ln:x.ln,lt:x.lt,pre:x.pre,wh:x.wh,at:Date.now()});bfWSet(W);}
     if(x.sc){BF.rn++;if(hit)BF.rok++;if(BF.rn>=20)BF.sub=api('rpc/bf_submit',{method:'POST',body:JSON.stringify({p_ok:BF.rok})});}else{BF.n++;if(hit)BF.ok++;}
-    if(!hit&&!x.sc){BF.miss.push({c:x.c,q:x.q,opts:x.opts,a:x.opts[x.ans],why:x.why,ln:x.ln,lt:x.lt,pre:x.pre});if(BF.miss.length>12)BF.miss.shift();}trk1('quiz','bf'+(BF.n+BF.rn+BF.wk*20),{bf:x.c});bfDraw();}});
+    if(!hit&&!x.sc){BF.miss.push({c:x.c,q:x.q,opts:x.opts,a:x.opts[x.ans],why:x.why,ln:x.ln,lt:x.lt,pre:x.pre,wh:x.wh,due:(BF.qn||0)+4+Math.floor(Math.random()*3)});if(BF.miss.length>12)BF.miss.shift();}trk1('quiz','bf'+(BF.n+BF.rn+BF.wk*20),{bf:x.c});bfDraw();}});
 document.addEventListener('change',e=>{if(e.target.matches('[data-bfcat]')){BF.cat=e.target.value;BF.cur=null;bfNext();}else if(e.target.matches('input[name=ntab][value=bf]'))bfDraw();else if(e.target.matches('input[name=bfbw],input[name=bfbwL]')){BF.bw=e.target.value==='1';bfBoard();}});
 function qzDraw(){const box=$('np-quiz');if(!box)return;const body=box.querySelector('.lbody');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先玩到測驗。 <button type="button" class="lnk pngbtn" data-qzshare title="複製測驗嘅連結">🔗 複製連結</button>'+QZ_SH+'<span class="hint" data-qzsharemsg></span></p>';return;}
@@ -4598,7 +4675,7 @@ const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 // 走馬燈最前面：最新改動（主人 11月14日）。每次上線改呢行：[日期, 好短嘅描述]；出 7 日，撳落去開更新日誌
-const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-14','「🧱 基本功」獨立一頁：每輪 20 題、每星期 5 輪，有自己嘅排行榜；下星期一測驗加 57 題深題'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
+const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-14','🧱 基本功加「🧠 心算起盤」類別，答完有十二地支圓盤圖解'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
 function supShow(rows,cs,qz,qr,qc){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);const nw=`<span class="supi"><button type="button" class="lnk" data-newsopen="quiz" style="font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer" title="撳呢度去小測驗">${esc(PROMO)} ›</button></span><span class="supsep">✦</span>`+(Date.now()-new Date(NEWS[0]+'T00:00:00+08:00')<7*864e5?`<span class="supi"><button type="button" class="lnk" data-newsopen="cl" style="font:inherit;color:inherit">🆕 ${esc(NEWS[1])}</button></span><span class="supsep">✦</span>`:'');
   if(!(rows.length+cs.length+qz.length+qr.length+(nw?1:0))||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
