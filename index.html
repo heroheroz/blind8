@@ -3020,7 +3020,7 @@ document.addEventListener('change',e=>{if(e.target.matches('[data-qzwrsk]')){QZ.
 // 基本功練習（師兄建議，主人 11月14日）：題目由固定嘅表即時出，唔計分、唔入排行榜；每類附隱姓先生課堂出處
 const BF={cat:'',cur:null,pick:-1,ok:0,n:0,miss:[],wk:null,rn:0,rok:0,sum:null,wr:false,bw:true,bd:null};  // 基本功獨立一頁（主人 11月14日）：每輪 20 題，每星期 5 輪計分，有自己嘅排行榜，唔入狀元榜
 const BF_CATS=[
- ['he5','天干五合',5,1429,()=>{const P=['甲己','乙庚','丙辛','丁壬','戊癸'],p=bfR(P),i=bfR([0,1]);return bfQ(`天干「${p[i]}」同邊個天干相合？`,p[1-i],[...GAN],`${p[0]}${p[1]}合。五合：甲己、乙庚、丙辛、丁壬、戊癸。`);}],
+ ['he5','天干五合',5,1429,()=>{const P=['甲己','乙庚','丙辛','丁壬','戊癸'],p=bfR(P),i=bfR([0,1]);const x=bfQ(`天干「${p[i]}」同邊個天干相合？`,p[1-i],[...GAN],`${p[0]}${p[1]}合。五合：甲己、乙庚、丙辛、丁壬、戊癸。`);x.wh={k:'g10',ln:P.map(q=>[q,q===p?1:0]),h:p,c:'五合：相隔五位，喺圓圈對面'};return x;}],
  ['chong','地支六沖',4,1776,()=>{const P=['子午','丑未','寅申','卯酉','辰戌','巳亥'],p=bfR(P),i=bfR([0,1]);const x=bfQ(`地支「${p[i]}」同邊個地支相沖？`,p[1-i],[...ZHI],`${p[0]}${p[1]}沖。六沖：子午、丑未、寅申、卯酉、辰戌、巳亥。`);x.wh={k:'chong',p};return x;}],
  ['he6','地支六合',5,1429,()=>{const P=['子丑','寅亥','卯戌','辰酉','巳申','午未'],p=bfR(P),i=bfR([0,1]);const x=bfQ(`地支「${p[i]}」同邊個地支六合？`,p[1-i],[...ZHI],`${p[0]}${p[1]}合。六合：子丑、寅亥、卯戌、辰酉、巳申、午未。`);x.wh={k:'he6',p};return x;}],
  ['he3','三合局',16,1864,()=>{const P=[['申子辰','水'],['亥卯未','木'],['寅午戌','火'],['巳酉丑','金']],p=bfR(P),i=bfR([0,1,2]),r=[...p[0]].filter((_,j)=>j!==i);const x=bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三合${p[1]}局？`,p[0][i],[...ZHI],`${p[0]}三合${p[1]}局。三合局：申子辰水、亥卯未木、寅午戌火、巳酉丑金。`);x.wh={k:'he3',p:p[0]};return x;}],
@@ -3029,13 +3029,13 @@ const BF_CATS=[
  ['ke','地支相剋',6,1439,()=>{const W='水土木木土火火土金金土水',KE={木:'土',土:'水',水:'火',火:'金',金:'木'},z=bfR([...ZHI]),w=W[ZHI.indexOf(z)],rev=Math.random()<0.5,t=rev?Object.keys(KE).find(k=>KE[k]===w):KE[w],good=[...ZHI].filter(x=>W[ZHI.indexOf(x)]===t),why=`五行相剋：木剋土、土剋水、水剋火、火剋金、金剋木。${z}屬${w}，${rev?`${t}剋${w}`:`${w}剋${t}`}（${good.join('')}屬${t}）。`;const x=bfQ(rev?`以下邊個地支剋「${z}」（${z}屬${w}）？`:`地支「${z}」（屬${w}）剋以下邊個地支？`,bfR(good.filter(x=>x!==z)),[...ZHI].filter(x=>!good.includes(x)),why);x.wh={k:'ke',p:z,g:good.join(''),r:rev};return x;}],
  ['xing','地支相刑',92,1205,()=>{if(Math.random()<0.35){const z=bfR([...'辰午酉亥']);const x=bfQ('以下邊個地支係自刑（兩個相同就自己刑自己）？',z,[...'子丑寅卯巳未申戌',z],'自刑得四個：辰辰、午午、酉酉、亥亥。');x.wh={k:'zx',p:z};return x;}
    const P=['寅巳申','丑戌未'],p=bfR(P),i=bfR([0,1,2]),r=[...p].filter((_,j)=>j!==i);const x=bfQ(`「${r[0]}、${r[1]}」再加邊個地支，就齊三刑？`,p[i],[...ZHI],`${p}三刑。三刑：寅巳申、丑戌未；另外子卯相刑。`);x.wh={k:'xing',p};return x;}],
- ['yy','陰陽',3,1664,()=>{const g=Math.random()<0.5,all=g?[...GAN]:[...ZHI],c=bfR(g?all:[...'丑寅卯辰未申酉戌']),yang=all.indexOf(c)%2===0;return bfQ(`${g?'天干':'地支'}「${c}」屬陰定屬陽？`,yang?'陽':'陰',['陽','陰'],g?'陽干：甲丙戊庚壬；陰干：乙丁己辛癸。':'陽支：子寅辰午申戌；陰支：丑卯巳未酉亥。',2);}],
- ['wx','五行',3,1664,()=>{const g=Math.random()<0.5,c=bfR(g?[...GAN]:[...ZHI]),w=g?'木木火火土土金金水水'[GAN.indexOf(c)]:'水土木木土火火土金金土水'[ZHI.indexOf(c)];return bfQ(`${g?'天干':'地支'}「${c}」五行屬乜？`,w,[...'木火土金水'],g?'甲乙木、丙丁火、戊己土、庚辛金、壬癸水。':'寅卯木、巳午火、申酉金、亥子水、辰戌丑未土。');}],
+ ['yy','陰陽',3,1664,()=>{const g=Math.random()<0.5,all=g?[...GAN]:[...ZHI],c=bfR(g?all:[...'丑寅卯辰未申酉戌']),yang=all.indexOf(c)%2===0;const x=bfQ(`${g?'天干':'地支'}「${c}」屬陰定屬陽？`,yang?'陽':'陰',['陽','陰'],g?'陽干：甲丙戊庚壬；陰干：乙丁己辛癸。':'陽支：子寅辰午申戌；陰支：丑卯巳未酉亥。',2);x.wh=g?{k:'g10',l:Object.fromEntries([...GAN].map((q,j)=>[q,j%2?'陰':'陽'])),h:c,c:'順序一陽一陰咁輪'}:{k:'lab',l:Object.fromEntries([...ZHI].map((q,j)=>[q,j%2?'陰':'陽'])),h:c,c:'由子起，一陽一陰咁輪'};return x;}],
+ ['wx','五行',3,1664,()=>{const g=Math.random()<0.5,c=bfR(g?[...GAN]:[...ZHI]),w=g?'木木火火土土金金水水'[GAN.indexOf(c)]:'水土木木土火火土金金土水'[ZHI.indexOf(c)];const x=bfQ(`${g?'天干':'地支'}「${c}」五行屬乜？`,w,[...'木火土金水'],g?'甲乙木、丙丁火、戊己土、庚辛金、壬癸水。':'寅卯木、巳午火、申酉金、亥子水、辰戌丑未土。');x.wh=g?{k:'g10',l:Object.fromEntries([...GAN].map((q,j)=>[q,'木木火火土土金金水水'[j]])),h:c,c:'兩個一組：甲乙木、丙丁火…'}:{k:'lab',l:Object.fromEntries([...ZHI].map((q,j)=>[q,'水土木木土火火土金金土水'[j]])),h:c,c:'東木（寅卯）、南火（巳午）、西金（申酉）、北水（亥子）、四角係土'};return x;}],
  ['sha','七殺',65,490,()=>{const c=bfR([...GAN]),k=GAN[(GAN.indexOf(c)+6)%10];const x=bfQ(`邊個天干係「${c}」嘅七殺（剋佢而且陰陽相同）？`,k,[...GAN],`${k}剋${c}，陰陽相同，係七殺。口訣：甲見庚、乙見辛、丙見壬、丁見癸、戊見甲、己見乙、庚見丙、辛見丁、壬見戊、癸見己。`);const W5='木火土金水',wc=W5[GAN.indexOf(c)>>1],wk=W5[GAN.indexOf(k)>>1];x.wh={k:'wx5',m:wc+wk,me:wc,e:wk+wc,c:`星形箭咀：${wk}剋${wc}，${k}同${c}陰陽相同＝七殺`};return x;}],
- ['cang','支藏本氣',29,935,()=>{const z=bfR([...ZHI]),a=HIDE[z][0];return bfQ(`地支「${z}」嘅本氣（主要藏嘅天干）係邊個？`,a,[...GAN],`${z}本氣係${a}。本氣：子癸、丑己、寅甲、卯乙、辰戊、巳丙、午丁、未己、申庚、酉辛、戌戊、亥壬。`);}],
- ['ren','陽刃（羊刃）',7,1144,()=>{const P=['甲卯','丙午','戊午','庚酉','壬子'],p=bfR(P);return bfQ(`陽干「${p[0]}」嘅陽刃（羊刃）喺邊個地支？`,p[1],[...ZHI],`${p[0]}嘅陽刃喺${p[1]}。陽刃得五個陽干先有：甲卯、丙午、戊午、庚酉、壬子。`);}],
+ ['cang','支藏本氣',29,935,()=>{const z=bfR([...ZHI]),a=HIDE[z][0];const x=bfQ(`地支「${z}」嘅本氣（主要藏嘅天干）係邊個？`,a,[...GAN],`${z}本氣係${a}。本氣：子癸、丑己、寅甲、卯乙、辰戊、巳丙、午丁、未己、申庚、酉辛、戌戊、亥壬。`);x.wh={k:'lab',l:Object.fromEntries([...ZHI].map(q=>[q,HIDE[q][0]])),h:z,c:'外圈係每個地支嘅本氣'};return x;}],
+ ['ren','陽刃（羊刃）',7,1144,()=>{const P=['甲卯','丙午','戊午','庚酉','壬子'],p=bfR(P);const x=bfQ(`陽干「${p[0]}」嘅陽刃（羊刃）喺邊個地支？`,p[1],[...ZHI],`${p[0]}嘅陽刃喺${p[1]}。陽刃得五個陽干先有：甲卯、丙午、戊午、庚酉、壬子。`);x.wh={k:'lab',l:{卯:'甲',午:'丙戊',酉:'庚',子:'壬'},h:p[1],c:'陽刃都喺子午卯酉（四正位）'};return x;}],
  ['kui','魁罡',2,1637,()=>{const K=['壬辰','戊戌','庚辰','庚戌'],O=['甲辰','丙辰','甲戌','丙戌','甲申','丙申'],k=bfR(K),why='四魁罡：壬辰、戊戌、庚辰、庚戌，係最強旺嘅柱。';if(Math.random()<0.5)return bfQ('以下邊條柱係魁罡？',k,O,why);const r=K.filter(x=>x!==k);return bfQ(`魁罡得四條柱：${r.join('、')}，仲有邊條？`,k,O,why);}],
- ['lian','天干相連',98,2383,()=>{const i=bfR([0,1,2,3,4,5,6,7,8,9]),c=GAN[i],a=GAN[(i+1)%10],b=GAN[(i+9)%10];return bfQ(`天干順序入面，緊接喺「${c}」後面（同佢黐埋一齊）嘅係邊個？`,a,[...GAN].filter(x=>x!==b),`甲乙丙丁戊己庚辛壬癸，${c}後面係${a}；癸後面返去甲，相連嘅天干會黏連。`);}],
+ ['lian','天干相連',98,2383,()=>{const i=bfR([0,1,2,3,4,5,6,7,8,9]),c=GAN[i],a=GAN[(i+1)%10],b=GAN[(i+9)%10];const x=bfQ(`天干順序入面，緊接喺「${c}」後面（同佢黐埋一齊）嘅係邊個？`,a,[...GAN].filter(x=>x!==b),`甲乙丙丁戊己庚辛壬癸，${c}後面係${a}；癸後面返去甲，相連嘅天干會黏連。`);x.wh={k:'g10',ln:[[c+a,1,1]],h:c+a,c:'天干順時針排成一圈，隔籬就係相連'};return x;}],
  // 第二批（主人 11月14日）：十二長生、神煞、墓庫、三桓命宮、五虎遁、五鼠遁；解釋要寫埋點樣推算。老師冇專門教推算嘅，出處寫明係傳統口訣
  ['cs','十二長生',10,209,()=>{const ST=['長生','沐浴','冠帶','臨官','帝旺','衰','病','死','墓','絕','胎','養'],SP='亥午寅酉寅酉巳子申卯',gi=bfR([0,1,2,3,6,7,8,9]),g=GAN[gi],yang=gi%2===0,si=ZHI.indexOf(SP[gi]),at=k=>ZHI[(si+(yang?k:12-k))%12],seq=k=>Array.from({length:k+1},(_,j)=>at(j)+ST[j]).join('、'),
      head=`推算：由長生位起，陽干順數、陰干逆數，次序係長生、沐浴、冠帶、臨官、帝旺、衰、病、死、墓、絕、胎、養。長生位：甲亥、丙戊寅、庚巳、壬申；乙午、丁己酉、辛子、癸卯。${g}係${yang?'陽':'陰'}干，由${SP[gi]}起${yang?'順':'逆'}數：`,r=Math.random();
@@ -3054,7 +3054,7 @@ const BF_CATS=[
    else if(k==='驛馬')why=`用年支查。推算：驛馬係年支嗰個三合局第一個字嘅對沖：申子辰馬在寅、寅午戌馬在申、巳酉丑馬在亥、亥卯未馬在巳。${z}屬${sh}，${sh[0]}沖${a}，驛馬喺${a}。`;
    else if(k==='華蓋')why=`用年支查。推算：華蓋係年支嗰個三合局最尾嗰個字（即係個庫）：申子辰見辰、寅午戌見戌、巳酉丑見丑、亥卯未見未。${z}屬${sh}，華蓋喺${a}。`;
    else why=`用年支查。推算：子年紅鸞喺卯，之後年支每順行一位，紅鸞就逆行一位（子卯、丑寅、寅丑、卯子、辰亥、巳戌、午酉、未申、申未、酉午、戌巳、亥辰）。${z}年紅鸞喺${a}。`;
-   const x=bfQ(`年支「${z}」嘅${k}，喺邊個地支？`,a,[...ZHI],why);x.lt=lt;if(k!=='紅鸞')x.wh={k:'sh3',p:sh,a,n:k};return x;}],
+   const x=bfQ(`年支「${z}」嘅${k}，喺邊個地支？`,a,[...ZHI],why);x.lt=lt;if(k!=='紅鸞')x.wh={k:'sh3',p:sh,a,n:k};else{const RP=['子卯','丑寅','辰亥','巳戌','午酉','未申'];x.wh={k:'lab',l:{[z]:'年支',[a]:'紅鸞'},ln:RP.map(q=>[q,q.includes(z)&&q.includes(a)?1:0]),h:z+a,c:'紅鸞兩兩相對：子卯、丑寅、辰亥、巳戌、午酉、未申'};}return x;}],
  ['sh','三桓、命宮推算',58,1268,()=>{const r=Math.random(),gi=bfR([0,1,2,3,4,5,6,7,8,9]),zi=(gi%2)+2*bfR([0,1,2,3,4,5]),g=GAN[gi],z=ZHI[zi],G=k=>GAN[(gi+k)%10];
    if(r<0.35){const a=G(1)+ZHI[(zi+3)%12];const x=bfQ(`月柱係「${g}${z}」，胎元係邊條柱？`,a,[G(1)+ZHI[(zi+1)%12],G(3)+ZHI[(zi+3)%12],G(9)+ZHI[(zi+9)%12],G(1)+ZHI[(zi+5)%12]],`推算：胎元＝月柱天干進一位、地支進三位。${g}進一位係${a[0]}，${z}進三位係${a[1]}，所以胎元係${a}。`);x.wh={k:'lab',l:{[z]:'月支',[ZHI[(zi+1)%12]]:'1',[ZHI[(zi+2)%12]]:'2',[a[1]]:'3 胎元'},h:z+a[1],c:`地支由${z}順時針進三位到${a[1]}`};return x;}
    if(r<0.65){const H={子:'丑',丑:'子',寅:'亥',亥:'寅',卯:'戌',戌:'卯',辰:'酉',酉:'辰',巳:'申',申:'巳',午:'未',未:'午'},hi=ZHI.indexOf(H[z]),a=G(5)+H[z];const x=bfQ(`日柱係「${g}${z}」，胎息係邊條柱？`,a,[G(5)+ZHI[(hi+2)%12],G(5)+ZHI[(hi+10)%12],G(1)+H[z],G(9)+H[z]],`推算：胎息＝同日柱天干地支都相合嗰條柱（天干五合、地支六合）。${g}合${a[0]}，${z}合${a[1]}，所以胎息係${a}。`);x.wh={k:'he6',p:z+H[z]};x.ln=50;x.lt=75;x.pre='老師話胎息由日元推出嚟：';return x;}
@@ -3138,7 +3138,7 @@ function bfWrongHtml(){const W=bfWGet();if(!W.length)return '';const idx=LS.idx|
 // 十二地支圓盤（主人 11月14日）：沖＝穿過中心嘅對角線，六合＝橫線，六害＝直線，三合／三刑＝三角，三會＝弧，相剋＝箭咀；淡色係同類全部，深色係今題；地支用網站五行顏色
 // 其他類別（十二長生、五虎遁、五鼠遁、神煞）喺圓盤外圈寫埋推算；十神、七殺用五行生剋圖。全部由出題嗰條公式即場畫，同答案一致
 const BF_T={chong:['子午','丑未','寅申','卯酉','辰戌','巳亥'],hai:['子未','丑午','寅巳','卯辰','申亥','酉戌'],he6:['子丑','寅亥','卯戌','辰酉','巳申','午未'],he3:['申子辰','亥卯未','寅午戌','巳酉丑'],hui3:['寅卯辰','巳午未','申酉戌','亥子丑']};
-function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);
+function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);if(w.k==='g10')return bfG10(w);
   let ln=[],tri=[],arc=[],hl='',ring='',lab=null,cap='',big='';const T=BF_T,fl=(k,on)=>T[k].forEach(p=>{if(p!==on)(p.length>2?tri:ln).push([p,0]);});
   if(w.k==='chong'||w.k==='hai'||w.k==='he6'){fl(w.k,w.p);ln.push([w.p,1]);hl=w.p;cap={chong:'六沖：對面直線穿過中心',hai:'六害：直線（虛線係其他五對）',he6:'六合：橫線（虛線係其他五對）'}[w.k];}
   else if(w.k==='he3'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p;cap='三合：每隔三格成一個三角';}
@@ -3148,7 +3148,7 @@ function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);
   else if(w.k==='ke'){[...w.g].forEach(z=>ln.push([w.r?z+w.p:w.p+z,1,1]));hl=w.p+w.g;cap=w.r?`箭咀：${w.g}剋${w.p}`:`箭咀：${w.p}剋${w.g}`;}
   else if(w.k==='mu'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p;ring=w.p[2];big=w.p[2];cap=`${w.p}三合，圈住嗰個（最尾一個字）係墓庫`;}
   else if(w.k==='sh3'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p+w.a;ring=w.a;if(w.n==='驛馬')ln.push([w.p[0]+w.a,1]);cap=w.n==='桃花'?`${w.p}三合，第一個字下一位（圈住）係桃花`:w.n==='驛馬'?`${w.p}三合，第一個字對沖（圈住）係驛馬`:`${w.p}三合，最尾一個字（圈住）係華蓋`;}
-  else if(w.k==='lab'){lab=w.l;hl=w.h;ring=w.h;cap=w.c;}
+  else if(w.k==='lab'){lab=w.l;hl=w.h;ring=w.h;cap=w.c;if(w.ln)ln=w.ln;}
   const S=lab?250:200,c=S/2,R=lab?78:74,pt=(z,r=R)=>{const a=(ZHI.indexOf(z)*30-15)*Math.PI/180;return [c-r*Math.sin(a),c+r*Math.cos(a)];},f=v=>v.toFixed(1);
   const L=(a,b,on,ar)=>{const [x1,y1]=pt(a),[x2,y2]=pt(b),d=Math.hypot(x2-x1,y2-y1),k=15/d;return `<line x1="${f(x1+(x2-x1)*k)}" y1="${f(y1+(y2-y1)*k)}" x2="${f(x2-(x2-x1)*k)}" y2="${f(y2-(y2-y1)*k)}" stroke="currentColor" stroke-width="${on?2.6:1}" opacity="${on?0.95:0.22}"${on?'':' stroke-dasharray="3 3"'}${ar?' marker-end="url(#bfar)"':''}/>`;};
   let g=ln.map(([p,on,ar])=>L(p[0],p[1],on,ar)).join('')+tri.map(([p,on])=>L(p[0],p[1],on)+L(p[1],p[2],on)+L(p[2],p[0],on)).join('')
@@ -3157,6 +3157,13 @@ function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);
     if(lab&&lab[z]){const [lx,ly]=pt(z,R+33);o+=`<text x="${f(lx)}" y="${f(ly+4)}" text-anchor="middle" font-size="11" font-weight="${on?700:400}" fill="currentColor" opacity="${on?1:0.7}">${esc(lab[z])}</text>`;}
     return o+`<circle cx="${f(x)}" cy="${f(y)}" r="12.5" fill="${on?col:'var(--paper,#fff)'}" fill-opacity="${on?0.18:1}" stroke="${col}" stroke-width="${on?2.4:1}"/><text x="${f(x)}" y="${f(y+5)}" text-anchor="middle" font-size="${on?15:13}" font-weight="${on?700:400}" fill="${col}">${z}</text>`;}).join('');
   return `<figure class="bfwh${lab?' wide':''}"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="十二地支圓盤：${esc(cap)}"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>${g}${dots}</svg><figcaption class="hint">${esc(cap)}</figcaption></figure>`;}
+// 十天干圓圈（主人 11月14日）：甲喺頂，順時針；五合＝對面（相隔五位），相連＝隔籬
+function bfG10(w){const S=w.l?240:200,c=S/2,R=w.l?78:74,pt=(g,r=R)=>{const a=GAN.indexOf(g)*36*Math.PI/180;return [c+r*Math.sin(a),c-r*Math.cos(a)];},f=v=>v.toFixed(1),hl=w.h||'';
+  const L=(a,b,on,ar)=>{const [x1,y1]=pt(a),[x2,y2]=pt(b),d=Math.hypot(x2-x1,y2-y1),k=15/d;return `<line x1="${f(x1+(x2-x1)*k)}" y1="${f(y1+(y2-y1)*k)}" x2="${f(x2-(x2-x1)*k)}" y2="${f(y2-(y2-y1)*k)}" stroke="currentColor" stroke-width="${on?2.6:1}" opacity="${on?0.95:0.22}"${on?'':' stroke-dasharray="3 3"'}${ar?' marker-end="url(#bfar)"':''}/>`;};
+  const g=(w.ln||[]).map(([p,on,ar])=>L(p[0],p[1],on,ar)).join('');
+  const dots=[...GAN].map((q,j)=>{const [x,y]=pt(q),on=hl.includes(q),col=EC[j>>1];let o='';if(w.l&&w.l[q]){const [lx,ly]=pt(q,R+28);o+=`<text x="${f(lx)}" y="${f(ly+4)}" text-anchor="middle" font-size="11" font-weight="${on?700:400}" fill="currentColor" opacity="${on?1:0.7}">${esc(w.l[q])}</text>`;}
+    return o+`<circle cx="${f(x)}" cy="${f(y)}" r="12.5" fill="${on?col:'var(--paper,#fff)'}" fill-opacity="${on?0.18:1}" stroke="${col}" stroke-width="${on?2.4:1}"/><text x="${f(x)}" y="${f(y+5)}" text-anchor="middle" font-size="${on?15:13}" font-weight="${on?700:400}" fill="${col}">${q}</text>`;}).join('');
+  return `<figure class="bfwh"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="十天干圓圈：${esc(w.c)}"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>${g}${dots}</svg><figcaption class="hint">${esc(w.c)}</figcaption></figure>`;}
 // 五行生剋圖：外圈順時針相生（木→火→土→金→水），入面星形相剋；深色箭咀係今題嘅關係
 // 心算起盤題（主人 11月14日）：年柱、立春前後、月支跟節、月柱、日柱推算、時支、大運順逆、第一步大運、起運歲數、空亡
 const JZ=i=>GAN[((i%60)+60)%60%10]+ZHI[((i%60)+60)%60%12],JZi=p=>{for(let i=0;i<60;i++)if(JZ(i)===p)return i;return -1;},bfJzOpts=i=>[1,-1,12,-12,10,-10].sort(()=>Math.random()-0.5).slice(0,3).map(d=>JZ(i+d));
