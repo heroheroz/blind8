@@ -3013,7 +3013,7 @@ function qzWrong(body){const W=QZ.wr,head=`<div class="qzbar"><b>📕 錯題重�
   body.querySelectorAll('.qzp b,.qzq,.qzopt,.qzwhy').forEach(e=>wxColor(e));}
 document.addEventListener('click',async e=>{if(e.target.closest('[data-qzwrongx]')){QZ.wr=null;qzDraw();return;}if(!e.target.closest('[data-qzwrong]'))return;QZ.wr='ing';QZ.wrs='';qzDraw();try{QZ.wr=await api('rpc/quiz_my_wrong',{method:'POST',body:'{}'})||[];}catch(x){QZ.wr=[];}qzDraw();const b=$('np-quiz');if(b)b.scrollIntoView({block:'start'});});
 document.addEventListener('change',e=>{if(e.target.matches('[data-qzwrsk]')){QZ.wrs=e.target.value;qzDraw();}});
-// 基本功練習（Sylar 師兄建議，主人 11月14日）：題目由固定嘅表即時出，唔計分、唔入排行榜；每類附隱姓先生課堂出處
+// 基本功練習（師兄建議，主人 11月14日）：題目由固定嘅表即時出，唔計分、唔入排行榜；每類附隱姓先生課堂出處
 const BF={on:false,cat:'',cur:null,pick:-1,ok:0,n:0,miss:[]};
 const BF_CATS=[
  ['he5','天干五合',5,1429,()=>{const P=['甲己','乙庚','丙辛','丁壬','戊癸'],p=bfR(P),i=bfR([0,1]);return bfQ(`天干「${p[i]}」同邊個天干相合？`,p[1-i],[...GAN],`${p[0]}${p[1]}合。五合：甲己、乙庚、丙辛、丁壬、戊癸。`);}],
