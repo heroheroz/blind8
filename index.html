@@ -4437,7 +4437,7 @@ const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 // 走馬燈最前面：最新改動（主人 11月14日）。每次上線改呢行：[日期, 好短嘅描述]；出 7 日，撳落去開更新日誌
-const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-14','測驗題「唔係」改紅色粗體；計法 v12 定為全站版本'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
+const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-14','下星期一測驗加 58 題深題，今個星期照舊'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
 function supShow(rows,cs,qz,qr,qc){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);const nw=`<span class="supi"><button type="button" class="lnk" data-newsopen="quiz" style="font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer" title="撳呢度去小測驗">${esc(PROMO)} ›</button></span><span class="supsep">✦</span>`+(Date.now()-new Date(NEWS[0]+'T00:00:00+08:00')<7*864e5?`<span class="supi"><button type="button" class="lnk" data-newsopen="cl" style="font:inherit;color:inherit">🆕 ${esc(NEWS[1])}</button></span><span class="supsep">✦</span>`:'');
   if(!(rows.length+cs.length+qz.length+qr.length+(nw?1:0))||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
