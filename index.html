@@ -3158,7 +3158,7 @@ function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);
 // 心算起盤題（主人 11月14日）：年柱、立春前後、月支跟節、月柱、日柱推算、時支、大運順逆、第一步大運、起運歲數、空亡
 const JZ=i=>GAN[((i%60)+60)%60%10]+ZHI[((i%60)+60)%60%12],JZi=p=>{for(let i=0;i<60;i++)if(JZ(i)===p)return i;return -1;},bfJzOpts=i=>[1,-1,12,-12,10,-10].sort(()=>Math.random()-0.5).slice(0,3).map(d=>JZ(i+d));
 const BF_JIE='立春驚蟄清明立夏芒種小暑立秋白露寒露立冬大雪小寒',BF_MZ='寅卯辰巳午未申酉戌亥子丑';
-function bfXs(){const r=Math.random(),pad=n=>String(n).padStart(2,'0');
+function bfXs(){if(Math.random()<0.45)return bfXs2();const r=Math.random(),pad=n=>String(n).padStart(2,'0');
   const zLab=()=>Object.fromEntries([...ZHI].map((z,j)=>[z,String(j)]));
   if(r<0.14){const y=1930+Math.floor(Math.random()*100),gi=(y-4)%10,zi=(y-4)%12,a=GAN[gi]+ZHI[zi];
     const x=bfQ(`公元 ${y} 年（過咗立春）出世，年柱係乜？`,a,bfJzOpts(JZi(a)),`心算：天干睇年份尾數：4甲 5乙 6丙 7丁 8戊 9己 0庚 1辛 2壬 3癸，${y} 尾數 ${y%10}，係${GAN[gi]}。地支：（${y}－4）÷12 嘅餘數＝${zi}，由子＝0 數起（子0 丑1 寅2…亥11），係${ZHI[zi]}。所以係${a}年。`);
@@ -3192,6 +3192,30 @@ function bfXs(){const r=Math.random(),pad=n=>String(n).padStart(2,'0');
   const i=Math.floor(Math.random()*60),p=JZ(i),st=i-i%10,k1=ZHI[(st+10)%12],k2=ZHI[(st+11)%12],a=k1+k2;
   const x=bfQ(`日柱係「${p}」，空亡係邊兩個地支？`,a,['子丑','寅卯','辰巳','午未','申酉','戌亥'],`推算：先搵旬首（${p}向前數返到「甲」）：${p}喺${JZ(st)}旬。甲配到第十個天干癸之後，剩低兩個地支冇天干配，就係空亡。${JZ(st)}旬由${JZ(st)}數到${JZ(st+9)}，${k1}${k2}冇得配，所以空${a}。口訣：甲子旬中戌亥空，甲戌旬中申酉空，甲申旬中午未空，甲午旬中辰巳空，甲辰旬中寅卯空，甲寅旬中子丑空。`);
   x.wh={k:'lab',l:Object.assign(Object.fromEntries(Array.from({length:10},(_,j)=>[ZHI[(st+j)%12],GAN[j]])),{[k1]:'空',[k2]:'空'}),h:a,c:`${JZ(st)}旬：外圈係配到嘅天干，${a}冇天干配＝空亡`};return x;}
+// 心算起盤第二批（主人 11月14日）：用真日子出題畀人計：命宮、胎元、時柱（鐘數＋五鼠遁）、日柱公式、月柱（節氣日子＋五虎遁）、八字＋性別揀順逆排、起運歲數
+function bfXs2(){const t=Math.floor(Math.random()*7),pad=n=>String(n).padStart(2,'0'),rd=()=>{const t0=Date.UTC(1931,0,1)+Math.floor(Math.random()*95*365)*864e5,d=new Date(t0);return [d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate(),Math.floor(Math.random()*24),10+Math.floor(Math.random()*40)];},
+  ds=(y,m,d)=>`${y} 年 ${m} 月 ${d} 日`,MZi=z=>BF_MZ.indexOf(z),ec=(y,m,d,h,mi)=>Solar.fromYmdHms(y,m,d,h,mi,0).getLunar().getEightChar();
+  if(t===0){const c=BF_CATS.find(k=>k[0]==='sh');let x;for(let i=0;i<20;i++){x=c[4]();if(!/胎息/.test(x.q))break;}x.ln=c[2];x.lt=c[3];return x;}
+  if(t===1){const [y,m,d,h,mi]=rd(),e=ec(y,m,d,h,mi),dg=e.getDayGan(),a=e.getTime(),yi=GAN.indexOf(dg),s=[0,2,4,6,8][yi%5],zi=ZHI.indexOf(a[1]);
+    const x=bfQ(`日柱係「${e.getDay()}」，${pad(h)}:${pad(mi)} 出世，時柱係乜？`,a,bfJzOpts(JZi(a)),`第一步：${pad(h)}:${pad(mi)} 係${a[1]}時（子 23–1、丑 1–3、寅 3–5…每個時辰兩粒鐘）。第二步：五鼠遁「${['甲己還加甲','乙庚丙作初','丙辛從戊起','丁壬庚子居','戊癸何方發，壬子是真途'][yi%5]}」，${dg}日子時係${GAN[s]}子，順數到${a[1]}時係${a}。（23 點後嘅夜子時，有啲派會用下一日嘅日干；呢度跟網站萬年曆。）`);
+    x.wh={k:'lab',l:Object.fromEntries([...ZHI].map((z,j)=>[z,GAN[(s+j)%10]])),h:a[1],c:`${dg}日：子時${GAN[s]}子起順數`};return x;}
+  if(t===2){const [y,m,d]=rd(),X=y-1900,Y=Math.round((Date.UTC(y,m-1,d)-Date.UTC(y,0,1))/864e5)+1,n=(5*(X-1)+Math.floor((X-1)/4)+15+Y)%60,k=n===0?60:n,a=JZ(k-1);
+    const x=bfQ(`用日柱公式：${ds(y,m,d)}係乜日柱？`,a,bfJzOpts(k-1),`公式（1901–2099 年用得）：序號＝［5×(x－1)＋(x－1)÷4 嘅整數＋15＋y］÷60 嘅餘數；x＝年份－1900，y＝嗰日係嗰年第幾日。x＝${X}，y＝${Y}：5×${X-1}＝${5*(X-1)}，${X-1}÷4 取整＝${Math.floor((X-1)/4)}，${5*(X-1)}＋${Math.floor((X-1)/4)}＋15＋${Y}＝${5*(X-1)+Math.floor((X-1)/4)+15+Y}，÷60 餘 ${n}${n===0?'（餘 0 當 60）':''}。甲子＝1、乙丑＝2…第 ${k} 個係${a}。天干＝序號尾數（1甲 2乙…0癸），地支＝序號÷12 餘數（1子 2丑…0亥）。例子：1949 年 10 月 1 日係甲子日、2000 年 1 月 1 日係戊午日。（萬年曆核對過）`);
+    x.wh={k:'lab',l:{[a[1]]:String(k)},h:a[1],c:`序號 ${k}：天干看尾數，地支看÷12 餘數`};return x;}
+  if(t===3){let y,m,d,h,mi,e,k;do{[y,m,d,h,mi]=rd();e=ec(y,m,d,h,mi);k=MZi(e.getMonthZhi());}while(k<0);const yg=e.getYearGan(),yi=GAN.indexOf(yg),s=[2,4,6,8,0][yi%5],a=e.getMonth(),j=Solar.fromYmdHms(y,m,d,h,mi,0).getLunar().getPrevJie(false).getSolar();
+    const x=bfQ(`${ds(y,m,d)}出世（年柱${e.getYear()}；對上一個節「${BF_JIE.slice(k*2,k*2+2)}」喺 ${j.getMonth()} 月 ${j.getDay()} 日），月柱係乜？`,a,bfJzOpts(JZi(a)),`第一步：過咗${BF_JIE.slice(k*2,k*2+2)}，係${BF_MZ[k]}月。第二步：年干${yg}，五虎遁「${['甲己之年丙作首','乙庚之歲戊為頭','丙辛必定尋庚起','丁壬壬位順行流','戊癸甲寅好追求'][yi%5]}」，寅月係${GAN[s]}寅，順數到${BF_MZ[k]}月係${a}。小心：1 月小寒後到立春前出世，年柱仲係上一年，五虎遁要用上一年嘅年干。（萬年曆核對過）`);
+    x.wh={k:'lab',l:Object.fromEntries([...BF_MZ].map((z,i)=>[z,GAN[(s+i)%10]])),h:BF_MZ[k],c:`${yg}年：寅月${GAN[s]}寅起順數`};return x;}
+  if(t===4){const [y,m,d,h,mi]=rd(),e=ec(y,m,d,h,mi),male=Math.random()<0.5,yg=e.getYearGan(),yang=GAN.indexOf(yg)%2===0,fw=yang===male,a=fw?'順排':'逆排';
+    const x=bfQ(`八字：${e.getYear()}年　${e.getMonth()}月　${e.getDay()}日　${e.getTime()}時，${male?'男':'女'}命。大運順排定逆排？`,a,['順排','逆排'],`睇年干：${yg}係${yang?'陽':'陰'}干（甲丙戊庚壬陽，乙丁己辛癸陰）。口訣：陽男陰女順排，陰男陽女逆排。${yang?'陽':'陰'}年${male?'男':'女'}命，所以${a}。${fw?'順排由月柱'+e.getMonth()+'向前數一個':'逆排由月柱'+e.getMonth()+'向後數一個'}，${fw?JZ(JZi(e.getMonth())+1):JZ(JZi(e.getMonth())-1)}就係第一步大運。`,2);
+    x.wh={k:'lab',l:{[e.getMonthZhi()]:'月柱',[(fw?JZ(JZi(e.getMonth())+1):JZ(JZi(e.getMonth())-1))[1]]:'大運'},h:e.getMonthZhi(),c:fw?'順排：順時針行':'逆排：逆時針行'};return x;}
+  if(t===5){const [y,m,d,h,mi]=rd(),e=ec(y,m,d,h,mi),male=Math.random()<0.5,yang=GAN.indexOf(e.getYearGan())%2===0,fw=yang===male,L=Solar.fromYmdHms(y,m,d,h,mi,0).getLunar(),J=fw?L.getNextJie(false):L.getPrevJie(false),js=J.getSolar(),jn=J.getName(),TN={'惊蛰':'驚蟄','芒种':'芒種','大雪':'大雪','小寒':'小寒','立春':'立春','清明':'清明','立夏':'立夏','小暑':'小暑','立秋':'立秋','白露':'白露','寒露':'寒露','立冬':'立冬'};
+    const t1=Date.UTC(y,m-1,d,h,mi),t2=Date.UTC(js.getYear(),js.getMonth()-1,js.getDay(),js.getHour(),js.getMinute()),hrs=Math.round(Math.abs(t2-t1)/36e5/2)*2,D=Math.floor(hrs/24),S=(hrs%24)/2;if(hrs<=0)return bfXs2();
+    const yr=Math.floor(D/3),mo=(D%3)*4,dy=S*10,mo2=mo+Math.floor(dy/30),dy2=dy%30,f=(a,b,c)=>`${a} 歲${b?` ${b} 個月`:''}${c?` ${c} 日`:''}`,ans=f(yr,mo2,dy2);
+    const alt=[f(D,0,0),f(yr+1,mo2,dy2),f(yr,(mo2+4)%12,dy2),f(Math.max(0,yr-1),mo2,dy2),f(yr,mo2,(dy2+10)%30)].filter((v,i,A)=>v!==ans&&A.indexOf(v)===i);
+    const x=bfQ(`${e.getYear()}年出世嘅${male?'男':'女'}命，生於 ${ds(y,m,d)} ${pad(h)}:${pad(mi)}；${fw?'下一個':'對上一個'}節「${TN[jn]||jn}」喺 ${ds(js.getYear(),js.getMonth(),js.getDay())} ${pad(js.getHour())}:${pad(js.getMinute())}。幾歲起運？`,ans,alt,`第一步：${e.getYearGan()}年${GAN.indexOf(e.getYearGan())%2===0?'陽':'陰'}干，${male?'男':'女'}命，${fw?'順排，數去下一個節':'逆排，數返對上一個節'}。第二步：相差大約 ${D} 日${S?` ${S} 個時辰`:''}（兩粒鐘一個時辰，執埋整數）。第三步：三日折一歲：${D}÷3＝${yr} 年餘 ${D%3} 日（一日＝四個月，即 ${mo} 個月）${S?`；${S} 個時辰×10 日＝${dy} 日`:''}，合計 ${ans}起運。（節氣時間用網站萬年曆）`);return x;}
+  const i=Math.floor(Math.random()*60),p=JZ(i),z=p[1],hz=bfR([...ZHI]),mo=[...BF_MZ].indexOf(z)+1,ti=[...BF_MZ].indexOf(hz)+1,sum=mo+ti,base=sum>=14?26:14,off=base-sum,a=BF_MZ[off-1];
+  const x=bfQ(`月柱係「${p}」（中氣後），「${hz}」時出世，命宮地支係乜？`,a,[...ZHI],`由寅數起：寅 1、卯 2…子 11、丑 12。${z}月＝${mo}，${hz}時＝${ti}，加埋＝${sum}，${sum>=14?'14 或以上用 26 減':'未夠 14 用 14 減'}：${base}－${sum}＝${off}，第 ${off} 個係${a}。命宮天干再用年干五虎遁推。（計命宮嘅月份用中氣分，題目當咗已經過中氣。）`);
+  x.wh={k:'lab',l:Object.fromEntries([...BF_MZ].map((zz,j)=>[zz,String(j+1)])),h:z+hz+a,c:`外圈數字由寅＝1 起：${base}－${sum}＝${off}＝${a}`};return x;}
 // 由「每個日干對應地支」砌返「每個地支有邊啲日干」，畀圓盤外圈用
 function bfInv(arr){const o={};arr.forEach((v,gi)=>[...v].forEach(z=>{if(ZHI.includes(z))o[z]=(o[z]||'')+GAN[gi];}));return o;}
 function bfPenta(w){const S=200,c=100,R=70,W='木火土金水',pt=i=>{const a=(i*72)*Math.PI/180;return [c+R*Math.sin(a),c-R*Math.cos(a)];},f=v=>v.toFixed(1);
@@ -4675,7 +4699,7 @@ const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 // 走馬燈最前面：最新改動（主人 11月14日）。每次上線改呢行：[日期, 好短嘅描述]；出 7 日，撳落去開更新日誌
-const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-14','🧱 基本功加「🧠 心算起盤」類別，答完有十二地支圓盤圖解'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
+const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-14','🧱 基本功加「🧠 心算起盤」：命宮、胎元、大運、年月日時柱都計得，答完有圓盤圖解'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
 function supShow(rows,cs,qz,qr,qc){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);const nw=`<span class="supi"><button type="button" class="lnk" data-newsopen="quiz" style="font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer" title="撳呢度去小測驗">${esc(PROMO)} ›</button></span><span class="supsep">✦</span>`+(Date.now()-new Date(NEWS[0]+'T00:00:00+08:00')<7*864e5?`<span class="supi"><button type="button" class="lnk" data-newsopen="cl" style="font:inherit;color:inherit">🆕 ${esc(NEWS[1])}</button></span><span class="supsep">✦</span>`:'');
   if(!(rows.length+cs.length+qz.length+qr.length+(nw?1:0))||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
