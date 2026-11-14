@@ -158,7 +158,7 @@ a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(-
 .wrap>*,.summary>div,.rel>span{min-width:0;max-width:100%;overflow-wrap:anywhere}
 .summary .k{color:var(--muted);margin-right:6px;font-size:12px;letter-spacing:.06em}
 .name{font-family:var(--f-display);font-size:22px;font-weight:700;width:100%}
-.tswrap{position:relative}.tsmore{display:none;position:absolute;top:0;right:0;bottom:0;width:18px;pointer-events:none;background:linear-gradient(to right,transparent,color-mix(in srgb,var(--paper) 85%,transparent))}.tsmore::after{content:'仲有 →';position:absolute;top:-17px;right:0;font-size:11px;line-height:1.5;font-weight:700;color:#fff;background:var(--accent);border-radius:8px;padding:0 6px;white-space:nowrap}.pngmode .tsmore{display:none!important}.mtiph{display:none}.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;container-type:inline-size;padding-right:14px}
+.tswrap{position:relative}.tsmore{display:none;position:absolute;top:0;right:0;bottom:0;width:18px;pointer-events:none;background:linear-gradient(to right,transparent,color-mix(in srgb,var(--paper) 85%,transparent))}.tsmore::after{content:'仲有 →';position:absolute;top:-17px;right:0;font-size:11px;line-height:1.5;font-weight:700;color:#fff;background:var(--accent);border-radius:8px;padding:1px 8px;white-space:nowrap;pointer-events:auto;cursor:pointer}.pngmode .tsmore{display:none!important}.mtiph{display:none}.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;container-type:inline-size;padding-right:14px}
 /* 柱多嘅時候字同箭咀跟欄闊縮細，盡量一版睇晒唔使拉 */
 .chart{--cw:calc((100cqw - 60px)/var(--n,10))}
 .chart .big{font-size:clamp(22px,calc(var(--cw)*.42),40px)}
@@ -307,7 +307,8 @@ td.chain{position:relative;overflow:visible}
 .ssfold{margin-top:22px}.ntabs{margin-bottom:10px}.notes .ntabs label:has(input[value=an]){display:none}#anBox>.npane{display:block!important}
 body.nocalc .ntabs label:has(input[value=calc]),body.nocalc #np-calc{display:none!important}
 .nlogin{display:none}body.nologin .notes .nlogin{display:block;font-size:14px}body.nologin .notes .ntabs,body.nologin .notes .npane{display:none!important}body.nologin .notes:not(.folded) #np-tut{display:block!important}
-.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=mj]:checked)) #np-mj,.notes:not(:has(input[value=tut]:checked)) #np-tut,.notes:not(:has(input[value=song]:checked)) #np-song,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=xzq]:checked)) #np-xzq,.notes:not(:has(input[value=an]:checked)) #np-an,.notes:not(:has(input[value=quiz]:checked)) #np-quiz,.notes:not(:has(input[value=bf]:checked)) #np-bf{display:none}
+.notes:not(:has(input[value=calc]:checked)) #np-calc,.notes:not(:has(input[value=sifu]:checked)) #np-sifu,.notes:not(:has(input[value=kj]:checked)) #np-kj,.notes:not(:has(input[value=mj]:checked)) #np-mj,.notes:not(:has(input[value=tut]:checked)) #np-tut,.notes:not(:has(input[value=song]:checked)) #np-song,.notes:not(:has(input[value=lsum]:checked)) #np-lsum,.notes:not(:has(input[value=ltxt]:checked)) #np-ltxt,.notes:not(:has(input[value=lqa]:checked)) #np-lqa,.notes:not(:has(input[value=xzq]:checked)) #np-xzq,.notes:not(:has(input[value=an]:checked)) #np-an,.notes:not(:has(input[value=quiz]:checked)) #np-quiz,.notes:not(:has(input[value=bf]:checked)) #np-bf,.notes:not(:has(input[value=jbg]:checked)) #np-jbg{display:none}
+.jbgsec{margin:8px 0;border:1px solid var(--line,#ccc);border-radius:8px;padding:6px 10px}.jbgsec>summary{cursor:pointer;padding:4px 0}.jbgsec>p{line-height:1.8}.jbgg{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:center}.jbgg .bfwh{margin:6px 0}
 .chb{display:inline-block;position:relative;overflow:hidden;vertical-align:middle;font-size:12px;font-weight:700;line-height:1.5;border-radius:6px;padding:0 7px;white-space:nowrap;color:#ffd54f;border:1px solid #e6b84a;background:#2b2416;-webkit-text-fill-color:#ffd54f}.chb.m{font-size:13px;padding:1px 9px;border-width:2px;border-color:#ffca28;background:linear-gradient(#c62828,#8e0000);box-shadow:0 0 7px rgba(255,190,40,.6)}.chb.s1:after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);animation:chsw 2.6s ease-in-out infinite}@keyframes chsw{0%,40%{left:-60%}100%{left:130%}}
 .chrain{font-weight:700;background:linear-gradient(90deg,#e0503a,#e39a1f,#d4c12a,#3fae5a,#3a8fd6,#8a5bd6,#e0503a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:supvr 4s linear infinite}.chglow{display:inline-block;animation:chgl 2s ease-in-out infinite}@keyframes chgl{0%,100%{filter:drop-shadow(0 0 1px rgba(255,200,40,.4))}50%{filter:drop-shadow(0 0 6px rgba(255,190,40,1)) drop-shadow(0 0 3px rgba(255,140,0,.9))}}.chst{font-style:normal;display:inline-block;animation:supvt 1.4s ease-in-out infinite}.chst.b{animation-delay:.7s}
 @media(prefers-reduced-motion:reduce){.chb.s1:after,.chrain,.chglow,.chst{animation:none}}
@@ -645,7 +646,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <section class="panel notes fold folded" data-sec="calc">
   <h2 class="foldh">隱姓先生課堂 · 盲派八字摘要 · 八字口訣 · 計法說明</h2>
   <p class="hint nlogin">🔒 登入先睇到隱姓先生課堂、盲派八字摘要、八字口訣、計法說明同命例數據庫分析。</p>
-  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="song" checked>🎤 隱姓先生歌曲庫</label><label><input type="radio" name="ntab" value="lsum">隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="quiz">🎯 測驗</label><label><input type="radio" name="ntab" value="bf">🧱 基本功</label><label><input type="radio" name="ntab" value="xzq">夏仲奇卜命遺例集</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="mj">盲派秘訣 8＋17</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="tut">📖 新手教學</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
+  <div class="seg ntabs" role="radiogroup" aria-label="說明分頁"><label><input type="radio" name="ntab" value="song" checked>🎤 隱姓先生歌曲庫</label><label><input type="radio" name="ntab" value="lsum">隱姓先生課堂總結</label><label><input type="radio" name="ntab" value="ltxt">隱姓先生課堂文字稿</label><label><input type="radio" name="ntab" value="lqa">隱姓先生答問</label><label><input type="radio" name="ntab" value="quiz">🎯 測驗</label><label><input type="radio" name="ntab" value="jbg">📘 八字基本功</label><label><input type="radio" name="ntab" value="bf">🧱 基本功練習</label><label><input type="radio" name="ntab" value="xzq">夏仲奇卜命遺例集</label><label><input type="radio" name="ntab" value="sifu">盲派八字摘要</label><label><input type="radio" name="ntab" value="mj">盲派秘訣 8＋17</label><label><input type="radio" name="ntab" value="kj">八字口訣</label><label><input type="radio" name="ntab" value="calc">計法說明</label><label><input type="radio" name="ntab" value="tut">📖 新手教學</label><label><input type="radio" name="ntab" value="an">命例數據庫分析</label></div>
   <div class="npane" id="np-calc">
   <p id="r-p-cal"><b>計法說明</b>　月柱以節氣交接時刻為準，年柱以立春為界。真太陽時＝鐘錶時間 − 夏令時間 − 時區 ＋ 經度時差 ＋ 均時差；不用真太陽時，日柱、時柱就用出世地嘅當地鐘錶時間（有夏令時間就扣 1 小時），唔會轉做北京時間；年柱、月柱同起運就按節氣交接嘅真正時刻計（外國時區會自動換算）。<span class="hint">（2026-11-13 修正：之前外國命例會轉咗做北京時間先排，令日柱或者時柱錯。香港、中國、台灣命例冇變。）</span></p>
   <p>十神以日干（日主）為準；地支十神取藏干本氣。星運為日主喺各支嘅十二長生，自坐為該柱天干坐下地支。</p>
@@ -1168,6 +1169,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   </div>
   <div class="npane" id="np-tut"></div>
   <div class="npane sifu" id="np-quiz"><div class="lbody"><p class="hint">載入緊…</p></div></div>
+  <div class="npane sifu" id="np-jbg"></div>
   <div class="npane sifu" id="np-bf"><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-song"><div class="lbody"><p class="hint">載入緊…</p></div></div>
   <div class="npane sifu" id="np-lsum"><div class="lsel row"><span class="lpick"></span></div><div class="lbody"><p class="hint">載入緊…</p></div></div>
@@ -2301,6 +2303,8 @@ document.addEventListener('click',e=>{if(!tipTouch()||e.target.closest(TIP_OWN))
 // 手機：命盤右邊仲有嘢未睇到，就出「仲有 →」提示；碌到盡就收
 function tsUpd(){document.querySelectorAll('.tswrap').forEach(w=>{const t=w.querySelector('.tscroll');if(t)w.classList.toggle('more',t.scrollWidth-t.clientWidth-t.scrollLeft>6);});}
 document.addEventListener('scroll',e=>{if(e.target.classList&&e.target.classList.contains('tscroll'))tsUpd();},true);addEventListener('resize',tsUpd);new MutationObserver(()=>{clearTimeout(tsUpd.t);tsUpd.t=setTimeout(tsUpd,80);}).observe(document.documentElement,{childList:true,subtree:true});
+// 撳「仲有 →」：命盤向右碌（主人 11月15日：以前撳落去會打開咗顯示選項）
+document.addEventListener('click',e=>{const m=e.target.closest('.tsmore');if(!m)return;e.preventDefault();e.stopPropagation();const t=m.closest('.tswrap').querySelector('.tscroll');if(t)t.scrollBy({left:t.clientWidth*0.7,behavior:'smooth'});},true);
 // 碌開咗先收（細微郁動唔收）
 addEventListener('scroll',()=>{const p=$('tipPop');if(p&&!p.hidden&&Math.abs(scrollY-(p._y||0))>40)p.hidden=true;},{passive:true});
 function arrows(a){if(!a||!a[0])return '';const n=a[0];return `<span class="act" title="被${a[1]}激活">${'↑'.repeat(n)}</span>`;}
@@ -3149,6 +3153,7 @@ function bfWrongHtml(){const W=bfWGet();if(!W.length)return '';const idx=LS.idx|
 // 十二地支圓盤（主人 11月14日）：沖＝穿過中心嘅對角線，六合＝橫線，六害＝直線，三合／三刑＝三角，三會＝弧，相剋＝箭咀；淡色係同類全部，深色係今題；地支用網站五行顏色
 // 其他類別（十二長生、五虎遁、五鼠遁、神煞）喺圓盤外圈寫埋推算；十神、七殺用五行生剋圖。全部由出題嗰條公式即場畫，同答案一致
 const BF_T={chong:['子午','丑未','寅申','卯酉','辰戌','巳亥'],hai:['子未','丑午','寅巳','卯辰','申亥','酉戌'],he6:['子丑','寅亥','卯戌','辰酉','巳申','午未'],he3:['申子辰','亥卯未','寅午戌','巳酉丑'],hui3:['寅卯辰','巳午未','申酉戌','亥子丑']};
+let BFMK=0;const bfMk=h=>{const n=++BFMK;return h.replace(/(id="|url\(#)(bfar(?:5b?)?)(?=["\)])/g,'$1$2_'+n);};  // 每個圖自己嘅箭咀 id：同 id 嘅 marker 如果喺收埋咗嘅分頁，箭咀會唔見
 function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);if(w.k==='g10')return bfG10(w);
   let ln=[],tri=[],arc=[],hl='',ring='',lab=null,cap='',big='';const T=BF_T,fl=(k,on)=>T[k].forEach(p=>{if(p!==on)(p.length>2?tri:ln).push([p,0]);});
   if(w.k==='chong'||w.k==='hai'||w.k==='he6'){fl(w.k,w.p);ln.push([w.p,1]);hl=w.p;cap={chong:'六沖：對面直線穿過中心',hai:'六害：直線（虛線係其他五對）',he6:'六合：橫線（虛線係其他五對）'}[w.k];}
@@ -3160,6 +3165,7 @@ function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);if(w.k==='g
   else if(w.k==='mu'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p;ring=w.p[2];big=w.p[2];cap=`${w.p}三合，圈住嗰個（最尾一個字）係墓庫`;}
   else if(w.k==='sh3'){fl('he3',w.p);tri.push([w.p,1]);hl=w.p+w.a;ring=w.a;if(w.n==='驛馬')ln.push([w.p[0]+w.a,1]);cap=w.n==='桃花'?`${w.p}三合，第一個字下一位（圈住）係桃花`:w.n==='驛馬'?`${w.p}三合，第一個字對沖（圈住）係驛馬`:`${w.p}三合，最尾一個字（圈住）係華蓋`;}
   else if(w.k==='lab'){lab=w.l;hl=w.h;ring=w.h;cap=w.c;if(w.ln)ln=w.ln;}
+  if(w.all){[ln,tri,arc].forEach(A=>A.forEach(x=>x[1]=1));hl=[...ln,...tri,...arc].map(x=>x[0]).join('');if(w.c)cap=w.c;}  // 教學頁：同類全部實線
   const S=lab?250:200,c=S/2,R=lab?78:74,pt=(z,r=R)=>{const a=(ZHI.indexOf(z)*30-15)*Math.PI/180;return [c-r*Math.sin(a),c+r*Math.cos(a)];},f=v=>v.toFixed(1);
   const L=(a,b,on,ar)=>{const [x1,y1]=pt(a),[x2,y2]=pt(b),d=Math.hypot(x2-x1,y2-y1),k=15/d;return `<line x1="${f(x1+(x2-x1)*k)}" y1="${f(y1+(y2-y1)*k)}" x2="${f(x2-(x2-x1)*k)}" y2="${f(y2-(y2-y1)*k)}" stroke="currentColor" stroke-width="${on?2.6:1}" opacity="${on?0.95:0.22}"${on?'':' stroke-dasharray="3 3"'}${ar?' marker-end="url(#bfar)"':''}/>`;};
   let g=ln.map(([p,on,ar])=>L(p[0],p[1],on,ar)).join('')+tri.map(([p,on])=>L(p[0],p[1],on)+L(p[1],p[2],on)+L(p[2],p[0],on)).join('')
@@ -3174,14 +3180,14 @@ function bfWheel(w){if(!w)return '';if(w.k==='wx5')return bfPenta(w);if(w.k==='g
     g+=st.map((z,j)=>{const t=an(z),[x,y]=P(t,Rn);let o=`<text x="${f(x)}" y="${f(y+4)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="currentColor">${'①②③④⑤⑥⑦⑧⑨⑩⑪⑫'[j]}</text>`;
       if(j<n){const t2=an(st[j+1]),d=dr*3*Math.PI/180,[ax,ay]=P(t+d,Ra),[bx,by]=P(t2-d,Ra);o+=`<path d="M${f(ax)} ${f(ay)}A${Ra} ${Ra} 0 0 ${dr>0?1:0} ${f(bx)} ${f(by)}" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.8" marker-end="url(#bfar)"/>`;}
       return o;}).join('');}
-  return `<figure class="bfwh${lab?' wide':''}"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="十二地支圓盤：${esc(cap)}"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>${g}${dots}</svg><figcaption class="hint">${esc(cap)}</figcaption></figure>`;}
+  return bfMk(`<figure class="bfwh${lab?' wide':''}"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="十二地支圓盤：${esc(cap)}"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>${g}${dots}</svg><figcaption class="hint">${esc(cap)}</figcaption></figure>`);}
 // 十天干圓圈（主人 11月14日）：甲喺頂，順時針；五合＝對面（相隔五位），相連＝隔籬
 function bfG10(w){const S=w.l?240:200,c=S/2,R=w.l?78:74,pt=(g,r=R)=>{const a=GAN.indexOf(g)*36*Math.PI/180;return [c+r*Math.sin(a),c-r*Math.cos(a)];},f=v=>v.toFixed(1),hl=w.h||'';
   const L=(a,b,on,ar)=>{const [x1,y1]=pt(a),[x2,y2]=pt(b),d=Math.hypot(x2-x1,y2-y1),k=15/d;return `<line x1="${f(x1+(x2-x1)*k)}" y1="${f(y1+(y2-y1)*k)}" x2="${f(x2-(x2-x1)*k)}" y2="${f(y2-(y2-y1)*k)}" stroke="currentColor" stroke-width="${on?2.6:1}" opacity="${on?0.95:0.22}"${on?'':' stroke-dasharray="3 3"'}${ar?' marker-end="url(#bfar)"':''}/>`;};
   const g=(w.ln||[]).map(([p,on,ar])=>L(p[0],p[1],on,ar)).join('');
   const dots=[...GAN].map((q,j)=>{const [x,y]=pt(q),on=hl.includes(q),col=EC[j>>1];let o='';if(w.l&&w.l[q]){const [lx,ly]=pt(q,R+28);o+=`<text x="${f(lx)}" y="${f(ly+4)}" text-anchor="middle" font-size="11" font-weight="${on?700:400}" fill="currentColor" opacity="${on?1:0.7}">${esc(w.l[q])}</text>`;}
     return o+`<circle cx="${f(x)}" cy="${f(y)}" r="12.5" fill="${on?col:'var(--paper,#fff)'}" fill-opacity="${on?0.18:1}" stroke="${col}" stroke-width="${on?2.4:1}"/><text x="${f(x)}" y="${f(y+5)}" text-anchor="middle" font-size="${on?15:13}" font-weight="${on?700:400}" fill="${col}">${q}</text>`;}).join('');
-  return `<figure class="bfwh"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="十天干圓圈：${esc(w.c)}"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>${g}${dots}</svg><figcaption class="hint">${esc(w.c)}</figcaption></figure>`;}
+  return bfMk(`<figure class="bfwh"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="十天干圓圈：${esc(w.c)}"><defs><marker id="bfar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs><circle cx="${c}" cy="${c}" r="${R}" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>${g}${dots}</svg><figcaption class="hint">${esc(w.c)}</figcaption></figure>`);}
 // 五行生剋圖：外圈順時針相生（木→火→土→金→水），入面星形相剋；深色箭咀係今題嘅關係
 // 心算起盤題（主人 11月14日）：年柱、立春前後、月支跟節、月柱、日柱推算、時支、大運順逆、第一步大運、起運歲數、空亡
 const JZ=i=>GAN[((i%60)+60)%60%10]+ZHI[((i%60)+60)%60%12],JZi=p=>{for(let i=0;i<60;i++)if(JZ(i)===p)return i;return -1;},bfJzOpts=i=>[1,-1,12,-12,10,-10].sort(()=>Math.random()-0.5).slice(0,3).map(d=>JZ(i+d));
@@ -3272,7 +3278,7 @@ function bfPenta(w){const S=200,c=100,R=70,W='木火土金水',pt=i=>{const a=(i
   if(h&&h[0]!==h[1])g+=A(h[0],h[1],1);
   const dots=[...W].map((x,i)=>{const [px,py]=pt(i),on=w.m&&w.m.includes(x),col=EC[i];return `<circle cx="${f(px)}" cy="${f(py)}" r="14" fill="${on?col:'var(--paper,#fff)'}" fill-opacity="${on?0.18:1}" stroke="${col}" stroke-width="${on?2.4:1}"/><text x="${f(px)}" y="${f(py+5)}" text-anchor="middle" font-size="${on?15:13}" font-weight="${on?700:400}" fill="${col}">${x}</text>${w.me===x?`<text x="${f(px)}" y="${f(py+(py>c?30:-20))}" text-anchor="middle" font-size="11" fill="currentColor">（我）</text>`:''}`;}).join('');
   const mk=id=>`<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="${id.endsWith('b')?6:5}" markerHeight="${id.endsWith('b')?6:5}" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>`;
-  return `<figure class="bfwh"><svg viewBox="0 0 ${S} ${S+10}" role="img" aria-label="五行生剋圖：${esc(w.c)}"><defs>${mk('bfar5')}${mk('bfar5b')}</defs>${g}${dots}</svg><figcaption class="hint">${esc(w.c)}</figcaption></figure>`;}
+  return bfMk(`<figure class="bfwh"><svg viewBox="0 0 ${S} ${S+10}" role="img" aria-label="五行生剋圖：${esc(w.c)}"><defs>${mk('bfar5')}${mk('bfar5b')}</defs>${g}${dots}</svg><figcaption class="hint">${esc(w.c)}</figcaption></figure>`);}
 function bfR(a){return a[Math.floor(Math.random()*a.length)];}
 function bfQ(q,ans,pool,why,n=4){const o=[ans];const ex=(q.match(/「[^」]*」/g)||[]).join('');pool=pool.filter(x=>x!==ans&&!ex.includes(x));while(o.length<n&&pool.length){o.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);}for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}return {q,opts:o,ans:o.indexOf(ans),why};}
 // 計分輪：揀「全部」而且今個星期未夠 5 輪；計分輪唔會重出答錯嘅題（費事變易）。揀咗單一類別或者做晒 5 輪就係練習，答錯嘅有四成機會再出
@@ -3294,6 +3300,41 @@ function bfDraw(){const box=$('np-bf');if(!box)return;const body=box.querySelect
   body.innerHTML=`<div class="qzbar"><b>🧱 基本功練習</b><label class="hint">練邊類：<select data-bfcat aria-label="基本功類別"><option value="">全部${BF.wk<5?'（計分）':''}</option>${BF_CATS.map(c=>`<option value="${c[0]}"${BF.cat===c[0]?' selected':''}>${c[1]}</option>`).join('')}</select></label><button type="button" class="lnk pngbtn" data-bfwrong title="睇返基本功答錯過嘅題目">📕 錯題重溫</button><button type="button" class="lnk pngbtn" data-bfx>🎯 去測驗</button><span class="qzsc">${x.sc?`第 ${BF.wk+1}／5 輪　第 ${Math.min(20,BF.rn+(done?0:1))}／20 題　啱 ${BF.rok}`:`練習　答啱 ${BF.ok}／${BF.n}`}</span></div><p class="hint">${BF.wk<5?'揀「全部」就係計分輪：每輪 20 題，每星期最多 5 輪（100 題），計入下面嘅基本功排行榜（唔入狀元榜）。揀單一類別就係練習，唔計分。':BF.off?'而家連唔到排行榜，當練習做住先，唔計分。':'今個星期 5 輪計分已經做晒，而家係練習，唔計分；下星期一重新計。'}答錯嘅會入「📕 錯題重溫」。</p>
   <div class="qzcard"><span class="qztag">${esc(x.cn)}</span><span class="qztag">${x.sc?'計分':'練習・唔計分'}</span>${x.again?'<span class="qztag">之前答錯過</span>':''}<p class="qzq">${esc(x.q)}</p><div class="qzopts">${x.opts.map((o,i)=>`<button type="button" class="qzopt${done?(i===x.ans?' ok':i===BF.pick?' no':''):''}" data-bfopt="${i}"${done?' disabled':''}>${'ABCD'[i]}. ${esc(o)}${done&&i===x.ans?' ✓':done&&i===BF.pick?' ✗':''}</button>`).join('')}</div>${done?`<div class="qzwhy"><b class="r">${BF.pick===x.ans?'👍 答啱':'👎 答錯，正確答案係 '+'ABCD'[x.ans]}</b><br>${esc(x.why)}<br><span class="hint">${bfSrc(x.ln,x.lt,x.pre)}</span>${bfWheel(x.wh)}</div><button type="button" class="qznext" data-bfnext>${last?'睇成績 ›':'下一題 ›'}</button>`:''}</div><div id="bfBd"></div>`;
   body.querySelectorAll('.qzq,.qzopt,.qzwhy').forEach(e=>wxColor(e));bfBoard();}
+// 📘 八字基本功教學（主人 11月15日）：天干地支生剋合沖刑害、十二長生、心算起盤，全部用圖示；做完可以去 🧱 基本功練習
+function jbgRender(){const b=$('np-jbg');if(!b||b.dataset.done)return;b.dataset.done=1;
+  const W=x=>bfWheel(x),MZ=BF_MZ,sec=(t,body,open)=>`<details class="jbgsec"${open?' open':''}><summary><b>${t}</b></summary>${body}</details>`,G=(...f)=>`<div class="jbgg">${f.join('')}</div>`,P=t=>`<p>${t}</p>`;
+  const tg=sec('一、天干：陰陽、五行、五合、生剋、十神',
+    P('十天干：甲 乙 丙 丁 戊 己 庚 辛 壬 癸。順序一陽一陰咁輪（甲陽乙陰…），兩個一組屬同一五行：甲乙木、丙丁火、戊己土、庚辛金、壬癸水。')
+    +G(bfG10({l:Object.fromEntries([...GAN].map((q,j)=>[q,j%2?'陰':'陽'])),h:'甲丙戊庚壬',c:'陽干：甲丙戊庚壬；陰干：乙丁己辛癸'}),bfG10({l:Object.fromEntries([...GAN].map((q,j)=>[q,'木木火火土土金金水水'[j]])),h:'',c:'兩個一組：甲乙木、丙丁火、戊己土、庚辛金、壬癸水'}))
+    +P('<b>五合</b>：天干排成一圈，相隔五位、喺對面嗰個就係合：甲己、乙庚、丙辛、丁壬、戊癸。陽干合陰干，而且係「剋我／我剋」嗰個異性（例如甲木剋己土）。')
+    +G(bfG10({ln:['甲己','乙庚','丙辛','丁壬','戊癸'].map(q=>[q,1]),h:GAN,c:'五合：圓圈對面相合'}))
+    +P('<b>五行生剋</b>：相生係隔籬順住行：木生火、火生土、土生金、金生水、水生木（圖外圈）。相剋係隔一個：木剋土、土剋水、水剋火、火剋金、金剋木（圖入面星形）。')
+    +G(bfPenta({c:'外圈順時針＝相生；星形＝相剋'}))
+    +P('<b>十神</b>：以日干做「我」，睇其他字同我嘅五行關係，再分陰陽同唔同：')
+    +`<table class="sstab"><thead><tr><th>關係</th><th>同陰陽</th><th>唔同陰陽</th></tr></thead><tbody><tr><td>同我（比劫）</td><td>比肩</td><td>劫財</td></tr><tr><td>我生（食傷）</td><td>食神</td><td>傷官</td></tr><tr><td>我剋（財）</td><td>偏財</td><td>正財</td></tr><tr><td>剋我（官殺）</td><td>七殺</td><td>正官</td></tr><tr><td>生我（印）</td><td>偏印</td><td>正印</td></tr></tbody></table>`,1);
+  const dz=sec('二、地支：方位、藏干、沖合刑害、三合三會',
+    P('十二地支：子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥，排成一個鐘面（子喺下面，順時針行）。東方寅卯木、南方巳午火、西方申酉金、北方亥子水，四角辰戌丑未土。')
+    +G(W({k:'lab',l:Object.fromEntries([...ZHI].map((q,j)=>[q,'水土木木土火火土金金土水'[j]])),h:'',c:'地支五行：東木南火西金北水，四角係土'}),W({k:'lab',l:Object.fromEntries([...ZHI].map(q=>[q,HIDE[q][0]])),h:'',c:'外圈係每個地支藏干嘅本氣'}))
+    +P('記圖嘅方法：<b>沖</b>＝穿過中心嘅對角線（相隔六位）；<b>六合</b>＝橫線；<b>六害</b>＝直線；<b>三合</b>＝每隔三格嘅三角；<b>三會</b>＝同一方位相連三個。')
+    +G(W({k:'chong',p:'子午',all:1,c:'六沖：子午、丑未、寅申、卯酉、辰戌、巳亥'}),W({k:'he6',p:'子丑',all:1,c:'六合：子丑、寅亥、卯戌、辰酉、巳申、午未'}),W({k:'hai',p:'子未',all:1,c:'六害：子未、丑午、寅巳、卯辰、申亥、酉戌'}),W({k:'he3',p:'申子辰',all:1,c:'三合：申子辰水、亥卯未木、寅午戌火、巳酉丑金'}),W({k:'hui3',p:'寅卯辰',all:1,c:'三會：寅卯辰東木、巳午未南火、申酉戌西金、亥子丑北水'}),W({k:'xing',p:'寅巳申',all:1,c:'三刑：寅巳申、丑戌未；子卯相刑'}),W({k:'zx',p:'辰午酉亥',c:'自刑：辰辰、午午、酉酉、亥亥'}))
+    +P('<b>墓庫</b>：三合局最尾嗰個字就係嗰個五行嘅庫：辰水庫、戌火庫、丑金庫、未木庫。'),0);
+  const SP='亥午寅酉寅酉巳子申卯',ST=['長生','沐浴','冠帶','臨官','帝旺','衰','病','死','墓','絕','胎','養'],cs=gi=>{const si=ZHI.indexOf(SP[gi]),y=gi%2===0,at=k=>ZHI[(si+(y?k:12-k))%12];return W({k:'lab',l:Object.fromEntries(ST.map((t,j)=>[at(j),t])),h:at(4),sq:[SP[gi],at(4),y?1:-1],c:`${GAN[gi]}：由${SP[gi]}長生起，${y?'順':'逆'}時針數到帝旺`});};
+  const cs12=sec('三、十二長生',P('次序：長生、沐浴、冠帶、臨官、帝旺、衰、病、死、墓、絕、胎、養。陽干順數、陰干逆數。長生位：甲亥、丙戊寅、庚巳、壬申；乙午、丁己酉、辛子、癸卯。')+G(cs(0),cs(1)),0);
+  const qp=sec('四、心算起盤：唔睇萬年曆起四柱',
+    P('<b>1. 年柱</b>（以立春換年，唔係年初一）：天干睇西曆年份尾數：4甲 5乙 6丙 7丁 8戊 9己 0庚 1辛 2壬 3癸。地支用（年份－4）÷12 嘅餘數：0子 1丑 2寅…11亥。例：1984 尾數 4＝甲，（1984－4）÷12 餘 0＝子，係甲子年。1 月同 2 月初未過立春，要用上一年。')
+    +G(W({k:'lab',l:Object.fromEntries([...ZHI].map((z,j)=>[z,String(j)])),h:'',c:'（年份－4）÷12 嘅餘數對地支'}))
+    +P('<b>2. 月柱</b>：月支跟「節」（唔係農曆初一）：立春後寅月、驚蟄後卯月、清明後辰月…小寒後丑月。月干用<b>五虎遁</b>由年干推：「甲己之年丙作首，乙庚之歲戊為頭，丙辛必定尋庚起，丁壬壬位順行流，戊癸甲寅好追求」，即係寅月嘅天干，之後順數。例：辛年午月：丙辛尋庚起，寅月庚寅，數 5 格到午，係甲午。')
+    +G(W({k:'lab',l:Object.fromEntries([...MZ].map((z,i)=>[z,BF_JIE.slice(i*2,i*2+2)])),h:'',c:'每個月由外圈嗰個「節」開始'}),W({k:'lab',l:Object.fromEntries([...MZ].map((z,i)=>[z,GAN[(6+i)%10]])),h:'午',sq:['寅','午',1],c:'辛年：寅月庚寅起順數'}))
+    +P('<b>3. 日柱</b>（1901–2099 年）：序號＝［5×(x－1)＋(x－1)÷4 取整＋15＋y］÷60 嘅餘數（餘 0 當 60）；x＝年份－1900，y＝嗰日係嗰年第幾日。序號：甲子 1、乙丑 2…癸亥 60；天干睇尾數（1甲 2乙…0癸），地支睇 ÷12 餘數（1子 2丑…0亥）。例：2000 年 1 月 1 日：x＝100，y＝1；5×99＝495，99÷4＝24，495＋24＋15＋1＝535，÷60 餘 55：尾數 5＝戊，55÷12 餘 7＝午，係戊午日。')
+    +P('<b>4. 時柱</b>：每個時辰兩粒鐘，子時 23–1 點、丑時 1–3 點…。時干用<b>五鼠遁</b>由日干推：「甲己還加甲，乙庚丙作初，丙辛從戊起，丁壬庚子居，戊癸何方發，壬子是真途」，即係子時嘅天干，之後順數。例：丁日戌時：丁壬庚子居，子時庚子，數到戌係庚戌。')
+    +G(W({k:'lab',l:Object.fromEntries([...ZHI].map((z,j)=>[z,String((j*2+23)%24)])),h:'',c:'外圈係每個時辰開始嘅鐘數'}),W({k:'lab',l:Object.fromEntries([...ZHI].map((z,j)=>[z,GAN[(6+j)%10]])),h:'戌',sq:['子','戌',1],c:'丁日：子時庚子起順數'}))
+    +P('<b>5. 大運</b>：睇年干陰陽同性別，「陽男陰女順排，陰男陽女逆排」。順排由月柱向前數（下一個甲子），逆排向後數。起運歲數：由出世數到下一個節（順排）或者對上一個節（逆排），相差幾多日，<b>三日折一歲</b>（一日＝四個月，一個時辰＝十日）。')
+    +G(W({k:'lab',l:{午:'月柱',未:'順排',巳:'逆排'},h:'午未巳',c:'例：月柱甲午，順排第一步乙未，逆排第一步癸巳'}))
+    +P('<b>6. 命宮</b>：由寅數起，寅 1、卯 2…丑 12。月數加時數，未夠 14 用 14 減，夠 14 用 26 減，得數再由寅數起。命宮天干用年干五虎遁。<b>胎元</b>：月柱天干進一位、地支進三位（例：甲午月→乙酉）。<b>空亡</b>：日柱所屬嘅旬，甲配到癸之後冇天干配嗰兩個地支（甲子旬戌亥空、甲戌旬申酉空、甲申旬午未空、甲午旬辰巳空、甲辰旬寅卯空、甲寅旬子丑空）。')
+    +G(W({k:'lab',l:Object.fromEntries([...MZ].map((z,j)=>[z,String(j+1)])),h:'',c:'命宮：外圈數字由寅＝1 起'})),0);
+  b.innerHTML=`<p class="hint">由零開始學天干地支同起盤，全部用圖示。睇完可以去「🧱 基本功練習」做題（有 🧠 心算起盤，仲用隱姓先生同夏仲奇老師嘅真命例）。撳標題打開／收埋。</p>`+tg+dz+cs12+qp+`<p><button type="button" class="lnk" data-bfgo>🧱 去基本功練習做題 ›</button></p>`;
+  b.querySelectorAll('.jbgsec>p,.jbgsec td').forEach(e=>wxColor(e));}
+document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab][value=jbg]'))jbgRender();});
 function bfOpen(){const r=document.querySelector('input[name=ntab][value=bf]');if(!r)return;if(isMob())mTab('learn');const n=r.closest('section');if(n)n.classList.remove('folded');r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));const b=$('np-bf');if(b)b.scrollIntoView({block:'start'});}
 // 基本功排行榜：基本功頁同排行榜都有；本週／本月；冇狀元稱號、冇獎分
 async function bfBoard(){const els=()=>[$('bfBd'),$('bfBdLb')].filter(Boolean);if(!els().length||!CLOUD||!SESSION)return;const wk=BF.bw!==false;
@@ -3306,7 +3347,7 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-bfgo]')){bfOpen
   if(e.target.closest('[data-bfnext]')){if(BF.cur&&BF.cur.sc&&BF.rn>=20){const fin=j=>{BF.sum={ok:BF.rok,saved:!!(j&&j.saved),err:!j};if(j&&j.rounds!=null)BF.wk=+j.rounds;BF.rn=0;BF.rok=0;BF.cur=null;BF.bd=null;const l=$('bfBdLb');if(l)l.innerHTML='';bfDraw();if(l)bfBoard();const b=$('np-bf');if(b)b.scrollIntoView({block:'nearest'});};(BF.sub||Promise.resolve(null)).then(fin,()=>fin(null));BF.sub=null;return;}bfNext();const b=$('np-bf');if(b)b.scrollIntoView({block:'nearest'});return;}
   const o=e.target.closest('[data-bfopt]');if(o&&BF.cur&&BF.pick<0){const x=BF.cur;BF.pick=+o.dataset.bfopt;track('basics');const hit=BF.pick===x.ans;{const W=bfWGet().filter(r=>r.q!==x.q);if(!hit)W.unshift({c:x.c,q:x.q,opts:x.opts,a:x.opts[x.ans],p:x.opts[BF.pick],why:x.why,ln:x.ln,lt:x.lt,pre:x.pre,wh:x.wh,at:Date.now()});bfWSet(W);}
     if(x.sc){BF.rn++;if(hit)BF.rok++;if(BF.rn>=20)BF.sub=api('rpc/bf_submit',{method:'POST',body:JSON.stringify({p_ok:BF.rok})});}else{BF.n++;if(hit)BF.ok++;}
-    if(!hit&&!x.sc){BF.miss.push({c:x.c,q:x.q,opts:x.opts,a:x.opts[x.ans],why:x.why,ln:x.ln,lt:x.lt,pre:x.pre,wh:x.wh,due:(BF.qn||0)+4+Math.floor(Math.random()*3)});if(BF.miss.length>12)BF.miss.shift();}trk1('quiz','bf'+(BF.n+BF.rn+BF.wk*20),{bf:x.c});bfDraw();}});
+    if(!hit&&!x.sc){BF.miss.push({c:x.c,q:x.q,opts:x.opts,a:x.opts[x.ans],why:x.why,ln:x.ln,lt:x.lt,pre:x.pre,wh:x.wh,due:(BF.qn||0)+4+Math.floor(Math.random()*3)});if(BF.miss.length>12)BF.miss.shift();}bfDraw();}});
 document.addEventListener('change',e=>{if(e.target.matches('[data-bfcat]')){BF.cat=e.target.value;BF.cur=null;bfNext();}else if(e.target.matches('input[name=ntab][value=bf]'))bfDraw();else if(e.target.matches('input[name=bfbw],input[name=bfbwL]')){BF.bw=e.target.value==='1';bfBoard();}});
 function qzDraw(){const box=$('np-quiz');if(!box)return;const body=box.querySelector('.lbody');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先玩到測驗。 <button type="button" class="lnk pngbtn" data-qzshare title="複製測驗嘅連結">🔗 複製連結</button>'+QZ_SH+'<span class="hint" data-qzsharemsg></span></p>';return;}
@@ -4746,7 +4787,7 @@ const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 // 走馬燈最前面：最新改動（主人 11月14日）。每次上線改呢行：[日期, 好短嘅描述]；出 7 日，撳落去開更新日誌
-const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-14','🧱 基本功加「🧠 心算起盤」：命宮、胎元、大運、年月日時柱都計得，答完有圓盤圖解'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
+const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-15','📘 新教學「八字基本功」：天干地支生剋合沖刑害、心算起盤，全部有圖解'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
 function supShow(rows,cs,qz,qr,qc){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);const nw=`<span class="supi"><button type="button" class="lnk" data-newsopen="quiz" style="font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer" title="撳呢度去小測驗">${esc(PROMO)} ›</button></span><span class="supsep">✦</span>`+(Date.now()-new Date(NEWS[0]+'T00:00:00+08:00')<7*864e5?`<span class="supi"><button type="button" class="lnk" data-newsopen="cl" style="font:inherit;color:inherit">🆕 ${esc(NEWS[1])}</button></span><span class="supsep">✦</span>`:'');
   if(!(rows.length+cs.length+qz.length+qr.length+(nw?1:0))||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
