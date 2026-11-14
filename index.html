@@ -1249,7 +1249,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auf"><input id="tuQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><select id="tuN" aria-label="每頁幾多個"><option value="6" selected>每頁 6 個</option><option value="10">每頁 10 個</option><option value="20">每頁 20 個</option><option value="30">每頁 30 個</option><option value="50">每頁 50 個</option><option value="100">每頁 100 個</option><option value="0">全部</option></select></div>
   <p class="tustats" id="tuStats"></p>
   <p class="hint" id="tuMsg"></p>
-  <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>加入命例</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
+  <div class="auwrap"><table class="audit"><thead><tr><th>用戶</th><th>分數</th><th>加入命例</th><th>註冊</th><th>最後登入</th><th>等級</th></tr></thead><tbody id="tuList"></tbody></table></div>
   <div class="gbpager" id="tuPager"></div>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
   <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="SIGNUP">註冊</option><option value="LOGIN">登入</option><option value="VIEW">打開命例</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><label class="hint"><input type="checkbox" id="auMe" checked> 唔顯示我自己同系統／SQL</label><button type="button" class="lnk" data-aureload title="重新載入" aria-label="重新載入">↻</button></div>
@@ -4064,7 +4064,7 @@ function ptSoon(){clearTimeout(PT.t);PT.t=setTimeout(()=>{if(SESSION)loadPoints(
 async function loadPoints(){PT.loaded=true;
   try{PT.rows=await api('rpc/points_board',{method:'POST',body:'{}'});PT.err='';}
   catch(e){PT.rows=null;PT.err=/points_board|42883|PGRST20/.test(e.message)?'未設定：請喺 Supabase SQL Editor 行一次 supabase/008_points.sql。':'載入唔到：'+e.message;}
-  drawPoints();renderAuthPts();
+  drawPoints();renderAuthPts();try{if(TU.rows.length)drawTiers();}catch(e){}
   // 分數多咗就放加分動畫（第一次載入只記低，唔放）
   const uid=SESSION&&SESSION.user.id;if(PT.uid!==uid){PT.uid=uid;PT.mine=null;}
   const now=myPts();if(now!=null&&PT.mine!=null&&now>PT.mine)ptFx(now-PT.mine,'貢獻分增加');PT.mine=now;}
@@ -4383,7 +4383,7 @@ function drawTiers(){const q=($('tuQ').value||'').trim().toLowerCase(),d=t=>t?ne
   const rows=TU.rows.filter(u=>!q||(u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q));
   const pn=TU.n||1e9,np=Math.max(1,Math.ceil(rows.length/pn));TU.p=Math.min(Math.max(0,TU.p),np-1);
   $('tuPager').innerHTML=pagerHtml(TU.p+1,np,'tupage');
-  $('tuList').innerHTML=rows.slice(TU.p*pn,(TU.p+1)*pn).map(u=>`<tr><td>${esc(u.name||'')}<br><span class="hint">${esc(u.email||'')}</span></td><td>${TU.nc?TU.nc[u.id]||0:'—'}</td><td>${d(u.created_at)}</td><td>${d(u.last_sign_in_at)}</td><td>${u.admin?'<b class="adm">管理員</b>':`<select data-tier="${u.id}" aria-label="等級"><option value="">普通用戶</option><option value="advance"${u.tier==='advance'?' selected':''}>進階用戶</option><option value="premium"${u.tier==='premium'?' selected':''}>高級用戶</option></select>`}</td></tr>`).join('')||'<tr><td colspan="5" class="hint">冇用戶</td></tr>';}
+  $('tuList').innerHTML=rows.slice(TU.p*pn,(TU.p+1)*pn).map(u=>`<tr><td>${esc(u.name||'')}<br><span class="hint">${esc(u.email||'')}</span></td><td>${(p=>p?`<b>${p.points}</b>`:'—')((PT.rows||[]).find(x=>x.user_id===u.id))}</td><td>${TU.nc?TU.nc[u.id]||0:'—'}</td><td>${d(u.created_at)}</td><td>${d(u.last_sign_in_at)}</td><td>${u.admin?'<b class="adm">管理員</b>':`<select data-tier="${u.id}" aria-label="等級"><option value="">普通用戶</option><option value="advance"${u.tier==='advance'?' selected':''}>進階用戶</option><option value="premium"${u.tier==='premium'?' selected':''}>高級用戶</option></select>`}</td></tr>`).join('')||'<tr><td colspan="6" class="hint">冇用戶</td></tr>';}
 async function setTier(id,tier){const msg=$('tuMsg');
   try{if(tier)await api('user_tiers?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({user_id:id,tier,updated_at:new Date().toISOString()})});
     else await api('user_tiers?user_id=eq.'+id,{method:'DELETE'});
