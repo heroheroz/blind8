@@ -124,10 +124,10 @@ a.kofi{display:inline-block;margin-left:4px;padding:0 8px;border:1px solid var(-
 .suptk{display:flex;align-items:center;gap:6px;margin:6px 0 10px;padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--sel) 55%,var(--paper));font-size:14px;overflow:hidden}
 .suptk[hidden]{display:none}.suptk .supv{flex:1;min-width:0;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
 .suptk .supt{display:inline-block;white-space:nowrap;animation:supmv var(--supd,40s) linear 5s infinite}.suptk:hover .supt{animation-play-state:paused}
-.suptk .supvip{background:linear-gradient(90deg,#e0503a,#e39a1f,#d4c12a,#3fae5a,#3a8fd6,#8a5bd6,#e0503a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:supvr 4s linear infinite}@keyframes supvr{0%{background-position:0 0}100%{background-position:300% 0}}
-.suptk .supst{font-style:normal;display:inline-block;animation:supvt 1.4s ease-in-out infinite}.suptk .supst.b{animation-delay:.7s}@keyframes supvt{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
-.suptk .supvip2,.suptk .supvip3{background-size:250% 100%;animation:supvs 2.6s linear infinite}.suptk .supvip2{background-image:linear-gradient(100deg,#b8860b 0%,#d4a52a 35%,#fff3b0 50%,#d4a52a 65%,#b8860b 100%)}.suptk .supvip3{background-image:linear-gradient(100deg,#7d8590 0%,#a9b1bb 35%,#ffffff 50%,#a9b1bb 65%,#7d8590 100%)}@keyframes supvs{0%{background-position:120% 0}100%{background-position:-130% 0}}
-@media(prefers-reduced-motion:reduce){.suptk .supvip,.suptk .supst{animation:none}}
+.suptk .supvip,.chdemo .supvip{background:linear-gradient(90deg,#e0503a,#e39a1f,#d4c12a,#3fae5a,#3a8fd6,#8a5bd6,#e0503a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:supvr 4s linear infinite}@keyframes supvr{0%{background-position:0 0}100%{background-position:300% 0}}
+.suptk .supst,.chdemo .supst{font-style:normal;display:inline-block;animation:supvt 1.4s ease-in-out infinite}.suptk .supst.b,.chdemo .supst.b{animation-delay:.7s}@keyframes supvt{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+.suptk .supvip2,.suptk .supvip3,.chdemo .supvip2,.chdemo .supvip3{background-size:250% 100%;animation:supvs 2.6s linear infinite}.suptk .supvip2,.chdemo .supvip2{background-image:linear-gradient(100deg,#b8860b 0%,#d4a52a 35%,#fff3b0 50%,#d4a52a 65%,#b8860b 100%)}.suptk .supvip3,.chdemo .supvip3{background-image:linear-gradient(100deg,#7d8590 0%,#a9b1bb 35%,#ffffff 50%,#a9b1bb 65%,#7d8590 100%)}@keyframes supvs{0%{background-position:120% 0}100%{background-position:-130% 0}}
+@media(prefers-reduced-motion:reduce){.suptk .supvip,.suptk .supst,.chdemo .supvip,.chdemo .supst{animation:none}}
 .suptk .supi{display:inline-block;padding:0 1.8em}.suptk .supi b{font-weight:700}.suptk .supi .amt{color:var(--warn);font-weight:700;margin-left:.3em}.suptk .supsep{color:var(--muted);opacity:.55}
 .suptk .suph{flex:none;font-size:13px;color:var(--accent);white-space:nowrap}.suptk>button{flex:none;font:inherit;border:0;background:none;color:var(--muted);cursor:pointer;padding:0 4px}
 @keyframes supmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -3002,6 +3002,7 @@ function qzChDemo(){const nm='你個名',N=x=>`<span class="chn">${x}</span>`,ro
   +row(N(chBadge('week',1)+' '+chName('week',1,nm,'chrain')),'<b>上星期第 1 名</b>：本週狀元，深色金邊牌＋彩虹名，戴一個星期')
   +row(N(chBadge('week',2)+' '+nm)+N(chBadge('week',3)+' '+nm),'<b>上星期第 2、3 名</b>：本週榜眼、探花，深色牌，戴一個星期')
   +row(N(`<span class="qzch qzch4">本週${QZ_CH[3]}</span> ${nm}`)+N(`<span class="qzch qzch4">本週${QZ_CH[4]}</span> ${nm}`),'<b>上星期第 4–10 名</b>：第 4 名傳臚、第 5–10 名進士')
+  +row([1,2,3].map(v=>N(`${'①②③'[v-1]} <i class="supst">✨</i><b class="supvip supvip${v}">${nm}</b><i class="supst b">✨</i>`)).join(''),'<b>走馬燈本週頭 3 名</b>：第 1 名彩虹字、第 2 名流金、第 3 名流銀，兩邊閃星')
   +`</tbody></table>`;}
 function qzName(r){const n0=r.name?shortName(r.name):'一位',t=r.title==null?'師兄':r.title;return n0+(/師[兄姐]$/.test(n0)?'':(t||(r.name?'':'有心人')));}
 async function qzBoard(){const els=()=>[$('qzBd'),$('qzBdLb')].filter(Boolean);if(!els().length||!CLOUD)return;const wk=QZ.bw!==false;  // 測驗積分榜：測驗頁同排行榜都有（主人 11月14日）
