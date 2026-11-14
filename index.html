@@ -2677,6 +2677,7 @@ function yuanGate(cc){if(!VIEW.yuanTrig)return cc;const src=cc.filter(c=>c.gz&&!
     ZG=zhaogan(src.map(c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.dyn?c.h.replace('大運','運'):c.h[0]})));
   return cc.map(c=>{if(!c.yuan||!c.gz)return c;const [g,z]=c.gz,hit=src.filter(d=>d.gz[0]===g||d.gz[1]===z).map(d=>d.h+d.gz),zg=ZG.st.some(x=>x&&x.c===g)||ZG.br.some(x=>x&&x.c===z);if(zg)hit.push('招感');return hit.length?{...c,yWhy:hit.join('、')}:CALC_T.yuanHalf?{...c,yWeak:true}:{...c,gz:null,yOff:true};});}
 function render(){
+  if(S.di==null||!S.dys[S.di])pickToday();  // 保險：未揀大運（例如睇運日期無效）就用今日
   const {inp,c,sol,lun,ec,yun,dys,P,dm}=S;
   const today=refDay().toYmd();
   const dy=dys[S.di], ln=dy.getLiuNian()[S.li], mo=S.mos[S.mi], dd=S.ds[S.dd];
@@ -4679,7 +4680,8 @@ document.addEventListener('click',e=>{
   if(t.dataset.sug){const el=$('caseTags'),cur=parseTags(el.value);if(!cur.includes(t.dataset.sug))el.value=[...cur,t.dataset.sug].join(' ');return;}
   if(t.dataset.ksgo){const [y,m,d]=t.dataset.ksgo.split('-').map(Number);$('atEra').value=y<=0?'-1':'1';$('aty').value=y<=0?1-y:y;$('atm').value=m;$('atd').value=d;run(readForm());$('chartBox')?.scrollIntoView({behavior:'smooth'});return;}
   if(t.dataset.evgo!==undefined){const c=CASES.find(x=>x.id===t.dataset.id),v=c&&(c.input.events||[])[+t.dataset.evgo];if(!v)return;
-    writeForm({...c.input,at:{y:v.y,m:v.m,d:v.d}});run(readForm());if(S&&v.p&&v.p!=='d'){S.evP=v.p;S.evT=`${v.t} ${evTxt(v)}`;render();}$('out').scrollIntoView({behavior:'smooth'});return;}
+    // 淨係知年／月嘅事件冇日（甚至冇月）：用嗰個月 15 號（冇月就用 6 月 15 號），流月流日照收埋（主人 11月15日報錯：冇日會令睇運日期無效）
+    writeForm({...c.input,at:{y:v.y,m:v.m||6,d:v.d||15}});const S0=S;run(readForm());if(S&&S!==S0&&v.p&&v.p!=='d'){S.evP=v.p;S.evT=`${v.t} ${evTxt(v)}`;render();}$('out').scrollIntoView({behavior:'smooth'});return;}
   // 修改事件：將事件填返入「加事件」表格，撳「改」就取代原本嗰個
   if(t.dataset.evedit!==undefined||t.dataset.evcancel!==undefined){const f=t.closest('.panel,#caseNote,body').querySelector('[data-addev]');if(!f)return;
     const c=CASES.find(x=>x.id===f.dataset.addev),v=t.dataset.evedit!==undefined&&c&&(c.input.events||[])[+t.dataset.evedit];
