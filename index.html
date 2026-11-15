@@ -12,8 +12,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>盲派八字排盤</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap"></noscript>
 <style>
 /* Layout: one column. Input sheet on top, then the 命盤 grid: 時日月年 | 大運流年流月流日, then strips for 大運 → 流年 → 流月 → 流日 and side cards. */
 :root{
@@ -21,7 +21,7 @@
   --accent:#34477e; --accent-soft:#dfe4f2; --sel:#fff4cf;
   --wood:#25803a; --fire:#cc3527; --earth:#8f5f1f; --metal:#a27d00; --water:#1d5bb3;
   --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
-  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-body:"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --good:#2b7a4b; --bad:#b8392e; --warn:#a46a00; --chuan:#7b4aa8;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
@@ -4768,7 +4768,7 @@ document.addEventListener('submit',e=>{
 });
 async function chartFontCSS(node){
   const txt=[...new Set(node.innerText.replace(/\s/g,''))].join('');
-  let css=await (await fetch('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&text='+encodeURIComponent(txt))).text();
+  let css=await (await fetch('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&text='+encodeURIComponent(txt))).text();
   for(const u of [...new Set([...css.matchAll(/url\((https:[^)]+)\)/g)].map(m=>m[1]))]){
     const b=await (await fetch(u)).blob();
     css=css.split(u).join(await new Promise(ok=>{const f=new FileReader();f.onload=()=>ok(f.result);f.readAsDataURL(b);}));}
