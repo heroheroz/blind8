@@ -1696,6 +1696,7 @@ const AW={fu:1,he:1,lian:0.5,banhe:0.5,sanhe:1,zg:0.5,gong:1,zgb:0.5,chain:1,cx:
 // 規則版本紀錄（主人 11月14日）：每次測試記低計法版本、試驗開關同箭咀力度；箭咀力度用一個短編號代表成套數值，數值一改編號就變
 const cfgHash=o=>{const t=JSON.stringify(Object.keys(o).sort().map(k=>[k,o[k]]));let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))>>>0;return h.toString(36).padStart(6,'0').slice(-6);};
 const AW_DEF={...AW},AW_DEF_ID=cfgHash(AW_DEF);
+try{const c=JSON.parse(localStorage.getItem('b8-awc')||'{}');for(const k in c)if(k in AW&&typeof c[k]==='number')AW[k]=c[k];}catch(e){}  // 上次攞到嘅箭咀力度：一開網個盤就用啱嘅數值（之後資料庫返嚟有變先再計）
 // 箭咀力度快照：編號 → 成套數值；用過唔係預設嘅數值做測試，就要喺度加一行（預設嗰套自動有）
 const AN_CFG={[AW_DEF_ID]:{note:'程式預設數值',aw:AW_DEF}};
 const cfgNow=()=>({at:new Date().toISOString().slice(0,16).replace('T',' '),ver:CALC_V,site:CALC_SITE,flags:{...CALC_T},aw_id:cfgHash(AW),aw:{...AW}});
@@ -2353,7 +2354,8 @@ const calcTry=()=>{try{return +localStorage.getItem('b8-calcv-try')||0;}catch(e)
 function applyCalcVer(v){v=CALC_VERS[v]?+v:CALC_VDEF;CALC_V=v;const P=CALC_VERS[v];CALC_CT_KEYS.forEach(k=>delete CALC_T[k]);Object.assign(CALC_T,P.ct);
   let saved={};try{saved=JSON.parse(localStorage.getItem(LS_VIEW)||'{}');}catch(e){}
   Object.entries(P.view).forEach(([k,x])=>{VIEW0[k]=x;if(!(k in saved))VIEW[k]=x;});}
-applyCalcVer(calcTry()||CALC_VDEF);
+{const c=+(()=>{try{return localStorage.getItem('b8-cvsite');}catch(e){}})();if(CALC_VERS[c])CALC_SITE=c;}  // 上次攞到嘅全站計法版本：一開網就用，唔使等資料庫
+applyCalcVer(calcTry()||CALC_SITE);
 function saveView(){try{const o={};Object.keys(VIEW0).forEach(k=>{if(!VIEW_NOSAVE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null)o[k]=VIEW[k];});localStorage.setItem(LS_VIEW,JSON.stringify(o));}catch(e){}}
 (()=>{const v=new URLSearchParams(location.search).get('v');if(!v)return;v.split(',').forEach(x=>{if(x[0]==='_'){(x.slice(1).match(/../g)||[]).forEach(c=>{const k=VIEW_CODES[parseInt(c,36)];if(k&&k in VIEW0&&!VIEW_NOSHARE.includes(k)&&typeof VIEW0[k]==='boolean')VIEW[k]=!VIEW0[k];});return;}const [k,val]=x.split('.');if(!(k in VIEW0)||VIEW_NOSHARE.includes(k))return;
   const d=VIEW0[k];VIEW[k]=typeof d==='string'?val:val==='1'?true:val==='0'?false:d;});})();
@@ -3433,7 +3435,7 @@ async function lsSongs(){if(!LS.songs){try{const r=await fetch('lessons/songs.js
   // 每首歌：連結文字係歌名（跳去嗰首歌開始，未知時間就由片頭播）；唔顯示時間（主人 2026-11-08）
   const song=(x,g)=>{const t=g&&g.t!=null?+g.t:null;return `<a href="${lsYT(x.id,t||0)}" target="_blank" rel="noopener noreferrer">🎵 ${esc((g&&g.name)||x.title||'')}</a>`;};
   return `<h3>🎤 隱姓先生歌曲庫</h3><p class="lsong-tip">🔓 聽完全部歌曲會解鎖隱藏功能 😆</p>`+(L.length?`<ul class="lsong">${L.map(x=>`<li><span class="hint">${esc(x.date||'')} ${esc(x.title||'')}${x.dur?`（${esc(x.dur)}）`:''}</span><br>${(Array.isArray(x.songs)?x.songs:String(x.songs||'').split('、').filter(Boolean).map(n=>({name:n}))).map(g=>song(x,g)).join('　')}</li>`).join('')}</ul>`:'<p class="hint">未有歌曲。</p>');}
-async function lsDraw(){const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
+async function lsDraw(){LS.drawn=true;const idx=await lsIndex(),bodies=document.querySelectorAll('#np-lsum .lbody,#np-ltxt .lbody');
   if(!idx.length){bodies.forEach(b=>b.innerHTML='<p class="hint">未有課堂資料。</p>');return;}
   const ord=[...idx].sort((a,b)=>(b.n||0)-(a.n||0));
   // 歌曲庫有自己嘅分頁；揀堂預設最新一堂
@@ -3807,7 +3809,11 @@ document.addEventListener('change',e=>{if(e.target.matches('input[name=ntab]')&&
 document.addEventListener('input',e=>{if(e.target.matches('[data-lq]')){LS.q=e.target.value;clearTimeout(LS.tm);LS.tm=setTimeout(lsDraw,200);}});
 document.addEventListener('click',e=>{const g=e.target.closest('[data-lgo]');if(g){lsOpen(g.dataset.lgo);return;}
   if(e.target.closest('[data-lcase]')&&document.body.dataset.mtab)setTimeout(()=>mTab('chart'),0);});
-lsIndex().then(()=>{lsRefsWatch();if(CUR)renderCases();const hp=new URLSearchParams(location.hash.slice(1)),h0=hp.get('lesson'),hn=/^\d{1,3}$/.test(h0||'')?(LS.idx||[]).find(x=>x.n===+h0):null,h=hn?hn.id:h0;if(h)lsOpen(h,hp.get('tab')==='ltxt'?'ltxt':undefined);else lsDraw();});
+lsIndex().then(()=>{(window.requestIdleCallback||setTimeout)(lsRefsWatch);if(CUR)renderCases();const hp=new URLSearchParams(location.hash.slice(1)),h0=hp.get('lesson'),hn=/^\d{1,3}$/.test(h0||'')?(LS.idx||[]).find(x=>x.n===+h0):null,h=hn?hn.id:h0;if(h)lsOpen(h,hp.get('tab')==='ltxt'?'ltxt':undefined);else lsLazy();});
+// 課堂區（歌曲庫／總結／文字稿／答問）打開先畫，唔好一開網就畫晒成堂文字稿拖慢手機（主人 11月15日：加快速度）
+function lsLazy(){const ps=['np-song','np-lsum','np-ltxt','np-lqa'].map(i=>document.getElementById(i)).filter(Boolean);
+  if(!ps.length||!window.IntersectionObserver){lsDraw();return;}
+  const io=new IntersectionObserver(es=>{if(!es.some(e=>e.isIntersecting))return;io.disconnect();if(!LS.drawn)lsDraw();},{rootMargin:'600px'});ps.forEach(p=>io.observe(p));}
 // 「分享 ↪」掣：撳先彈 WhatsApp／Telegram／WeChat 三個選擇，撳完或者撳第二度就收埋（主人 11月14日）
 document.addEventListener('click',e=>{const t=e.target.closest('[data-shtog]'),g=t&&t.parentNode;document.querySelectorAll('.shgrp.open').forEach(x=>{if(x!==g)x.classList.remove('open');});if(g)g.classList.toggle('open');});
 // 測驗直達連結（主人 11月14日）：#quiz 一開就去測驗；條連結唔帶題目或者命例。登入狀態遲啲先到嘅話，到咗再畫一次
@@ -4165,9 +4171,9 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-swv]
   catch(e){}finally{SWV.busy=false;}loadSwVotes();});
 // 箭咀力度：arrow_weights（015_arrow_weights.sql）所有人讀；arrow_votes 每人每項一票；改咗就重新排盤
 const AWV={cnt:{},mine:{},ok:null,busy:false};
-async function loadAW(){if(!CLOUD){drawAW();return;}
-  try{const r=await api('arrow_weights?select=key,value');let ch=false;r.forEach(x=>{const v=+x.value;if(x.key in AW&&AW[x.key]!==v){AW[x.key]=v;ch=true;}});AWV.ok=true;if(ch&&S&&S.dys)render();}catch(e){AWV.ok=false;}
-  try{const r=await api('rpc/arrow_vote_counts',{method:'POST',body:'{}'});AWV.cnt={};r.forEach(x=>AWV.cnt[x.key]=x);}catch(e){}
+async function loadAW(){if(!CLOUD){drawAW();return;}const vcP=api('rpc/arrow_vote_counts',{method:'POST',body:'{}'});vcP.catch(()=>{});  // 一齊發
+  try{const r=await api('arrow_weights?select=key,value');let ch=false;r.forEach(x=>{const v=+x.value;if(x.key in AW&&AW[x.key]!==v){AW[x.key]=v;ch=true;}});AWV.ok=true;try{const c={};r.forEach(x=>{if(x.key in AW)c[x.key]=+x.value;});localStorage.setItem('b8-awc',JSON.stringify(c));}catch(e){}if(ch&&S&&S.dys)render();}catch(e){AWV.ok=false;}
+  try{const r=await vcP;AWV.cnt={};r.forEach(x=>AWV.cnt[x.key]=x);}catch(e){}
   AWV.mine={};if(SESSION)try{(await api('arrow_votes?select=key,dir')).forEach(x=>AWV.mine[x.key]=x.dir);}catch(e){}
   drawAW();}
 function drawAW(){const b=$('awList');if(!b)return;const adm=!!(CLOUD&&ADMIN&&AWV.ok);
@@ -4185,9 +4191,10 @@ async function saveAW(){const msg=$('awSaveMsg');msg.textContent='儲存緊…';
       if(v!==AW[k]){await api('arrow_weights?key=eq.'+k,{method:'PATCH',body:JSON.stringify({value:v,updated_at:new Date().toISOString()})});AW[k]=v;}}
     msg.textContent='已儲存，盤已經用新數值重新計。';if(S&&S.dys)render();drawAW();}catch(e){msg.textContent='儲存唔到：'+e.message;}}
 $('aw').addEventListener('click',e=>{const v=e.target.closest('[data-awvote]');if(v){voteAW(v.dataset.awvote,+v.dataset.dir);return;}if(e.target.closest('[data-awsave]'))saveAW();});
-async function loadCosts(){COST.loaded=true;try{const r=await api('point_costs?select=kind,cost');r.forEach(x=>{COST[x.kind]=x.cost;});COST.ok=true;}catch(e){COST.ok=false;}
+async function loadCosts(){COST.loaded=true;const psP=api('point_settings?select=key,value');psP.catch(()=>{});  // 兩個查詢一齊發
+  try{const r=await api('point_costs?select=kind,cost');r.forEach(x=>{COST[x.kind]=x.cost;});COST.ok=true;}catch(e){COST.ok=false;}
   // 開戶分同👍門檻：point_settings（012_points_admin.sql）；未設定就係舊規則 100 分、3 個準
-  try{const r=await api('point_settings?select=key,value');r.forEach(x=>{PS[x.key]=x.value;});PS.has_vday=r.some(x=>x.key==='vday');PS.has_daily=r.some(x=>x.key==='daily');PS.ok=true;PS.has_cv=r.some(x=>x.key==='calc_ver');if(PS.has_cv)CALC_SITE=+PS.calc_ver;const tv=ADMIN&&calcTry();applyCalcVer(tv||CALC_SITE);}catch(e){PS.ok=false;}drawCalcVer();
+  try{const r=await psP;if(PS.has_cv=r.some(x=>x.key==='calc_ver'))try{localStorage.setItem('b8-cvsite',String(r.find(x=>x.key==='calc_ver').value));}catch(x){}r.forEach(x=>{PS[x.key]=x.value;});PS.has_vday=r.some(x=>x.key==='vday');PS.has_daily=r.some(x=>x.key==='daily');PS.ok=true;PS.has_cv=r.some(x=>x.key==='calc_ver');if(PS.has_cv)CALC_SITE=+PS.calc_ver;const tv=ADMIN&&calcTry();applyCalcVer(tv||CALC_SITE);}catch(e){PS.ok=false;}drawCalcVer();
   drawCosts();if(S&&S.dys)render();}
 function drawCosts(){document.querySelectorAll('[data-pneed]').forEach(e=>e.textContent=PS.need);document.querySelectorAll('[data-pstart]').forEach(e=>e.textContent=PS.start);document.querySelectorAll('[data-pvday]').forEach(e=>e.textContent=+PS.vday?`每日最多計 ${PS.vday} 個`:'每日冇上限');document.querySelectorAll('[data-pgday]').forEach(e=>e.textContent=+PS.gday?`每日最多計 ${PS.gday} 條`:'每日冇上限');document.querySelectorAll('[data-pdaily]').forEach(e=>e.textContent=PS.daily||10);document.querySelectorAll('[data-pcostv]').forEach(e=>e.textContent=COST[e.dataset.pcostv]);
   const b=$('pcBox');if(!b)return;b.innerHTML=[['sha','招感殺星'],['work','做功計算（每次）']].map(([k,n])=>`<label class="chk">${n} <input type="number" min="0" max="1000" step="1" data-pcost="${k}" value="${COST[k]}" style="width:5em"> 分</label>`).join('')+`<label class="chk">開戶送 <input type="number" min="0" max="100000" step="1" data-pset="start" value="${PS.start}" style="width:6em"> 分</label><label class="chk">命例／筆記要 <input type="number" min="1" max="100" step="1" data-pset="need" value="${PS.need}" style="width:4em"> 個 👍先加分</label><label class="chk">幫人投票每日最多計 <input type="number" min="0" max="100" step="1" data-pset="vday" value="${PS.vday}" style="width:4em"> 個</label><label class="chk">留言版每日最多計 <input type="number" min="0" max="100" step="1" data-pset="gday" value="${PS.gday}" style="width:4em"> 條（兩個都係填 0 就冇上限）</label><label class="chk">每日登入 <input type="number" min="0" max="1000" step="1" data-pset="daily" value="${PS.daily}" style="width:4em"> 分</label><button type="button" class="go sm" data-pcsave title="儲存" aria-label="儲存">💾</button>`;
@@ -4854,7 +4861,8 @@ function supShow(rows,cs,qz,qr,qc,bt,br){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr
   const qrn=qr.filter(r=>r.name).map(r=>esc(qzName(r))),qrLine=qr.length?`<span class="supi">💪 ${qrn.length?`<b>${qrn.join('、')}</b>${qr.length>qrn.length?` 等 ${qr.length} 位`:''}`:`${qr.length} 位師兄師姐`} 成功挑戰小測驗！你都嚟試吓？</span><span class="supsep">✦</span>`:'';
   const qc0=Array.isArray(qc)?qc:[],qm1=qc0.find(r=>r.period==='month'&&r.rk===1),qw1=qc0.find(r=>r.period==='week'&&r.rk===1),dbl=qm1&&qw1&&qzName(qm1)===qzName(qw1),qcLine=qc0.filter(r=>!(dbl&&r===qw1)).filter(r=>r.rk<=(r.period==='month'?3:5)).sort((a,b)=>(a.period==='month'?0:1)-(b.period==='month'?0:1)||a.rk-b.rk).map(r=>r.rk<=3?`<span class="supi">🎉 ${r.rk===1&&r.period==='month'?'金榜題名！':''}恭喜 ${chBadge(r.period,r.rk)} ${r.period==='month'&&r.rk===1?chName('month',1,esc(qzName(r)),'supvip supvip1'):`<b class="supvip supvip${r.rk}">${esc(qzName(r))}</b>`} ${r.rk===1?'榮登榜首':'金榜題名'}！</span><span class="supsep">✦</span>`:`<span class="supi">恭喜 <b>${esc(qzName(r))}</b> 榮登本週${QZ_CH[r.rk-1]}！</span><span class="supsep">✦</span>`).join(''),bfn=br.filter(r=>r.name).map(r=>esc(qzName(r))),btLine=bt.length?`<span class="supi">🧱 基本功積分榜：${bt.map(r=>`${'①②③④⑤'[r.rk-1]||''} <b>${esc(qzName(r))}</b> ${r.score} 分`).join('　')}</span><span class="supsep">✦</span>`:'',brLine=br.length?`<span class="supi">🧱 ${bfn.length?`<b>${bfn.join('、')}</b>${br.length>bfn.length?` 等 ${br.length} 位`:''}`:`${br.length} 位師兄師姐`} 今日練咗基本功！你都嚟練吓？</span><span class="supsep">✦</span>`:'',h=nw+qcLine+qrLine+qzLine+btLine+brLine+rows.map(supItem).join('')+csLine;$('supT').innerHTML=h+h;$('supT').style.setProperty('--supd',Math.max(20,(rows.reduce((n,r)=>n+12+(r.message||'').length+(r.name||'').length,0)+(cs.length?30+csn.join('').length:0)+qz.length*14+(Array.isArray(qc)?qc.filter(r=>r.rk<=5).length*20:0)+(qr.length?24+qrn.join('').length:0)+bt.length*12+(br.length?24+bfn.join('').length:0))*0.45)+'s');
   b.hidden=false;b.dataset.last=last;}
-async function supLoad(){supLoad.s=!!SESSION;if(!CLOUD){$('kfSup').hidden=true;return;}try{const cs=await api('case_thanks?select=*').catch(()=>[]),qz=await api('rpc/quiz_top5',{method:'POST',body:'{}'}).catch(()=>[]),qr=await api('rpc/quiz_recent',{method:'POST',body:'{}'}).catch(()=>[]),qc=await api('rpc/quiz_champs',{method:'POST',body:'{}'}).catch(()=>[]),bt=await api('rpc/bf_top5',{method:'POST',body:'{}'}).catch(()=>[]),br=await api('rpc/bf_recent',{method:'POST',body:'{}'}).catch(()=>[]);supShow(await api('supporter_ticker?select=*&order=created_at.desc&limit=30'),cs,qz,qr,qc,bt,br);$('kfSup').hidden=false;}catch(e){$('kfSup').hidden=true;}}
+async function supLoad(){supLoad.s=!!SESSION;if(!CLOUD){$('kfSup').hidden=true;return;}try{const rp=n=>api('rpc/'+n,{method:'POST',body:'{}'}).catch(()=>[]);  // 7 個查詢一齊攞（以前逐個排隊，手機要等 8 秒）
+    const [tk,cs,qz,qr,qc,bt,br]=await Promise.all([api('supporter_ticker?select=*&order=created_at.desc&limit=30'),api('case_thanks?select=*').catch(()=>[]),rp('quiz_top5'),rp('quiz_recent'),rp('quiz_champs'),rp('bf_top5'),rp('bf_recent')]);supShow(tk,cs,qz,qr,qc,bt,br);$('kfSup').hidden=false;}catch(e){$('kfSup').hidden=true;}}
 $('supX').addEventListener('click',()=>{try{localStorage.setItem('b8-suptk-x',JSON.stringify({l:$('supTk').dataset.last||'',t:Date.now()}));}catch(e){}$('supTk').hidden=true;});
 $('supForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,m=$('supMsg'),d=document.getElementById('kofiDlg');
   const tab=(d.querySelector('[data-kft].on')||{dataset:{}}).dataset.kft||'kofi',amt=parseFloat(f.amount.value);
