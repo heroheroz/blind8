@@ -235,6 +235,7 @@ table.chart{border-collapse:collapse;width:100%;min-width:max(720px,var(--mw,0px
 .tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:9px;background:var(--accent-soft);color:var(--accent);margin-top:2px}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
 .qzbd th,.qzbd td{white-space:nowrap!important}.qzbd td:nth-child(2) .supvip,.qzbd td:nth-child(2) b{white-space:nowrap}@media(max-width:700px){.qzbd th,.qzbd td{padding:4px 4px}.qzbd .qzch,.qzbd .chb{font-size:11px}}  /* 稱號牌同名唔斷行（主人 11月16日） */
+.mych{font-size:11px!important;padding:0 4px!important;margin-right:2px;vertical-align:1px}
 .sstab{border-collapse:collapse;width:100%;font-size:14px}.sstab th,.sstab td{padding:4px 8px;border-bottom:1px solid var(--line,#ddd);text-align:left;white-space:nowrap}.sstab tr.on th{color:var(--accent)}#ssBox summary{cursor:pointer}#ssBox summary h2{font-size:18px}.ssw{overflow-x:auto;margin:6px 0}.sstab:not(.ssfull) td:last-child{white-space:normal}
 @media(max-width:700px){.sstab:not(.ssfull){font-size:13px}.sstab:not(.ssfull) th,.sstab:not(.ssfull) td{padding:4px 3px}.sstab:not(.ssfull) td:nth-child(2){white-space:normal;min-width:3em}.sstab:not(.ssfull) td:last-child{min-width:5em}}.ssfull th,.ssfull td{text-align:center}.ssfull tr.me{background:var(--soft)}#ssBox h3{font-size:15px;margin:12px 0 4px}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -3007,21 +3008,22 @@ function qzNextRel(wk){const h=new Date(Date.now()+8*36e5),y=h.getUTCFullYear(),
   return `${wk?'本週':'本月'}放榜：${e.getUTCMonth()+1}月${e.getUTCDate()}日（星期${'日一二三四五六'[e.getUTCDay()]}）00:00（香港時間）· 仲有 ${dd?dd+' 日 ':''}${hh} 小時`;}
 const QZ_CH=['狀元','榜眼','探花','傳臚','進士','進士','進士','進士','進士','進士'],QZ_CHI=['👑','🥈','🥉'];
 // 稱號牌：月＝紅底金字（狀元有皇冠、金光、星星）；週＝深色金邊牌（狀元用勳章，冇金光星星）（主人 11月14日）
-function chBadge(per,rk){const m=per==='month';return `<span class="chb${m?' m':''}${rk===1?' s1':''}" title="${m?'上個月':'上星期'}測驗榜第 ${rk} 名">${rk===1?(m?'👑':'🎖️'):QZ_CHI[rk-1]} ${m?'本月':'本週'}${QZ_CH[rk-1]}</span>`;}
+function chBadge(per,rk){const m=per==='month';if(rk>3)return `<span class="qzch qzch4 ${rk===4?'qzchS':'qzchB'}" title="${m?'上個月':'上星期'}測驗榜第 ${rk} 名">${m?'本月':'本週'}${QZ_CH[rk-1]}</span>`;return `<span class="chb${m?' m':''}${rk===1?' s1':''}" title="${m?'上個月':'上星期'}測驗榜第 ${rk} 名">${rk===1?(m?'👑':'🎖️'):QZ_CHI[rk-1]} ${m?'本月':'本週'}${QZ_CH[rk-1]}</span>`;}
 function rkFx(rk,nm){return rk>=1&&rk<=3?`<i class="supst">✨</i><b class="supvip supvip${rk}">${nm}</b>`:nm;}  // 頭三級（同分同級，可以多人）彩虹／金／銀（主人 11月16日）
 function chName(per,rk,nm,cls){const r=`<b class="${cls}">${nm}</b>`;return per==='month'&&rk===1?`<i class="chst">✨</i><span class="chglow">${r}</span><i class="chst b">✨</i>`:r;}  // 上星期測驗榜頭十名嘅科舉稱號，戴一個星期（051）
 // 稱號示範（主人 11月14日）：喺積分榜說明直接用真效果顯示每個稱號個名點樣
 function qzChDemo(){const nm='你個名',N=x=>`<span class="chn">${x}</span>`,row=(b,c)=>`<tr><td>${b}</td><td class="hint">${c}</td></tr>`;
   return `<table class="sstab chdemo"><tbody>`+row(N(chBadge('month',1)+' '+chName('month',1,nm,'chrain')),'<b>上個月第 1 名</b>：本月狀元，紅底金字牌＋彩虹名＋金光＋兩邊星星，戴成個月')
   +row(N(chBadge('month',2)+' '+nm)+N(chBadge('month',3)+' '+nm),'<b>上個月第 2、3 名</b>：本月榜眼、探花，紅底牌，戴成個月')
+  +row(N(chBadge('month',4)+' '+nm)+N(chBadge('month',5)+' '+nm),'<b>上個月第 4–10 名</b>：本月傳臚（銀框）、本月進士（銅框），戴成個月')
   +row(N(chBadge('week',1)+' '+chName('week',1,nm,'chrain')),'<b>上星期第 1 名</b>：本週狀元，深色金邊牌＋彩虹名，戴一個星期')
   +row(N(chBadge('week',2)+' '+nm)+N(chBadge('week',3)+' '+nm),'<b>上星期第 2、3 名</b>：本週榜眼、探花，深色牌，戴一個星期')
-  +row(N(`<span class="qzch qzch4 qzchS">本週${QZ_CH[3]}</span> ${nm}`)+N(`<span class="qzch qzch4 qzchB">本週${QZ_CH[4]}</span> ${nm}`),'<b>上星期第 4–10 名</b>：第 4 名傳臚、第 5–10 名進士')
+  +row(N(`<span class="qzch qzch4 qzchS">本週${QZ_CH[3]}</span> ${nm}`)+N(`<span class="qzch qzch4 qzchB">本週${QZ_CH[4]}</span> ${nm}`),'<b>上星期第 4–10 名</b>：第 4 名傳臚（銀框）、第 5–10 名進士（銅框）')
   +row([1,2,3].map(v=>N(`${'①②③'[v-1]} <i class="supst">✨</i><b class="supvip supvip${v}">${nm}</b><i class="supst b">✨</i>`)).join(''),'<b>走馬燈本週頭 3 名</b>：第 1 名彩虹字、第 2 名流金、第 3 名流銀，兩邊閃星')
   +`</tbody></table>`;}
 function qzName(r){const n0=r.name?shortName(r.name):'一位',t=r.title==null?'師兄':r.title;return n0+(/師[兄姐]$/.test(n0)?'':(t||(r.name?'':'有心人')));}
 function qzPrev(wk,qzRow){const L=(wk?QZ.bd.pw:QZ.bd.pa)||[];if(!L.length)return '';const d=x=>new Date(x).toLocaleDateString('zh-HK',{timeZone:'Asia/Hong_Kong',month:'numeric',day:'numeric'});  // 放榜名單：上一期最終頭十級（主人 11月16日）
-  return `<details class="qzcard" open style="margin-top:10px"><summary><b>📜 ${wk?'上星期':'上個月'}放榜</b> <span class="hint">（${d(L[0].f)}–${d(new Date(new Date(L[0].t)-864e5))}，最終名單）</span></summary><table class="sstab qzbd rkfx"><thead><tr><th>名次</th><th>師兄師姐</th><th>分數</th><th title="啱幾多題／做咗幾多題">答啱率</th></tr></thead><tbody>${L.map(r=>`<tr${r.me?' class="me"':''}><th>${r.rk<=3?['🥇','🥈','🥉'][r.rk-1]:r.rk}</th><td>${r.n<10?'':r.rk<=3?chBadge(wk?'week':'month',r.rk)+' ':wk?`<span class="qzch qzch4 ${r.rk===4?'qzchS':'qzchB'}">本週${QZ_CH[r.rk-1]}</span> `:''}${rkFx(r.rk,esc(qzName(r)))}${r.me?'（你）':''}</td><td><b>${r.score}</b></td><td class="hint">${Math.round(r.score/r.n*100)}% <small>(${r.score}/${r.n})</small></td></tr>`).join('')}</tbody></table></details>`;}
+  return `<details class="qzcard" open style="margin-top:10px"><summary><b>📜 ${wk?'上星期':'上個月'}放榜</b> <span class="hint">（${d(L[0].f)}–${d(new Date(new Date(L[0].t)-864e5))}，最終名單）</span></summary><table class="sstab qzbd rkfx"><thead><tr><th>名次</th><th>師兄師姐</th><th>分數</th><th title="啱幾多題／做咗幾多題">答啱率</th></tr></thead><tbody>${L.map(r=>`<tr${r.me?' class="me"':''}><th>${r.rk<=3?['🥇','🥈','🥉'][r.rk-1]:r.rk}</th><td>${r.n<10?'':chBadge(wk?'week':'month',r.rk)+' '}${rkFx(r.rk,esc(qzName(r)))}${r.me?'（你）':''}</td><td><b>${r.score}</b></td><td class="hint">${Math.round(r.score/r.n*100)}% <small>(${r.score}/${r.n})</small></td></tr>`).join('')}</tbody></table></details>`;}
 function qzHard(wk){const h=(wk?QZ.bd.hw:QZ.bd.ha)||[],by=QZ.hq||{},L=h.filter(r=>by[r.qid]);if(!L.length)return '';const d=x=>new Date(x).toLocaleDateString('zh-HK',{timeZone:'Asia/Hong_Kong',month:'numeric',day:'numeric'});  // 放榜之後：上一期最多人錯嘅三題（主人 11月16日）
   return `<div class="qzcard" style="margin-top:10px"><p style="margin:0 0 6px"><b>📉 ${wk?'上星期':'上個月'}最多人錯嘅三題</b> <span class="hint">（${d(L[0].f)}–${d(new Date(new Date(L[0].t)-864e5))}）</span></p><ol style="margin:0;padding-left:1.4em">${L.map(r=>{const x=by[r.qid];return `<li style="margin:0 0 8px"><b>${esc(x.q)}</b><br>✅ 正確：${esc(x.opts[r.ans]??'?')} <span class="hint">（${r.total} 人答，${r.wrong} 人錯）</span>${r.why?`<br><span class="hint">老師點解：${esc(r.why)}</span>`:''}<br><span class="hint">第${x.lesson}堂 · ${lsA(x.vid,x.t,'▶ 聽老師講')}</span></li>`;}).join('')}</ol></div>`;}
 async function qzBoard(){const els=()=>[$('qzBd'),$('qzBdLb')].filter(Boolean);if(!els().length||!CLOUD)return;const wk=QZ.bw!==false;  // 測驗積分榜：測驗頁同排行榜都有（主人 11月14日）
@@ -4472,6 +4474,16 @@ async function mytSave(v){await api('user_titles',{method:'POST',headers:{Prefer
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-mytset],#mytX');if(!t)return;if(t.id==='mytX'){try{localStorage.setItem('b8-myt-x',MYT.u);}catch(x){}mytAsk(false);return;}if(SESSION)mytSave(t.dataset.mytset).catch(x=>alert('儲唔到稱呼：'+x.message));});
 document.addEventListener('change',async e=>{const t=e.target.closest&&e.target.closest('[data-mytitle]');if(!t||!SESSION||t.value==='?')return;const v=t.value;
   try{await mytSave(v);}catch(x){alert('儲唔到稱呼：'+x.message);}});
+// 留言版／命例備註／登入名前面嘅科舉稱號牌（主人 11月16日）：本月頭三名優先，跟住本週，再跟住本月 4–10 名
+const chPick=rs=>rs.find(r=>r.period==='month'&&r.rk<=3)||rs.filter(r=>r.period==='week').sort((a,b)=>a.rk-b.rk)[0]||rs.filter(r=>r.period==='month').sort((a,b)=>a.rk-b.rk)[0];
+function chMini(r){const per=r.period,rk=r.rk,m=per==='month',tt=`${m?'上個月':'上星期'}測驗榜第 ${rk} 名：${m?'本月':'本週'}${QZ_CH[rk-1]}`;
+  return rk<=3?`<span class="chb${m?' m':''}${rk===1?' s1':''} mych" title="${tt}">${rk===1?(m?'👑':'🎖️'):QZ_CHI[rk-1]}</span> `:`<span class="qzch qzch4 ${rk===4?'qzchS':'qzchB'} mych" title="${tt}">${QZ_CH[rk-1].slice(-1)}</span> `;}
+const CHU={m:null};
+function chFor(uid){if(!CHU.m){if(!CHU.ing&&CLOUD){CHU.ing=1;api('rpc/quiz_champ_uids',{method:'POST',body:'{}'}).then(r=>{const g={};(r||[]).forEach(x=>(g[x.uid]=g[x.uid]||[]).push(x));CHU.m={};for(const k in g)CHU.m[k]=chPick(g[k]);try{renderGB();}catch(e){}try{renderCases();}catch(e){}}).catch(()=>{CHU.m={};});}return '';}
+  const r=uid&&CHU.m[uid];return r?chBadge(r.period,r.rk).replace('class="','class="mych ')+' ':'';}
+const MYCH={uid:null,rows:[]};
+function myChLoad(){const u=SESSION&&SESSION.user&&SESSION.user.id;if(!u||!CLOUD||MYCH.uid===u)return;MYCH.uid=u;MYCH.rows=[];api('rpc/quiz_my_champ',{method:'POST',body:'{}'}).then(r=>{MYCH.rows=r||[];document.querySelectorAll('[data-mych]').forEach(e=>e.innerHTML=myChTag(e.dataset.mych==='m'));}).catch(()=>{});}
+function myChTag(mob){if(!SESSION||MYCH.uid!==(SESSION.user&&SESSION.user.id))return '';const r=chPick(MYCH.rows);if(!r)return '';return mob?chMini(r):chBadge(r.period,r.rk)+' ';}
 function renderAuth(){calcVis();mytLoad();if(supLoad.s!==undefined&&supLoad.s!==!!SESSION)supLoad();  // 登入／登出：鳴謝榜重新攞（命例名要登入先有）
 
   const shaOk=can.sha();if(!shaOk&&!can.buy())VIEW.sha=false;if(!SESSION){BUY.paid.clear();BUY.msg='';}if(S&&S.dys&&(S.shaOk!==(shaOk||can.buy())||S.shaFree!==shaOk||S.swOk!==can.sw()||S.sess!==!!SESSION||(!VIEW.work&&WORK_KEEP()&&!WORK_TRY)))render();
@@ -4485,8 +4497,8 @@ function renderAuth(){calcVis();mytLoad();if(supLoad.s!==undefined&&supLoad.s!==
   $('caseAdd').hidden=!can.add();$('tagMgrAdd').hidden=!can.add();$('tagMgrLogin').hidden=can.add();$('caseIO').hidden=!can.io();$('casePrivL').hidden=!(CLOUD&&PRIV_OK);
   const box=$('caseAuth'),ma=$('mAuth');if(!CLOUD){box.hidden=true;ma.innerHTML='';return;}box.hidden=false;
   // 手機版頂部左邊嘅登入狀態；未登入撳「登入」去命例頁嘅登入選項
-  ma.innerHTML=SESSION?`<span class="who">👤 ${esc(SESSION.user.name||SESSION.user.email||'')}</span>${mytSel()}${tierTag()}<span data-pts>${ptTag()}</span><button type="button" data-logout>登出</button>`:`<button type="button" data-mlogin>登入</button><span class="hint">登入先可以加命例同投票</span>`;
-  box.innerHTML=SESSION?`<span class="hint">已登入 ${esc(SESSION.user.email||SESSION.user.name||'')} ${mytSel()}${tierTag()?' · '+tierTag():''} <span data-pts>${ptTag()}</span></span> <button type="button" class="lnk" data-logout>登出</button>`
+  myChLoad();ma.innerHTML=SESSION?`<span class="who"><span data-mych="m">${myChTag(1)}</span>👤 ${esc(SESSION.user.name||SESSION.user.email||'')}</span>${mytSel()}${tierTag()}<span data-pts>${ptTag()}</span><button type="button" data-logout>登出</button>`:`<button type="button" data-mlogin>登入</button><span class="hint">登入先可以加命例同投票</span>`;
+  box.innerHTML=SESSION?`<span class="hint">已登入 <span data-mych>${myChTag(0)}</span>${esc(SESSION.user.email||SESSION.user.name||'')} ${mytSel()}${tierTag()?' · '+tierTag():''} <span data-pts>${ptTag()}</span></span> <button type="button" class="lnk" data-logout>登出</button>`
     :`${[['google','G','#4285f4','Google'],['discord','D','#5865f2','Discord']].map(([pv,ic,col,nm])=>`<a class="gbtn" href="${CLOUD.url}/auth/v1/authorize?provider=${pv}&redirect_to=${encodeURIComponent(location.origin+location.pathname)}"><b style="color:${col}">${ic}</b> 用 ${nm} 登入</a>`).join('')}<p class="hint" style="text-align:center;margin:6px 0">或者用電郵</p><form id="loginF" class="cadd"><input type="email" id="lgEmail" required placeholder="電郵" autocomplete="email" aria-label="電郵"><input type="password" id="lgPass" required minlength="6" placeholder="密碼（最少 6 個字）" autocomplete="current-password" aria-label="密碼"><input type="text" id="lgName" maxlength="40" placeholder="顯示名稱（註冊時用，可留空）" aria-label="顯示名稱"><span class="row"><button type="submit" class="go sm">登入</button><button type="button" class="lnk" data-signup>註冊新戶口</button></span><span class="hint">登入先可以加命例、投票同加備註。</span></form>`;
   
 }
@@ -4530,7 +4542,7 @@ function showCase(c){
     ${ed?`<div class="ctags"><span class="cap">加標籤</span><span class="tags">${sug.map(t=>`<button type="button" class="tag sug" data-addsug="${esc(t)}" data-id="${c.id}">+${esc(t)}</button>`).join('')}</span><form class="row" data-addtag="${c.id}"><input type="text" maxlength="100" placeholder="其他標籤" aria-label="其他標籤" style="width:8em"><button type="submit" class="lnk" title="加" aria-label="加">＋</button></form></div>`:''}
     ${evBlock(c,ed)}
     ${c.notes?`<div class="cbody">${linky(c.notes)}</div>`:''}${lsCaseRefs(c)}
-    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span><span class="row">${cvoteBtns(c,m)}${can.cdel(m)?`<button type="button" class="lnk del" data-cdel="${esc(m.id)}" data-case="${c.id}" title="刪除備註" aria-label="刪除備註">🗑</button>`:''}</span></div><div>${linky(m.body)}</div></div>`).join('')}
+    ${c.comments.map(m=>`<div class="ccom"><div class="row" style="justify-content:space-between"><span class="hint">${m.by?`${chFor(m.author)}<b class="by">${esc(m.by)}</b> · `:''}${esc(String(m.t).slice(0,10))}</span><span class="row">${cvoteBtns(c,m)}${can.cdel(m)?`<button type="button" class="lnk del" data-cdel="${esc(m.id)}" data-case="${c.id}" title="刪除備註" aria-label="刪除備註">🗑</button>`:''}</span></div><div>${linky(m.body)}</div></div>`).join('')}
     ${can.vote()?`<form class="cadd" data-comment="${c.id}"><textarea rows="2" maxlength="2000" placeholder="加解釋或者補充備註" required></textarea><button type="submit" class="go sm" title="加備註" aria-label="加備註">📝</button></form>`:'<p class="hint">登入先可以加備註。</p>'}`;
 }
 // 命例事件日期（例如結婚、生仔、過身），撳一下就用嗰日做睇運日期；存喺 input.events
@@ -4615,7 +4627,7 @@ document.addEventListener('submit',e=>{if(e.target.id!=='clAdd')return;e.prevent
 function renderGB(){renderCL();
   $('gbForm').innerHTML=can.vote()?`<form id="gbAdd"><textarea id="gbBody" rows="3" maxlength="1000" placeholder="留低你想講嘅嘢，例如意見、問題或者命例討論" required></textarea><div class="row" style="justify-content:space-between;margin-top:6px"><span class="hint">以「${esc(myName())}」名義留言</span><button type="submit" class="go sm">留言</button></div></form>`:'<p class="hint">🔒 登入先睇到同寫留言。</p>';
   const canDel=m=>!CLOUD||ADMIN||(SESSION&&m.author===SESSION.user.id);
-  const one=m=>`<span class="who">${esc(m.by||'無名')}</span><span class="when">${gbWhen(m.t)}</span>${canDel(m)?` <button type="button" class="lnk del" data-gbdel="${esc(m.id)}" title="刪除" aria-label="刪除">🗑</button>`:''}<div class="body">${esc(m.body)}</div>`;
+  const one=m=>`<span class="who">${chFor(m.author)}${esc(m.by||'無名')}</span><span class="when">${gbWhen(m.t)}</span>${canDel(m)?` <button type="button" class="lnk del" data-gbdel="${esc(m.id)}" title="刪除" aria-label="刪除">🗑</button>`:''}<div class="body">${esc(m.body)}</div>`;
   const all=GBS.filter(m=>!m.parent&&m.kind!=='log'),np=Math.max(1,Math.ceil(all.length/GB_N));GBP=Math.min(Math.max(1,GBP),np);
   const top=all.slice((GBP-1)*GB_N,GBP*GB_N);
   $('gbPager').innerHTML=np>1?`<button type="button" class="lnk" data-gbpage="${GBP-1}" ${GBP===1?'disabled':''}>‹ 上一頁</button>${Array.from({length:np},(_,i)=>`<button type="button" class="pg${i+1===GBP?' on':''}" data-gbpage="${i+1}" aria-current="${i+1===GBP}">${i+1}</button>`).join('')}<button type="button" class="lnk" data-gbpage="${GBP+1}" ${GBP===np?'disabled':''}>下一頁 ›</button>`:'';
@@ -4856,7 +4868,7 @@ const shortName=n=>{const m=/^([A-Za-z]{3,})\s+[A-Za-z.'-]+$/.exec(n||'');return
 function caseItem(r){const t=r.title==null?'師兄':r.title,n0=shortName(r.name),nm=n0?`<b>${esc(n0+(/師[兄姐]$/.test(n0)?'':t))}</b>`:'一位'+(t||'有心人');
   return `<span class="supi">📚 感謝 ${nm} 加咗${r.last_case?`命例「${esc(r.last_case)}」${r.n>1?`等 ${r.n} 個`:''}`:` ${r.n} 個命例`}，多謝支持</span><span class="supsep">✦</span>`;}
 // 走馬燈最前面：最新改動（主人 11月14日）。每次上線改呢行：[日期, 好短嘅描述]；出 7 日，撳落去開更新日誌
-const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-16','📜 放榜之後，測驗積分榜會顯示上一期最終名單同最多人錯嘅三題','📉 放榜之後，測驗積分榜下面會列出上一期最多人錯嘅三題同正確答案','📕 「錯題重溫」改做「重溫」：睇返今個星期做過嘅所有題目，亦可以揀淨係睇錯題','🏆 所有排行榜：同分就同級、唔跳號，可以雙狀元、雙榜眼；頭三級有彩虹、金、銀名','🧱 基本功練習同狀元挑戰一樣：每答一題即刻計分，每星期頭 50 題'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
+const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-16','🎖️ 測驗榜稱號牌：登入名同留言名前面都會出；本月榜都有傳臚、進士','📜 放榜之後，測驗積分榜會顯示上一期最終名單同最多人錯嘅三題','📉 放榜之後，測驗積分榜下面會列出上一期最多人錯嘅三題同正確答案','📕 「錯題重溫」改做「重溫」：睇返今個星期做過嘅所有題目，亦可以揀淨係睇錯題','🏆 所有排行榜：同分就同級、唔跳號，可以雙狀元、雙榜眼；頭三級有彩虹、金、銀名','🧱 基本功練習同狀元挑戰一樣：每答一題即刻計分，每星期頭 50 題'];  // 走馬燈最前面：固定一句（撳去測驗）＋一句好短嘅最新改動（7 日，撳去更新日誌）（主人 11月14日）
 function supShow(rows,cs,qz,qr,qc,bt,br,gb,gm1){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];bt=Array.isArray(bt)?bt:[];br=Array.isArray(br)?br:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);// 走馬燈最前（主人 11月15日）：小測驗同基本功通知 → 最新一條更新日誌（自動攞，唔使手改）→ 留言版最新一條留言 → 鳴謝→ 測驗推廣 → 其他
   const gbA=Array.isArray(gb)?gb:[],cut=(t,n)=>{t=String(t||'').replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n)+'…':t;},gm=Array.isArray(gm1)?gm1[0]:null,gl=gbA[0],gnm=(n,t)=>qzName({name:n||'有心人',title:t}),gbLine=gm?`<span class="supi"><button type="button" class="lnk" data-newsopen="gb" style="font:inherit;color:inherit" title="撳呢度去留言版">💬 <b>${esc(gnm(gm.name,gm.title))}</b>${gm.to_name?` 回覆 <b>${esc(gnm(gm.to_name,gm.to_title))}</b>`:''}：${esc(cut(gm.body,60))}</button></span><span class="supsep">✦</span>`:'',logLine=gl?`<span class="supi"><button type="button" class="lnk" data-newsopen="cl" style="font:inherit;color:inherit" title="撳呢度去更新日誌">🆕 ${esc(cut(gl.body,70))}</button></span><span class="supsep">✦</span>`:'';
