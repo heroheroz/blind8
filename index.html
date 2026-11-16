@@ -4076,8 +4076,8 @@ $('inToggle').addEventListener('click',()=>foldIn(!$('inPanel').classList.contai
 if(typeof Solar==='undefined'){$('err').textContent='曆法程式庫載入失敗，請重新整理頁面。';return;}
 let init={name:'Owner',sex:1,lunar:false,leap:false,y:1982,m:5,d:6,h:9,mi:25,zi:1,city:0,lon:114.17,tz:8,dst:false,tst:true};
 try{const s=localStorage.getItem('bazi-last');if(s)init=Object.assign(init,JSON.parse(s));}catch(e){}
-// 打開網站時日期時間預設為香港回歸（1997-07-01 00:00），其他欄沿用上次
-Object.assign(init,{name:'香港回歸',lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0});
+// 打開網站時日期時間預設為香港回歸（1997-07-01 00:00），其他欄沿用上次；「唔知時辰」一定清走，因為呢個盤有時辰（主人 11月16日：上次開過唔知時辰嘅盤，開網就變咗三柱）
+Object.assign(init,{name:'香港回歸',lunar:false,leap:false,y:1997,m:7,d:1,h:0,mi:0,noT:undefined});
 // 網址有出生資料（分享連結）就用網址嗰個盤
 const INIT_Q=!!fromQuery();{const qv=fromQuery();if(qv)init=Object.assign(init,qv);}
 /* ---------- 命例 ---------- */
