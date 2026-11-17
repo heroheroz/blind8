@@ -379,7 +379,7 @@ button.go.sm{padding:6px 14px;letter-spacing:.08em;align-self:flex-start}
 .cases input[type=email],.cases input[type=password],.casenote input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
 .vb:disabled{opacity:.6;cursor:default}
 .cpriv{font-size:13px;color:var(--muted);margin-top:4px}.cname .lock{font-size:12px;margin-right:2px}.qsave{display:flex;gap:6px}.qsave input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}.qsave .go.sm{align-self:stretch}
-.csrc{margin:0 0 6px}.csrc p{margin:0}.more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
+.csrc{margin:0 0 8px;line-height:1.6}.more{font-size:13px}.more summary{cursor:pointer;color:var(--accent)}.more[open]{display:flex;flex-direction:column;gap:6px}
 .armed{color:var(--paper)!important;background:var(--bad);border-radius:6px;padding:2px 6px}
 .lsong{font-size:15px;padding-left:1.1em}.lsong li{margin:8px 0;line-height:1.9}.lsong a{white-space:nowrap}.lsong-tip{font-weight:600;margin:4px 0 8px}
 .evwhy{display:flex;gap:6px;margin:-2px 0 8px;font-size:13px;line-height:1.5}.evwhy .cap{font-size:12px;color:var(--muted);min-width:3.5em;flex:none}.evwhy ul{margin:0;padding-left:1.1em}.evwhy li{margin:2px 0}.evws{font-size:12px;padding:0 5px;border-radius:6px;background:var(--line,#8883)}.evws.t{background:#e6b80033}
@@ -497,8 +497,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
 <aside class="panel cases" aria-label="命例">
 <details id="caseBox" open>
 <summary title="打開／收埋命例"><h2>命例 <span class="hint" id="caseCount">0</span></h2></summary>
-<p class="mcasehint">撳命例個名就會打開嗰個命盤。登入之後，喺下面「命例名稱」填個名再撳「儲存」，就會將而家個命盤加入命例。</p>
-<details class="more csrc"><summary>📚 命例來源</summary><p class="hint">除咗隱姓先生同夏仲奇老師嘅命例，仲有各國皇室、Astro-Databank 出生時間可信度 AA 級嘅 200 位世界名人，同埋用 AI 搵嘅奧運選手、地方官員等例子（AI 要有 95% 信心先收）。</p></details>
+<p class="hint csrc">📚 命例來源：除咗隱姓先生同夏仲奇老師嘅命例，仲有各國皇室、Astro-Databank 出生時間可信度 AA 級嘅 200 位世界名人，同埋用 AI 搵嘅奧運選手、地方官員等例子（AI 要有 95% 信心先收）。</p>
 <div id="caseAuth" class="cauth" hidden></div>
 <form id="caseAdd" class="cadd">
   <div class="qsave"><input type="text" id="caseName" maxlength="60" placeholder="命例名稱" aria-label="命例名稱"><button type="submit" class="go sm" title="儲存" aria-label="儲存">💾</button></div>
