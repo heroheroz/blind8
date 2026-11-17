@@ -72,7 +72,7 @@ header p{margin:0;color:var(--muted);font-size:13px}
 .auf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}.auf select,.auf input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
 .mbst{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.mbk{border:1px solid var(--line);border-radius:10px;padding:6px 4px;text-align:center;background:var(--soft)}.mbk b{display:block;font-size:20px;line-height:1.2}.mbk span{font-size:12px;color:var(--muted)}.mbsp{margin:8px 0}.mbsp .hint{display:block}.spk2{display:flex;align-items:flex-end;gap:2px;height:30px;margin-top:3px}.spk2 i{flex:1;background:var(--good);border-radius:2px 2px 0 0;min-width:0}
 .chdemo td{vertical-align:middle;padding:6px 6px}.chdemo .chn{display:block;white-space:nowrap;margin:3px 0}
-.tustats{margin:6px 0}.spkg{display:grid;justify-content:start;grid-template-columns:auto repeat(24,minmax(7px,15px)) auto;align-items:end;column-gap:1px;row-gap:2px;margin-top:4px;max-width:100%}.spkc{font-family:ui-monospace,monospace;color:var(--good);text-align:center;line-height:1.1;overflow:hidden}.spkl{padding-right:6px;white-space:nowrap}.spkm{padding-left:6px;white-space:nowrap}.spkt{height:22px;position:relative}.spkt.on{border-left:1px solid var(--muted,#888)}.spkt i{position:absolute;left:2px;top:6px;font-style:normal;font-size:10px;white-space:nowrap;color:var(--muted,#888)}.spkx{font-style:normal}@media(max-width:640px){.spkg{grid-template-columns:auto repeat(24,minmax(0,1fr));width:100%;overflow:hidden}.spkt.on:not(.six){border-left:0}.spkt:not(.six) i{display:none}.spkm,.spkx{display:none}.spkl{font-size:11px}}.tustats .spark{font-family:ui-monospace,monospace;letter-spacing:1px;color:var(--good)}.auwrap{overflow-x:auto}table.audit{width:100%;border-collapse:collapse;font-size:13px}table.audit th,table.audit td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}table.audit th{color:var(--muted);font-weight:600;white-space:nowrap}
+.tustats{margin:6px 0}#voOut h4{margin:10px 0 4px}#voOut .vous{max-height:420px;overflow:auto}#vwBar{position:fixed;left:8px;bottom:8px;z-index:60;background:var(--paper);color:var(--ink);border:1px solid var(--warn);border-radius:10px;padding:6px 10px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.3);max-width:calc(100vw - 16px)}#vwBar[hidden]{display:none}@media (max-width:700px){#vwBar{bottom:74px}}.spkg{display:grid;justify-content:start;grid-template-columns:auto repeat(24,minmax(7px,15px)) auto;align-items:end;column-gap:1px;row-gap:2px;margin-top:4px;max-width:100%}.spkc{font-family:ui-monospace,monospace;color:var(--good);text-align:center;line-height:1.1;overflow:hidden}.spkl{padding-right:6px;white-space:nowrap}.spkm{padding-left:6px;white-space:nowrap}.spkt{height:22px;position:relative}.spkt.on{border-left:1px solid var(--muted,#888)}.spkt i{position:absolute;left:2px;top:6px;font-style:normal;font-size:10px;white-space:nowrap;color:var(--muted,#888)}.spkx{font-style:normal}@media(max-width:640px){.spkg{grid-template-columns:auto repeat(24,minmax(0,1fr));width:100%;overflow:hidden}.spkt.on:not(.six){border-left:0}.spkt:not(.six) i{display:none}.spkm,.spkx{display:none}.spkl{font-size:11px}}.tustats .spark{font-family:ui-monospace,monospace;letter-spacing:1px;color:var(--good)}.auwrap{overflow-x:auto}table.audit{width:100%;border-collapse:collapse;font-size:13px}table.audit th,table.audit td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}table.audit th{color:var(--muted);font-weight:600;white-space:nowrap}
 table.audit td.t{white-space:nowrap;color:var(--muted)}table.audit small{color:var(--muted);display:block}table.audit .op-INSERT{color:var(--good,#2e7d32)}table.audit .op-DELETE{color:var(--bad)}table.audit .op-LOGIN{color:var(--muted)}table.audit.usage td,table.audit.usage th{text-align:right}table.audit.usage .uss{display:none}table.audit.usage td:first-child,table.audit.usage th:first-child{text-align:left}#audit h3{font-size:16px;margin:14px 0 6px}#audit .usd{margin:6px 0 10px}table.audit .op-UPDATE{color:var(--accent)}
 table.audit .chg{display:block;margin-top:2px}table.audit details pre{white-space:pre-wrap;word-break:break-all;font-size:11px;max-height:240px;overflow:auto;margin:4px 0 0}
 .gblist .when{color:var(--muted);font-size:12px;margin-left:8px}
@@ -1242,6 +1242,9 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <div class="auwrap"><table class="audit usage" id="usSum"></table></div>
   <p class="tustats" id="usSpark"></p>
   <details class="usd"><summary>最近 14 日</summary><div class="auwrap"><table class="audit usage" id="usDaily"></table></div></details>
+  <details class="usd" id="voWrap"><summary>🧮 用戶揀咗乜嘢入計算（顯示選項、「計」剔格）</summary>
+    <div class="auf"><select id="voDays" aria-label="時段"><option value="1">24 小時</option><option value="7">7 日</option><option value="30" selected>30 日</option><option value="0">全部</option></select><label class="chk"><input type="checkbox" id="voAll">包埋管理員同測試戶口</label><button type="button" class="lnk" data-voreload>↻ 重新載入</button></div>
+    <p class="hint" id="voMsg"></p><div id="voOut"></div></details>
   <h2>審計紀錄 <span class="hint">（只有管理員睇到）</span></h2>
   <div class="auf"><select id="auTbl" aria-label="類別"><option value="">全部類別</option><option value="cases">命例</option><option value="comments">命例筆記</option><option value="guestbook">留言版</option><option value="tags">標籤</option><option value="votes">命例投票</option><option value="comment_votes">筆記投票</option><option value="event_votes">事件投票</option><option value="user_tiers">用戶等級</option><option value="point_bonus">手動加分</option><option value="point_costs">扣分設定</option><option value="point_settings">計分設定</option><option value="admins">管理員</option><option value="users">用戶註冊</option><option value="logins">用戶登入</option></select><select id="auOp" aria-label="動作"><option value="">全部動作</option><option value="INSERT">新增</option><option value="UPDATE">修改</option><option value="DELETE">刪除</option><option value="SIGNUP">註冊</option><option value="LOGIN">登入</option><option value="VIEW">打開命例</option></select><input id="auQ" type="search" placeholder="搵用戶名或電郵" aria-label="用戶"><label class="hint">每頁 <select id="auN" aria-label="每頁幾多條"><option value="6">6</option><option value="10" selected>10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="0">全部</option></select></label><label class="hint"><input type="checkbox" id="auMe" checked> 唔顯示我自己同系統／SQL</label><button type="button" class="lnk" data-aureload title="重新載入" aria-label="重新載入">↻</button></div>
   <p class="hint" id="auMsg"></p>
@@ -2339,7 +2342,7 @@ const FOLD={opt:false,leg:false};
 const VIEW={colOff:{},jinMode:'both',adjDyP:false,adjDyN:false,adjLnP:false,adjLnN:false,adjMoN:false,moJin:true,moJinCalc:true,lnJinG:true,lnJinGCalc:true,lnJinGM:'dz',yuanTrig:true,lnJin:false,lnJinCalc:true,dyJin:false,dyJinCalc:true,route:false,newBlk:false,prevMoCalc:true,jinqiCalc:true,xiaoCalc:true,virt:true,dyn:false,dynZg:true,only4:false,yuan:true,aux:false,ming:false,yuanCalc:true,auxCalc:false,zgMerge:false,lianSplit:false,core:false,noDyn:false,noMD:false,noD:false,xiao:false,mingLeft:false,mgQi:true,prevMo:false,sha:null,shaAll:true,tkAll:false,jinqi:false,muku:false,ssTag:true,noMidL:true,ganTop:true,wkMark:true,work:false,arNum:false,natL:true,cInfo:true,hr:false,hrCalc:true,sw:null,swm:'s1',fillSplit:false};
 // 分享連結帶埋顯示選項（v=鍵.值,鍵.值，淨係寫同預設唔同嘅），打開連結嘅人見到同一個樣
 // 管理員專用、會員級別限定、會扣分嘅選項（做功、招感殺星、最強五行）唔帶
-const VIEW0={...VIEW},VIEW_NOSHARE=['work','sha','shaAll','sw','swm'];
+const VWR={on:false,me:null,meK:null,who:''},VIEW0={...VIEW},VIEW_B={...VIEW},VIEW_NOSHARE=['work','sha','shaAll','sw','swm'];
 // 分享連結嘅顯示選項短碼（主人 11月12日）：開關類選項每個兩個字（喺 VIEW_CODES 嘅位置，36 進制），寫咗即係同預設相反。VIEW_CODES 只可以喺尾加新嘢，唔可以改次序或者刪，否則舊連結會錯
 const VIEW_CODES='adjDyP,adjDyN,adjLnP,adjLnN,adjMoN,moJin,moJinCalc,lnJinG,lnJinGCalc,yuanTrig,lnJin,lnJinCalc,dyJin,dyJinCalc,route,newBlk,prevMoCalc,jinqiCalc,xiaoCalc,virt,dyn,dynZg,only4,yuan,aux,ming,yuanCalc,auxCalc,zgMerge,lianSplit,core,noDyn,noMD,noD,xiao,mingLeft,mgQi,prevMo,shaAll,tkAll,jinqi,muku,ssTag,noMidL,ganTop,wkMark,work,arNum,natL,cInfo,hr,hrCalc,fillSplit'.split(',');
 const viewQ=()=>{const ks=Object.keys(VIEW0).filter(k=>!VIEW_NOSHARE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null),sh=k=>typeof VIEW0[k]==='boolean'&&typeof VIEW[k]==='boolean'&&VIEW_CODES.includes(k),b=ks.filter(sh).map(k=>VIEW_CODES.indexOf(k).toString(36).padStart(2,'0')).join('');
@@ -2372,7 +2375,7 @@ function applyCalcVer(v){v=CALC_VERS[v]?+v:CALC_VDEF;CALC_V=v;const P=CALC_VERS[
   Object.entries(P.view).forEach(([k,x])=>{VIEW0[k]=x;if(!(k in saved))VIEW[k]=x;});}
 {const c=+(()=>{try{return localStorage.getItem('b8-cvsite');}catch(e){}})();if(CALC_VERS[c])CALC_SITE=c;}  // 上次攞到嘅全站計法版本：一開網就用，唔使等資料庫
 applyCalcVer(calcTry()||CALC_SITE);
-function saveView(){try{const o={};Object.keys(VIEW0).forEach(k=>{if(!VIEW_NOSAVE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null)o[k]=VIEW[k];});localStorage.setItem(LS_VIEW,JSON.stringify(o));}catch(e){}}
+function saveView(){if(VWR.on)return;try{const o={};Object.keys(VIEW0).forEach(k=>{if(!VIEW_NOSAVE.includes(k)&&VIEW[k]!==VIEW0[k]&&VIEW[k]!=null)o[k]=VIEW[k];});localStorage.setItem(LS_VIEW,JSON.stringify(o));}catch(e){}}
 (()=>{const v=new URLSearchParams(location.search).get('v');if(!v)return;v.split(',').forEach(x=>{if(x[0]==='_'){(x.slice(1).match(/../g)||[]).forEach(c=>{const k=VIEW_CODES[parseInt(c,36)];if(k&&k in VIEW0&&!VIEW_NOSHARE.includes(k)&&typeof VIEW0[k]==='boolean')VIEW[k]=!VIEW0[k];});return;}const [k,val]=x.split('.');if(!(k in VIEW0)||VIEW_NOSHARE.includes(k))return;
   const d=VIEW0[k];VIEW[k]=typeof d==='string'?val:val==='1'?true:val==='0'?false:d;});})();
 // 招感殺星：未撳過（null）就跟等級，免費嘅（進階、高級、管理員）預設開，普通用戶預設閂（唔會自動扣分）
@@ -4172,8 +4175,32 @@ function drawPoints(){const box=$('lb');if(!box)return;box.hidden=!(CLOUD&&SESSI
 const ANON=(()=>{try{let a=localStorage.getItem('b8-anon');if(!a){a=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('b8-anon',a);}return a;}catch(e){return Math.random().toString(36).slice(2,12)+'x';}})();
 // 開命例會記埋 case_id（要行咗 020_case_views.sql，審計紀錄就會記低邊個打開咗邊個命例）；未行就唔帶 case_id 再寫一次
 function track(kind,input,caseId){if(!CLOUD)return;const mobile=matchMedia('(max-width:700px),(pointer:coarse) and (max-width:1000px)').matches;
-  const body={kind,anon:ANON,mobile,...(input?{input}:{})},post=b=>api('usage',{method:'POST',body:JSON.stringify(b)});
-  (caseId?post({...body,case_id:caseId}).catch(()=>post(body)):post(body)).catch(()=>{});}
+  let vw=null;if(kind==='chart'||kind==='case'||kind==='vopt'){if(VWR.on&&kind==='vopt')return;try{vw=vwSnap();}catch(e){}if(vw){VWL.last=JSON.stringify({...vw,s:undefined});clearTimeout(VWL.t);}}
+  const body={kind,anon:ANON,mobile,...(input?{input}:{}),...(vw?{vw}:{})},post=b=>api('usage',{method:'POST',body:JSON.stringify(b)}),noVw=b=>{const c={...b};delete c.vw;return c;};
+  const go=b=>post(b).catch(()=>b.vw?post(noVw(b)):Promise.reject());
+  (caseId?go({...body,case_id:caseId}).catch(()=>go(body)):go(body)).catch(()=>{});}
+// 用戶嘅顯示選項同「計」剔格（075，主人 11月17日）：開命例、排盤嗰陣記一份；之後喺盤上改選項，停咗 5 秒先記一次（同上次一樣就唔記）
+// o＝同原始預設唔同嘅顯示選項；x＝閂咗嘅柱（colOff）；c＝盤上每條有「計」剔格嘅柱計唔計（1／0）；h＝填實分開計每條柱天干地支計唔計；k＝手動改過嘅干支剔格；cv＝計法版本；s＝揀咗邊日（大運、日子、時辰）
+const VWL={last:'',t:0};
+function vwSnap(){if(!S||!S.cols)return null;const o={},x={},c={},h={};
+  Object.keys(VIEW_B).forEach(k=>{if(k==='colOff')return;const v=VIEW[k],b=VIEW_B[k];if(v!==b&&v!==undefined&&!(b==null&&(v==null||v===false)))o[k]=typeof v==='boolean'?+v:v;});
+  Object.keys(VIEW.colOff||{}).forEach(k=>{if(VIEW.colOff[k])x[k]=1;});
+  S.cols.forEach((col,i)=>{if(col.ysp){const cc=S.cc&&S.cc[i];if(cc&&cc.hOn)h[col.h]=''+(+!!cc.hOn[0])+(+!!cc.hOn[1]);}else if(colHasCk(col))c[col.h]=colOn(col)?1:0;});
+  const d=S.ds&&S.ds[S.dd];
+  return {o,x,c,h,k:{...HALF_CK},cv:CALC_V,s:{di:S.di,d:d?d.sol.toYmd():null,hr:S.hr==null?null:S.hr}};}
+document.addEventListener('change',e=>{const t=e.target;if(!CLOUD||!t.closest||!(t.dataset.colck||t.dataset.halfck||t.closest('.viewopt,.tkopt')))return;
+  clearTimeout(VWL.t);VWL.t=setTimeout(()=>{let v=null;try{v=vwSnap();}catch(x){}if(!v)return;const j=JSON.stringify({...v,s:undefined});if(j===VWL.last)return;track('vopt');},5000);});
+// 審計「睇盤」：用返嗰個用戶當時一模一樣嘅顯示選項、剔格、計法版本同揀咗嗰日；淨係今次睇，唔會改你自己記住嘅選項，撳「還原」就返返自己嘅
+function vwApply(vw,v,who){if(!VWR.on){VWR.me=JSON.parse(JSON.stringify(VIEW));VWR.meK={...HALF_CK};}VWR.on=true;VWR.who=who||'';
+  applyCalcVer(CALC_VERS[vw.cv]?vw.cv:CALC_SITE);
+  Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,JSON.parse(JSON.stringify(VIEW_B)));
+  Object.entries(vw.o||{}).forEach(([k,x])=>{if(k in VIEW_B)VIEW[k]=typeof VIEW_B[k]==='boolean'?!!x:x;});VIEW.colOff={...(vw.x||{})};HALF_CK={...(vw.k||{})};
+  writeForm(v);TRK.skip=true;try{run(v);const s=vw.s||{};if(s.d&&S){const [y,m,d]=s.d.split('-').map(Number),sol=Solar.fromYmdHms(y,m,d,12,0,0);if(goDay(sol)){if(s.di!=null&&S.dys[s.di]&&s.di!==S.di){S.di=s.di;selectYear(gzYear(sol),sol);}}if(s.hr!=null)S.hr=s.hr;render();}}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);vwBar();}
+function vwRestore(){if(!VWR.on)return;Object.keys(VIEW).forEach(k=>delete VIEW[k]);Object.assign(VIEW,VWR.me);HALF_CK={...VWR.meK};VWR.on=false;applyCalcVer(calcTry()||CALC_SITE);
+  Object.keys(VWR.me).forEach(k=>VIEW[k]=VWR.me[k]);vwBar();if(S)render();}
+function vwBar(){let b=$('vwBar');if(!b){b=document.createElement('div');b.id='vwBar';document.body.appendChild(b);}b.hidden=!VWR.on;
+  b.innerHTML=VWR.on?`👁 用緊 <b>${esc(VWR.who)}</b> 當時嘅選項 <button type="button" class="lnk" data-vwrest>還原我嘅選項</button>`:'';}
+document.addEventListener('click',e=>{if(e.target.closest('[data-vwrest]'))vwRestore();});
 // 新功能次數（測驗答題、開課堂、開分析；057）：同一樣嘢 10 分鐘內只記一次
 const TRK1={};function trk1(kind,key,input){const k=kind+key,now=Date.now();if(TRK1[k]&&now-TRK1[k]<6e5)return;TRK1[k]=now;track(kind,input);}
 // 排盤記錄：唔止撳「排盤」，所有成功排出嚟嘅盤都記（分享連結、對盤 ‹ ›、睇運日期、事件、揀干支等）；
@@ -4479,12 +4506,32 @@ async function loadUsage(){
     // 預設唔顯示管理員自己（自己個戶口＋呢部機未登入時）嘅記錄；剔「顯示埋我自己」先出（主人 11月14日）
     if(!$('usMe').checked){if(SESSION)a.push(`or(user_id.is.null,user_id.neq.${SESSION.user.id})`);a.push(`or(user_id.not.is.null,anon.neq.${ANON})`);}
     if(a.length)f.push('and='+encodeURIComponent('('+a.join(',')+')'));}
-  try{const {rows,total}=await api(`usage?select=id,at,kind,anon,user_id,user_name,user_email,mobile,input&order=at.desc&limit=${US.n+1}&offset=${US.p*US.n}&${f.join('&')}`,{count:true,headers:{Prefer:'count=exact'}});
+  try{const {rows,total}=await api(`usage?select=id,at,kind,anon,user_id,user_name,user_email,mobile,input,vw&order=at.desc&limit=${US.n+1}&offset=${US.p*US.n}&${f.join('&')}`,{count:true,headers:{Prefer:'count=exact'}});
     const more=rows.length>US.n,np=total!=null?Math.ceil(total/US.n):US.p+1+(more?1:0);rows.length=Math.min(rows.length,US.n);US.rows=rows;
-    $('usList').innerHTML=rows.map((r,i)=>{const v=r.input||{};return `<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.user_id?`${esc(r.user_name||'')}<small>${esc(r.user_email||'')}</small>`:`<small>訪客 ${esc(String(r.anon).slice(0,6))}</small>`}<small>${r.mobile?'手機':'電腦'}</small></td><td>${r.kind==='case'?'開命例':'排盤'}</td><td>${esc(v.name||'未命名')}<small>${v.y!=null?esc(birthTxt(v)):''}</small></td><td>${v.y!=null?`<button type="button" class="lnk" data-usopen="${i}">睇盤</button>`:''}</td></tr>`;}).join('')||'<tr><td colspan="5">冇紀錄</td></tr>';
+    $('usList').innerHTML=rows.map((r,i)=>{const v=r.input||{};return `<tr><td class="t">${esc(new Date(r.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${r.user_id?`${esc(r.user_name||'')}<small>${esc(r.user_email||'')}</small>`:`<small>訪客 ${esc(String(r.anon).slice(0,6))}</small>`}<small>${r.mobile?'手機':'電腦'}</small></td><td>${r.kind==='case'?'開命例':'排盤'}</td><td>${esc(v.name||'未命名')}<small>${v.y!=null?esc(birthTxt(v)):''}</small></td><td>${v.y!=null?`<button type="button" class="lnk" data-usopen="${i}" title="${r.vw?'用返佢當時一模一樣嘅顯示選項、「計」剔格同計法版本':'11月17日之前嘅紀錄冇記選項，用你自己嘅選項'}">睇盤${r.vw?'（佢嘅選項）':''}</button>`:''}</td></tr>`;}).join('')||'<tr><td colspan="5">冇紀錄</td></tr>';
     $('usPager').innerHTML=pagerHtml(US.p+1,np,'uspage');
   }catch(e){$('usList').innerHTML='';$('usPager').innerHTML='';$('usMsg').textContent='載入唔到：'+e.message;}
 }
+// 用戶揀咗乜嘢入計算（075）：每條柱「計」剔格、填實分開計干支、顯示選項，開／閂百分比同每個用戶最新設定；管理員同測試戶口預設唔計
+const VO_N={jinMode:'進氣期間計邊條',lnJinGM:'流年進氣計法',swm:'最強五行計法',sw:'最強五行',sha:'招感殺星',work:'做功計算'};
+function voLbl(k){const el=$('v'+k[0].toUpperCase()+k.slice(1));let t='';if(el){t=el.tagName==='SELECT'?el.getAttribute('aria-label')||'':((el.closest('label')||{}).textContent||'');}return (t.trim()||VO_N[k]||k).slice(0,40);}
+function voVal(k,v){if(typeof VIEW_B[k]==='boolean')return +v?'開':'閂';const el=$('v'+k[0].toUpperCase()+k.slice(1)),o=el&&el.tagName==='SELECT'&&[...el.options].find(x=>x.value===String(v));return o?o.textContent:typeof v==='object'?JSON.stringify(v):String(v);}
+const voPct=(a,b)=>b?Math.round(a/b*100)+'%':'—';
+async function loadVo(){const out=$('voOut'),msg=$('voMsg');if(!(CLOUD&&ADMIN))return;msg.textContent='載入緊…';
+  try{const r=await api('rpc/view_opt_stats',{method:'POST',body:JSON.stringify({p_days:+$('voDays').value,p_all:$('voAll').checked})});
+    msg.textContent=`${r.people} 個人（部機／戶口）、開盤 ${r.opens} 次、盤上改選項 ${r.changes} 次。由 11 月 17 日先開始記，之前嘅選擇冇記低，追唔返。「人」按每個人最新一次設定計。${$('voAll').checked?'':'管理員同測試戶口（同佢哋用過嘅部機）唔計。'}`;
+    const col=(r.col||[]).sort((a,b)=>b.n-a.n),half=(r.half||[]).sort((a,b)=>b.n-a.n),opt=(r.opt||[]).sort((a,b)=>b.p-a.p||b.n-a.n);
+    const t1=col.length?`<h4>柱頂「計」剔格</h4><div class="auwrap"><table class="audit usage"><thead><tr><th>柱</th><th>出現（次）</th><th>有計（次）</th><th>出現（人）</th><th>有計（人）</th></tr></thead><tbody>${col.map(c=>`<tr><td>${esc(c.k)}</td><td>${c.n}</td><td><b>${voPct(c.on,c.n)}</b></td><td>${c.p}</td><td><b>${voPct(c.pon,c.p)}</b></td></tr>`).join('')}</tbody></table></div>`:'';
+    const t2=half.length?`<h4>填實分開計（天干、地支剔格）</h4><div class="auwrap"><table class="audit usage"><thead><tr><th>柱</th><th>次數</th><th>計天干</th><th>計地支</th></tr></thead><tbody>${half.map(c=>`<tr><td>${esc(c.k)}</td><td>${c.n}</td><td>${voPct(c.g,c.n)}</td><td>${voPct(c.z,c.n)}</td></tr>`).join('')}</tbody></table></div>`:'';
+    const ch=new Set(opt.map(o=>o.k)),rest=Object.keys(VIEW_B).filter(k=>k!=='colOff'&&!ch.has(k)).length;
+    const t3=`<h4>顯示選項（同原始預設唔同嘅）</h4>${opt.length?`<div class="auwrap"><table class="audit usage"><thead><tr><th>選項</th><th>預設</th><th>改做</th><th>開盤（次）</th><th>人</th></tr></thead><tbody>${opt.map(o=>`<tr><td>${esc(voLbl(o.k))}</td><td>${esc(voVal(o.k,VIEW_B[o.k]))}</td><td><b>${esc(voVal(o.k,o.v))}</b></td><td>${o.n}（${voPct(o.n,r.opens)}）</td><td>${o.p}（${voPct(o.p,r.people)}）</td></tr>`).join('')}</tbody></table></div>`:''}<p class="hint">其餘 ${rest} 個選項全部人都用預設。</p>`;
+    const us=r.users||[],t4=us.length?`<h4>每個人最新設定</h4><div class="auwrap vous"><table class="audit"><thead><tr><th>時間</th><th>用戶</th><th>次數</th><th>唔計嘅柱</th><th>改咗嘅選項</th></tr></thead><tbody>${us.map(u=>{const w=u.vw||{},off=Object.entries(w.c||{}).filter(([,x])=>!+x).map(([k])=>k).concat(Object.entries(w.h||{}).filter(([,x])=>x!=='11').map(([k,x])=>k+(x==='00'?'':x==='10'?'（淨計干）':'（淨計支）')));
+        return `<tr><td class="t">${esc(new Date(u.at).toLocaleString('zh-HK',{hour12:false}))}</td><td>${u.uid?`${esc(u.name||'')}<small>${esc(u.email||'')}</small>`:`<small>訪客 ${esc(u.anon||'')}</small>`}<small>${u.mobile?'手機':'電腦'}</small></td><td>開 ${u.opens}${u.changes?`<small>改 ${u.changes}</small>`:''}</td><td>${off.length?esc(off.join('、')):'<span class="hint">全部計</span>'}${w.cv&&w.cv!==CALC_SITE?`<small>計法 v${esc(String(w.cv))}</small>`:''}</td><td>${Object.entries(w.o||{}).map(([k,x])=>esc(voLbl(k))+'：<b>'+esc(voVal(k,x))+'</b>').join('<br>')||'<span class="hint">全部預設</span>'}</td></tr>`;}).join('')}</tbody></table></div><p class="hint">想睇佢個盤：去下面「最近排盤」撳「睇盤（佢嘅選項）」，會用返佢當時一模一樣嘅設定。</p>`:'';
+    out.innerHTML=(t1+t2+t3+t4)||'<p class="hint">未有紀錄。</p>';
+  }catch(e){out.innerHTML='';msg.textContent=/view_opt_stats|42883|PGRST20/.test(e.message)?'未設定：請行 supabase/075_view_opts.sql。':'載入唔到：'+e.message;}}
+$('voWrap').addEventListener('toggle',()=>{if($('voWrap').open)loadVo();});
+$('audit').addEventListener('click',e=>{if(e.target.closest('[data-voreload]'))loadVo();});
+$('audit').addEventListener('change',e=>{if(e.target.id==='voDays'||e.target.id==='voAll')loadVo();});
 $('audit').addEventListener('change',e=>{if(e.target.dataset.tier!==undefined){setTier(e.target.dataset.tier,e.target.value);return;}if(e.target.id==='usN'){US.n=+e.target.value;US.p=0;loadUsage();return;}if(e.target.id==='usKind'||e.target.id==='usQ'||e.target.id==='usMe'){US.p=0;loadUsage();}});
 $('tuQ').addEventListener('input',()=>{TU.p=0;drawTiers();});
 $('tuN').addEventListener('change',e=>{TU.n=+e.target.value;TU.p=0;drawTiers();});
@@ -4493,7 +4540,7 @@ $('audit').addEventListener('click',e=>{if(e.target.closest('[data-pcsave]'))sav
 $('lb').addEventListener('click',e=>{if(e.target.closest('[data-lbreload]')){loadPoints();QZ.bd=null;qzBoard();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-uspage],[data-usopen]');if(!b)return;
   if(b.dataset.uspage){US.p=Math.max(0,+b.dataset.uspage-1);loadUsage();return;}
-  const v=US.rows[+b.dataset.usopen].input;writeForm(v);TRK.skip=true;try{run(v);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);mTab('chart');$('out').scrollIntoView({block:'start'});});
+  const r=US.rows[+b.dataset.usopen],v=r.input;if(r.vw)vwApply(r.vw,v,r.user_id?(r.user_name||r.user_email||'用戶'):'訪客 '+String(r.anon).slice(0,6));else{vwRestore();writeForm(v);TRK.skip=true;try{run(v);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);}mTab('chart');$('out').scrollIntoView({block:'start'});});
 $('audit').addEventListener('change',e=>{if(e.target.id==='auN'){AU.n=+e.target.value;try{localStorage.setItem('b8-aun2',e.target.value);}catch(x){}}if(e.target.id==='auMe'||e.target.id==='auTbl'||e.target.id==='auOp'||e.target.id==='auQ'||e.target.id==='auN'){AU.p=0;loadAudit();}});
 $('audit').addEventListener('click',e=>{const b=e.target.closest('[data-aupage],[data-aureload]');if(!b)return;if(b.dataset.aupage){AU.p=Math.max(0,+b.dataset.aupage-1);$('auList').scrollIntoView({block:'start'});}else loadUsage();loadAudit();});
 // 計法說明：淨係進階用戶、高級用戶同管理員先睇到（跟 can.sha）；普通用戶同未登入就收埋，自動轉去「盲派八字摘要」
