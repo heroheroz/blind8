@@ -4359,7 +4359,7 @@ const Store={
 
 // 私人命例：數據庫行咗 019 先有；冇就唔顯示私人選項
 let PRIV_OK=false;
-let CASES=[],CUR=null,EDIT=false,Q='',TQ='',CP=1,CP_KEY='';
+let CASES=[],CASES_OK=false,CUR=null,EDIT=false,Q='',TQ='',CP=1,CP_KEY='';
 // 命例每頁幾多個：手機預設 10、電腦預設 20，0 即全部；兩邊分開記低
 const cpKey=()=>isMob()?'b8-cpn-m':'b8-cpn-d';
 const cpN=()=>{try{const s=localStorage.getItem(cpKey());if(s!==null&&[10,20,30,50,0].includes(+s))return +s;}catch(e){}return isMob()?10:20;};const TAGF=new Set();
@@ -4409,7 +4409,7 @@ function auWhat(r){const o=r.row_new||r.row_old||{};
 // 命例名做連結：一撳就開嗰個命例，隔籬寫埋係邊個加嘅；命例已經刪咗就寫「已刪除」
 function auCaseLink(r){const o=r.row_new||r.row_old||{},id=r.tbl==='cases'?o.id:['comments','votes','event_votes'].includes(r.tbl)?o.case_id:null;if(!id)return null;
   const c=CASES.find(x=>x.id===id),nm=c?c.name:(r.tbl==='cases'?o.name:'')||'',by=c?c.by:(r.tbl==='cases'?o.owner_name:'')||'',pv=c?c.private:r.tbl==='cases'&&o.private;
-  const head=(pv?'🔒 ':'')+(c?`<button type="button" class="lnk" data-open="${c.id}" data-lcase title="打開呢個命例">「${esc(nm)}」</button>`:`${nm?'「'+esc(nm)+'」':''}<small style="display:inline">（命例已刪除）</small>`)+(by?` <small style="display:inline">· ${esc(by)}</small>`:'');
+  const head=(pv?'🔒 ':'')+(c?`<button type="button" class="lnk" data-open="${c.id}" data-lcase title="打開呢個命例">「${esc(nm)}」</button>`:`${nm?'「'+esc(nm)+'」':''}<small style="display:inline">${CASES_OK?'（命例已刪除）':'（命例載入緊…）'}</small>`)+(by?` <small style="display:inline">· ${esc(by)}</small>`:'');
   const w=auWhat(r),lead=r.tbl==='cases'?`${o.private?'🔒 ':''}「${o.name||''}」`:auCase(id);
   return head+esc(w.startsWith(lead)?w.slice(lead.length):' '+w);}
 $('auList').addEventListener('click',e=>{if(e.target.closest('[data-open]'))setTimeout(()=>{const t=document.querySelector('.tscroll');if(t)t.scrollIntoView({block:'start',behavior:'smooth'});},60);});
@@ -4732,13 +4732,15 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-gbdel],[da
 document.addEventListener('click',e=>{if(e.target.closest('[data-casesretry]')){$('caseMsg').textContent='重新連緊…';reloadCases();}});
 async function reloadCases(){
   // 未登入：命例要登入先睇到，唔去讀，免得出錯誤字眼
-  if(CLOUD&&!SESSION){CASES=[];$('caseMsg').textContent='';}
-  else try{if(CLOUD)TAG_SUG=await TagStore.list().catch(()=>TAG_SUG);CASES=await Store.list();$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
+  if(CLOUD&&!SESSION){CASES=[];CASES_OK=false;$('caseMsg').textContent='';}
+  else try{if(CLOUD)TAG_SUG=await TagStore.list().catch(()=>TAG_SUG);CASES=await Store.list();CASES_OK=true;$('caseMsg').textContent=CLOUD?'命例同所有人共享。':'命例只存喺呢個瀏覽器，可以用匯出／匯入搬去其他機。';}
   catch(e){$('caseMsg').innerHTML=/Failed to fetch|NetworkError|Load failed/i.test(e.message)?'連唔到伺服器（可能網絡斷咗，或者呢個瀏覽器擋咗）。<button type="button" class="lnk" data-casesretry>撳此重試</button>':esc('讀唔到命例：'+e.message);}
   if(PENDING_CASE){const c=CASES.find(x=>x.id===PENDING_CASE)||(PENDING_CASE.length>=8?CASES.find(x=>x.id.startsWith(PENDING_CASE)):null);if(c){CUR=c.id;
     // 短連結冇寫名：搵到命例就用返命例嘅資料開（名、時區等），睇運日期照連結
     if(!URL_NAME){const inp=Object.assign({},c.input,LAST_V&&LAST_V.at?{at:LAST_V.at}:{});try{writeForm(inp);TRK.skip=true;run(inp);}catch(e){console.error(e);}finally{TRK.skip=false;}}PENDING_CASE=null;}}
   renderCases();reloadGB();
+  // 審計喺登入一刻就載入，通常早過命例載完；命例載完再畫一次，唔係就會誤當「命例已刪除」（11月17日）
+  if(CLOUD&&ADMIN&&AU.loaded&&CASES_OK)loadAudit();
 }
 // CSV：第一行係欄名；Excel 開得到（加 BOM）
 const CSV_COLS=[['名稱',c=>c.name],['性別',c=>c.input.sex===1?'男':'女'],['曆法',c=>c.input.lunar?'農曆':'公曆'],['閏月',c=>c.input.leap?'是':''],
