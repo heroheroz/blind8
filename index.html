@@ -4748,7 +4748,7 @@ async function reloadCases(){
   catch(e){$('caseMsg').innerHTML=/Failed to fetch|NetworkError|Load failed/i.test(e.message)?'連唔到伺服器（可能網絡斷咗，或者呢個瀏覽器擋咗）。<button type="button" class="lnk" data-casesretry>撳此重試</button>':esc('讀唔到命例：'+e.message);}
   if(PENDING_CASE){const c=CASES.find(x=>x.id===PENDING_CASE)||(PENDING_CASE.length>=8?CASES.find(x=>x.id.startsWith(PENDING_CASE)):null);if(c){CUR=c.id;
     // 短連結冇寫名：搵到命例就用返命例嘅資料開（名、時區等），睇運日期照連結
-    if(!URL_NAME){const inp=Object.assign({},c.input,LAST_V&&LAST_V.at?{at:LAST_V.at}:{});try{writeForm(inp);TRK.skip=true;run(inp);}catch(e){console.error(e);}finally{TRK.skip=false;}}PENDING_CASE=null;}}
+    if(!URL_NAME){const inp=Object.assign({},c.input,{name:c.name},LAST_V&&LAST_V.at?{at:LAST_V.at}:{});try{writeForm(inp);TRK.skip=true;run(inp);}catch(e){console.error(e);}finally{TRK.skip=false;}}PENDING_CASE=null;}}
   renderCases();reloadGB();
   // 審計喺登入一刻就載入，通常早過命例載完；命例載完再畫一次，唔係就會誤當「命例已刪除」（11月17日）
   if(CLOUD&&ADMIN&&AU.loaded&&CASES_OK)loadAudit();
@@ -4828,7 +4828,7 @@ document.addEventListener('click',e=>{
     return;}
   if(t.dataset.evdel!==undefined){const c=CASES.find(x=>x.id===t.dataset.id);if(!c||!twice(t,'再撳一下刪除'))return;
     const evs=(c.input.events||[]).filter((_,i)=>i!==+t.dataset.evdel);busy(()=>Store.update(c.id,{input:{...c.input,events:evs}}));return;}
-  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;writeForm(c.input);TRK.skip=true;try{run(c.input);}catch(err){console.error(err);$('err').textContent='排盤出錯：'+err.message;showErr(err);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);track('case',c.input,c.id);renderCases();
+  if(t.dataset.open){const c=CASES.find(x=>x.id===t.dataset.open);if(!c)return;CUR=c.id;EDIT=false;const ci={...c.input,name:c.name};writeForm(ci);TRK.skip=true;try{run(ci);}catch(err){console.error(err);$('err').textContent='排盤出錯：'+err.message;showErr(err);}finally{TRK.skip=false;}TRK.last=JSON.stringify(LAST_V);track('case',c.input,c.id);renderCases();
     if(matchMedia('(max-width:1099px)').matches)$('caseNote').scrollIntoView({behavior:'smooth'});}
   else if(t.dataset.evote){const c=CASES.find(x=>x.id===t.dataset.case),k=t.dataset.ev,v=+t.dataset.evote,m=c&&(c.evVotes||{})[k];if(c)busy(()=>Store.evote(c.id,k,m&&m.myVote===v?0:v));}
   else if(t.dataset.cvote){const c=CASES.find(x=>x.id===t.dataset.case),m=c&&c.comments.find(x=>x.id===t.dataset.cid),v=+t.dataset.cvote;if(m)busy(()=>Store.cvote(c.id,m.id,m.myVote===v?0:v));}
@@ -4843,7 +4843,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('submit',e=>{
   const f=e.target;
   if(f.id==='caseAdd'){e.preventDefault();const input=setNums(S&&S.inp?{...S.inp}:readForm(),numIn($('caseSib').value),numIn($('caseKid').value));
-    const name=$('caseName').value.trim()||input.name||'未命名',notes=$('caseNotes').value.trim();
+    const name=$('caseName').value.trim()||input.name||'未命名',notes=$('caseNotes').value.trim();input.name=name;// 盤名跟命例名，免得留咗預設「香港回歸」（主人 11月18日）
     const tags=parseTags($('caseTags').value);
     if(SAVING)return;SAVING=true;const btn=f.querySelector('button[type=submit]');if(btn)btn.disabled=true;
     busy(async()=>{if(CLOUD)CASES=await Store.list();const k=caseKey({name,input}),dup=CASES.find(c=>caseKey(c)===k);
@@ -4857,7 +4857,7 @@ document.addEventListener('submit',e=>{
   else if(f.dataset.editf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.editf),fd=new FormData(f);
     const patch={name:String(fd.get('name')).trim()||c.name,notes:String(fd.get('notes')).trim(),tags:parseTags(fd.get('tags'))};
     const base=fd.get('birth')?{...readForm(),...(c.input&&c.input.events?{events:c.input.events}:{})}:c.input;// 事件唔喺表格度，保留返
-    if(fd.get('birth'))patch.input=setNums(base,c.input.sib,c.input.kid);
+    if(fd.get('birth'))patch.input={...setNums(base,c.input.sib,c.input.kid),name:patch.name};
     busy(async()=>{await Store.update(c.id,patch);EDIT=false;if(fd.get('birth')){writeForm(patch.input);run(patch.input);}});}
   else if(f.dataset.cnumf){e.preventDefault();const c=CASES.find(x=>x.id===f.dataset.cnumf);if(!c)return;const fd=new FormData(f);
     const ni=setNums(c.input,numIn(fd.get('sib')),numIn(fd.get('kid')));if(ni.sib===c.input.sib&&ni.kid===c.input.kid)return;busy(()=>Store.update(c.id,{input:ni}));}
