@@ -3919,6 +3919,7 @@ function readForm(){
     at:$('aty').value&&!isTodayAt()?{y:$('atEra').value==='-1'?1-(+$('aty').value):+$('aty').value,m:+$('atm').value,d:+$('atd').value}:null,city:+$('city').value,lon:parseFloat($('lon').value),tz:parseFloat($('tz').value),dst:$('dst').checked,tst:$('tst').checked};
 }
 function writeForm(v){
+  try{const c=CUR&&CASES.find(x=>x.id===CUR);if(c&&c.input&&['y','m','d','h','mi'].every(k=>+c.input[k]===+v[k]))v={...v,name:c.name};}catch(x){}// 開住命例：盤名一律用命例名（主人 11月18日）
   $('name').value=v.name||'';(v.sex===0?$('sexF'):$('sexM')).checked=true;(v.lunar?$('calL'):$('calS')).checked=true;refreshMD();
   $('leap').checked=!!v.leap;$('era').value=v.y<=0?'-1':'1';$('y').value=v.y<=0?1-v.y:v.y;$('m').value=v.m;$('d').value=v.d;$('h').value=v.h;$('mi').value=v.mi;$('noT').checked=!!v.noT;noTSync();$('zi').value=v.zi||1;
   if(v.at){$('atEra').value=v.at.y<=0?'-1':'1';$('aty').value=v.at.y<=0?1-v.at.y:v.at.y;$('atm').value=v.at.m;$('atd').value=v.at.d;}else atToday();
@@ -4817,7 +4818,7 @@ document.addEventListener('click',e=>{
   if(t.dataset.ksgo){const [y,m,d]=t.dataset.ksgo.split('-').map(Number);$('atEra').value=y<=0?'-1':'1';$('aty').value=y<=0?1-y:y;$('atm').value=m;$('atd').value=d;run(readForm());$('chartBox')?.scrollIntoView({behavior:'smooth'});return;}
   if(t.dataset.evgo!==undefined){const c=CASES.find(x=>x.id===t.dataset.id),v=c&&(c.input.events||[])[+t.dataset.evgo];if(!v)return;
     // 淨係知年／月嘅事件冇日（甚至冇月）：用嗰個月 15 號（冇月就用 6 月 15 號），流月流日照收埋（主人 11月15日報錯：冇日會令睇運日期無效）
-    writeForm({...c.input,at:{y:v.y,m:v.m||6,d:v.d||15}});const S0=S;run(readForm());if(S&&S!==S0&&v.p&&v.p!=='d'){S.evP=v.p;S.evT=`${v.t} ${evTxt(v)}`;render();}$('out').scrollIntoView({behavior:'smooth'});return;}
+    writeForm({...c.input,name:c.name,at:{y:v.y,m:v.m||6,d:v.d||15}});const S0=S;run(readForm());if(S&&S!==S0&&v.p&&v.p!=='d'){S.evP=v.p;S.evT=`${v.t} ${evTxt(v)}`;render();}$('out').scrollIntoView({behavior:'smooth'});return;}
   // 修改事件：將事件填返入「加事件」表格，撳「改」就取代原本嗰個
   if(t.dataset.evedit!==undefined||t.dataset.evcancel!==undefined){const f=t.closest('.panel,#caseNote,body').querySelector('[data-addev]');if(!f)return;
     const c=CASES.find(x=>x.id===f.dataset.addev),v=t.dataset.evedit!==undefined&&c&&(c.input.events||[])[+t.dataset.evedit];
