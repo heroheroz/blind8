@@ -65,7 +65,7 @@
 [data-theme="pop"] .gbpager .pg.on{background:var(--ink);color:var(--lime)}
 [data-theme="pop"] .chart .aux{background:#e3ded2}[data-theme="pop"] .chart .dyn{background:color-mix(in srgb,var(--accent-soft) 60%,transparent)}
 [data-theme="pop"] .chart .gn{background:color-mix(in srgb,var(--metal) 18%,transparent)}[data-theme="pop"] .chart .gy{background:color-mix(in srgb,var(--chuan) 22%,transparent)}[data-theme="pop"] .chart .gd{background:color-mix(in srgb,var(--wood) 16%,transparent)}
-#darkBtn .pp{display:none}[data-theme="pop"] #darkBtn .pp{display:inline}[data-theme="pop"] #darkBtn span{padding:3px 8px}
+#darkBtn span{padding:3px 8px}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
@@ -576,7 +576,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <p class="credit">Inspired by <a href="https://www.youtube.com/@%E9%9A%B1%E5%A7%93%E5%9F%8B%E5%90%8D%E8%AB%87%E8%A1%93%E6%95%B8" target="_blank" rel="noopener">隱姓師父</a> &amp; <a href="https://www.youtube.com/@toneming" target="_blank" rel="noopener">通明師兄</a></p>
   <button type="button" class="zhbtn helpbtn" data-nozh data-helpopen aria-label="新手教學" title="點用？再睇新手教學"><span>？ 點用</span></button>
   <button type="button" id="zhBtn" class="zhbtn" data-nozh aria-label="繁簡轉換" title="繁簡轉換"><span class="t on">繁</span><span class="s">简</span></button>
-  <button type="button" id="darkBtn" class="zhbtn" data-nozh aria-label="顏色主題" title="顏色主題：日間 → 夜間 → 繽紛模式"><span class="lt">☀</span><span class="dk">☾</span><span class="pp">✦</span></button>
+  <button type="button" id="darkBtn" class="zhbtn" data-nozh aria-label="顏色主題" title="顏色主題：☀ 日間 ☾ 夜間 ✦ 繽紛模式"><span class="lt" data-t="light" title="日間">☀</span><span class="dk" data-t="dark" title="夜間">☾</span><span class="pp" data-t="pop" title="繽紛模式">✦</span></button>
 </header>
 <div class="suptk" id="mytAsk" hidden style="gap:8px;flex-wrap:wrap"><b class="suph">👋 想我哋點稱呼你？</b><span><button type="button" class="lnk" data-mytset="師兄">師兄</button> <button type="button" class="lnk" data-mytset="師姐">師姐</button> <button type="button" class="lnk" data-mytset="">唔加稱呼</button></span><button type="button" id="mytX" aria-label="遲啲先" style="margin-left:auto">✕</button></div>
 <div class="suptk" id="supTk" hidden aria-label="通告同鳴謝"><b class="suph" title="通告同鳴謝">📢</b><div class="supv"><span class="supt" id="supT"></span></div><button type="button" id="supX" aria-label="收埋" title="收埋">✕</button></div>
@@ -5129,7 +5129,7 @@ function popFont(){if(!THEME.pop||document.getElementById('popFont'))return;cons
 function themeBtn(){const b=document.getElementById('darkBtn'),d=THEME.dark,p=THEME.pop;b.querySelector('.lt').classList.toggle('on',!d&&!p);b.querySelector('.dk').classList.toggle('on',d);b.querySelector('.pp').classList.toggle('on',p);b.setAttribute('aria-pressed',d||p);popFont();}
 try{const t=localStorage.getItem('b8theme');if(t==='dark'||t==='light'||t==='pop')document.documentElement.dataset.theme=t;}catch(e){}
 themeBtn();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',themeBtn);
-document.getElementById('darkBtn').addEventListener('click',()=>{const t=THEME.pop?'light':THEME.dark?'pop':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('b8theme',t);}catch(e){}themeBtn();});
+document.getElementById('darkBtn').addEventListener('click',e=>{const sp=e.target.closest('[data-t]');const t=sp?sp.dataset.t:(THEME.pop?'light':THEME.dark?'pop':'dark');document.documentElement.dataset.theme=t;try{localStorage.setItem('b8theme',t);}catch(e){}themeBtn();});
 document.getElementById('zhBtn').addEventListener('click',()=>{if(ZH.on)zhApply(false);else zhLoad().then(()=>zhApply(true)).catch(e=>alert(e.message));});
 try{if(localStorage.getItem('b8-zh')==='cn')zhLoad().then(()=>zhApply(true)).catch(()=>{});}catch(e){}
 
