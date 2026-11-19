@@ -24,7 +24,7 @@
   --f-body:"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --good:#2b7a4b; --bad:#b8392e; --warn:#a46a00; --chuan:#7b4aa8;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]):not([data-theme="pop"]){
   --bg:#141a18; --paper:#1c2421; --ink:#e7ece8; --muted:#9aa8a0; --line:#33403b; --soft:#25302c;
   --accent:#9db0ee; --accent-soft:#2a3352; --sel:#3d3618;
   --wood:#63c977; --fire:#ff6f61; --earth:#d6a25a; --metal:#e9c84f; --water:#62a6ff;
@@ -34,6 +34,36 @@
   --accent:#9db0ee; --accent-soft:#2a3352; --sel:#3d3618;
   --wood:#63c977; --fire:#ff6f61; --earth:#d6a25a; --metal:#e9c84f; --water:#62a6ff;
   --good:#6fd39a; --bad:#ff7d72; --warn:#f0b54a; --chuan:#c79bf0; color-scheme:dark}
+/* 盲測風主題（data-theme="pop"）：米色點點底、粗黑圓角框加黑影、黑色標題、螢光綠重點、圓體字。干支字型同五行色唔變，唔阻睇盤。 */
+:root[data-theme="pop"]{
+  --bg:#f2eee5; --paper:#fffdf8; --ink:#151515; --muted:#5b5750; --line:#151515; --soft:#e9e4d8;
+  --accent:#151515; --accent-soft:#dde6f6; --sel:#e8f9a8; --lime:#c8f03c;
+  --wood:#1f8a45; --fire:#d8392a; --earth:#9a6416; --metal:#a07800; --water:#1c5fc0;
+  --good:#1f7a43; --bad:#c6352a; --warn:#9a6400; --chuan:#7b4aa8;
+  --f-body:"Huninn","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; color-scheme:light}
+[data-theme="pop"] body{background-color:var(--bg);background-image:radial-gradient(#d6cfbf 1.2px,transparent 1.3px);background-size:22px 22px}
+[data-theme="pop"] .panel{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink)}
+[data-theme="pop"] h1{display:inline-block;background:var(--lime);border:2.5px solid var(--ink);border-radius:14px;padding:0 10px 2px;box-shadow:4px 4px 0 var(--ink);font-size:26px}[data-theme="pop"] header .credit{font-size:15px}
+[data-theme="pop"] .panel h2,[data-theme="pop"] .panel>h2{display:inline-block;background:linear-gradient(transparent 55%,var(--lime) 55%);padding:0 3px}
+[data-theme="pop"] button.go{background:var(--ink);color:var(--lime);border-radius:999px;box-shadow:3px 3px 0 #0003}
+[data-theme="pop"] button.go:hover{background:#000;color:#fff}
+[data-theme="pop"] .seg,[data-theme="pop"] .zhbtn{border:2px solid var(--ink);border-radius:999px}
+[data-theme="pop"] .seg label:has(input:checked),[data-theme="pop"] .zhbtn span.on{background:var(--lime);color:var(--ink);font-weight:700}
+[data-theme="pop"] input[type=text],[data-theme="pop"] input[type=number],[data-theme="pop"] input[type=email],[data-theme="pop"] input[type=password],[data-theme="pop"] input[type=date],[data-theme="pop"] select,[data-theme="pop"] textarea{background:var(--paper);border:2px solid var(--ink);border-radius:12px}
+[data-theme="pop"] input[type=checkbox],[data-theme="pop"] input[type=radio]{accent-color:var(--ink)}
+[data-theme="pop"] .cell{border:2px solid var(--ink);border-radius:12px;box-shadow:2px 2px 0 var(--ink)}
+[data-theme="pop"] .cell[aria-pressed="true"]{background:var(--sel);border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink),2px 2px 0 var(--ink)}
+[data-theme="pop"] .card{border:2px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink)}
+[data-theme="pop"] .chart thead th{border-bottom:2.5px solid var(--ink)}
+[data-theme="pop"] .chart th,[data-theme="pop"] .chart td{border-bottom-color:#e2dccd}
+[data-theme="pop"] .chart .sep{border-left:2.5px solid var(--ink)}
+[data-theme="pop"] .suptk{border:2px solid var(--ink);background:var(--paper)}
+[data-theme="pop"] a.kofi{border:2px solid var(--ink);color:var(--ink);background:var(--lime);font-weight:700}
+[data-theme="pop"] .mnav{border-top:2.5px solid var(--ink);box-shadow:none}
+[data-theme="pop"] .mnav button[aria-current=page]{background:var(--ink);color:var(--lime)}
+[data-theme="pop"] a{color:inherit}
+[data-theme="pop"] .gbpager .pg.on{background:var(--ink);color:var(--lime)}
+#darkBtn .pp{display:none}[data-theme="pop"] #darkBtn .pp{display:inline}[data-theme="pop"] #darkBtn span{padding:3px 8px}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
@@ -542,7 +572,7 @@ body.arnum .arF{display:none}body.arnum .arC{display:inline-flex;flex-direction:
   <p class="credit">Inspired by <a href="https://www.youtube.com/@%E9%9A%B1%E5%A7%93%E5%9F%8B%E5%90%8D%E8%AB%87%E8%A1%93%E6%95%B8" target="_blank" rel="noopener">隱姓師父</a> &amp; <a href="https://www.youtube.com/@toneming" target="_blank" rel="noopener">通明師兄</a></p>
   <button type="button" class="zhbtn helpbtn" data-nozh data-helpopen aria-label="新手教學" title="點用？再睇新手教學"><span>？ 點用</span></button>
   <button type="button" id="zhBtn" class="zhbtn" data-nozh aria-label="繁簡轉換" title="繁簡轉換"><span class="t on">繁</span><span class="s">简</span></button>
-  <button type="button" id="darkBtn" class="zhbtn" data-nozh aria-label="深色模式" title="深色模式開／關"><span class="lt">☀</span><span class="dk">☾</span></button>
+  <button type="button" id="darkBtn" class="zhbtn" data-nozh aria-label="顏色主題" title="顏色主題：日間 → 夜間 → 盲測風"><span class="lt">☀</span><span class="dk">☾</span><span class="pp">✦</span></button>
 </header>
 <div class="suptk" id="mytAsk" hidden style="gap:8px;flex-wrap:wrap"><b class="suph">👋 想我哋點稱呼你？</b><span><button type="button" class="lnk" data-mytset="師兄">師兄</button> <button type="button" class="lnk" data-mytset="師姐">師姐</button> <button type="button" class="lnk" data-mytset="">唔加稱呼</button></span><button type="button" id="mytX" aria-label="遲啲先" style="margin-left:auto">✕</button></div>
 <div class="suptk" id="supTk" hidden aria-label="通告同鳴謝"><b class="suph" title="通告同鳴謝">📢</b><div class="supv"><span class="supt" id="supT"></span></div><button type="button" id="supX" aria-label="收埋" title="收埋">✕</button></div>
@@ -5053,11 +5083,12 @@ function zhApply(on){
     for(const [n,o] of ZH.orig){if(!n.isConnected)continue;if(typeof o==='string')n.nodeValue=o;else for(const a in o)n.setAttribute(a,o[a]);}
     ZH.orig.clear();document.title='盲派八字排盤';}}
 // 深色模式：右上角掣喺淺色同深色之間轉；冇揀過就跟系統設定，揀咗就記低喺呢部機
-const THEME={get dark(){const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;}};
-function themeBtn(){const b=document.getElementById('darkBtn'),d=THEME.dark;b.querySelector('.lt').classList.toggle('on',!d);b.querySelector('.dk').classList.toggle('on',d);b.setAttribute('aria-pressed',d);}
-try{const t=localStorage.getItem('b8theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}
+const THEME={get pop(){return document.documentElement.dataset.theme==='pop';},get dark(){const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;}};
+function popFont(){if(!THEME.pop||document.getElementById('popFont'))return;const l=document.createElement('link');l.id='popFont';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Huninn&display=swap';document.head.appendChild(l);}
+function themeBtn(){const b=document.getElementById('darkBtn'),d=THEME.dark,p=THEME.pop;b.querySelector('.lt').classList.toggle('on',!d&&!p);b.querySelector('.dk').classList.toggle('on',d);b.querySelector('.pp').classList.toggle('on',p);b.setAttribute('aria-pressed',d||p);popFont();}
+try{const t=localStorage.getItem('b8theme');if(t==='dark'||t==='light'||t==='pop')document.documentElement.dataset.theme=t;}catch(e){}
 themeBtn();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',themeBtn);
-document.getElementById('darkBtn').addEventListener('click',()=>{const t=THEME.dark?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('b8theme',t);}catch(e){}themeBtn();});
+document.getElementById('darkBtn').addEventListener('click',()=>{const t=THEME.pop?'light':THEME.dark?'pop':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('b8theme',t);}catch(e){}themeBtn();});
 document.getElementById('zhBtn').addEventListener('click',()=>{if(ZH.on)zhApply(false);else zhLoad().then(()=>zhApply(true)).catch(e=>alert(e.message));});
 try{if(localStorage.getItem('b8-zh')==='cn')zhLoad().then(()=>zhApply(true)).catch(()=>{});}catch(e){}
 
