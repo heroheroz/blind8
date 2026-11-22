@@ -4522,7 +4522,7 @@ const auCase=id=>{const c=CASES.find(c=>c.id===id);return c?`「${c.name}」`:''
 function auWhat(r){const o=r.row_new||r.row_old||{};
   switch(r.tbl){case 'cases':return `${o.private?'🔒 ':''}「${o.name||''}」`;case 'comments':return auCase(o.case_id)+' '+auCut(o.body);case 'guestbook':return auCut(o.body);case 'tags':return '#'+(o.name||'');
     case 'votes':return auCase(o.case_id)+' '+(AU_V[o.vote]||o.vote);case 'comment_votes':return AU_V[o.vote]||o.vote;case 'event_votes':return auCase(o.case_id)+' '+(o.ev||'')+' '+(AU_V[o.vote]||o.vote);
-    case 'users':case 'logins':{const pv=(o.providers&&o.providers.length?o.providers:[o.provider]).filter(Boolean).map(x=>AU_PV[x]||x);return pv.length?'方法：'+pv.join('／'):'';}case 'point_bonus':{const m=/^quiz:([wm]):([\d-]+):(\d+)$/.exec(o.reason||'');return `${auUser(o.user_id)} ${o.amount>0?'+':''}${o.amount} 分${m?'（'+m[2]+(m[1]==='w'?' 嗰週':' 月')+'第 '+m[3]+' 名）':o.reason?'（'+o.reason+'）':''}`;}case 'point_settings':return `${{need:'準門檻',start:'開戶分',vday:'投票每日上限',gday:'留言每日上限',daily:'每日登入分'}[o.key]||o.key} ${o.value}`;case 'point_costs':return `${{sha:'招感殺星',sw:'最強五行',work:'做功'}[o.kind]||o.kind} ${o.cost} 分`;default:return o.user_id||'';}}
+    case 'users':case 'logins':{const pv=(o.providers&&o.providers.length?o.providers:[o.provider]).filter(Boolean).map(x=>AU_PV[x]||x);return pv.length?'方法：'+pv.join('／'):'';}case 'point_bonus':{const m=/^quiz:([wm]):([\d-]+):(\d+)$/.exec(o.reason||'');return `${auUser(o.user_id)} ${o.amount>0?'+':''}${o.amount} 分${m?'（'+m[2]+(m[1]==='w'?' 週測驗榜':' 月測驗榜')+'第 '+m[3]+' 名）':o.reason?'（'+o.reason+'）':''}`;}case 'point_settings':return `${{need:'準門檻',start:'開戶分',vday:'投票每日上限',gday:'留言每日上限',daily:'每日登入分'}[o.key]||o.key} ${o.value}`;case 'point_costs':return `${{sha:'招感殺星',sw:'最強五行',work:'做功'}[o.kind]||o.kind} ${o.cost} 分`;default:return o.user_id||'';}}
 // 命例名做連結：一撳就開嗰個命例，隔籬寫埋係邊個加嘅；命例已經刪咗就寫「已刪除」
 function auCaseLink(r){const o=r.row_new||r.row_old||{},id=r.tbl==='cases'?o.id:['comments','votes','event_votes'].includes(r.tbl)?o.case_id:null;if(!id)return null;
   const c=CASES.find(x=>x.id===id),nm=c?c.name:(r.tbl==='cases'?o.name:'')||'',by=c?c.by:(r.tbl==='cases'?o.owner_name:'')||'',pv=c?c.private:r.tbl==='cases'&&o.private;
@@ -4531,7 +4531,7 @@ function auCaseLink(r){const o=r.row_new||r.row_old||{},id=r.tbl==='cases'?o.id:
   return head+esc(w.startsWith(lead)?w.slice(lead.length):' '+w);}
 $('auList').addEventListener('click',e=>{if(e.target.closest('[data-open]'))setTimeout(()=>{const t=document.querySelector('.tscroll');if(t)t.scrollIntoView({block:'start',behavior:'smooth'});},60);});
 // 測驗獎分（quiz_award 自動派，by 係 null）：由放榜後第一個開網站嘅用戶觸發，唔係嗰個用戶手動加分
-function auAuto(r){const o=r.row_new||r.row_old||{};if(r.tbl!=='point_bonus'||o.by!=null)return '';const m=/^quiz:([wm]):/.exec(o.reason||'');return m?(m[1]==='w'?'每週測驗獎分':'每月測驗獎分'):'';}
+function auAuto(r){const o=r.row_new||r.row_old||{};if(r.tbl!=='point_bonus'||o.by!=null)return '';const m=/^quiz:([wm]):/.exec(o.reason||'');return m?'排名加分':'';}
 function auUser(id){const u=TU.rows.find(x=>x.id===id);return u?(u.name||u.email||''):String(id||'').slice(0,8);}
 function auDiff(r){if(r.op!=='UPDATE'||!r.row_old||!r.row_new)return [];const a=r.row_old,b=r.row_new,out=[];
   for(const k of Object.keys(b)){if(k==='created_at'||JSON.stringify(a[k])===JSON.stringify(b[k]))continue;
