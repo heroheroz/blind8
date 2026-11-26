@@ -2667,7 +2667,7 @@ function zhudao(P,noT){
   const g=i=>c4[i].gz[0],ks=c=>GAN[(gi(c)+6)%10],lk=i=>L.filter(l=>l.a===i||(l.b===i&&l.vx==null));
   const nm=i=>c4[i].h[0]+'干'+g(i);
   // 同一組粘連（連埋伏吟、合、連續，同招感字）
-  const comp=i0=>{const s=new Set([i0]);let ch=true;while(ch){ch=false;L.forEach(l=>{if(l.vx!=null)return;if(s.has(l.a)&&!s.has(l.b)){s.add(l.b);ch=true;}else if(s.has(l.b)&&!s.has(l.a)){s.add(l.a);ch=true;}});}return [...s];};
+  const comp=i0=>{const s=new Set([i0]);let ch=true;while(ch){ch=false;L.forEach(l=>{if(l.vx!=null||l.b==null)return;if(s.has(l.a)&&!s.has(l.b)){s.add(l.b);ch=true;}else if(s.has(l.b)&&!s.has(l.a)){s.add(l.a);ch=true;}});}return [...s];};
   let T=1,conf='95%+';
   // 日主得一條粘連、而另一個天干粘得更多：老師由嗰個更受困嘅字開始（張國榮、梁啟超、無私的人）
   {const c=[2,0,3].filter(i=>lk(i).length>=2&&lk(i).length>lk(1).length).sort((a,b)=>lk(b).length-lk(a).length||b-a);
@@ -4179,7 +4179,7 @@ function run(v,force){
   if(v.at&&!validDate(v.at.y,v.at.m,v.at.d)){$('err').textContent='睇運日期冇呢一日，請再揀過。';return;}
   try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();setInSum(v);if(RUN_N++||fromQuery())mTab('chart');try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
     LAST_V=v;trackChart(v,force);if(!HSH.busy){HSH.base=null;HSH.off={y:0,m:0,d:0,t:0};}try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
-  catch(e){$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。';}
+  catch(e){console.error(e);$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:v.lunar&&!(e instanceof TypeError||e instanceof ReferenceError)?'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。':'排盤程式出錯（'+(e&&e.message||e)+'），可以試吓閂咗試驗選項，或者截圖通知站長。';}
 }
 // 改命例時，「出生資料改做表格上面嘅資料」旁邊即時顯示表格而家嘅資料
 $('f').addEventListener('input',()=>document.querySelectorAll('[data-birthnow]').forEach(b=>b.textContent=birthTxt(readForm())));
