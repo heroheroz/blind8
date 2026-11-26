@@ -140,6 +140,7 @@ input#name{width:100%}
 .seg label:has(input:checked){background:var(--accent);color:var(--paper)}
 .seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:-2px}
 .chk{display:flex;gap:6px;align-items:center;font-size:14px;cursor:pointer}
+.whoq{font:inherit;font-size:12px;font-weight:700;width:20px;height:20px;line-height:18px;padding:0;margin-left:4px;border-radius:50%;border:1px solid var(--accent);background:var(--paper);color:var(--accent);cursor:pointer;vertical-align:1px}.whohelp{margin:6px 0;padding:8px 10px;border:1px solid var(--line,#ccc);border-radius:8px;font-size:13px;line-height:1.6}.whohelp ol{margin:4px 0 2px;padding-left:20px}
 .tip{position:relative}.colck{display:flex;justify-content:center;align-items:center;gap:3px;white-space:nowrap;font-size:12px;font-weight:400;cursor:pointer;margin-top:2px;min-height:24px}.colck input{width:16px;height:16px;margin:0}th.coloff>b,th.coloff>.hsub{opacity:.4}.ytagbox{margin-bottom:3px;cursor:pointer}th.gy>b,th.aux>b,.yr[title]{cursor:pointer}.ytagw{display:flex;flex-direction:column;align-items:center;gap:0;margin-bottom:1px;font-size:11px;font-weight:400;line-height:13px;width:100%;overflow:hidden}.ytag{display:inline-block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box;padding:0 6px;border-radius:999px;background:var(--good);color:var(--paper);font-size:11px;line-height:16px;height:16px}.ytag.off{background:var(--bad);color:var(--paper)}@media(max-width:700px){.ytag{font-size:10px;padding:0 3px;line-height:14px;height:14px}.chart thead .ytagw{font-size:10px;line-height:12px}.chart thead .yby{height:12px;font-size:9px}.chart thead .yslot{height:34px}.chart thead .colck{font-size:10px;gap:1px}.chart thead .colck input{width:13px;height:13px}.chart thead .ytag{font-size:10px;padding:0 3px;line-height:14px;height:14px}}.chart thead th.hsplit>.yslot>.ytagbox{position:absolute;top:3px;left:0;right:0;margin:0}.ytagw.ysp{flex-direction:row;justify-content:center;align-items:center;gap:2px;margin-bottom:3px;overflow:visible}.hck{display:inline-flex;cursor:pointer;flex:none}.hck input{width:15px;height:15px;margin:0}@media(max-width:700px){.hck input{width:12px;height:12px}.ytagw.ysp{gap:1px}}.yby{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;height:13px}
 @media(hover:hover){th label.tip:hover::after{left:auto;right:0}}.tipq{cursor:help;font-size:14px;line-height:1;color:var(--mut,#777);padding:2px 4px;margin-left:-6px;user-select:none}
 .tipq:focus::after,.tipq:hover::after{content:attr(data-tip);position:absolute;z-index:60;left:0;top:calc(100% + 6px);width:min(340px,80vw);padding:10px 12px;border-radius:8px;background:#222;color:#fff;font-size:13px;line-height:1.6;font-weight:400;white-space:normal;text-align:left;box-shadow:0 4px 16px rgba(0,0,0,.3);pointer-events:none}
@@ -2818,15 +2819,18 @@ function whoCols(){const out=[],mo=whoMo(),ew=S&&S.evWho;
     if(ew.mo&&g.m)out.push({h:'事件人月',sub:`${n} · 月柱`,gz:g.m,dyn:true,who:true,adj:'加人'});}whoList().forEach((p,i)=>{const g=whoGz(p),n=p.n||('第'+(i+1)+'個人'),h='加人'+(i+1);
   out.push({h,sub:`${n} · 年柱${g.exact?'':'（未計立春）'}`,gz:g.y,dyn:true,who:true,adj:'加人'});
   if(mo&&g.m)out.push({h:h+'月',sub:`${n} · 月柱`,gz:g.m,dyn:true,who:true,adj:'加人'});});return out;}
+let WHO_HELP=false;  // 加人旁邊 ？ 說明（主人 11月26日）
 function whoHtml(){const L=whoList(),mo=whoMo();
   const wc=whoCase(),wed=!!wc&&can.edit(wc);
   const rows=L.map((p,i)=>{const g=whoGz(p),del=p.src==='me'||wed;return `<li><b>加人${i+1}</b> ${esc(p.n||'')} ${p.y<=0?'前'+(1-p.y):p.y}${p.m?'-'+p.m:''}${p.d?'-'+p.d:''}　年柱 <b>${g.y}</b>${g.m?`　月柱 <b>${g.m}</b>${mo?'':'（未加）'}`:''}${g.exact?'':'<span class="hint">（冇月日，未計立春；1、2月初出世要自己核對）</span>'} <span class="hint">${p.src==='case'?`（命例${p.by?'・'+esc(p.by):''}）`:wc?'（只喺你部機）':''}</span>${del?` <button type="button" class="lnk" data-whodel="${i}" aria-label="刪除">✕</button>`:''}</li>`;}).join('');
   const ew=S&&S.evWho,eg=ew&&whoGz(ew),erow=ew?`<li><b>事件人</b> ${esc(ew.n||'')} ${ew.y<=0?'前'+(1-ew.y):ew.y}${ew.m?'-'+ew.m:''}${ew.d?'-'+ew.d:''}　年柱 <b>${eg.y}</b>${ew.mo&&eg.m?`　月柱 <b>${eg.m}</b>`:''}<span class="hint">（跟事件「${esc(ew.t||'')}」，喺命例事件「＋人」改）</span></li>`:'';
-  return `<details class="more whobox"${L.length||ew?' open':''}><summary>➕ 加人（配偶、拍檔、仔女……）${L.length?`：${L.length} 個`:''}</summary>
-  <p class="hint">輸入對方出世日期，佢嘅年柱會當一條入嚟嘅柱放落盤，參與招感、粘連、做功（同流年一樣填實元運），睇佢旺唔旺你。老師：配偶出世嗰年嘅天干地支幫你完成做功，好大程度睇天干（〈教你如何從八字推算出配偶的出生年〉約 31:10）。${wc?(wed?'開住命例：加嘅人會記入命例，人人開呢個命例都見到。':'呢個命例唔係你嘅：你加嘅人只記喺你部機；命例主人加嘅人人都見到。'):'冇開命例：只記喺呢部機、呢個盤。'}柱頂「計」可以閂。</p>
+  return `<details class="more whobox"${L.length||ew||WHO_HELP?' open':''}><summary>➕ 加人（配偶、拍檔、仔女……）${L.length?`：${L.length} 個`:''} <button type="button" class="whoq" data-whohelp aria-label="點用加人" aria-expanded="${WHO_HELP}">？</button></summary>
+  ${WHO_HELP?`<div class="whohelp"><b>點用加人</b><ol><li>填對方公曆出世年（月日可以唔填），撳「加」。</li><li>盤上多咗一條「加人」柱（佢嘅年柱），好似流年咁入嚟，參與招感、粘連、做功，亦會填實元運。</li><li>睇佢條柱有冇幫你做到功：有就係旺你、幫到你。</li><li>剔「加人月柱」連佢嘅月柱都計（要填埋月日）。</li><li>柱頂「計」唔剔＝只顯示唔計；✕ 刪除；最多 ${WHO_MAX} 個。</li><li>命例事件旁邊「＋人」可以為某件事（結婚、生仔）加伴侶或子女，撳事件睇運時以「事件人」柱計。</li></ol><p class="hint">老師：配偶出世嗰年嘅天干地支幫你完成做功，好大程度睇天干（〈教你如何從八字推算出配偶的出生年〉約 31:10）。</p></div>`:''}
+  <p class="hint">${wc?(wed?'開住命例：加嘅人會記入命例，人人開呢個命例都見到。':'呢個命例唔係你嘅：你加嘅人只記喺你部機；命例主人加嘅人人都見到。'):'冇開命例：只記喺呢部機、呢個盤。'}</p>
   ${rows||erow?`<ul class="wholist">${erow}${rows}</ul>`:''}
   ${L.length<WHO_MAX?`<div class="row"><input type="text" id="whoN" placeholder="名（可選）" maxlength="12" style="width:7em"><input type="number" id="whoY" placeholder="年" style="width:5.5em"><input type="number" id="whoM" placeholder="月" min="1" max="12" style="width:3.5em"><input type="number" id="whoD" placeholder="日" min="1" max="31" style="width:3.5em"><button type="button" class="go sm" data-whoadd>加</button></div><p class="hint">公曆；月日可以唔填（就淨係用年份排年柱）。</p>`:''}
   <label class="chk"><input type="checkbox" id="vWhoMo" ${mo?'checked':''}>加人月柱（要有月日）</label></details>`;}
+document.addEventListener('click',e=>{const q=e.target.closest&&e.target.closest('[data-whohelp]');if(q){e.preventDefault();e.stopPropagation();WHO_HELP=!WHO_HELP;const d=q.closest('details');if(d)d.open=true;render();return;}});
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-whoadd],[data-whodel]');if(!t||!S)return;
   if(t.hasAttribute('data-whoadd')){const y=parseInt($('whoY').value,10),m=parseInt($('whoM').value,10)||0,d=parseInt($('whoD').value,10)||0;
     if(!(y>=-2999&&y<=9999)){alert('請填出世年份（公元）。');return;}
@@ -3615,7 +3619,7 @@ function bmRound(){const D=BM.data,sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=
   const tp=sh([...new Set(D.cats.map(c=>c.t)),'身份','身份']),byT=t=>D.Q.filter(q=>bmCat(q.k).t===t);
   for(let n=0;out.length<10&&n<60;n++){const L=byT(tp[n%tp.length]).filter(q=>!used.has(q.x)&&!used.has(q.y)&&!out.includes(q)),f=L.filter(q=>!seen.has(q.id)),g=f.length?f:L,tw=g.filter(q=>D.C[q.x].tw||D.C[q.y].tw),q=sh(tw.length&&Math.random()<0.7?tw:g)[0];  // 七成機會揀老師講過嘅命例（主人 11月19日）
     if(!q)continue;out.push(q);used.add(q.x);used.add(q.y);}
-  out.forEach(q=>{delete q._a;delete q._sc;});return sh(out);}
+  out.forEach(q=>{delete q._a;delete q._sc;delete q._ht;delete q._pl;delete q._jn;});return sh(out);}
 function bmCat(k){return BM.data.cats.find(c=>c.k===k);}
 function bmFact(c,id){const r=c.A.find(x=>x[0]===id)||c.B.find(x=>x[0]===id);return r?r[1]:'';}
 function bmChart(q,side){const D=BM.data,k=side?q.y:q.x,C=D.C[k],a=q._a,done=BM.pick>=0&&!!a,ok=done&&side===a.ans,mine=BM.pick===side,inf=a&&a[side?'y':'x'];
@@ -3629,30 +3633,67 @@ function bmTw(q){const D=BM.data,a=q._a;if(!a)return '';const sides=[0,1].filter
     return `<div class="bmtw"><b>🎓 隱姓先生講過${s?'乙':'甲'}（${E(inf.n)}）</b><ul>${ev.map(e=>`<li><span class="hint">${E(e.y||'')}${e.y?' ':''}${E(e.t||'')}</span>${e.why.map(w=>`<div>${w.u?`<a class="lnk" href="${E(w.u)}" target="_blank" rel="noopener">▶ ${E(w.n||'課堂')}</a> `:E(w.n||'')+' '}${E(w.x||'')}</div>`).join('')}</li>`).join('')}</ul></div>`;}).join('');}
 function bmAi(q){if(!q.cl||!q._a)return '';const L=['甲','乙'],A=q._a.ans,row=(ic,nm,p,w,dash)=>`<div class="bmai"><div class="bmaih"><span>${ic} <b>${nm}</b></span><span class="bmaip ${p===A?'ok':'no'}">揀${L[p]} ${p===A?'✓':'✗'}</span></div><div class="bmaiw${dash?' dash':''}">${w}</div></div>`;
   return row('🤖','Claude',q.cl.p,esc(q.cl.w)+(q.cl.r?' <span class="hint">（佢話認得呢個盤）</span>':''))+(q.gm?row('✨','Gemini'+(q.gm.m?' '+q.gm.m:''),q.gm.p,esc(q.gm.w)+(q.gm.r?' <span class="hint">（佢話認得呢個盤）</span>':'')):'')+row('🪙','擲毫',q.coin,'擲出嚟嘅，冇根據。',true)+'<p class="hint">AI 答題前先讀咗本站摘要、口訣、秘訣同計法說明；答題時只睇到八字、性別、三桓命宮、元運同大運，睇唔到名同地方。佢寫嘅理由照錄，冇改過。</p>';}
+// 八字盲測錦囊（主人 11月26日）：每輪三個，各用一次——🔄 換題、💡 提示（呢類特徵要睇乜，唔講答案）、👥 睇大家點揀（其他人揀甲揀乙嘅比例）。
+// 用咗照計分；排行榜顯示用咗幾多個錦囊，同分冇用錦囊排先。
+const BM_HINT={'出家人':'男命財星（妻星）、女命官星（夫星）冇做功或者被合死；正印做功（讀書、學術、宗教，第25堂 25:20）',
+  '政界高官':'官星做到大功（正官＝做官，官位由劫財力量啟動，第40堂 26:43）',
+  '歌星／影星':'一般睇法係食神傷官（才華、表演）明朗做功；走紅嗰幾年做功特別大（第21堂 03:52）',
+  '命理術數家':'伏吟明顯（第18堂 65:51）、水旺尤其水伏吟（第23堂 06:17）；正印做功（第25堂 25:20）',
+  '皇室成員':'出身好：年柱（祖上）、胎元、印星做到功（本站數據王室印星做到功比例較高）',
+  '坐過監':'日干受困（第75堂 48:13）；天干封閉、合住打唔開（第57堂 25:22）',
+  '大富豪':'財星做大功，財剋嘅對象越強越有錢（第39堂 07:33）；夾拱招出嚟做功嘅字強＝富（第9堂 13:00）',
+  '考試狀元／進士':'印星（讀書）做大功，中進士嗰運正印做功（第96堂 22:18、第98堂 35:02）',
+  '啞巴':'天干見合打唔開，最嚴重可以啞、盲（第57堂 02:24）；食傷有自刑唔一定啞（第4堂 06:40）',
+  '唔係啞巴':'天干嘅合打得開、冇封死',
+  '唔夠 40 歲就過身':'早運日干受封閉、元神斷滅（第71堂 06:12、第17堂 54:05）',
+  '活過 80 歲':'幾十年大運都冇將日干釘死',
+  '仔女成群（4 個或以上）':'子女星（男命殺星官星、女命食神傷官，第43堂、第24堂）幾粒都有做功（第48堂 06:57）',
+  '冇親生仔女':'子女星被夾住、合死（第57堂 10:46）',
+  '一生冇親生仔女':'子女星被夾住、合死（第57堂 10:46）',
+  '試過喪子女':'子女星被沖剋；觸犯最強五行又解唔開會應六親刑傷（第75堂 14:16）',
+  '未成年就喪父或喪母':'父星偏財、母星正印（第61堂、第87堂）早運被剋；無遮無攔直剋、冇大運庇護易傷親人（第96堂 20:27）',
+  '細個父母離異／被送走':'細個睇撫養自己嘅人用殺星（第46堂）；父母星被沖開',
+  '結過兩次或以上婚':'男命財星、女命官星有合有解，幾時解開＝幾時離婚（第12堂 57:50）',
+  '兄弟姊妹（連自己）5 個或以上':'兄弟姊妹睇劫財（第76堂）；老師都話兄弟數目未摸通（第75堂 56:43），呢類題特別難',
+  '兄弟姊妹（連自己）最多 2 個':'兄弟姊妹睇劫財（第76堂）；老師都話兄弟數目未摸通（第75堂 56:43），呢類題特別難',
+  '試過嚴重意外受傷':'大意外一定係做唔到功、日主天干受封閉（第71堂 06:12）；普通意外過得到（第87堂 01:33）'};
+function bmJn(q,done){const c=bmCat(q.k),j=BM.jk||{},ht=t=>BM_HINT[t]?`<li>「${esc(t)}」：${esc(BM_HINT[t])}</li>`:'';
+  const res=(q._ht?`<div class="bmjr"><b>💡 提示</b><ul>${ht(c.a)}${ht(c.b)}</ul><p class="hint">提示只講呢類人通常要睇乜，唔代表答案。</p></div>`:'')
+    +(q._pl?`<div class="bmjr"><b>👥 大家點揀</b> ${q._pl.n?`甲 <b>${Math.round(q._pl.a*100/q._pl.n)}%</b>　乙 <b>${100-Math.round(q._pl.a*100/q._pl.n)}%</b> <span class="hint">（${q._pl.n} 個師兄師姐，計佢哋第一次答）</span>`:'<span class="hint">未有其他師兄師姐答過呢題。</span>'}${q._pl.n<5?`<div>🤖 AI 師兄：${[q.cl?`Claude 揀<b>${q.cl.p?'乙':'甲'}</b>`:'',q.gm?`Gemini 揀<b>${q.gm.p?'乙':'甲'}</b>`:''].filter(Boolean).join('，')} <span class="hint">（答過嘅人少過 5 個，加埋 AI 嘅揀法；Claude 成個題庫啱 ${(st=>Math.round(st.cl*100/st.n))(BM.data.st||{cl:0,n:1})}%）</span></div>`:''}</div>`:'');
+  if(done)return res;
+  const b=(k,ic,nm)=>`<button type="button" class="bmjb" data-bmjn="${k}"${j[k]||BM.busy?' disabled':''}>${ic} ${nm}${j[k]?' ✓':''}</button>`;
+  return `<div class="bmjn"><span class="hint">🧧 隱師錦囊（每輪各一次）：</span>${b('sw','🔄','換題')}${b('ht','💡','提示')}${CLOUD?b('pl','👥','大家點揀'):''}</div>${res}`;}
+function bmSwap(){const D=BM.data,q=BM.rd[BM.i],used=new Set(),inR=new Set(BM.rd.map(x=>x.id));BM.rd.forEach((x,j)=>{if(j!==BM.i){used.add(x.x);used.add(x.y);}});
+  const seen=new Set([...bmSeen(),...(BM.srv||[])]),L=D.Q.filter(x=>!inR.has(x.id)&&!used.has(x.x)&&!used.has(x.y)),f=L.filter(x=>!seen.has(x.id)),g=f.length?f:L;
+  if(!g.length)return false;const n=g[Math.floor(Math.random()*g.length)];delete n._a;delete n._sc;delete n._ht;delete n._pl;n._jn=(q._jn||0)+1;if(q._ht)n._ht=1;BM.rd[BM.i]=n;return true;}
 const bmScored=()=>!BM.off&&BM.wk!=null&&BM.wk<50;  // 每星期頭 50 題計分（5 輪 × 10 題），之後照玩但係練習（主人 11月19日）
 function bmDraw(){const box=$('np-bm');if(!box)return;const body=box.querySelector('.lbody'),SB=SH_BTNS('bm','複製八字盲測嘅連結');
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先玩到八字盲測。 '+SB+'</p>';return;}
   if(!BM.data){body.innerHTML='<p class="hint">載入緊…</p>';if(!BM.ing){BM.ing=true;fetch('blind.json?v=4').then(r=>r.json()).then(d=>{BM.data=d;}).catch(()=>{body.innerHTML='<p class="hint">載入唔到題目，請遲啲再試。</p>';}).then(()=>{BM.ing=false;if(BM.data)bmDraw();});}return;}
   if(BM.wk==null){if(!CLOUD){BM.wk=0;}else{body.innerHTML='<p class="hint">載入緊…</p>';if(!BM.wing){BM.wing=true;api('rpc/blind_my',{method:'POST',body:'{}'}).then(j=>{BM.wk=+(j&&j.n)||0;BM.srv=(j&&j.seen)||[];}).catch(()=>{BM.wk=50;BM.off=true;}).then(()=>{BM.wing=false;bmDraw();});}return;}}
-  if(!BM.rd){BM.rd=bmRound();BM.i=0;BM.pick=-1;BM.sc=0;BM.log=[];BM.rsc=0;}
+  if(!BM.rd){BM.rd=bmRound();BM.i=0;BM.pick=-1;BM.sc=0;BM.log=[];BM.rsc=0;BM.jk={};}
   const N=BM.rd.length,bar=`<div class="bmbar">${BM.rd.map((_,j)=>`<i class="${j<BM.i||(j===BM.i&&BM.pick>=0&&BM.rd[j]._a)?(BM.log[j]?'ok':'no'):j===BM.i?'cur':''}"></i>`).join('')}</div>`,st=BM.data.st||{n:BM.data.Q.length,cl:0};
   if(BM.i>=N){const ai=BM.rd.filter(q=>q.cl&&q._a),cl=ai.filter(q=>q.cl.p===q._a.ans).length,co=ai.filter(q=>q.coin===q._a.ans).length,gi=ai.filter(q=>q.gm),gm=gi.filter(q=>q.gm.p===q._a.ans).length;
-    body.innerHTML=`<div class="qzbar"><b>🙈 八字盲測</b>${SB}<span class="qzsc">你 ${BM.sc}／${N}</span></div>${bar}<div class="qzcard"><p class="qzq">🎉 做完一輪：你答啱 ${BM.sc}／${N} 題</p>${ai.length?`<p>同一輪 🤖 Claude 啱 ${cl} 題，${gi.length?`✨ Gemini 啱 ${gm}${gi.length<ai.length?`／${gi.length}`:''} 題，`:''}🪙 擲毫啱 ${co} 題。</p>`:''}<p class="hint">${BM.off?'而家連唔到排行榜，呢輪當練習。':BM.rsc?`呢輪有 ${BM.rsc} 題計入排行榜。`:'呢輪係練習，冇計分。'}今個星期計咗 ${Math.min(50,BM.wk)}／50 題${BM.wk>=50?'，計分用晒；之後照玩，係練習唔計分，下星期一重新計。':'。'}</p><p class="hint">成個題庫 ${st.n} 題，Claude 答啱 ${st.cl} 題（${Math.round(st.cl*100/st.n)}%）${st.gn?`；Gemini 答咗 ${st.gn} 題，啱 ${st.gm} 題（${Math.round(st.gm*100/st.gn)}%）`:''}；亂揀平均係 50%。</p><button type="button" class="qznext" data-bmagain>${bmScored()?'再嚟一輪 ›':'繼續練習 ›'}</button></div><div id="bmBd"></div>`;bmBoard();return;}
+    body.innerHTML=`<div class="qzbar"><b>🙈 八字盲測</b>${SB}<span class="qzsc">你 ${BM.sc}／${N}</span></div>${bar}<div class="qzcard"><p class="qzq">🎉 做完一輪：你答啱 ${BM.sc}／${N} 題</p><p class="hint">${(n=>n?`呢輪用咗 ${n} 個隱師錦囊。`:'呢輪冇用隱師錦囊 👍')(Object.keys(BM.jk||{}).length)}</p>${ai.length?`<p>同一輪 🤖 Claude 啱 ${cl} 題，${gi.length?`✨ Gemini 啱 ${gm}${gi.length<ai.length?`／${gi.length}`:''} 題，`:''}🪙 擲毫啱 ${co} 題。</p>`:''}<p class="hint">${BM.off?'而家連唔到排行榜，呢輪當練習。':BM.rsc?`呢輪有 ${BM.rsc} 題計入排行榜。`:'呢輪係練習，冇計分。'}今個星期計咗 ${Math.min(50,BM.wk)}／50 題${BM.wk>=50?'，計分用晒；之後照玩，係練習唔計分，下星期一重新計。':'。'}</p><p class="hint">成個題庫 ${st.n} 題，Claude 答啱 ${st.cl} 題（${Math.round(st.cl*100/st.n)}%）${st.gn?`；Gemini 答咗 ${st.gn} 題，啱 ${st.gm} 題（${Math.round(st.gm*100/st.gn)}%）`:''}；亂揀平均係 50%。</p><button type="button" class="qznext" data-bmagain>${bmScored()?'再嚟一輪 ›':'繼續練習 ›'}</button></div><div id="bmBd"></div>`;bmBoard();return;}
   const q=BM.rd[BM.i],c=bmCat(q.k),ask=q.ask==='a'?c.a:c.b,oth=q.ask==='a'?c.b:c.a,done=BM.pick>=0&&!!q._a,A=done?q._a.ans:-1;
   body.innerHTML=`<div class="qzbar"><b>🙈 八字盲測</b>${SB}<span class="hint">兩個真人嘅八字，唔講係邊個。</span><span class="qzsc">你 ${BM.sc}／${BM.i+(done?1:0)}</span></div>${bar}
   <div class="qzcard bmcard"><div><span class="qztag">${String(BM.i+1).padStart(2,'0')} / ${N}</span><span class="qztag">${esc(c.t)}</span><span class="qztag">${done?(q._sc?'計分':'練習・唔計分'):bmScored()?'計分':'練習・唔計分'}</span></div>
   <p class="qzq bmq">邊個係<mark>${esc(ask)}</mark>？</p><p class="hint">一個係「${esc(ask)}」，一個係「${esc(oth)}」。撳你覺得係嘅嗰張盤。</p>${BM.err?`<p class="hint" style="color:var(--bad)">${esc(BM.err)}</p>`:''}
-  <div class="bmpair"><div class="bmside">${bmChart(q,0)}</div><div class="bmside">${bmChart(q,1)}</div></div>
+  ${bmJn(q,done)}<div class="bmpair"><div class="bmside">${bmChart(q,0)}</div><div class="bmside">${bmChart(q,1)}</div></div>
   ${BM.pick>=0&&!done?'<p class="hint">對緊答案…</p>':''}${done?`<div class="qzwhy"><b>${BM.pick===A?'✓ 揀啱！':'✗ 揀錯。'}</b>${A?'乙':'甲'}先係「${esc(ask)}」。</div>${bmAi(q)}${bmTw(q)}<button type="button" class="qznext" data-bmnext>${BM.i+1<N?'下一題 →':'睇結果 →'}</button>`:''}</div><div id="bmBd"></div>`;body.querySelectorAll('.bmch .qzps,.bmch .bmdy').forEach(e=>wxColor(e));bmBoard();}
 async function bmBoard(){const els=()=>[$('bmBd'),$('bmBdLb')].filter(Boolean);if(!els().length||!CLOUD||!SESSION)return;const wk=BM.bw!==false;
   if(BM.bdp)await BM.bdp;
-  if(!BM.bd){let done;BM.bdp=new Promise(r=>done=r);try{const b=p=>api('rpc/blind_board',{method:'POST',body:JSON.stringify({p_period:p})});BM.bd={w:await b('week'),a:await b('month')};}catch(e){els().forEach(x=>x.innerHTML='');return;}finally{BM.bdp=null;done();}}
+  if(!BM.bd){let done;BM.bdp=new Promise(r=>done=r);try{const b=p=>api('rpc/blind_board2',{method:'POST',body:JSON.stringify({p_period:p})});BM.bd={w:await b('week'),a:await b('month')};}catch(e){els().forEach(x=>x.innerHTML='');return;}finally{BM.bdp=null;done();}}
   const all=(wk?BM.bd.w:BM.bd.a)||[],rows=all.filter(r=>r.rk<=10),mine=all.find(r=>r.me&&r.rk>10);
-  els().forEach(el2=>{const nm=el2.id==='bmBd'?'bmbw':'bmbwL';el2.innerHTML=`<h3 style="margin:16px 0 6px">🙈 八字盲測排行榜 <span class="seg" style="vertical-align:middle;font-weight:400"><label><input type="radio" name="${nm}" value="1"${wk?' checked':''}>本週</label><label><input type="radio" name="${nm}" value="0"${wk?'':' checked'}>本月</label></span></h3>`+(rows.length?`<table class="sstab qzbd rkfx"><thead><tr><th>名次</th><th>師兄師姐</th><th>分數</th><th title="啱幾多題／做咗幾多題">答啱率</th></tr></thead><tbody>${rows.map(r=>`<tr${r.me?' class="me"':''}><th>${r.rk<=3?['🥇','🥈','🥉'][r.rk-1]:r.rk}</th><td>${rkFx(r.rk,esc(qzName(r)))}${r.me?'（你）':''}</td><td><b>${r.score}</b></td><td class="hint">${Math.round(r.score/r.n*100)}% <small>(${r.score}/${r.n})</small></td></tr>`).join('')}</tbody></table>`:`<p class="hint">${wk?'今個星期':'今個月'}未有人上榜，答啱一題計分題就上到。</p>`)+(ADMIN?'<p class="hint">🔒 你係管理員，你嘅成績唔會上榜（同狀元榜一樣）。</p>':'')+(mine?`<p class="hint">你而家排第 ${mine.rk} 名（${mine.score} 分），加油！</p>`:'')+'<p class="hint">榜上只放頭 10 名。每輪 10 題，每星期頭 5 輪（50 題）計分，每答啱一題 1 分，即刻上榜；之後照玩，係練習唔計分。答案喺伺服器對，30 日內見過答案嘅題目唔再計分。同分睇答啱率，都一樣就同級。本週榜逢星期一、本月榜逢每月 1 號（香港時間）重新計。</p>'+(el2.id==='bmBdLb'?'<p><button type="button" class="lnk" data-bmgo>🙈 去玩八字盲測 ›</button></p>':'');});}
+  els().forEach(el2=>{const nm=el2.id==='bmBd'?'bmbw':'bmbwL';el2.innerHTML=`<h3 style="margin:16px 0 6px">🙈 八字盲測排行榜 <span class="seg" style="vertical-align:middle;font-weight:400"><label><input type="radio" name="${nm}" value="1"${wk?' checked':''}>本週</label><label><input type="radio" name="${nm}" value="0"${wk?'':' checked'}>本月</label></span></h3>`+(rows.length?`<table class="sstab qzbd rkfx"><thead><tr><th>名次</th><th>師兄師姐</th><th>分數</th><th title="啱幾多題／做咗幾多題">答啱率</th><th title="計分題用咗幾多個隱師錦囊；同分冇用錦囊排先">隱師錦囊</th></tr></thead><tbody>${rows.map(r=>`<tr${r.me?' class="me"':''}><th>${r.rk<=3?['🥇','🥈','🥉'][r.rk-1]:r.rk}</th><td>${rkFx(r.rk,esc(qzName(r)))}${r.me?'（你）':''}</td><td><b>${r.score}</b></td><td class="hint">${Math.round(r.score/r.n*100)}% <small>(${r.score}/${r.n})</small></td><td class="hint">${r.jn?'🧧'+r.jn:'—'}</td></tr>`).join('')}</tbody></table>`:`<p class="hint">${wk?'今個星期':'今個月'}未有人上榜，答啱一題計分題就上到。</p>`)+(ADMIN?'<p class="hint">🔒 你係管理員，你嘅成績唔會上榜（同狀元榜一樣）。</p>':'')+(mine?`<p class="hint">你而家排第 ${mine.rk} 名（${mine.score} 分），加油！</p>`:'')+'<p class="hint">榜上只放頭 10 名。每輪 10 題，每星期頭 5 輪（50 題）計分，每答啱一題 1 分，即刻上榜；之後照玩，係練習唔計分。答案喺伺服器對，30 日內見過答案嘅題目唔再計分。同分用少隱師錦囊嘅排先，再睇答啱率，都一樣就同級。本週榜逢星期一、本月榜逢每月 1 號（香港時間）重新計。</p>'+(el2.id==='bmBdLb'?'<p><button type="button" class="lnk" data-bmgo>🙈 去玩八字盲測 ›</button></p>':'');});}
 function bmOpen(){const r=document.querySelector('input[name=ntab][value=bm]');if(!r)return;if(isMob())mTab('learn');const n=r.closest('section');if(n)n.classList.remove('folded');r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));const b=$('np-bm');if(b)b.scrollIntoView({block:'start'});}
 document.addEventListener('click',e=>{const p=e.target.closest('[data-bmpick]');if(p&&BM.pick<0&&BM.rd&&!BM.busy){const q=BM.rd[BM.i],side=+p.dataset.bmpick,sc=bmScored(),i=BM.i;BM.pick=side;BM.err='';BM.busy=true;bmDraw();
     const fin=j=>{q._a=j;q._sc=!!j.saved;if(j.saved){BM.wk=+j.n;BM.rsc++;}const ok=side===j.ans;BM.log[i]=ok;if(ok)BM.sc++;bmSeenAdd(q.id);BM.bd=null;};
-    (CLOUD?api('rpc/blind_answer',{method:'POST',body:JSON.stringify({p_qid:q.id,p_pick:side,p_score:sc})}):Promise.reject(new Error('offline'))).then(fin).catch(()=>{BM.pick=-1;BM.err='連唔到伺服器對答案，請再撳一次。';}).then(()=>{BM.busy=false;if(BM.rd&&BM.i===i)bmDraw();});return;}
+    (CLOUD?api('rpc/blind_answer',{method:'POST',body:JSON.stringify({p_qid:q.id,p_pick:side,p_score:sc,p_jn:q._jn||0})}):Promise.reject(new Error('offline'))).then(fin).catch(()=>{BM.pick=-1;BM.err='連唔到伺服器對答案，請再撳一次。';}).then(()=>{BM.busy=false;if(BM.rd&&BM.i===i)bmDraw();});return;}
+  const jb=e.target.closest('[data-bmjn]');if(jb&&BM.rd&&BM.pick<0&&!BM.busy){const k=jb.dataset.bmjn,q=BM.rd[BM.i];BM.jk=BM.jk||{};if(BM.jk[k])return;
+    if(k==='sw'){if(bmSwap()){BM.jk.sw=1;}else alert('冇得再換題喇。');bmDraw();return;}
+    if(k==='ht'){BM.jk.ht=1;q._ht=1;q._jn=(q._jn||0)+1;bmDraw();return;}
+    if(k==='pl'){BM.busy=true;bmDraw();api('rpc/blind_poll',{method:'POST',body:JSON.stringify({p_qid:q.id})}).then(j=>{const a=+(j&&j.a)||0,b=+(j&&j.b)||0;q._pl={a,n:a+b};BM.jk.pl=1;q._jn=(q._jn||0)+1;}).catch(()=>{BM.err='連唔到伺服器，錦囊未用，請再試。';}).then(()=>{BM.busy=false;if(BM.rd&&BM.rd[BM.i]===q)bmDraw();});return;}}
   if(e.target.closest('[data-bmnext]')){BM.i++;BM.pick=-1;BM.err='';bmDraw();const b=$('np-bm');if(b&&isMob())b.scrollIntoView({block:'start'});return;}
   if(e.target.closest('[data-bmgo]')){bmOpen();return;}
   if(e.target.closest('[data-bmagain]')){BM.rd=null;bmDraw();}});
