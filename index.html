@@ -2492,7 +2492,8 @@ function drawChains(){
   });
 }
 window.addEventListener('resize',()=>{if(S)drawChains();});
-document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.halfck){const [h,k]=e.target.dataset.halfck.split('|');HALF_CK[h+k]=e.target.checked;render();return;}if(e.target.id==='vFillSplit')HALF_CK={};});
+document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.halfck){const [h,k]=e.target.dataset.halfck.split('|'),on=e.target.checked,cc=S&&S.cc&&S.cc.find(c=>c&&c.h===h&&c.hFill);
+    if(cc&&!!cc.hFill[+k]===on)delete HALF_CK[h+k];else HALF_CK[h+k]=on;halfSave();render();return;}if(e.target.id==='vFillSplit')HALF_CK=halfLoad(S&&S.evK);});
 document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.colck){const c=S&&S.cols&&S.cols.find(x=>x.h===e.target.dataset.colck);if(c){const on=e.target.checked,g=c.yuan?'yuanCalc':c.aux?'auxCalc':null;if(c.show)VIEW[c.show]=on;else{if(g&&on&&!VIEW[g]){VIEW[g]=true;S.cols.forEach(x=>{if(x!==c&&(c.yuan?x.yuan:x.aux))VIEW.colOff[x.h]=true;});}VIEW.colOff[c.h]=!on;}render();}}else if(e.target.id==='vVirt'){VIEW.virt=e.target.checked;drawChains();}else if(e.target.id==='vDyn'){VIEW.dyn=e.target.checked;drawChains();}else if(e.target.id==='vDynZg'){VIEW.dynZg=e.target.checked;drawChains();}else if(e.target.id==='vNatL'){VIEW.natL=e.target.checked;drawChains();}else if(e.target.id==='vArNum'){VIEW.arNum=e.target.checked;document.body.classList.toggle('arnum',VIEW.arNum);}else if(e.target.id==='vNoMidL'){VIEW.noMidL=e.target.checked;render();}else if(e.target.id==='vHr'){VIEW.hr=e.target.checked;render();}else if(e.target.id==='vHrCalc'){VIEW.hrCalc=e.target.checked;render();}else if(e.target.id==='vCInfo'){VIEW.cInfo=e.target.checked;render();}else if(e.target.id==='vGanTop'){VIEW.ganTop=e.target.checked;render();}else if(e.target.id==='vNoDyn'){VIEW.noDyn=e.target.checked;render();}else if(e.target.id==='vNoMD'){VIEW.noMD=e.target.checked;render();}else if(e.target.id==='vNoD'){VIEW.noD=e.target.checked;render();}else if(e.target.id==='vXiao'){VIEW.xiao=e.target.checked;render();}else if(e.target.id==='vXiaoCalc'){VIEW.xiaoCalc=e.target.checked;render();}else if(e.target.id==='vPrevMoCalc'){VIEW.prevMoCalc=e.target.checked;render();}else if(e.target.id==='vJinqiCalc'){VIEW.jinqiCalc=e.target.checked;render();}else if(e.target.id==='vMingLeft'){VIEW.mingLeft=e.target.checked;render();}else if(e.target.id==='vPrevMo'){VIEW.prevMo=e.target.checked;render();}else if(e.target.id==='vLnJinG'){VIEW.lnJinG=e.target.checked;render();}else if(/^vAdj(Dy|Ln|Mo)[PN]$/.test(e.target.id)){VIEW['adj'+e.target.id.slice(4)]=e.target.checked;render();}else if(e.target.id==='vJinMode'){VIEW.jinMode=e.target.value;render();}else if(e.target.id==='vLnJinGM'){VIEW.lnJinGM=e.target.value;render();}else if(e.target.id==='vLnJinGCalc'){VIEW.lnJinGCalc=e.target.checked;render();}else if(e.target.id==='vMoJin'){VIEW.moJin=e.target.checked;render();}else if(e.target.id==='vMoJinCalc'){VIEW.moJinCalc=e.target.checked;render();}else if(e.target.id==='vSha'){VIEW.sha=e.target.checked;render();}else if(e.target.id==='vWork'){WORK_KEEP(e.target.checked);if(e.target.checked)buyWork(e.target);else{VIEW.work=false;render();}}else if(e.target.id==='vShaAll'){VIEW.shaAll=e.target.checked;render();}else if(e.target.id==='vJinqi'){VIEW.jinqi=e.target.checked;render();}else if(e.target.id==='vMuku'){VIEW.muku=e.target.checked;render();}else if(e.target.id==='vNewBlk'){VIEW.newBlk=e.target.checked;render();}else if(e.target.id==='vWkMark'){VIEW.wkMark=e.target.checked;render();}else if(e.target.id==='vSsTag'){VIEW.ssTag=e.target.checked;render();}else if(e.target.name==='tkm'){VIEW.tkAll=e.target.value==='all';render();}else if(e.target.id==='vSw'){VIEW.sw=e.target.checked;render();}else if(e.target.id==='vSwm'){VIEW.swm=e.target.value;render();}else if(e.target.name==='mgq'){VIEW.mgQi=e.target.value==='qi';render();}else if(e.target.id==='vOnly4'){VIEW.only4=e.target.checked;if(VIEW.only4)VIEW.core=false;render();}else if(e.target.id==='vCore'){VIEW.core=e.target.checked;if(VIEW.core)VIEW.only4=false;render();}else if(e.target.id==='vYuan'){VIEW.yuan=e.target.checked;render();}else if(e.target.id==='vZgMerge'){VIEW.zgMerge=e.target.checked;render();}else if(e.target.id==='vLianSplit'){VIEW.lianSplit=e.target.checked;render();}else if(e.target.id==='vAuxCalc'){VIEW.auxCalc=e.target.checked;['身宮','胎息','胎元','命宮'].forEach(h=>delete VIEW.colOff[h]);render();}else if(e.target.id==='vYuanCalc'){VIEW.yuanCalc=e.target.checked;Object.keys(VIEW.colOff).forEach(h=>{if(/^元運/.test(h))delete VIEW.colOff[h];});render();}else if(['vYuanTrig','vFillSplit','vNatGong','vYsWork','vCapMode','vZangHe','vZangHeX','vZangHeBq','vFuMing','vLnJin','vLnJinCalc','vDyJin','vDyJinCalc','vRoute'].includes(e.target.id)){VIEW[e.target.id[1].toLowerCase()+e.target.id.slice(2)]=e.target.checked;render();}else if(e.target.id==='vAux'){VIEW.aux=e.target.checked;render();}else if(e.target.id==='vMing'){VIEW.ming=e.target.checked;render();}});
 document.addEventListener('change',e=>{if(e.target.closest&&(e.target.closest('.viewopt,.tkopt')||e.target.dataset.colck))saveView();});
 
@@ -2793,8 +2794,15 @@ const fillSrc=cc=>{const zl=c=>({gz:c.gz,dyn:!!c.dyn,lbl:c.dyn?c.h.replace('大�
   if(CALC_T.fillDyn){const src=cc.filter(c=>c.gz&&!c.yuan&&!c.aux&&isIn(c)),all=cc.filter(c=>c.gz&&!c.yuan&&!c.aux&&(/^[年月日時]柱$/.test(c.h)||isIn(c))),inI=new Set(all.map((c,i)=>isIn(c)?i:-1)),Z=zhaogan(all.map(zl)),f=a=>VIEW.natGong?a:a.filter(x=>x&&((x.src||[]).some(i=>inI.has(i))||fmOK(all,x)));return {src,ZG:{st:f(Z.st),br:f(Z.br)}};}
   const src=cc.filter(c=>c.gz&&!c.yuan&&!c.aux&&(/^[年月日時]柱$/.test(c.h)||isIn(c)));return {src,ZG:zhaogan(src.map(zl))};};
 // 填實分開計天干地支（主人 11月17日，顯示選項，預設閂）：元運、三桓、命宮每條柱嘅天干同地支各自睇填實；填實咗嗰半入計算，未填實嗰半唔計（唔係減半），另一半填唔填實都唔影響。
-// 柱頂每個紅綠標籤前面有剔格（計干／計支），預設跟填實自動剔，用戶可以自己改（只記喺今次打開網頁，重新載入或者轉選項就返返自動）
+// 柱頂每個紅綠標籤前面有剔格（計干／計支），預設跟填實自動剔，用戶可以自己改（喺命例撳事件開嘅盤會逐件事記喺部機，見下面 b8-halfck；其他盤只記喺今次打開網頁）
 let HALF_CK={};
+// 虛干／虛支剔格逐件事記住（用家 11月26日要求）：喺命例撳事件開盤，剔過嘅干支剔格記喺部機（b8-halfck），下次撳返同一件事自動剔返；
+// key＝命例 id＋事件名＋日期；同自動（跟填實）一樣嘅剔格唔記；冇事件嘅盤照舊只記喺今次打開網頁；轉第二個人嘅盤就清返，唔再跟埋過去
+let EV_NEXT=null;const LS_HALF='b8-halfck';
+const halfAll=()=>{try{return JSON.parse(localStorage.getItem(LS_HALF)||'{}')||{};}catch(e){return {};}};
+const halfLoad=k=>k?{...(halfAll()[k]||{})}:{};
+function halfSave(){const k=S&&S.evK;if(!k||(typeof VWR!=='undefined'&&VWR.on))return;try{const a=halfAll();delete a[k];if(Object.keys(HALF_CK).length)a[k]={...HALF_CK};
+  const ks=Object.keys(a);ks.slice(0,Math.max(0,ks.length-500)).forEach(x=>delete a[x]);localStorage.setItem(LS_HALF,JSON.stringify(a));}catch(e){}}
 const ccK=(cc,k)=>cc.some(c=>c.hOff&&c.hOff[k])?cc.map(c=>c.hOff&&c.hOff[k]?{...c,gz:null}:c):cc;
 const halfHit=({src,ZG},ch,k)=>{const a=src.filter(d=>d.gz[k]===ch).map(d=>d.h);if((k?ZG.br:ZG.st).some(x=>x&&x.c===ch))a.push('招感');return [...new Set(a)];};
 const splitCol=c=>!!(VIEW.fillSplit&&(c.yuan||c.aux));
@@ -4172,12 +4180,16 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-hsh]');if(
     const so=u==='t'?so0.nextHour(dir*2):u==='d'?so0.next(dir):u==='m'?so0.nextMonth(dir):so0.nextYear(dir);
     v={...LAST_V,lunar:false,leap:false,y:so.getYear(),m:so.getMonth(),d:so.getDay(),h:so.getHour(),mi:so.getMinute()};}
   HSH.busy=true;try{writeForm(v);run(v);}finally{HSH.busy=false;}});
+// 換盤時決定虛干／虛支剔格跟邊件事：撳事件開 → 讀返嗰件事記低嘅剔格；同一個人同一日重排 → 照舊；第二個人或者第二日 → 清返（冇事件就只記喺今次網頁）
+function halfScope(S_,v,ev){const P=typeof LAST_V!=='undefined'&&S_?LAST_V:null,same=!!P&&['y','m','d','h','mi','sex','lunar','leap','zi','lon','tz','dst','tst'].every(k=>P[k]===v[k]);
+  const at=x=>x&&x.at?[x.at.y,x.at.m,x.at.d].join('-'):'';
+  if(ev){S.evK=ev;HALF_CK=halfLoad(ev);}else if(same&&at(P)===at(v)){S.evK=S_.evK||null;}else if(!same){S.evK=null;HALF_CK={};}else S.evK=null;}
 function run(v,force){
   $('err').textContent='';
   if(!(v.y>=-2999&&v.y<=9999)){$('err').textContent='年份請填公元前 3000 年至公元 9999 年。';return;}
   if(isNaN(v.lon)){$('err').textContent='請填出生地經度，或者揀城市。';return;}
   if(v.at&&!validDate(v.at.y,v.at.m,v.at.d)){$('err').textContent='睇運日期冇呢一日，請再揀過。';return;}
-  try{S=compute(v);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();setInSum(v);if(RUN_N++||fromQuery())mTab('chart');try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
+  try{const S_=S,ev=EV_NEXT;EV_NEXT=null;S=compute(v);halfScope(S_,v,ev);S.ref=v.at?Solar.fromYmdHms(v.at.y,v.at.m,v.at.d,12,0,0):null;pickToday();render();setInSum(v);if(RUN_N++||fromQuery())mTab('chart');try{localStorage.setItem('bazi-last',JSON.stringify(v));}catch(e){}
     LAST_V=v;trackChart(v,force);if(!HSH.busy){HSH.base=null;HSH.off={y:0,m:0,d:0,t:0};}try{history.replaceState(null,'',location.pathname+'?'+toQuery(v)+location.hash);}catch(e){}}
   catch(e){console.error(e);$('err').textContent=e.message&&/[一-鿿]/.test(e.message)?e.message:v.lunar&&!(e instanceof TypeError||e instanceof ReferenceError)?'呢個日子計唔到（例如農曆該年冇呢個閏月），請再檢查。':'排盤程式出錯（'+(e&&e.message||e)+'），可以試吓閂咗試驗選項，或者截圖通知站長。';}
 }
@@ -5025,7 +5037,7 @@ document.addEventListener('click',e=>{
   if(t.dataset.ksgo){const [y,m,d]=t.dataset.ksgo.split('-').map(Number);$('atEra').value=y<=0?'-1':'1';$('aty').value=y<=0?1-y:y;$('atm').value=m;$('atd').value=d;run(readForm());$('chartBox')?.scrollIntoView({behavior:'smooth'});return;}
   if(t.dataset.evgo!==undefined){const c=CASES.find(x=>x.id===t.dataset.id),v=c&&(c.input.events||[])[+t.dataset.evgo];if(!v)return;
     // 淨係知年／月嘅事件冇日（甚至冇月）：用嗰個月 15 號（冇月就用 6 月 15 號），流月流日照收埋（主人 11月15日報錯：冇日會令睇運日期無效）
-    writeForm({...c.input,name:c.name,at:{y:v.y,m:v.m||6,d:v.d||15}});const S0=S;run(readForm());if(S&&S!==S0&&v.p&&v.p!=='d'){S.evP=v.p;S.evT=`${v.t} ${evTxt(v)}`;render();}$('out').scrollIntoView({behavior:'smooth'});return;}
+    writeForm({...c.input,name:c.name,at:{y:v.y,m:v.m||6,d:v.d||15}});const S0=S;EV_NEXT=c.id+'|'+(v.t||'')+'|'+[v.y,v.m||'',v.d||''].join('-');run(readForm());if(S&&S!==S0&&v.p&&v.p!=='d'){S.evP=v.p;S.evT=`${v.t} ${evTxt(v)}`;render();}$('out').scrollIntoView({behavior:'smooth'});return;}
   // 修改事件：將事件填返入「加事件」表格，撳「改」就取代原本嗰個
   if(t.dataset.evedit!==undefined||t.dataset.evcancel!==undefined){const f=t.closest('.panel,#caseNote,body').querySelector('[data-addev]');if(!f)return;
     const c=CASES.find(x=>x.id===f.dataset.addev),v=t.dataset.evedit!==undefined&&c&&(c.input.events||[])[+t.dataset.evedit];
