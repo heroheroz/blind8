@@ -2762,7 +2762,7 @@ let S_ccJ=null;
 // 選項加出嚟嘅柱：柱頂有個「計」剔格，剔咗先入計算，唔剔就只係顯示
 const COL_OPT={進氣流年:'流年進氣（鋼佬）或者流年進氣',進氣流月:'流月進氣（鋼佬）',交脫運:'交脫運',上月流月:'上月流月',小運:'顯示小運',進氣時柱:'時柱進氣',流時:'顯示流時'};
 // 下月流月預設唔計（主人 11月17日；上月流月用 prevMoCalc）；元運（元運、元運1、元運2…）預設唔計（主人 11月19日：「計」剔格預設全部唔計）；用戶自己剔過就跟佢（colOff 明確寫 false＝計）
-const COL_DEF_OFF=h=>h==='下月流月'||/^元運\d*$/.test(h),colOffD=h=>!!(VIEW.colOff[h]??COL_DEF_OFF(h));
+const COL_DEF_OFF=h=>h==='下月流月'||/^元運\d*$/.test(h)||/^加人\d+[日時]$/.test(h),colOffD=h=>!!(VIEW.colOff[h]??COL_DEF_OFF(h));
 const colOn=c=>c.show?!!VIEW[c.show]:c.yuan?VIEW.yuanCalc&&!colOffD(c.h):c.aux?VIEW.auxCalc&&!colOffD(c.h):!colOffD(c.h);
 const colHasCk=c=>!!(c.show||c.adj||c.yuan||c.aux);
 const FIX_TIP=c=>c.yuan?'元運柱（每 60 年一柱）。預設唔計（11月19日起）；剔咗「計」先入計算，照舊要填實先全力計（原局、大運或者流年有佢嘅字，或者招出嚟）；唔剔就成條柱只係顯示，填實都唔計。':`三桓／命宮柱（${c.h}）。預設唔計；剔咗「計」＝同原局柱一樣入計算；唔剔＝只係顯示，唔入計算。`;
@@ -2812,30 +2812,35 @@ const whoMine=()=>{const k=S&&S.ck||(typeof chartKey==='function'?chartKey():'')
 const whoList=()=>{const c=whoCase();return [...(c?(c.input.who||[]).map((p,j)=>({...p,src:'case',j})):[]),...whoMine().map((p,j)=>({...p,src:'me',j}))].slice(0,WHO_MAX);};
 function whoSet(a){const k=S&&(S.ck||chartKey());if(!k)return;try{const m=whoAll();if(a.length)m[k]=a;else delete m[k];const ks=Object.keys(m);ks.slice(0,Math.max(0,ks.length-300)).forEach(x=>delete m[x]);localStorage.setItem(LS_WHO,JSON.stringify(m));}catch(e){}}
 const whoMo=()=>{try{return localStorage.getItem('b8-who-mo')==='1';}catch(e){return false;}};
-function whoGz(p){const y=+p.y;if(p.m&&p.d){try{const l=Solar.fromYmd(y,+p.m,+p.d).getLunar();return {y:l.getYearInGanZhiExact(),m:l.getMonthInGanZhiExact(),exact:true};}catch(e){}}
-  return {y:JIAZI60[((y-4)%60+60)%60],m:null,exact:false};}
-function whoCols(){const out=[],mo=whoMo(),ew=S&&S.evWho;
+// 加人日柱、時柱（主人 11月26日，Eric師兄要求）：有日就有日柱，有時辰就有時柱；同月柱一樣全站一個剔格
+function whoGz(p){const y=+p.y;if(p.m&&p.d){try{const hr=p.h!=null&&p.h!=='',l=Solar.fromYmdHms(y,+p.m,+p.d,hr?+p.h:12,0,0).getLunar(),e=l.getEightChar();return {y:e.getYear(),m:e.getMonth(),d:e.getDay(),t:hr?e.getTime():null,exact:true};}catch(e){}}
+  return {y:JIAZI60[((y-4)%60+60)%60],m:null,d:null,t:null,exact:false};}
+const whoDy=()=>{try{return localStorage.getItem('b8-who-dy')==='1';}catch(e){return false;}},whoHr=()=>{try{return localStorage.getItem('b8-who-hr')==='1';}catch(e){return false;}};
+function whoCols(){const out=[],mo=whoMo(),dy=whoDy(),hr=whoHr(),ew=S&&S.evWho;
   if(ew){const g=whoGz(ew),n=ew.n||'事件人';out.push({h:'事件人',sub:`${n} · 年柱${g.exact?'':'（未計立春）'}`,gz:g.y,dyn:true,who:true,adj:'加人'});
     if(ew.mo&&g.m)out.push({h:'事件人月',sub:`${n} · 月柱`,gz:g.m,dyn:true,who:true,adj:'加人'});}whoList().forEach((p,i)=>{const g=whoGz(p),n=p.n||('第'+(i+1)+'個人'),h='加人'+(i+1);
   out.push({h,sub:`${n} · 年柱${g.exact?'':'（未計立春）'}`,gz:g.y,dyn:true,who:true,adj:'加人'});
-  if(mo&&g.m)out.push({h:h+'月',sub:`${n} · 月柱`,gz:g.m,dyn:true,who:true,adj:'加人'});});return out;}
+  if(mo&&g.m)out.push({h:h+'月',sub:`${n} · 月柱`,gz:g.m,dyn:true,who:true,adj:'加人'});
+  if(dy&&g.d)out.push({h:h+'日',sub:`${n} · 日柱`,gz:g.d,dyn:true,who:true,adj:'加人'});
+  if(hr&&g.t)out.push({h:h+'時',sub:`${n} · 時柱`,gz:g.t,dyn:true,who:true,adj:'加人'});});return out;}
 let WHO_HELP=false;  // 加人旁邊 ？ 說明（主人 11月26日）
-function whoHtml(){const L=whoList(),mo=whoMo();
+function whoHtml(){const L=whoList(),mo=whoMo(),dy=whoDy(),hr=whoHr();
   const wc=whoCase(),wed=!!wc&&can.edit(wc);
-  const rows=L.map((p,i)=>{const g=whoGz(p),del=p.src==='me'||wed;return `<li><b>加人${i+1}</b> ${esc(p.n||'')} ${p.y<=0?'前'+(1-p.y):p.y}${p.m?'-'+p.m:''}${p.d?'-'+p.d:''}　年柱 <b>${g.y}</b>${g.m?`　月柱 <b>${g.m}</b>${mo?'':'（未加）'}`:''}${g.exact?'':'<span class="hint">（冇月日，未計立春；1、2月初出世要自己核對）</span>'} <span class="hint">${p.src==='case'?`（命例${p.by?'・'+esc(p.by):''}）`:wc?'（只喺你部機）':''}</span>${del?` <button type="button" class="lnk" data-whodel="${i}" aria-label="刪除">✕</button>`:''}</li>`;}).join('');
+  const rows=L.map((p,i)=>{const g=whoGz(p),del=p.src==='me'||wed;return `<li><b>加人${i+1}</b> ${esc(p.n||'')} ${p.y<=0?'前'+(1-p.y):p.y}${p.m?'-'+p.m:''}${p.d?'-'+p.d:''}${p.h!=null&&p.h!==''?' '+p.h+'時':''}　年柱 <b>${g.y}</b>${g.m?`　月柱 <b>${g.m}</b>${mo?'':'（未加）'}`:''}${g.d?`　日柱 <b>${g.d}</b>${dy?'':'（未加）'}`:''}${g.t?`　時柱 <b>${g.t}</b>${hr?'':'（未加）'}`:''}${g.exact?'':'<span class="hint">（冇月日，未計立春；1、2月初出世要自己核對）</span>'} <span class="hint">${p.src==='case'?`（命例${p.by?'・'+esc(p.by):''}）`:wc?'（只喺你部機）':''}</span>${del?` <button type="button" class="lnk" data-whodel="${i}" aria-label="刪除">✕</button>`:''}</li>`;}).join('');
   const ew=S&&S.evWho,eg=ew&&whoGz(ew),erow=ew?`<li><b>事件人</b> ${esc(ew.n||'')} ${ew.y<=0?'前'+(1-ew.y):ew.y}${ew.m?'-'+ew.m:''}${ew.d?'-'+ew.d:''}　年柱 <b>${eg.y}</b>${ew.mo&&eg.m?`　月柱 <b>${eg.m}</b>`:''}<span class="hint">（跟事件「${esc(ew.t||'')}」，喺命例事件「＋人」改）</span></li>`:'';
   return `<details class="more whobox"${L.length||ew||WHO_HELP?' open':''}><summary>➕ 加人（配偶、拍檔、仔女……）${L.length?`：${L.length} 個`:''} <button type="button" class="whoq" data-whohelp aria-label="點用加人" aria-expanded="${WHO_HELP}">？</button></summary>
-  ${WHO_HELP?`<div class="whohelp"><b>點用加人</b><ol><li>填對方公曆出世年（月日可以唔填），撳「加」。</li><li>盤上多咗一條「加人」柱（佢嘅年柱），好似流年咁入嚟，參與招感、粘連、做功，亦會填實元運。</li><li>睇佢條柱有冇幫你做到功：有就係旺你、幫到你。</li><li>剔「加人月柱」連佢嘅月柱都計（要填埋月日）。</li><li>柱頂「計」唔剔＝只顯示唔計；✕ 刪除；最多 ${WHO_MAX} 個。</li><li>命例事件旁邊「＋人」可以為某件事（結婚、生仔）加伴侶或子女，撳事件睇運時以「事件人」柱計。</li></ol><p class="hint">老師：配偶出世嗰年嘅天干地支幫你完成做功，好大程度睇天干（〈教你如何從八字推算出配偶的出生年〉約 31:10）。</p></div>`:''}
+  ${WHO_HELP?`<div class="whohelp"><b>點用加人</b><ol><li>填對方公曆出世年（月日可以唔填），撳「加」。</li><li>盤上多咗一條「加人」柱（佢嘅年柱），好似流年咁入嚟，參與招感、粘連、做功，亦會填實元運。</li><li>睇佢條柱有冇幫你做到功：有就係旺你、幫到你。</li><li>剔「加人月柱／日柱／時柱」連佢嗰幾條柱都計（月柱日柱要填埋月日，時柱要填埋時辰）；日柱、時柱出咗之後預設「唔計」，要計就剔柱頂「計」。</li><li>柱頂「計」唔剔＝只顯示唔計；✕ 刪除；最多 ${WHO_MAX} 個。</li><li>命例事件旁邊「＋人」可以為某件事（結婚、生仔）加伴侶或子女，撳事件睇運時以「事件人」柱計。</li></ol><p class="hint">老師：配偶出世嗰年嘅天干地支幫你完成做功，好大程度睇天干（〈教你如何從八字推算出配偶的出生年〉約 31:10）。</p></div>`:''}
   <p class="hint">${wc?(wed?'開住命例：加嘅人會記入命例，人人開呢個命例都見到。':'呢個命例唔係你嘅：你加嘅人只記喺你部機；命例主人加嘅人人都見到。'):'冇開命例：只記喺呢部機、呢個盤。'}</p>
   ${rows||erow?`<ul class="wholist">${erow}${rows}</ul>`:''}
-  ${L.length<WHO_MAX?`<div class="row"><input type="text" id="whoN" placeholder="名（可選）" maxlength="12" style="width:7em"><input type="number" id="whoY" placeholder="年" style="width:5.5em"><input type="number" id="whoM" placeholder="月" min="1" max="12" style="width:3.5em"><input type="number" id="whoD" placeholder="日" min="1" max="31" style="width:3.5em"><button type="button" class="go sm" data-whoadd>加</button></div><p class="hint">公曆；月日可以唔填（就淨係用年份排年柱）。</p>`:''}
-  <label class="chk"><input type="checkbox" id="vWhoMo" ${mo?'checked':''}>加人月柱（要有月日）</label></details>`;}
+  ${L.length<WHO_MAX?`<div class="row"><input type="text" id="whoN" placeholder="名（可選）" maxlength="12" style="width:7em"><input type="number" id="whoY" placeholder="年" style="width:5.5em"><input type="number" id="whoM" placeholder="月" min="1" max="12" style="width:3.5em"><input type="number" id="whoD" placeholder="日" min="1" max="31" style="width:3.5em"><input type="number" id="whoH" placeholder="時" min="0" max="23" style="width:3.5em" title="出世時間（0–23 點，可以唔填）"><button type="button" class="go sm" data-whoadd>加</button></div><p class="hint">公曆；月日時可以唔填（冇月日就淨係用年份排年柱）。時填 0–23 點，例如下晝 3 點填 15。</p>`:''}
+  <div class="row" style="gap:14px;flex-wrap:wrap"><label class="chk"><input type="checkbox" id="vWhoMo" ${mo?'checked':''}>加人月柱</label><label class="chk"><input type="checkbox" id="vWhoDy" ${dy?'checked':''}>加人日柱</label><label class="chk"><input type="checkbox" id="vWhoHr" ${hr?'checked':''}>加人時柱</label></div></details>`;}
 document.addEventListener('click',e=>{const q=e.target.closest&&e.target.closest('[data-whohelp]');if(q){e.preventDefault();e.stopPropagation();WHO_HELP=!WHO_HELP;const d=q.closest('details');if(d)d.open=true;render();return;}});
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-whoadd],[data-whodel]');if(!t||!S)return;
-  if(t.hasAttribute('data-whoadd')){const y=parseInt($('whoY').value,10),m=parseInt($('whoM').value,10)||0,d=parseInt($('whoD').value,10)||0;
+  if(t.hasAttribute('data-whoadd')){const y=parseInt($('whoY').value,10),m=parseInt($('whoM').value,10)||0,d=parseInt($('whoD').value,10)||0,hv=$('whoH')?$('whoH').value.trim():'',h=hv===''?null:parseInt(hv,10);
+    if(h!=null&&(!(h>=0&&h<=23)||!d)){alert('時辰要填 0–23，而且要先填埋月日。');return;}
     if(!(y>=-2999&&y<=9999)){alert('請填出世年份（公元）。');return;}
     if(m&&(m<1||m>12)||d&&(!m||d<1||d>31)||(m&&d&&typeof validDate==='function'&&!validDate(y,m,d))){alert('月日唔啱，請再檢查（填日要填埋月）。');return;}
-    if(whoList().length>=WHO_MAX)return;const np={n:$('whoN').value.trim().slice(0,12),y,m:m||null,d:d&&m?d:null},wc=whoCase();
+    if(whoList().length>=WHO_MAX)return;const np={n:$('whoN').value.trim().slice(0,12),y,m:m||null,d:d&&m?d:null,...(h!=null&&d&&m?{h}:{})},wc=whoCase();
     if(wc&&can.edit(wc)){const by=myName();if(by&&by!=='我')np.by=by.split('@')[0].slice(0,20);whoCase_save(wc,[...(wc.input.who||[]),np]);return;}
     whoSet([...whoMine(),np]);render();return;}
   const p=whoList()[+t.dataset.whodel];if(!p)return;
@@ -2863,7 +2868,7 @@ document.addEventListener('submit',e=>{const f=e.target;if(!f.dataset||!f.datase
   if(m&&(m<1||m>12)||d&&(!m||d<1||d>31)||(m&&d&&!validDate(y,m,d))){$('caseMsg').textContent='伴侶／子女出世月日唔啱，請再檢查（填日要填埋月）。';return;}
   const w={n:f.n.value.trim().slice(0,12),y,m:m||null,d:d&&m?d:null};if(f.mo.checked)w.mo=1;f.hidden=true;evWhoPut(c,+f.i.value,w);});
 function whoCase_save(c,a){const inp={...c.input,who:a};if(!a.length)delete inp.who;c.input=inp;render();busy(()=>Store.update(c.id,{input:inp}));}
-document.addEventListener('change',e=>{if(e.target.id==='vWhoMo'){try{localStorage.setItem('b8-who-mo',e.target.checked?'1':'0');}catch(x){}render();}});
+document.addEventListener('change',e=>{const k={vWhoMo:'b8-who-mo',vWhoDy:'b8-who-dy',vWhoHr:'b8-who-hr'}[e.target.id];if(k){try{localStorage.setItem(k,e.target.checked?'1':'0');}catch(x){}render();}});
 const halfAll=()=>{try{return JSON.parse(localStorage.getItem(LS_HALF)||'{}')||{};}catch(e){return {};}};
 const halfLoad=k=>k?{...(halfAll()[k]||{})}:{};
 function halfSave(){const k=S&&S.evK;if(!k||(typeof VWR!=='undefined'&&VWR.on))return;try{const a=halfAll();delete a[k];if(Object.keys(HALF_CK).length)a[k]={...HALF_CK};
