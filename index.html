@@ -3633,7 +3633,17 @@ function bmTw(q){const D=BM.data,a=q._a;if(!a)return '';const sides=[0,1].filter
     return `<div class="bmtw"><b>🎓 隱姓先生講過${s?'乙':'甲'}（${E(inf.n)}）</b><ul>${ev.map(e=>`<li><span class="hint">${E(e.y||'')}${e.y?' ':''}${E(e.t||'')}</span>${e.why.map(w=>`<div>${w.u?`<a class="lnk" href="${E(w.u)}" target="_blank" rel="noopener">▶ ${E(w.n||'課堂')}</a> `:E(w.n||'')+' '}${E(w.x||'')}</div>`).join('')}</li>`).join('')}</ul></div>`;}).join('');}
 function bmAi(q){if(!q.cl||!q._a)return '';const L=['甲','乙'],A=q._a.ans,row=(ic,nm,p,w,dash)=>`<div class="bmai"><div class="bmaih"><span>${ic} <b>${nm}</b></span><span class="bmaip ${p===A?'ok':'no'}">揀${L[p]} ${p===A?'✓':'✗'}</span></div><div class="bmaiw${dash?' dash':''}">${w}</div></div>`;
   return row('🤖','Claude',q.cl.p,esc(q.cl.w)+(q.cl.r?' <span class="hint">（佢話認得呢個盤）</span>':''))+(q.gm?row('✨','Gemini'+(q.gm.m?' '+q.gm.m:''),q.gm.p,esc(q.gm.w)+(q.gm.r?' <span class="hint">（佢話認得呢個盤）</span>':'')):'')+row('🪙','擲毫',q.coin,'擲出嚟嘅，冇根據。',true)+'<p class="hint">AI 答題前先讀咗本站摘要、口訣、秘訣同計法說明；答題時只睇到八字、性別、三桓命宮、元運同大運，睇唔到名同地方。佢寫嘅理由照錄，冇改過。</p>';}
-// 八字盲測錦囊（主人 11月26日）：每輪三個，各用一次——🔄 換題、💡 提示（呢類特徵要睇乜，唔講答案）、👥 睇大家點揀（其他人揀甲揀乙嘅比例）。
+// 隱師錦囊（主人 11月26日）：小測驗、基本功、八字盲測都有；每個測驗每星期每種錦囊用一次，伺服器記數（SQL 081 jn_take／jn_my）。盲測即刻開，小測驗同基本功 2026-11-30 00:00 香港時間先開
+const JN={st:null,ing:null},JN_OPEN=Date.UTC(2026,10,29,16),JN_RD={blind:()=>bmDraw(),quiz:()=>qzDraw(),bf:()=>bfDraw()};
+const jnOpen=g=>g==='blind'||Date.now()>=JN_OPEN;
+function jnLoad(){if(!CLOUD){JN.st=JN.st||{};return;}if(JN.st||JN.ing||!SESSION)return;JN.ing=1;api('rpc/jn_my',{method:'POST',body:'{}'}).then(j=>{JN.st=j||{};}).catch(()=>{JN.st={};}).then(()=>{JN.ing=0;Object.values(JN_RD).forEach(f=>{try{f();}catch(x){}});});}
+const jnUsed=(g,k)=>!!(JN.st&&(JN.st[g]||[]).includes(k));
+function jnTake(g,qid,k){const add=j=>{if(j&&j.ok&&!j.free){JN.st=JN.st||{};const L=JN.st[g]=JN.st[g]||[];if(!L.includes(k))L.push(k);}return j||{ok:false};};
+  if(!CLOUD)return Promise.resolve(add({ok:true,d:{}}));return api('rpc/jn_take',{method:'POST',body:JSON.stringify({p_game:g,p_qid:String(qid),p_kind:k})}).then(add);}
+const jnMsg=j=>j&&j.why==='used'?'呢種錦囊今個星期用咗喇，下星期一再有。':j&&j.why==='soon'?'隱師錦囊 11月30日（星期一）先開。':'連唔到伺服器，錦囊未用，請再試。';
+function jnBar(g,items,attr,busy){if(!jnOpen(g))return '';if(!JN.st){jnLoad();if(!JN.st)return '';}
+  return `<div class="bmjn"><span class="hint">🧧 隱師錦囊（每星期每種一次）：</span>${items.map(([k,ic,nm])=>{const u=jnUsed(g,k);return `<button type="button" class="bmjb" ${attr}="${k}"${u||busy?' disabled':''}>${ic} ${nm}${u?' ✓':''}</button>`;}).join('')}</div>`;}
+// 八字盲測錦囊：🔄 換題、💡 提示（呢類特徵要睇乜，唔講答案）、👥 睇大家點揀（其他人揀甲揀乙嘅比例）。
 // 用咗照計分；排行榜顯示用咗幾多個錦囊，同分冇用錦囊排先。
 const BM_HINT={'出家人':'男命財星（妻星）、女命官星（夫星）冇做功或者被合死；正印做功（讀書、學術、宗教，第25堂 25:20）',
   '政界高官':'官星做到大功（正官＝做官，官位由劫財力量啟動，第40堂 26:43）',
@@ -3657,12 +3667,11 @@ const BM_HINT={'出家人':'男命財星（妻星）、女命官星（夫星）�
   '兄弟姊妹（連自己）5 個或以上':'兄弟姊妹睇劫財（第76堂）；老師都話兄弟數目未摸通（第75堂 56:43），呢類題特別難',
   '兄弟姊妹（連自己）最多 2 個':'兄弟姊妹睇劫財（第76堂）；老師都話兄弟數目未摸通（第75堂 56:43），呢類題特別難',
   '試過嚴重意外受傷':'大意外一定係做唔到功、日主天干受封閉（第71堂 06:12）；普通意外過得到（第87堂 01:33）'};
-function bmJn(q,done){const c=bmCat(q.k),j=BM.jk||{},ht=t=>BM_HINT[t]?`<li>「${esc(t)}」：${esc(BM_HINT[t])}</li>`:'';
+function bmJn(q,done){const c=bmCat(q.k),ht=t=>BM_HINT[t]?`<li>「${esc(t)}」：${esc(BM_HINT[t])}</li>`:'';
   const res=(q._ht?`<div class="bmjr"><b>💡 提示</b><ul>${ht(c.a)}${ht(c.b)}</ul><p class="hint">提示只講呢類人通常要睇乜，唔代表答案。</p></div>`:'')
     +(q._pl?`<div class="bmjr"><b>👥 大家點揀</b> ${q._pl.n?`甲 <b>${Math.round(q._pl.a*100/q._pl.n)}%</b>　乙 <b>${100-Math.round(q._pl.a*100/q._pl.n)}%</b> <span class="hint">（${q._pl.n} 個師兄師姐，計佢哋第一次答）</span>`:'<span class="hint">未有其他師兄師姐答過呢題。</span>'}${q._pl.n<5?`<div>🤖 AI 師兄：${[q.cl?`Claude 揀<b>${q.cl.p?'乙':'甲'}</b>`:'',q.gm?`Gemini 揀<b>${q.gm.p?'乙':'甲'}</b>`:''].filter(Boolean).join('，')} <span class="hint">（答過嘅人少過 5 個，加埋 AI 嘅揀法；Claude 成個題庫啱 ${(st=>Math.round(st.cl*100/st.n))(BM.data.st||{cl:0,n:1})}%）</span></div>`:''}</div>`:'');
   if(done)return res;
-  const b=(k,ic,nm)=>`<button type="button" class="bmjb" data-bmjn="${k}"${j[k]||BM.busy?' disabled':''}>${ic} ${nm}${j[k]?' ✓':''}</button>`;
-  return `<div class="bmjn"><span class="hint">🧧 隱師錦囊（每輪各一次）：</span>${b('sw','🔄','換題')}${b('ht','💡','提示')}${CLOUD?b('pl','👥','大家點揀'):''}</div>${res}`;}
+  return jnBar('blind',[['swap','🔄','換題'],['hint','💡','提示'],...(CLOUD?[['poll','👥','大家點揀']]:[])],'data-bmjn',BM.busy)+res;}
 function bmSwap(){const D=BM.data,q=BM.rd[BM.i],used=new Set(),inR=new Set(BM.rd.map(x=>x.id));BM.rd.forEach((x,j)=>{if(j!==BM.i){used.add(x.x);used.add(x.y);}});
   const seen=new Set([...bmSeen(),...(BM.srv||[])]),L=D.Q.filter(x=>!inR.has(x.id)&&!used.has(x.x)&&!used.has(x.y)),f=L.filter(x=>!seen.has(x.id)),g=f.length?f:L;
   if(!g.length)return false;const n=g[Math.floor(Math.random()*g.length)];delete n._a;delete n._sc;delete n._ht;delete n._pl;n._jn=(q._jn||0)+1;if(q._ht)n._ht=1;BM.rd[BM.i]=n;return true;}
@@ -3671,10 +3680,10 @@ function bmDraw(){const box=$('np-bm');if(!box)return;const body=box.querySelect
   if(CLOUD&&!SESSION){body.innerHTML='<p class="hint">🔒 登入先玩到八字盲測。 '+SB+'</p>';return;}
   if(!BM.data){body.innerHTML='<p class="hint">載入緊…</p>';if(!BM.ing){BM.ing=true;fetch('blind.json?v=4').then(r=>r.json()).then(d=>{BM.data=d;}).catch(()=>{body.innerHTML='<p class="hint">載入唔到題目，請遲啲再試。</p>';}).then(()=>{BM.ing=false;if(BM.data)bmDraw();});}return;}
   if(BM.wk==null){if(!CLOUD){BM.wk=0;}else{body.innerHTML='<p class="hint">載入緊…</p>';if(!BM.wing){BM.wing=true;api('rpc/blind_my',{method:'POST',body:'{}'}).then(j=>{BM.wk=+(j&&j.n)||0;BM.srv=(j&&j.seen)||[];}).catch(()=>{BM.wk=50;BM.off=true;}).then(()=>{BM.wing=false;bmDraw();});}return;}}
-  if(!BM.rd){BM.rd=bmRound();BM.i=0;BM.pick=-1;BM.sc=0;BM.log=[];BM.rsc=0;BM.jk={};}
+  if(!BM.rd){BM.rd=bmRound();BM.i=0;BM.pick=-1;BM.sc=0;BM.log=[];BM.rsc=0;BM.rj=0;}
   const N=BM.rd.length,bar=`<div class="bmbar">${BM.rd.map((_,j)=>`<i class="${j<BM.i||(j===BM.i&&BM.pick>=0&&BM.rd[j]._a)?(BM.log[j]?'ok':'no'):j===BM.i?'cur':''}"></i>`).join('')}</div>`,st=BM.data.st||{n:BM.data.Q.length,cl:0};
   if(BM.i>=N){const ai=BM.rd.filter(q=>q.cl&&q._a),cl=ai.filter(q=>q.cl.p===q._a.ans).length,co=ai.filter(q=>q.coin===q._a.ans).length,gi=ai.filter(q=>q.gm),gm=gi.filter(q=>q.gm.p===q._a.ans).length;
-    body.innerHTML=`<div class="qzbar"><b>🙈 八字盲測</b>${SB}<span class="qzsc">你 ${BM.sc}／${N}</span></div>${bar}<div class="qzcard"><p class="qzq">🎉 做完一輪：你答啱 ${BM.sc}／${N} 題</p><p class="hint">${(n=>n?`呢輪用咗 ${n} 個隱師錦囊。`:'呢輪冇用隱師錦囊 👍')(Object.keys(BM.jk||{}).length)}</p>${ai.length?`<p>同一輪 🤖 Claude 啱 ${cl} 題，${gi.length?`✨ Gemini 啱 ${gm}${gi.length<ai.length?`／${gi.length}`:''} 題，`:''}🪙 擲毫啱 ${co} 題。</p>`:''}<p class="hint">${BM.off?'而家連唔到排行榜，呢輪當練習。':BM.rsc?`呢輪有 ${BM.rsc} 題計入排行榜。`:'呢輪係練習，冇計分。'}今個星期計咗 ${Math.min(50,BM.wk)}／50 題${BM.wk>=50?'，計分用晒；之後照玩，係練習唔計分，下星期一重新計。':'。'}</p><p class="hint">成個題庫 ${st.n} 題，Claude 答啱 ${st.cl} 題（${Math.round(st.cl*100/st.n)}%）${st.gn?`；Gemini 答咗 ${st.gn} 題，啱 ${st.gm} 題（${Math.round(st.gm*100/st.gn)}%）`:''}；亂揀平均係 50%。</p><button type="button" class="qznext" data-bmagain>${bmScored()?'再嚟一輪 ›':'繼續練習 ›'}</button></div><div id="bmBd"></div>`;bmBoard();return;}
+    body.innerHTML=`<div class="qzbar"><b>🙈 八字盲測</b>${SB}<span class="qzsc">你 ${BM.sc}／${N}</span></div>${bar}<div class="qzcard"><p class="qzq">🎉 做完一輪：你答啱 ${BM.sc}／${N} 題</p><p class="hint">${(n=>n?`呢輪用咗 ${n} 個隱師錦囊（每星期每種一次）。`:'呢輪冇用隱師錦囊 👍')(BM.rj||0)}</p>${ai.length?`<p>同一輪 🤖 Claude 啱 ${cl} 題，${gi.length?`✨ Gemini 啱 ${gm}${gi.length<ai.length?`／${gi.length}`:''} 題，`:''}🪙 擲毫啱 ${co} 題。</p>`:''}<p class="hint">${BM.off?'而家連唔到排行榜，呢輪當練習。':BM.rsc?`呢輪有 ${BM.rsc} 題計入排行榜。`:'呢輪係練習，冇計分。'}今個星期計咗 ${Math.min(50,BM.wk)}／50 題${BM.wk>=50?'，計分用晒；之後照玩，係練習唔計分，下星期一重新計。':'。'}</p><p class="hint">成個題庫 ${st.n} 題，Claude 答啱 ${st.cl} 題（${Math.round(st.cl*100/st.n)}%）${st.gn?`；Gemini 答咗 ${st.gn} 題，啱 ${st.gm} 題（${Math.round(st.gm*100/st.gn)}%）`:''}；亂揀平均係 50%。</p><button type="button" class="qznext" data-bmagain>${bmScored()?'再嚟一輪 ›':'繼續練習 ›'}</button></div><div id="bmBd"></div>`;bmBoard();return;}
   const q=BM.rd[BM.i],c=bmCat(q.k),ask=q.ask==='a'?c.a:c.b,oth=q.ask==='a'?c.b:c.a,done=BM.pick>=0&&!!q._a,A=done?q._a.ans:-1;
   body.innerHTML=`<div class="qzbar"><b>🙈 八字盲測</b>${SB}<span class="hint">兩個真人嘅八字，唔講係邊個。</span><span class="qzsc">你 ${BM.sc}／${BM.i+(done?1:0)}</span></div>${bar}
   <div class="qzcard bmcard"><div><span class="qztag">${String(BM.i+1).padStart(2,'0')} / ${N}</span><span class="qztag">${esc(c.t)}</span><span class="qztag">${done?(q._sc?'計分':'練習・唔計分'):bmScored()?'計分':'練習・唔計分'}</span></div>
@@ -3690,10 +3699,11 @@ function bmOpen(){const r=document.querySelector('input[name=ntab][value=bm]');i
 document.addEventListener('click',e=>{const p=e.target.closest('[data-bmpick]');if(p&&BM.pick<0&&BM.rd&&!BM.busy){const q=BM.rd[BM.i],side=+p.dataset.bmpick,sc=bmScored(),i=BM.i;BM.pick=side;BM.err='';BM.busy=true;bmDraw();
     const fin=j=>{q._a=j;q._sc=!!j.saved;if(j.saved){BM.wk=+j.n;BM.rsc++;}const ok=side===j.ans;BM.log[i]=ok;if(ok)BM.sc++;bmSeenAdd(q.id);BM.bd=null;};
     (CLOUD?api('rpc/blind_answer',{method:'POST',body:JSON.stringify({p_qid:q.id,p_pick:side,p_score:sc,p_jn:q._jn||0})}):Promise.reject(new Error('offline'))).then(fin).catch(()=>{BM.pick=-1;BM.err='連唔到伺服器對答案，請再撳一次。';}).then(()=>{BM.busy=false;if(BM.rd&&BM.i===i)bmDraw();});return;}
-  const jb=e.target.closest('[data-bmjn]');if(jb&&BM.rd&&BM.pick<0&&!BM.busy){const k=jb.dataset.bmjn,q=BM.rd[BM.i];BM.jk=BM.jk||{};if(BM.jk[k])return;
-    if(k==='sw'){if(bmSwap()){BM.jk.sw=1;}else alert('冇得再換題喇。');bmDraw();return;}
-    if(k==='ht'){BM.jk.ht=1;q._ht=1;q._jn=(q._jn||0)+1;bmDraw();return;}
-    if(k==='pl'){BM.busy=true;bmDraw();api('rpc/blind_poll',{method:'POST',body:JSON.stringify({p_qid:q.id})}).then(j=>{const a=+(j&&j.a)||0,b=+(j&&j.b)||0;q._pl={a,n:a+b};BM.jk.pl=1;q._jn=(q._jn||0)+1;}).catch(()=>{BM.err='連唔到伺服器，錦囊未用，請再試。';}).then(()=>{BM.busy=false;if(BM.rd&&BM.rd[BM.i]===q)bmDraw();});return;}}
+  const jb=e.target.closest('[data-bmjn]');if(jb&&BM.rd&&BM.pick<0&&!BM.busy){const k=jb.dataset.bmjn,q=BM.rd[BM.i];if(jnUsed('blind',k))return;BM.busy=true;BM.err='';bmDraw();
+    jnTake('blind',q.id,k).then(j=>{if(!j.ok){BM.err=jnMsg(j);return;}BM.rj=(BM.rj||0)+1;
+      if(k==='swap'){if(!bmSwap())BM.err='冇得再換題喇。';}
+      else if(k==='hint'){q._ht=1;q._jn=(q._jn||0)+1;}
+      else{const d=j.d||{},a=+d.a||0,b=+d.b||0;q._pl={a,n:a+b};q._jn=(q._jn||0)+1;}}).catch(()=>{BM.err=jnMsg();}).then(()=>{BM.busy=false;if(BM.rd)bmDraw();});return;}
   if(e.target.closest('[data-bmnext]')){BM.i++;BM.pick=-1;BM.err='';bmDraw();const b=$('np-bm');if(b&&isMob())b.scrollIntoView({block:'start'});return;}
   if(e.target.closest('[data-bmgo]')){bmOpen();return;}
   if(e.target.closest('[data-bmagain]')){BM.rd=null;bmDraw();}});
@@ -5302,7 +5312,7 @@ const PROMO='🎯 小測驗已經上線，歡迎大家挑戰！',NEWS=['2026-11-
 function supShow(rows,cs,qz,qr,qc,bt,br,gb,gm1){cs=cs||[];qz=Array.isArray(qz)?qz:[];qr=Array.isArray(qr)?qr:[];bt=Array.isArray(bt)?bt:[];br=Array.isArray(br)?br:[];const b=$('supTk');if(!b)return;let x=null;try{x=JSON.parse(localStorage.getItem('b8-suptk-x')||'null');}catch(e){}
   const last=rows.reduce((m,r)=>(r.approved_at||'')>m?r.approved_at:m,NEWS[0]);// 走馬燈最前（主人 11月15日）：小測驗同基本功通知 → 最新一條更新日誌（自動攞，唔使手改）→ 留言版最新一條留言 → 鳴謝→ 測驗推廣 → 其他
   const gbA=Array.isArray(gb)?gb:[],cut=(t,n)=>{t=String(t||'').replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n)+'…':t;},gm=Array.isArray(gm1)?gm1[0]:null,gl=gbA[0],gnm=(n,t)=>qzName({name:n||'有心人',title:t}),gbLine=gm?`<span class="supi"><button type="button" class="lnk" data-newsopen="gb" style="font:inherit;color:inherit" title="撳呢度去留言版">💬 ${chFor(gm.author)}<b>${esc(gnm(gm.name,gm.title))}</b>${gm.to_name?` 回覆 ${chFor(gm.to_author)}<b>${esc(gnm(gm.to_name,gm.to_title))}</b>`:''}：${esc(cut(gm.body,60))}</button></span><span class="supsep">✦</span>`:'',logLine=gl?`<span class="supi"><button type="button" class="lnk" data-newsopen="cl" style="font:inherit;color:inherit" title="撳呢度去更新日誌">🆕 ${esc(cut(gl.body,70))}</button></span><span class="supsep">✦</span>`:'';
-  const nw=`<span class="supi">🎯 <button type="button" class="lnk" style="font:inherit;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0" data-newsopen="quiz" title="撳呢度去小測驗">小測驗</button>、<button type="button" class="lnk" style="font:inherit;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0" data-bfgo title="撳呢度去基本功練習">基本功練習</button>、<button type="button" class="lnk" style="font:inherit;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0" data-bmgo title="撳呢度去八字盲測">八字盲測</button> 都上咗線，歡迎大家挑戰！</span><span class="supsep">✦</span>`;
+  const nw=`<span class="supi">🎯 <button type="button" class="lnk" style="font:inherit;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0" data-newsopen="quiz" title="撳呢度去小測驗">小測驗</button>、<button type="button" class="lnk" style="font:inherit;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0" data-bfgo title="撳呢度去基本功練習">基本功練習</button>、<button type="button" class="lnk" style="font:inherit;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0" data-bmgo title="撳呢度去八字盲測">八字盲測</button> 都上咗線，歡迎大家挑戰！</span><span class="supsep">✦</span>`+(Date.now()<Date.UTC(2026,11,6,16)?`<span class="supi">🧧 <b>隱師錦囊</b>${Date.now()<JN_OPEN?'：八字盲測今日已經有（換題、提示、睇大家點揀），小測驗同基本功<b>星期一（11月30日）</b>推出！':'已經推出：小測驗、基本功、八字盲測每星期每種錦囊用一次，排行榜同分少用錦囊排先！'}</span><span class="supsep">✦</span>`:'');  // 錦囊公佈（主人 11月26日），12月7日自動收
   if(!(gbA.length+(gm?1:0)+rows.length+cs.length+qz.length+qr.length+bt.length+br.length+(nw?1:0))||(x&&x.l>=last&&Date.now()-x.t<432e5)){b.hidden=true;return;}
   // 次序（主人 11月12日）：支持由最新排到最舊，全部出完先到加命例嘅感謝（都係新排先）
   const tm=r=>r.created_at||r.approved_at||'';rows=rows.slice().sort((p,q)=>tm(q)<tm(p)?-1:tm(q)>tm(p)?1:0);cs=cs.slice().sort((p,q)=>(q.last_at||'')<(p.last_at||'')?-1:1);
